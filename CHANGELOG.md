@@ -4,13 +4,24 @@ Format: [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) · Versi: [SemV
 Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
-- **Redesign brand DIPUTUSKAN (3 Jul 2026): arah "Polara Purr" (Final Brand Kit)** — light warm-cream + bubblegum pink, mascot Poca, font bubbly, tagline "share the fun". MENGGANTIKAN arah kosmik-gelap di `DESIGN.md` lama. Eksekusi (rombak `tokens.css` + `index.html` + preview template sebelum jepret) mulai begitu aset transparan siap.
-> **⏳ NUNGGU ASET dari Henry** (regenerate di GPT, background TRANSPARAN ~2000px, acuan `assets/Polara Final Brand Kit.png`):
-> - **Batch A** (timpa file lama, `assets/poca/poca-porikura/`, benerin background putih ke-bake): `poca-wink` · `poca-camera` · `poca-peeking` · `sticker-cute` · `sticker-snap` · `sticker-purrfect` · `watermark-made-with-polara`.
-> - **Batch B** (file baru, `assets/brand/`): `logo-polara` · `app-icon` · `mascot-poca-hero`.
+> **⏳ NUNGGU ASET TRANSPARAN dari Henry** (regenerate GPT, PNG transparan ~2000px, acuan `assets/Polara Final Brand Kit.png`). Yang UDAH bener: `assets/brand/logo-polara.png` (transparan). Yang MASIH no-alpha (background putih ke-bake, perlu diganti):
+> - `assets/mascot/`: `poca-wink` · `poca-camera` · `poca-peeking` · `mascot-poca-hero`
+> - `assets/stickers/`: `sticker-cute` · `sticker-snap` · `sticker-purrfect`
+> - `assets/brand/`: `app-icon` · `watermark-made-with-polara` · `secondary-app-icon`
+> (Sementara: mascot-hero ditaruh di kartu putih biar background putihnya nyatu; `sticker-cute` direstore dari `_originals/`.)
+- **Preview template sebelum jepret** — masih belum ada (frame baru muncul setelah jepret). Rencana: render frame + live-camera di slot pas milih template (perlu sentuh `app.js` dikit).
 - Tes flow kamera → composite → download di device asli (preview headless nggak ada kamera).
 - Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
-- Sticker tray baru ada isinya buat kategori `purikura` — kategori lain (kosmik, y2k, dll) butuh set stiker sendiri sebelum tray-nya kelihatan.
+- Sticker tray cuma buat kategori `purikura` — kategori lain butuh set stiker sendiri.
+
+## [0.5.0] - 2026-07-04
+### Added
+- **Redesign brand "Polara Purr / Sticker Pop"** (skill `/ui-ux-pro-max`): `styles/tokens.css` (palet warm-cream + bubblegum pink dari brand kit, font Fredoka/Nunito) + `index.html` di-reskin total — header logo transparan, layout "studio" 3-kolom responsif (mobile: picker jadi strip horizontal), tombol emoji → inline **SVG**, kartu gaya stiker (outline cozy-brown + shadow), info card + mascot Poca, tagline "share the fun", favicon. Kontrak template (`.ph-canvas` dst) & engine (camera/compositor) TIDAK disentuh. Terverifikasi: tema cream/pink kepakai, 11 template render ter-scope (nggak bocor), export PNG jalan.
+- **Struktur aset dirapiin** (ikut saran GPT): `assets/brand/` (logo, app-icon, watermark) · `assets/mascot/` (poca-hero + 3 pose) · `assets/stickers/` (3 kata-stiker). Path diupdate di `src/modules/stickers/index.js` + 2 template (`poca-purikura`, `seoul-snap-y2k`).
+### Fixed
+- `sticker-cute.png` yang hilang direstore (dari `_originals/`) ke `assets/stickers/`.
+### Catatan
+- ⚠️ **Cache browser**: kalau habis update file keliatan "nggak berubah / banyak bug", **hard-refresh (Ctrl+Shift+R)** — `python http.server` nggak kirim header no-cache, jadi browser suka nyimpen CSS/JS lama.
 
 ## [0.4.1] - 2026-07-03
 ### Fixed

@@ -1,13 +1,42 @@
-/* tokens.css — design system Polara (vibe KOSMIK, sekeluarga Canox/Neurova).
-   Semua warna/font sebagai CSS variables → gampang diutak-atik. */
+/* tokens.css — design system Polara "Polara Purr / Sticker Pop".
+   Acuan: assets/Polara Final Brand Kit.png. Semua warna/font = CSS variables
+   biar gampang diutak-atik (redesign = ubah token, bukan hardcode). */
 :root {
-  --bg:         #0a0a14;
-  --surface:    #141426;
-  --border:     #2a2a44;
-  --text:       #e8e8f2;
-  --accent:     #8b7bff;   /* ungu kosmik */
-  --accent-dim: #8b7bff44;
-  --font-display: 'Space Grotesk', system-ui, sans-serif;
-  --font-ui:      'Inter', system-ui, sans-serif;
-  --radius: 16px;
+  /* ── palet brand ── */
+  --pink:        #ff8fbd;   /* bubblegum pink — primary/CTA */
+  --pink-soft:   #ffc2d8;
+  --pink-deep:   #ec5e9e;
+  --blue:        #8fd3ff;   /* sky blue */
+  --butter:      #ffe26f;   /* soft butter */
+  --lilac:       #cab8ff;   /* lilac */
+  --cream:       #fff7ef;   /* warm cream — background */
+  --cream-2:     #fffaf4;
+  --white:       #ffffff;
+  --brown:       #4b2e1f;   /* cozy brown — teks + outline */
+  --brown-soft:  #7a4b35;
+
+  /* ── semantik (dipakai shell) ── */
+  --bg:          var(--cream);
+  --surface:     var(--white);
+  --text:        var(--brown);
+  --muted:       #9c8577;
+  --accent:      var(--pink);
+  --accent-dim:  rgba(255, 143, 189, 0.30);
+  --accent-strong: var(--pink-deep);
+  --border:      rgba(75, 46, 31, 0.14);
+  --outline:     #4b2e1f;   /* garis tepi stiker */
+
+  /* ── bentuk ── */
+  --radius:      22px;
+  --radius-lg:   34px;
+  --radius-pill: 999px;
+
+  /* ── bayangan (efek stiker/clay) ── */
+  --shadow-sticker: 0 8px 0 rgba(75, 46, 31, 0.07), 0 18px 40px rgba(75, 46, 31, 0.14);
+  --shadow-soft:    0 12px 30px rgba(75, 46, 31, 0.12);
+  --ring:           0 0 0 4px rgba(255, 143, 189, 0.38);
+
+  /* ── tipografi ── */
+  --font-display: 'Fredoka', system-ui, sans-serif;
+  --font-ui:      'Nunito', system-ui, sans-serif;
 }
