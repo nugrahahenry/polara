@@ -15,3 +15,6 @@ docs/
 # ─── Windows launcher scripts (lokal, jangan masuk GitHub) ───
 *.bat
 *.vbs
+
+# Backup aset asli sebelum di-resize (lokal aja, jangan ke GitHub — nambah berat repo)
+assets/**/_originals/

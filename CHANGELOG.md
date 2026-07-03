@@ -4,10 +4,17 @@ Format: [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) · Versi: [SemV
 Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
+- **Redesign brand DIPUTUSKAN (3 Jul 2026): arah "Polara Purr" (Final Brand Kit)** — light warm-cream + bubblegum pink, mascot Poca, font bubbly, tagline "share the fun". MENGGANTIKAN arah kosmik-gelap di `DESIGN.md` lama. Eksekusi (rombak `tokens.css` + `index.html` + preview template sebelum jepret) mulai begitu aset transparan siap.
+> **⏳ NUNGGU ASET dari Henry** (regenerate di GPT, background TRANSPARAN ~2000px, acuan `assets/Polara Final Brand Kit.png`):
+> - **Batch A** (timpa file lama, `assets/poca/poca-porikura/`, benerin background putih ke-bake): `poca-wink` · `poca-camera` · `poca-peeking` · `sticker-cute` · `sticker-snap` · `sticker-purrfect` · `watermark-made-with-polara`.
+> - **Batch B** (file baru, `assets/brand/`): `logo-polara` · `app-icon` · `mascot-poca-hero`.
 - Tes flow kamera → composite → download di device asli (preview headless nggak ada kamera).
 - Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
-- **Perlu keputusan Henry**: 7 aset PNG di `assets/poca/poca-porikura/` nggak punya alpha channel (background putih ke-bake, bukan transparan) — cutout stiker bakal keliatan kotak solid di atas template, bukan potongan bersih. Perlu regenerate ulang dari source AI dengan background transparan (lihat daftar nama file di riwayat chat/CHANGELOG v0.4.0).
 - Sticker tray baru ada isinya buat kategori `purikura` — kategori lain (kosmik, y2k, dll) butuh set stiker sendiri sebelum tray-nya kelihatan.
+
+## [0.4.1] - 2026-07-03
+### Fixed
+- **BUG BESAR: CSS template bocor ke seluruh app.** File template GPT itu dokumen HTML utuh dengan CSS level-halaman (`html`/`body`/`*`/`:root`). Loader v0.3.0 ambil `<style>` mentah-mentah → aturan `body{display:grid;padding:40px}` & `html,body{background:pink}` ke-apply ke app → tema gelap & layout rusak tiap kali pilih template. `loader.js` sekarang SCOPE semua CSS template ke `.ph-canvas` pakai CSSOM (`:root`→`.ph-canvas`, `*`→`.ph-canvas *`, rule `html`/`body` dibuang, sisanya di-prefix `.ph-canvas `). Handle `@media`/`@keyframes` dengan benar. Terverifikasi: `body` app nggak berubah lagi pas render template.
 
 ## [0.4.0] - 2026-07-03
 ### Added
