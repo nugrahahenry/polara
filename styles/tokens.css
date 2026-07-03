@@ -1,0 +1,13 @@
+/* tokens.css — design system Polara (vibe KOSMIK, sekeluarga Canox/Neurova).
+   Semua warna/font sebagai CSS variables → gampang diutak-atik. */
+:root {
+  --bg:         #0a0a14;
+  --surface:    #141426;
+  --border:     #2a2a44;
+  --text:       #e8e8f2;
+  --accent:     #8b7bff;   /* ungu kosmik */
+  --accent-dim: #8b7bff44;
+  --font-display: 'Space Grotesk', system-ui, sans-serif;
+  --font-ui:      'Inter', system-ui, sans-serif;
+  --radius: 16px;
+}

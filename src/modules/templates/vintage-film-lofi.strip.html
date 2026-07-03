@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=720, initial-scale=1.0" />
+  <title>Polara Template — Vintage Film Lo-Fi Strip</title>
+
+  <!--
+    Template: Vintage Film / Analog Lo-Fi Strip
+    Type: CSS-heavy photobooth strip template
+    Fonts: Space Mono, Libre Baskerville
+    Canvas: 720 × 1800 px
+    Slots: 3 vertical photo slots
+    Output target: PNG export from Polara compositor
+
+    Recommended file location:
+    C:\HenryDev\1HenryDev\polara\src\modules\templates\vintage-film-lofi.strip.html
+
+    Asset requirement:
+    - No required PNG assets.
+    - Film grain, sprocket holes, light leaks, labels, and tape are CSS-based.
+    - Clean Polara branding is rendered as CSS text.
+
+    Template contract:
+    - .ph-canvas
+    - .ph-slot[data-slot="1"], .ph-slot[data-slot="2"], .ph-slot[data-slot="3"]
+    - .ph-caption
+    - .ph-date
+    - .ph-brand
+    - .ph-sticker-layer
+
+    No JavaScript. No framework.
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --film-black: #17110d;
+      --film-brown: #2a1d16;
+      --paper: #f4e5c7;
+      --paper-light: #fff2d0;
+      --sepia: #b88955;
+      --orange: #f3a25f;
+      --red: #cf594b;
+      --cream: #fff6df;
+      --ink: #211813;
+      --muted: #7d6655;
+      --white: #fffaf0;
+      --line: rgba(255, 246, 223, 0.42);
+      --shadow: rgba(16, 10, 7, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: #d6c8b8;
+      font-family: "Space Mono", monospace;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 40px;
+    }
+
+    .ph-canvas {
+      position: relative;
+      width: 720px;
+      height: 1800px;
+      overflow: hidden;
+      isolation: isolate;
+      background:
+        radial-gradient(circle at 20% 8%, rgba(243, 162, 95, 0.22) 0 12%, transparent 13%),
+        radial-gradient(circle at 90% 62%, rgba(207, 89, 75, 0.18) 0 18%, transparent 20%),
+        linear-gradient(180deg, #251812 0%, var(--film-black) 42%, #2a1b15 100%);
+      color: var(--paper);
+      box-shadow: 0 30px 90px rgba(16, 10, 7, 0.36);
+    }
+
+    /* film grain */
+    .ph-canvas::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.28;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(255,255,255,0.42) 0 1px, transparent 1.4px),
+        radial-gradient(circle, rgba(0,0,0,0.45) 0 1px, transparent 1.3px),
+        linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px);
+      background-size: 9px 9px, 13px 13px, 36px 36px;
+      background-position: 0 0, 4px 7px, 0 0;
+      mix-blend-mode: overlay;
+    }
+
+    /* warm light leak */
+    .ph-canvas::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at -4% 17%, rgba(255, 177, 90, 0.55) 0 8%, transparent 18%),
+        radial-gradient(circle at 104% 82%, rgba(255, 96, 76, 0.38) 0 9%, transparent 22%),
+        linear-gradient(90deg, rgba(255, 202, 132, 0.16), transparent 22%, transparent 78%, rgba(255, 117, 88, 0.12));
+      mix-blend-mode: screen;
+      opacity: 0.88;
+    }
+
+    .film-strip {
+      position: absolute;
+      inset: 34px 46px;
+      z-index: 2;
+      border: 5px solid rgba(255, 246, 223, 0.36);
+      background:
+        linear-gradient(180deg, rgba(255, 246, 223, 0.07), rgba(255, 246, 223, 0.02)),
+        linear-gradient(90deg, rgba(0,0,0,0.26), transparent 12%, transparent 88%, rgba(0,0,0,0.26));
+      box-shadow:
+        inset 0 0 0 2px rgba(0,0,0,0.42),
+        inset 0 0 80px rgba(0,0,0,0.45),
+        0 20px 60px rgba(0,0,0,0.28);
+    }
+
+    .sprocket-column {
+      position: absolute;
+      top: 28px;
+      bottom: 28px;
+      width: 42px;
+      z-index: 4;
+      display: grid;
+      grid-template-rows: repeat(16, 1fr);
+      gap: 18px;
+      pointer-events: none;
+    }
+
+    .sprocket-column.left {
+      left: 14px;
+    }
+
+    .sprocket-column.right {
+      right: 14px;
+    }
+
+    .sprocket {
+      width: 26px;
+      height: 52px;
+      margin: auto;
+      border-radius: 8px;
+      background:
+        linear-gradient(180deg, rgba(255, 246, 223, 0.82), rgba(255, 246, 223, 0.48));
+      box-shadow:
+        inset 0 0 0 2px rgba(0,0,0,0.28),
+        0 0 14px rgba(255, 246, 223, 0.12);
+      opacity: 0.72;
+    }
+
+    .strip-header {
+      position: absolute;
+      top: 56px;
+      left: 98px;
+      right: 98px;
+      height: 112px;
+      z-index: 5;
+      border-top: 2px solid rgba(255, 246, 223, 0.5);
+      border-bottom: 2px solid rgba(255, 246, 223, 0.5);
+      display: grid;
+      place-items: center;
+      text-align: center;
+    }
+
+    .strip-title {
+      margin: 0;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 34px;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      color: var(--paper-light);
+      text-transform: uppercase;
+      text-shadow: 0 3px 0 rgba(0,0,0,0.28);
+    }
+
+    .strip-title span {
+      display: block;
+      margin-top: 10px;
+      font-family: "Space Mono", monospace;
+      font-size: 14px;
+      letter-spacing: 0.22em;
+      color: rgba(255, 246, 223, 0.72);
+    }
+
+    .frame-stack {
+      position: absolute;
+      top: 202px;
+      left: 94px;
+      right: 94px;
+      bottom: 214px;
+      z-index: 5;
+      display: grid;
+      grid-template-rows: repeat(3, 1fr);
+      gap: 34px;
+    }
+
+    .photo-frame {
+      position: relative;
+      padding: 12px;
+      border: 3px solid rgba(255, 246, 223, 0.52);
+      background:
+        linear-gradient(180deg, rgba(255, 246, 223, 0.18), rgba(255, 246, 223, 0.06)),
+        #1e1511;
+      box-shadow:
+        inset 0 0 0 2px rgba(0,0,0,0.5),
+        0 14px 26px rgba(0,0,0,0.32);
+    }
+
+    .photo-frame::before {
+      content: "";
+      position: absolute;
+      inset: -12px;
+      border: 1px solid rgba(255, 246, 223, 0.14);
+      pointer-events: none;
+    }
+
+    .photo-number {
+      position: absolute;
+      left: -2px;
+      top: -28px;
+      padding: 5px 10px;
+      background: rgba(244, 229, 199, 0.92);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      box-shadow: 4px 4px 0 rgba(0,0,0,0.18);
+      transform: rotate(-1deg);
+    }
+
+    .ph-slot {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(244, 229, 199, 0.24), rgba(184, 137, 85, 0.14)),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255,255,255,0.08) 0 11px,
+          rgba(255,255,255,0.02) 11px 22px
+        );
+      border: 2px solid rgba(255, 246, 223, 0.32);
+      display: grid;
+      place-items: center;
+    }
+
+    .ph-slot::before {
+      content: attr(data-label);
+      position: absolute;
+      z-index: 1;
+      padding: 10px 18px;
+      border: 2px solid rgba(255, 246, 223, 0.38);
+      background: rgba(23, 17, 13, 0.42);
+      color: rgba(255, 246, 223, 0.62);
+      font-family: "Space Mono", monospace;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+    }
+
+    .ph-slot img {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter:
+        contrast(1.05)
+        saturate(0.82)
+        sepia(0.18)
+        brightness(0.98);
+    }
+
+    .ph-slot::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 15% 10%, rgba(255,255,255,0.18), transparent 28%),
+        radial-gradient(circle at 88% 80%, rgba(243, 162, 95, 0.18), transparent 32%),
+        linear-gradient(180deg, rgba(0,0,0,0.04), rgba(0,0,0,0.18));
+      mix-blend-mode: screen;
+    }
+
+    .tape {
+      position: absolute;
+      z-index: 8;
+      width: 112px;
+      height: 34px;
+      background:
+        linear-gradient(135deg, rgba(255,246,223,0.86), rgba(244,229,199,0.72));
+      border: 1px solid rgba(33,24,19,0.2);
+      opacity: 0.82;
+      box-shadow: 0 6px 14px rgba(0,0,0,0.18);
+      pointer-events: none;
+    }
+
+    .tape-1 {
+      left: 110px;
+      top: 184px;
+      transform: rotate(-10deg);
+    }
+
+    .tape-2 {
+      right: 106px;
+      top: 670px;
+      transform: rotate(12deg);
+    }
+
+    .tape-3 {
+      left: 116px;
+      bottom: 312px;
+      transform: rotate(7deg);
+    }
+
+    .side-code {
+      position: absolute;
+      z-index: 6;
+      font-family: "Space Mono", monospace;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      color: rgba(255, 246, 223, 0.58);
+      writing-mode: vertical-rl;
+      text-transform: uppercase;
+    }
+
+    .side-code.left {
+      left: 58px;
+      top: 222px;
+    }
+
+    .side-code.right {
+      right: 58px;
+      bottom: 268px;
+      transform: rotate(180deg);
+    }
+
+    .ph-caption {
+      position: absolute;
+      left: 100px;
+      right: 100px;
+      bottom: 132px;
+      z-index: 8;
+      min-height: 50px;
+      padding: 10px 18px;
+      border-top: 2px solid rgba(255, 246, 223, 0.52);
+      border-bottom: 2px solid rgba(255, 246, 223, 0.52);
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 24px;
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: 0.03em;
+      text-align: center;
+      color: var(--paper-light);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-shadow: 0 2px 0 rgba(0,0,0,0.35);
+    }
+
+    .footer-meta {
+      position: absolute;
+      left: 96px;
+      right: 96px;
+      bottom: 58px;
+      z-index: 8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      font-family: "Space Mono", monospace;
+      color: rgba(255, 246, 223, 0.8);
+    }
+
+    .ph-date {
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+    }
+
+    .ph-brand {
+      padding: 8px 12px;
+      border: 2px solid rgba(255, 246, 223, 0.48);
+      background: rgba(255, 246, 223, 0.08);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: rgba(255, 246, 223, 0.86);
+      transform: rotate(-1deg);
+    }
+
+    .ph-sticker-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .stamp {
+      position: absolute;
+      right: 88px;
+      bottom: 214px;
+      z-index: 9;
+      width: 116px;
+      height: 116px;
+      border: 5px double rgba(255, 246, 223, 0.58);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-family: "Space Mono", monospace;
+      font-size: 13px;
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(255, 246, 223, 0.66);
+      text-transform: uppercase;
+      transform: rotate(12deg);
+      mix-blend-mode: screen;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: transparent;
+      }
+
+      .ph-canvas {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ph-canvas template-vintage-film-lofi" role="img" aria-label="Polara Vintage Film Lo-Fi photobooth strip frame">
+    <section class="film-strip">
+      <div class="sprocket-column left">
+        <span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span>
+        <span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span>
+        <span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span>
+        <span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span>
+      </div>
+
+      <div class="sprocket-column right">
+        <span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span>
+        <span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span>
+        <span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span>
+        <span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span><span class="sprocket"></span>
+      </div>
+
+      <header class="strip-header">
+        <h1 class="strip-title">
+          Analog Memory
+          <span>Polara Film Strip · 35mm Lo‑Fi Edition</span>
+        </h1>
+      </header>
+
+      <div class="side-code left">polara 400tx · iso 400 · frame 01-03</div>
+      <div class="side-code right">developed in browser · instant png</div>
+
+      <div class="tape tape-1"></div>
+      <div class="tape tape-2"></div>
+      <div class="tape tape-3"></div>
+
+      <section class="frame-stack">
+        <article class="photo-frame">
+          <div class="photo-number">01</div>
+          <div class="ph-slot" data-slot="1" data-label="FOTO 1"></div>
+        </article>
+
+        <article class="photo-frame">
+          <div class="photo-number">02</div>
+          <div class="ph-slot" data-slot="2" data-label="FOTO 2"></div>
+        </article>
+
+        <article class="photo-frame">
+          <div class="photo-number">03</div>
+          <div class="ph-slot" data-slot="3" data-label="FOTO 3"></div>
+        </article>
+      </section>
+
+      <div class="stamp">soft<br>flash<br>archive</div>
+
+      <div class="ph-caption">Nama · Kampus · Memory Strip</div>
+
+      <footer class="footer-meta">
+        <div class="ph-date">02 Jul 2026</div>
+        <div class="ph-brand">made with Polara</div>
+      </footer>
+    </section>
+
+    <div class="ph-sticker-layer"></div>
+  </div>
+</body>
+</html>

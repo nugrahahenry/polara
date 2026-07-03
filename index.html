@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Polara — AI Photobooth</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles/tokens.css" />
+  <style>
+    /* Layout shell (struktur app — warna/font dari tokens.css) */
+    * { box-sizing: border-box; }
+    body { margin:0; min-height:100vh; background:var(--bg); color:var(--text); font-family:var(--font-ui); display:flex; flex-direction:column; }
+    header { padding:16px 24px; display:flex; align-items:center; gap:12px; }
+    header .logo { font-family:var(--font-display); font-size:1.5rem; font-weight:700; letter-spacing:.5px; }
+    header .logo .star { color:var(--accent); }
+    main { flex:1; display:grid; grid-template-columns:200px 1fr 300px; gap:20px; padding:0 24px 24px; }
+    @media (max-width:900px){ main{ grid-template-columns:1fr; } }
+    .panel { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px; }
+    #templateList { display:flex; flex-direction:column; gap:10px; overflow:auto; }
+    .tpl-btn { cursor:pointer; border:2px solid var(--border); border-radius:12px; padding:10px 12px; background:transparent; color:var(--text); text-align:left; transition:.15s; }
+    .tpl-btn:hover { border-color:var(--accent-dim); }
+    .tpl-btn.active { border-color:var(--accent); box-shadow:0 0 0 2px var(--accent-dim); }
+    .tpl-btn .cat { font-size:.7rem; opacity:.55; margin-top:2px; }
+    #stage { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:16px; }
+    #cameraWrap { position:relative; padding:0; overflow:hidden; transition:filter .1s; }
+    video { display:block; border-radius:var(--radius); max-width:100%; transform:scaleX(-1); }
+    #canvasScale { transform-origin:top center; display:none; }
+    #stickerTray { display:none; flex-wrap:wrap; gap:8px; justify-content:center; max-width:460px; padding:10px; }
+    #stickerTray .sticker-btn { border:1px solid var(--border); background:transparent; border-radius:10px; padding:4px; cursor:pointer; width:56px; height:56px; }
+    #stickerTray .sticker-btn:hover { border-color:var(--accent-dim); }
+    #stickerTray .sticker-btn img { width:100%; height:100%; object-fit:contain; display:block; }
+    .controls { display:flex; gap:10px; flex-wrap:wrap; justify-content:center; }
+    button.act { cursor:pointer; font-family:var(--font-ui); font-weight:600; border:none; border-radius:999px; padding:12px 22px; background:var(--accent); color:#0a0a14; transition:.15s; }
+    button.act.ghost { background:transparent; color:var(--text); border:1px solid var(--border); }
+    button.act:disabled { opacity:.4; cursor:not-allowed; }
+    #countdown { position:absolute; inset:0; display:none; align-items:center; justify-content:center; font-family:var(--font-display); font-size:8rem; font-weight:700; color:#fff; text-shadow:0 0 40px var(--accent); }
+    .hint { opacity:.6; font-size:.85rem; }
+    h3 { margin:4px 0 8px; font-family:var(--font-display); }
+  </style>
+</head>
+<body>
+  <header>
+    <span class="logo">Pol<span class="star">✦</span>ra</span>
+    <span class="hint">AI Photobooth — Fase 1 (MVP)</span>
+  </header>
+  <main>
+    <aside class="panel" id="templateList"></aside>
+    <section id="stage">
+      <div id="cameraWrap" class="panel">
+        <video id="video" autoplay playsinline muted width="460" height="575"></video>
+        <div id="countdown"></div>
+      </div>
+      <div id="canvasScale"></div>
+      <div id="stickerTray" class="panel" style="display:none;"></div>
+      <div class="controls">
+        <button class="act" id="snapBtn">📸 Jepret</button>
+        <button class="act ghost" id="retakeBtn" style="display:none;">↺ Ulangi</button>
+        <button class="act" id="downloadBtn" style="display:none;">⬇️ Download</button>
+        <button class="act ghost" id="flipBtn">🔄 Kamera</button>
+      </div>
+      <p class="hint" id="status">Pilih template, lalu jepret. (Browser bakal minta izin kamera.)</p>
+    </section>
+    <aside class="panel">
+      <h3>Privasi ✦</h3>
+      <p class="hint">Fotomu nggak dikirim ke mana-mana — semua diproses di browser-mu. Hasil tinggal di-download.</p>
+    </aside>
+  </main>
+  <script type="module" src="src/app.js"></script>
+</body>
+</html>

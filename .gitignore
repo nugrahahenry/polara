@@ -1,0 +1,17 @@
+# Dependencies & build
+node_modules/
+dist/
+
+# Secrets — key asli HANYA di .env (lokal) & Vercel env vars
+.env
+.env*.local
+.vercel
+
+# Docs = konteks pribadi (PRD/DESIGN/brief) — JANGAN di-track, sama kayak neurova/canox
+docs/
+
+.DS_Store
+
+# ─── Windows launcher scripts (lokal, jangan masuk GitHub) ───
+*.bat
+*.vbs

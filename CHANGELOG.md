@@ -1,0 +1,40 @@
+# Changelog — Polara (Photobooth Digital)
+
+Format: [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) · Versi: [SemVer](https://semver.org/lang/id/).
+Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
+
+## [Unreleased]
+- Tes flow kamera → composite → download di device asli (preview headless nggak ada kamera).
+- Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
+- **Perlu keputusan Henry**: 7 aset PNG di `assets/poca/poca-porikura/` nggak punya alpha channel (background putih ke-bake, bukan transparan) — cutout stiker bakal keliatan kotak solid di atas template, bukan potongan bersih. Perlu regenerate ulang dari source AI dengan background transparan (lihat daftar nama file di riwayat chat/CHANGELOG v0.4.0).
+- Sticker tray baru ada isinya buat kategori `purikura` — kategori lain (kosmik, y2k, dll) butuh set stiker sendiri sebelum tray-nya kelihatan.
+
+## [0.4.0] - 2026-07-03
+### Added
+- **Fitur sticker picker** (photobooth-style): `src/modules/stickers/index.js` (registry pack stiker per kategori template) + `placeSticker()`/`makeDraggable()` di `compositor.js`. Setelah jepret, tray stiker muncul (kalau kategori template punya pack) — tap stiker → nempel di tengah kanvas, bisa digeser (drag, pointer events, ada koreksi skala buat `transform:scale()` di stage), ada tombol ✕ buat hapus. Ikut ke-export ke PNG final (tombol ✕ disembunyikan pas export).
+- `run-polara.bat` — shortcut buka app (jalanin `python -m http.server 5510` + auto-buka browser). Udah ke-cover `.gitignore` (`*.bat` udah di-ignore).
+### Fixed
+- `exportPng()` sekarang retry otomatis 3x kalau fetch gambar gagal (misal koneksi lemot pas embed banyak gambar sekaligus) + `cacheBust` dimatikan (gambar udah ke-load di DOM, nggak perlu fetch ulang paksa ke jaringan tiap export).
+### Changed
+- 7 PNG di `assets/poca/poca-porikura/` di-resize 1254px→600px, ~1.1MB→~300KB (original di-backup di `_originals/`) — biar export lebih ringan & cepat.
+
+## [0.3.0] - 2026-07-03
+### Added
+- **10 template baru dari GPT diregistrasi ke app** (`src/modules/templates/index.js`): 5 prioritas viral 🔴 (Polara Daily/Newspaper, Seoul Snap Y2K, Vintage Film Lo-Fi, Poca Purikura, Live Frame Cinemagraph) + 5 sekunder 🟠🟡 (Cyber Y2K Neon, Aura Gradient, Dark Romantic, Cottagecore, Trading Card) — total 11 template termasuk Kosmik lama. Semua 10 kategori riset di `RISET.md` sudah punya template.
+- `src/modules/templates/loader.js` — loader lazy-fetch: file HTML standalone dari GPT (punya `<head>`+`<style>`+`<body>`) di-fetch & di-parse (DOMParser), diambil cuma `<style>`+`.ph-canvas`-nya, plus Google Fonts `<link>` disuntik otomatis ke document. File asli GPT nggak perlu dipotong manual.
+### Fixed
+- Path & nama file asset salah di 2 template (`poca-purikura.single.v2.html`, `seoul-snap-y2k.single.html`) — GPT nebak nama file (`kucing_lucu_dengan_kamera_pink.png` dst) yang beda dari nama asli di `assets/poca/poca-porikura/` (`poca-camera.png` dst), dan pakai path relatif `../../../assets/...` yang salah arah (app inject HTML via `innerHTML` ke `index.html` di root, bukan buka file template langsung, jadi path harus relatif ke root: `assets/...`).
+- 7 PNG di `assets/poca/poca-porikura/` di-resize dari 1254px/~1.1MB ke 600px/~300KB (originalnya ke-backup di `assets/poca/poca-porikura/_originals/`) — ukuran raw jauh lebih besar dari display size (~150-290px), bikin export PNG lemot/kadang gagal pas load bareng.
+### Changed
+- `renderTemplate()` (compositor.js) sekarang terima HTML string langsung (bukan objek template) — resolusi lazy-load dipisah ke `resolveTemplateHtml()` (index.js templates), dipanggil `await` sebelum render di `app.js`.
+
+## [0.2.0] - 2026-06-28
+### Added
+- **Scaffold engine Fase 1** (modular vanilla per `docs/DESIGN.md`): `index.html` shell kosmik, `src/core/camera.js` (webcam + capture un-mirror), `src/core/compositor.js` (inject foto ke `.ph-slot` + export PNG via `html-to-image`), `src/modules/templates/` (registry + template Kosmik), `styles/tokens.css`. Verified load bersih (no JS error, shell+template render, camera-error ke-handle). Dijalanin via `launch.json` config "polara" (port 5510).
+
+## [0.1.0] - 2026-06-28
+### Added
+- Riset pasar + strategi (`docs/RISET.md`): 10 template viral 2026 + analisis Blok M. Insight kunci: **Live Frame/GIF = diferensiasi** (booth fisik nggak punya), B2B kiosk = paling scalable.
+- Spec produk (Henry): `docs/PRD.md`, `docs/DESIGN.md` (arsitektur modular vanilla), `docs/TEMPLATE-SPEC.md` (brief GPT bikin template HTML/CSS).
+### Removed
+- Draf awal salah-asumsi (`docs/KONSEP.md` React + `public/frames/` PNG) → diganti pendekatan resmi **vanilla HTML/JS/CSS + template HTML** sesuai PRD/DESIGN.

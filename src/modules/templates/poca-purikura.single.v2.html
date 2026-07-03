@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080, initial-scale=1.0" />
+  <title>Polara Template — Poca Purikura Single v2</title>
+
+  <!--
+    Template: Poca Purikura Single v2
+    Type: Asset-based HTML/CSS template
+    Fonts: Fredoka, Nunito
+    Canvas: 1080 × 1350 px
+    Output target: PNG export from Polara compositor
+
+    IMPORTANT:
+    - This template is designed to live in:
+      src/modules/templates/poca-purikura.single.v2.html
+
+    - User assets are expected in:
+      C:\HenryDev\1HenryDev\polara\assets\poca\poca-porikura
+
+    - If this HTML file is placed in src/modules/templates/,
+      the relative asset path should be:
+      ../../../assets/poca/poca-porikura/<filename>.png
+
+    - If your project structure is different, only change the src="" values
+      inside .asset-sticker images below.
+
+    Suggested asset filenames:
+    1. kucing_lucu_dengan_senyum_dan_lambaian.png
+    2. kucing_lucu_dengan_kamera_pink.png
+    3. kucing_menggemaskan_dengan_senyuman_lebar.png
+    4. kata_lucu_dengan_aksen_pastel.png
+    5. stiker_kata_snap_lucu_dan_ceria.png
+    6. stiker_lucu_bertuliskan_purr_fect.png
+    7. stiker_lucu_made_with_polara.png
+
+    Template contract:
+    - .ph-canvas
+    - .ph-slot[data-slot="1"]
+    - .ph-caption
+    - .ph-date
+    - .ph-brand
+    - .ph-sticker-layer
+
+    No JavaScript. No framework.
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pink: #ffc2d8;
+      --pink-soft: #ffe4ef;
+      --pink-strong: #ff8fbd;
+      --pink-deep: #ec5e9e;
+
+      --blue: #8fd3ff;
+      --blue-soft: #dff4ff;
+      --blue-strong: #4eb7f8;
+
+      --butter: #ffe26f;
+      --butter-soft: #fff2b8;
+      --lilac: #cab8ff;
+      --lilac-soft: #eee8ff;
+
+      --cream: #fff4e6;
+      --cream-2: #fffaf2;
+      --white: #ffffff;
+
+      --brown: #4b2e1f;
+      --brown-soft: #7a4b35;
+
+      --line: rgba(75, 46, 31, 0.16);
+      --shadow: rgba(75, 46, 31, 0.18);
+      --pink-shadow: rgba(236, 94, 158, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: #f5edf7;
+      font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 40px;
+    }
+
+    .ph-canvas {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      isolation: isolate;
+      color: var(--brown);
+      background:
+        radial-gradient(circle at 10% 9%, rgba(255, 226, 111, 0.95) 0 5.5%, transparent 6.4%),
+        radial-gradient(circle at 90% 12%, rgba(143, 211, 255, 0.95) 0 7.2%, transparent 8.1%),
+        radial-gradient(circle at 12% 86%, rgba(202, 184, 255, 0.95) 0 7.6%, transparent 8.6%),
+        radial-gradient(circle at 91% 88%, rgba(255, 194, 216, 0.95) 0 9.5%, transparent 10.5%),
+        linear-gradient(145deg, var(--cream-2) 0%, var(--cream) 38%, #ffeaf3 100%);
+    }
+
+    .ph-canvas::before {
+      content: "";
+      position: absolute;
+      inset: 34px;
+      border: 8px solid var(--white);
+      border-radius: 58px;
+      box-shadow:
+        0 0 0 4px rgba(255, 143, 189, 0.58),
+        0 22px 70px rgba(255, 143, 189, 0.2);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .ph-canvas::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        radial-gradient(circle, rgba(75, 46, 31, 0.13) 0 2px, transparent 2.5px),
+        radial-gradient(circle, rgba(255, 143, 189, 0.32) 0 3px, transparent 3.5px),
+        linear-gradient(45deg, transparent 0 48%, rgba(255,255,255,0.24) 48% 52%, transparent 52% 100%);
+      background-size: 42px 42px, 76px 76px, 34px 34px;
+      background-position: 4px 6px, 28px 40px, 0 0;
+      opacity: 0.2;
+      mix-blend-mode: multiply;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Main sticker-like title. Text stays in CSS/HTML so it remains editable. */
+    .ph-title-group {
+      position: absolute;
+      top: 66px;
+      left: 96px;
+      right: 96px;
+      height: 142px;
+      display: grid;
+      place-items: center;
+      z-index: 8;
+      pointer-events: none;
+    }
+
+    .ph-title-bubble {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 18px;
+      padding: 20px 44px 24px;
+      border: 8px solid var(--white);
+      border-radius: 999px;
+      background: linear-gradient(180deg, #ffbdd7 0%, #ff8fbd 100%);
+      box-shadow:
+        0 11px 0 rgba(236, 94, 158, 0.34),
+        0 28px 62px rgba(75, 46, 31, 0.16);
+      transform: rotate(-1.1deg);
+    }
+
+    .ph-title-bubble::before,
+    .ph-title-bubble::after {
+      content: "✦";
+      font-family: "Fredoka", sans-serif;
+      font-size: 38px;
+      color: var(--butter);
+      -webkit-text-stroke: 3px var(--white);
+      paint-order: stroke fill;
+    }
+
+    .ph-title {
+      margin: 0;
+      font-family: "Fredoka", "Nunito", sans-serif;
+      font-size: 70px;
+      line-height: 0.9;
+      letter-spacing: 0.5px;
+      color: var(--white);
+      text-shadow:
+        0 4px 0 rgba(122, 75, 53, 0.24),
+        0 0 1px var(--brown);
+    }
+
+    .ph-subtitle {
+      position: absolute;
+      top: 181px;
+      left: 50%;
+      transform: translateX(-50%) rotate(1deg);
+      z-index: 9;
+      padding: 8px 24px;
+      border: 4px solid var(--white);
+      border-radius: 999px;
+      background: var(--butter);
+      box-shadow: 0 8px 20px rgba(75, 46, 31, 0.12);
+      font-family: "Fredoka", "Nunito", sans-serif;
+      font-size: 24px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--brown);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+
+    /* Photo slot */
+    .ph-slot-wrap {
+      position: absolute;
+      left: 106px;
+      top: 252px;
+      width: 868px;
+      height: 876px;
+      border-radius: 56px;
+      padding: 18px;
+      background:
+        linear-gradient(145deg, var(--white) 0%, #fff6fb 100%);
+      box-shadow:
+        0 26px 70px rgba(75, 46, 31, 0.22),
+        inset 0 0 0 5px rgba(255, 143, 189, 0.4);
+      z-index: 2;
+    }
+
+    .ph-slot-wrap::before {
+      content: "";
+      position: absolute;
+      inset: -16px;
+      border-radius: 70px;
+      border: 9px dashed rgba(255, 143, 189, 0.72);
+      z-index: -1;
+    }
+
+    .ph-slot {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 40px;
+      border: 6px solid rgba(75, 46, 31, 0.14);
+      background:
+        linear-gradient(135deg, rgba(255, 194, 216, 0.7), rgba(143, 211, 255, 0.56)),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(255, 255, 255, 0.54) 0 16px,
+          rgba(255, 244, 230, 0.42) 16px 32px
+        );
+      display: grid;
+      place-items: center;
+    }
+
+    .ph-slot::before {
+      content: "FOTO 1";
+      position: absolute;
+      z-index: 1;
+      padding: 18px 28px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      border: 4px solid rgba(75, 46, 31, 0.12);
+      color: rgba(75, 46, 31, 0.52);
+      font-family: "Fredoka", "Nunito", sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .ph-slot img {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* Editable dynamic fields */
+    .ph-caption {
+      position: absolute;
+      left: 150px;
+      right: 150px;
+      bottom: 122px;
+      z-index: 12;
+      min-height: 56px;
+      padding: 14px 28px;
+      border: 5px solid var(--white);
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 12px 28px rgba(75, 46, 31, 0.12);
+      font-family: "Fredoka", "Nunito", sans-serif;
+      font-size: 34px;
+      font-weight: 700;
+      text-align: center;
+      color: var(--brown);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      backdrop-filter: blur(8px);
+    }
+
+    .ph-date {
+      position: absolute;
+      left: 86px;
+      bottom: 58px;
+      z-index: 12;
+      padding: 10px 18px;
+      border: 4px solid var(--white);
+      border-radius: 999px;
+      background: var(--blue);
+      box-shadow: 0 10px 22px rgba(75, 46, 31, 0.12);
+      font-size: 22px;
+      line-height: 1;
+      font-weight: 900;
+      color: var(--brown);
+    }
+
+    /*
+      .ph-brand is still present for the app contract.
+      In this v2 template, the visible brand is an image asset (.asset-watermark).
+      Keep this element so Polara can still replace or read it if needed.
+    */
+    .ph-brand {
+      position: absolute;
+      right: 92px;
+      bottom: 58px;
+      z-index: 12;
+      font-family: "Fredoka", "Nunito", sans-serif;
+      font-size: 0;
+      color: transparent;
+      width: 210px;
+      height: 64px;
+    }
+
+    .ph-sticker-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    /* Asset sticker system */
+    .asset-sticker {
+      position: absolute;
+      z-index: 10;
+      display: block;
+      height: auto;
+      object-fit: contain;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 16px 18px rgba(75, 46, 31, 0.12));
+    }
+
+    /*
+      Replace only src="" if your filenames are different.
+      Keep class names so the layout remains stable.
+    */
+
+    .asset-poca-main {
+      width: 228px;
+      right: 42px;
+      bottom: 154px;
+      transform: rotate(4deg);
+      z-index: 14;
+    }
+
+    .asset-poca-camera {
+      width: 156px;
+      right: 64px;
+      top: 74px;
+      transform: rotate(5deg);
+      z-index: 12;
+    }
+
+    .asset-poca-peek {
+      width: 182px;
+      left: 46px;
+      bottom: 146px;
+      transform: rotate(-5deg);
+      z-index: 12;
+    }
+
+    .asset-cute {
+      width: 222px;
+      left: 34px;
+      top: 260px;
+      transform: rotate(-8deg);
+      z-index: 13;
+    }
+
+    .asset-snap {
+      width: 196px;
+      right: 35px;
+      top: 370px;
+      transform: rotate(7deg);
+      z-index: 13;
+    }
+
+    .asset-purrfect {
+      width: 286px;
+      left: 50px;
+      bottom: 232px;
+      transform: rotate(-5deg);
+      z-index: 13;
+    }
+
+    .asset-watermark {
+      width: 240px;
+      right: 72px;
+      bottom: 42px;
+      transform: rotate(1deg);
+      z-index: 16;
+    }
+
+    /* CSS-only tiny accents. These are safe because the main assets now come from PNG. */
+    .css-accent {
+      position: absolute;
+      z-index: 9;
+      pointer-events: none;
+      user-select: none;
+      font-family: "Fredoka", sans-serif;
+      filter: drop-shadow(0 6px 8px rgba(75, 46, 31, 0.12));
+    }
+
+    .sparkle {
+      color: var(--butter);
+      -webkit-text-stroke: 4px var(--white);
+      paint-order: stroke fill;
+      font-size: 54px;
+      line-height: 1;
+    }
+
+    .sparkle.blue {
+      color: var(--blue);
+    }
+
+    .heart {
+      color: var(--pink-strong);
+      -webkit-text-stroke: 5px var(--white);
+      paint-order: stroke fill;
+      font-size: 72px;
+      line-height: 1;
+    }
+
+    .paw {
+      font-size: 64px;
+      line-height: 1;
+    }
+
+    .a1 { left: 66px; top: 94px; transform: rotate(-15deg); }
+    .a2 { right: 94px; top: 178px; transform: rotate(18deg) scale(0.88); }
+    .a3 { left: 74px; bottom: 194px; transform: rotate(12deg) scale(0.75); }
+    .a4 { right: 278px; bottom: 188px; transform: rotate(-20deg) scale(0.7); }
+    .a5 { left: 54px; top: 1010px; transform: rotate(-16deg) scale(0.82); }
+    .a6 { right: 36px; top: 632px; transform: rotate(-18deg) scale(0.72); }
+
+    .blob {
+      position: absolute;
+      z-index: 1;
+      border: 7px solid var(--white);
+      box-shadow: 0 16px 34px rgba(75, 46, 31, 0.12);
+      pointer-events: none;
+    }
+
+    .blob-1 {
+      width: 150px;
+      height: 128px;
+      top: 184px;
+      left: -44px;
+      border-radius: 42% 58% 64% 36%;
+      background: var(--blue);
+      transform: rotate(20deg);
+    }
+
+    .blob-2 {
+      width: 166px;
+      height: 146px;
+      top: 858px;
+      right: -58px;
+      border-radius: 58% 42% 36% 64%;
+      background: var(--butter);
+      transform: rotate(-14deg);
+    }
+
+    .blob-3 {
+      width: 176px;
+      height: 150px;
+      bottom: -54px;
+      left: 430px;
+      border-radius: 50% 50% 38% 62%;
+      background: var(--lilac);
+      transform: rotate(5deg);
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: transparent;
+      }
+
+      .ph-canvas {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ph-canvas template-poca-purikura" role="img" aria-label="Polara Poca Purikura photobooth frame">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+
+    <div class="ph-title-group">
+      <div class="ph-title-bubble">
+        <h1 class="ph-title">Polara</h1>
+      </div>
+    </div>
+    <div class="ph-subtitle">POCA PURIKURA</div>
+
+    <div class="ph-slot-wrap">
+      <div class="ph-slot" data-slot="1"></div>
+    </div>
+
+    <!--
+      ASSET: Main Poca mascot.
+      Expected file:
+      ../../../assets/poca/poca-porikura/kucing_lucu_dengan_senyum_dan_lambaian.png
+    -->
+    <img
+      class="asset-sticker asset-poca-main"
+      src="assets/poca/poca-porikura/poca-wink.png"
+      alt=""
+      aria-hidden="true"
+    />
+
+    <!--
+      ASSET: Poca holding camera.
+      Expected file:
+      ../../../assets/poca/poca-porikura/kucing_lucu_dengan_kamera_pink.png
+    -->
+    <img
+      class="asset-sticker asset-poca-camera"
+      src="assets/poca/poca-porikura/poca-camera.png"
+      alt=""
+      aria-hidden="true"
+    />
+
+    <!--
+      ASSET: Optional peeking Poca.
+      Expected file:
+      ../../../assets/poca/poca-porikura/kucing_menggemaskan_dengan_senyuman_lebar.png
+      If this feels too crowded, remove this img tag only.
+    -->
+    <img
+      class="asset-sticker asset-poca-peek"
+      src="assets/poca/poca-porikura/poca-peeking.png"
+      alt=""
+      aria-hidden="true"
+    />
+
+    <!--
+      ASSET: "cute!" sticker.
+      Expected file:
+      ../../../assets/poca/poca-porikura/kata_lucu_dengan_aksen_pastel.png
+    -->
+    <img
+      class="asset-sticker asset-cute"
+      src="assets/poca/poca-porikura/sticker-cute.png"
+      alt=""
+      aria-hidden="true"
+    />
+
+    <!--
+      ASSET: "snap!" sticker.
+      Expected file:
+      ../../../assets/poca/poca-porikura/stiker_kata_snap_lucu_dan_ceria.png
+    -->
+    <img
+      class="asset-sticker asset-snap"
+      src="assets/poca/poca-porikura/sticker-snap.png"
+      alt=""
+      aria-hidden="true"
+    />
+
+    <!--
+      ASSET: "purr-fect!" sticker.
+      Expected file:
+      ../../../assets/poca/poca-porikura/stiker_lucu_bertuliskan_purr_fect.png
+    -->
+    <img
+      class="asset-sticker asset-purrfect"
+      src="assets/poca/poca-porikura/sticker-purrfect.png"
+      alt=""
+      aria-hidden="true"
+    />
+
+    <!--
+      ASSET: Watermark sticker.
+      Expected file:
+      ../../../assets/poca/poca-porikura/stiker_lucu_made_with_polara.png
+    -->
+    <img
+      class="asset-sticker asset-watermark"
+      src="assets/poca/poca-porikura/watermark-made-with-polara.png"
+      alt=""
+      aria-hidden="true"
+    />
+
+    <div class="css-accent sparkle a1">✦</div>
+    <div class="css-accent sparkle blue a2">✦</div>
+    <div class="css-accent sparkle a3">✦</div>
+    <div class="css-accent sparkle blue a4">✦</div>
+    <div class="css-accent heart a5">♥</div>
+    <div class="css-accent paw a6">🐾</div>
+
+    <div class="ph-caption">Nama · Kampus</div>
+    <div class="ph-date">02 Jul 2026</div>
+    <div class="ph-brand">made with Polara</div>
+    <div class="ph-sticker-layer"></div>
+  </div>
+</body>
+</html>

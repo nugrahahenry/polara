@@ -1,0 +1,829 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080, initial-scale=1.0" />
+  <title>Polara Template — Seoul Snap Y2K Single</title>
+
+  <!--
+    Template: Seoul Snap Y2K Single
+    Type: Asset-light HTML/CSS photobooth template
+    Fonts: Fredoka, Nunito, Space Mono
+    Canvas: 1080 × 1350 px
+    Output target: PNG export from Polara compositor
+
+    Recommended file location:
+    C:\HenryDev\1HenryDev\polara\src\modules\templates\seoul-snap-y2k.single.html
+
+    Optional asset folder:
+    C:\HenryDev\1HenryDev\polara\assets\poca\poca-porikura
+
+    Optional assets used:
+    ../../../assets/poca/poca-porikura/kucing_lucu_dengan_kamera_pink.png
+    ../../../assets/poca/poca-porikura/stiker_lucu_made_with_polara.png
+
+    If your asset filenames are different, only change the src="" values below.
+
+    Template contract:
+    - .ph-canvas
+    - .ph-slot[data-slot="1"]
+    - .ph-caption
+    - .ph-date
+    - .ph-brand
+    - .ph-sticker-layer
+
+    No JavaScript. No framework.
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --pink: #ffc2d8;
+      --pink-soft: #ffe6f1;
+      --pink-strong: #ff8fbd;
+      --pink-deep: #e85d99;
+
+      --blue: #bfe4ff;
+      --blue-soft: #e7f6ff;
+      --blue-strong: #6ec7ff;
+
+      --lilac: #c9b6ff;
+      --lilac-soft: #efe9ff;
+      --butter: #ffe8a3;
+      --cream: #fff4e6;
+      --white: #ffffff;
+      --silver: #d8d8d8;
+
+      --ink: #38261f;
+      --muted: #7e6a62;
+      --line: rgba(56, 38, 31, 0.18);
+      --shadow: rgba(56, 38, 31, 0.18);
+      --pink-shadow: rgba(232, 93, 153, 0.22);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: #eef3fb;
+      font-family: "Nunito", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 40px;
+    }
+
+    .ph-canvas {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      isolation: isolate;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 13% 10%, rgba(255, 194, 216, 0.95) 0 7%, transparent 8%),
+        radial-gradient(circle at 88% 13%, rgba(191, 228, 255, 0.95) 0 8%, transparent 9%),
+        radial-gradient(circle at 18% 87%, rgba(201, 182, 255, 0.9) 0 8%, transparent 9%),
+        radial-gradient(circle at 88% 86%, rgba(255, 232, 163, 0.9) 0 9%, transparent 10%),
+        linear-gradient(145deg, #fffaf7 0%, #fff4fb 38%, #eaf6ff 72%, #f3edff 100%);
+    }
+
+    .ph-canvas::before {
+      content: "";
+      position: absolute;
+      inset: 36px;
+      border-radius: 56px;
+      border: 7px solid rgba(255, 255, 255, 0.92);
+      box-shadow:
+        0 0 0 4px rgba(255, 143, 189, 0.28),
+        0 26px 72px rgba(56, 38, 31, 0.14);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .ph-canvas::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(255, 143, 189, 0.14) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(110, 199, 255, 0.13) 1px, transparent 1px),
+        radial-gradient(circle, rgba(56, 38, 31, 0.08) 0 2px, transparent 2.5px);
+      background-size: 40px 40px, 40px 40px, 70px 70px;
+      background-position: 0 0, 0 0, 20px 18px;
+      opacity: 0.58;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* Main digital camera panel */
+    .camera-shell {
+      position: absolute;
+      left: 94px;
+      top: 126px;
+      width: 892px;
+      height: 1100px;
+      z-index: 2;
+      border-radius: 58px;
+      border: 8px solid var(--white);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.9), rgba(255,255,255,0.76)),
+        linear-gradient(135deg, rgba(255,194,216,0.5), rgba(191,228,255,0.48), rgba(201,182,255,0.44));
+      box-shadow:
+        0 34px 82px rgba(56, 38, 31, 0.2),
+        inset 0 0 0 4px rgba(255, 143, 189, 0.36);
+      overflow: hidden;
+    }
+
+    .camera-shell::before {
+      content: "";
+      position: absolute;
+      inset: 22px;
+      border-radius: 44px;
+      border: 2px dashed rgba(56, 38, 31, 0.22);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .top-bar {
+      position: absolute;
+      left: 32px;
+      top: 28px;
+      right: 32px;
+      height: 86px;
+      border-radius: 28px;
+      border: 4px solid rgba(56, 38, 31, 0.16);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.92), rgba(255,244,251,0.86));
+      box-shadow: 0 10px 22px rgba(56, 38, 31, 0.08);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 26px;
+      z-index: 4;
+    }
+
+    .top-left,
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .rec-dot {
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background: #ff5f86;
+      box-shadow: 0 0 0 5px rgba(255, 95, 134, 0.16);
+    }
+
+    .cam-label {
+      font-family: "Space Mono", monospace;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+    }
+
+    .top-heart {
+      font-size: 30px;
+      line-height: 1;
+      color: var(--pink-strong);
+      -webkit-text-stroke: 2px var(--white);
+      paint-order: stroke fill;
+    }
+
+    .battery {
+      width: 74px;
+      height: 32px;
+      border: 4px solid var(--ink);
+      border-radius: 8px;
+      position: relative;
+      background: rgba(255,255,255,0.72);
+    }
+
+    .battery::before {
+      content: "";
+      position: absolute;
+      right: -12px;
+      top: 8px;
+      width: 8px;
+      height: 14px;
+      border-radius: 0 5px 5px 0;
+      background: var(--ink);
+    }
+
+    .battery::after {
+      content: "";
+      position: absolute;
+      inset: 5px 18px 5px 5px;
+      border-radius: 4px;
+      background: linear-gradient(90deg, var(--pink-strong), var(--blue-strong));
+    }
+
+    .flash-symbol {
+      font-family: "Space Mono", monospace;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .side-panel {
+      position: absolute;
+      left: 32px;
+      top: 142px;
+      width: 96px;
+      height: 760px;
+      border-radius: 28px;
+      border: 4px solid rgba(56, 38, 31, 0.13);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.72), rgba(231,246,255,0.82));
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,0.7);
+      z-index: 4;
+    }
+
+    .slider {
+      position: absolute;
+      left: 50%;
+      top: 120px;
+      width: 18px;
+      height: 260px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      background: rgba(255,255,255,0.78);
+      border: 3px solid rgba(56, 38, 31, 0.16);
+    }
+
+    .slider::before {
+      content: "";
+      position: absolute;
+      left: 50%;
+      top: 56px;
+      width: 44px;
+      height: 92px;
+      transform: translateX(-50%);
+      border-radius: 999px;
+      border: 4px solid var(--white);
+      background: linear-gradient(180deg, var(--pink), var(--pink-strong));
+      box-shadow: 0 8px 18px rgba(56, 38, 31, 0.12);
+    }
+
+    .side-button {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 48px;
+      height: 48px;
+      border-radius: 16px;
+      border: 4px solid var(--white);
+      display: grid;
+      place-items: center;
+      font-size: 26px;
+      font-weight: 900;
+      box-shadow: 0 8px 16px rgba(56, 38, 31, 0.1);
+    }
+
+    .btn-plus { top: 34px; background: var(--pink); }
+    .btn-play { top: 430px; background: var(--blue); }
+    .btn-heart { top: 514px; background: var(--lilac); }
+    .btn-star { top: 598px; background: var(--butter); }
+
+    .right-meta {
+      position: absolute;
+      right: 32px;
+      top: 142px;
+      width: 96px;
+      height: 760px;
+      border-radius: 28px;
+      border: 4px solid rgba(56, 38, 31, 0.13);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.72), rgba(255,230,241,0.82));
+      box-shadow: inset 0 0 0 3px rgba(255,255,255,0.7);
+      z-index: 4;
+      padding-top: 32px;
+      text-align: center;
+    }
+
+    .meta-text {
+      font-family: "Space Mono", monospace;
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1.45;
+      color: var(--ink);
+      writing-mode: vertical-rl;
+      margin: 0 auto;
+      letter-spacing: 0.04em;
+    }
+
+    .mini-dots {
+      position: absolute;
+      bottom: 38px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 50px;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 7px;
+    }
+
+    .mini-dots span {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      background: rgba(56, 38, 31, 0.42);
+    }
+
+    /* Photo slot */
+    .ph-slot-wrap {
+      position: absolute;
+      left: 154px;
+      top: 154px;
+      width: 772px;
+      height: 820px;
+      border-radius: 44px;
+      padding: 18px;
+      z-index: 3;
+      background:
+        linear-gradient(135deg, rgba(255,255,255,0.94), rgba(255,244,251,0.86));
+      border: 5px solid rgba(56, 38, 31, 0.14);
+      box-shadow:
+        0 22px 54px rgba(56, 38, 31, 0.14),
+        inset 0 0 0 4px rgba(255, 255, 255, 0.8);
+    }
+
+    .ph-slot {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 32px;
+      border: 5px solid rgba(255, 143, 189, 0.48);
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255, 194, 216, 0.7), transparent 34%),
+        radial-gradient(circle at 80% 80%, rgba(191, 228, 255, 0.7), transparent 34%),
+        linear-gradient(135deg, #fff8f1, #f8f2ff);
+      display: grid;
+      place-items: center;
+    }
+
+    .ph-slot::before {
+      content: "FOTO 1";
+      position: absolute;
+      z-index: 1;
+      padding: 16px 28px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.7);
+      border: 4px solid rgba(56, 38, 31, 0.12);
+      color: rgba(56, 38, 31, 0.48);
+      font-family: "Fredoka", "Nunito", sans-serif;
+      font-size: 42px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+    }
+
+    .ph-slot img {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .bottom-console {
+      position: absolute;
+      left: 32px;
+      right: 32px;
+      bottom: 34px;
+      height: 132px;
+      border-radius: 30px;
+      border: 4px solid rgba(56, 38, 31, 0.14);
+      background:
+        linear-gradient(180deg, rgba(255,255,255,0.86), rgba(255,230,241,0.82));
+      box-shadow:
+        inset 0 0 0 3px rgba(255,255,255,0.76),
+        0 14px 28px rgba(56, 38, 31, 0.08);
+      z-index: 5;
+    }
+
+    .console-speaker {
+      position: absolute;
+      left: 34px;
+      top: 34px;
+      width: 130px;
+      height: 56px;
+      background-image: radial-gradient(circle, rgba(56, 38, 31, 0.65) 0 3px, transparent 3.5px);
+      background-size: 18px 18px;
+      opacity: 0.78;
+    }
+
+    .timestamp {
+      position: absolute;
+      left: 194px;
+      top: 34px;
+      padding: 13px 20px;
+      border-radius: 14px;
+      background: var(--blue-soft);
+      border: 3px solid rgba(56, 38, 31, 0.12);
+      font-family: "Space Mono", monospace;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .ph-brand {
+      position: absolute;
+      right: 206px;
+      top: 26px;
+      z-index: 7;
+      font-size: 0;
+      color: transparent;
+      width: 230px;
+      height: 74px;
+    }
+
+    .brand-fallback {
+      position: absolute;
+      right: 206px;
+      top: 28px;
+      min-width: 220px;
+      height: 70px;
+      display: grid;
+      place-items: center;
+      padding: 10px 20px;
+      border: 4px solid var(--white);
+      border-radius: 999px;
+      background: var(--pink);
+      box-shadow: 0 10px 18px rgba(56, 38, 31, 0.1);
+      font-family: "Fredoka", "Nunito", sans-serif;
+      font-size: 28px;
+      font-weight: 700;
+      color: var(--ink);
+      z-index: 5;
+    }
+
+    .asset-watermark {
+      position: absolute;
+      right: 188px;
+      top: 12px;
+      width: 260px;
+      height: auto;
+      z-index: 8;
+      object-fit: contain;
+      filter: drop-shadow(0 12px 14px rgba(56, 38, 31, 0.12));
+      pointer-events: none;
+    }
+
+    .console-icons {
+      position: absolute;
+      right: 32px;
+      top: 34px;
+      display: flex;
+      gap: 12px;
+      z-index: 7;
+    }
+
+    .console-icon {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      border: 4px solid var(--white);
+      display: grid;
+      place-items: center;
+      font-size: 25px;
+      background: var(--cream);
+      box-shadow: 0 8px 14px rgba(56, 38, 31, 0.1);
+    }
+
+    /* Editable dynamic fields */
+    .ph-caption {
+      position: absolute;
+      left: 180px;
+      right: 180px;
+      bottom: 240px;
+      z-index: 9;
+      min-height: 56px;
+      padding: 13px 26px;
+      border: 4px solid rgba(56, 38, 31, 0.12);
+      border-radius: 18px;
+      background: rgba(255, 255, 255, 0.72);
+      box-shadow: 0 10px 22px rgba(56, 38, 31, 0.09);
+      font-family: "Space Mono", monospace;
+      font-size: 24px;
+      font-weight: 700;
+      text-align: center;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      backdrop-filter: blur(8px);
+    }
+
+    .ph-date {
+      position: absolute;
+      left: 186px;
+      bottom: 184px;
+      z-index: 9;
+      padding: 10px 18px;
+      border-radius: 14px;
+      border: 3px solid rgba(56, 38, 31, 0.12);
+      background: rgba(255, 255, 255, 0.72);
+      font-family: "Space Mono", monospace;
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--ink);
+    }
+
+    .ph-sticker-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    /* Optional asset */
+    .asset-poca-camera {
+      position: absolute;
+      width: 152px;
+      right: 52px;
+      top: 56px;
+      z-index: 12;
+      transform: rotate(5deg);
+      filter: drop-shadow(0 16px 18px rgba(56, 38, 31, 0.14));
+      pointer-events: none;
+    }
+
+    /* Y2K decorations */
+    .y2k-sticker {
+      position: absolute;
+      z-index: 10;
+      pointer-events: none;
+      user-select: none;
+      filter: drop-shadow(0 10px 14px rgba(56, 38, 31, 0.12));
+    }
+
+    .bubble {
+      display: grid;
+      place-items: center;
+      min-width: 112px;
+      padding: 14px 20px;
+      border: 5px solid var(--white);
+      border-radius: 999px;
+      font-family: "Fredoka", "Nunito", sans-serif;
+      font-size: 30px;
+      font-weight: 700;
+      line-height: 1;
+      color: var(--ink);
+      box-shadow: 0 10px 18px rgba(56, 38, 31, 0.1);
+    }
+
+    .bubble-love {
+      left: 74px;
+      top: 236px;
+      background: var(--pink);
+      transform: rotate(-9deg);
+    }
+
+    .bubble-cute {
+      right: 70px;
+      top: 808px;
+      background: var(--lilac);
+      transform: rotate(8deg);
+    }
+
+    .bubble-vibe {
+      left: 108px;
+      bottom: 318px;
+      background: var(--blue);
+      transform: rotate(5deg);
+    }
+
+    .pixel-heart {
+      font-size: 62px;
+      line-height: 1;
+      color: var(--pink-strong);
+      -webkit-text-stroke: 5px var(--white);
+      paint-order: stroke fill;
+    }
+
+    .heart-1 { left: 64px; top: 764px; transform: rotate(-12deg); }
+    .heart-2 { right: 48px; top: 294px; transform: rotate(14deg) scale(0.72); }
+    .heart-3 { right: 174px; bottom: 280px; transform: rotate(-6deg) scale(0.58); }
+
+    .sparkle {
+      font-size: 54px;
+      line-height: 1;
+      color: var(--blue-strong);
+      -webkit-text-stroke: 4px var(--white);
+      paint-order: stroke fill;
+    }
+
+    .sparkle.gold { color: var(--butter); }
+    .sparkle.pink { color: var(--pink-strong); }
+
+    .sparkle-1 { left: 78px; top: 92px; transform: rotate(-12deg); }
+    .sparkle-2 { right: 94px; top: 218px; transform: rotate(18deg) scale(0.85); }
+    .sparkle-3 { left: 74px; bottom: 166px; transform: rotate(12deg) scale(0.72); }
+    .sparkle-4 { right: 80px; bottom: 168px; transform: rotate(-10deg) scale(0.7); }
+
+    .mini-device {
+      position: absolute;
+      width: 86px;
+      height: 116px;
+      border: 5px solid var(--white);
+      border-radius: 22px;
+      background:
+        linear-gradient(180deg, var(--lilac-soft), var(--blue-soft));
+      box-shadow: 0 10px 18px rgba(56, 38, 31, 0.1);
+      z-index: 9;
+    }
+
+    .mini-device::before {
+      content: "";
+      position: absolute;
+      left: 18px;
+      right: 18px;
+      top: 18px;
+      height: 54px;
+      border-radius: 12px;
+      background: rgba(255,255,255,0.82);
+      border: 3px solid rgba(56, 38, 31, 0.1);
+    }
+
+    .mini-device::after {
+      content: "♡";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 10px;
+      text-align: center;
+      font-size: 26px;
+      font-weight: 900;
+      color: var(--pink-deep);
+    }
+
+    .device-1 { left: 72px; top: 520px; transform: rotate(-8deg); }
+    .device-2 { right: 72px; bottom: 378px; transform: rotate(9deg) scale(0.86); }
+
+    .corner-tag {
+      position: absolute;
+      left: 164px;
+      top: 1060px;
+      z-index: 8;
+      padding: 10px 16px;
+      border: 4px solid var(--white);
+      border-radius: 16px;
+      background: var(--butter-soft);
+      box-shadow: 0 10px 18px rgba(56, 38, 31, 0.09);
+      font-family: "Space Mono", monospace;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--ink);
+      transform: rotate(-2deg);
+    }
+
+    .shot-number {
+      position: absolute;
+      right: 168px;
+      top: 1060px;
+      z-index: 8;
+      padding: 10px 16px;
+      border: 4px solid var(--white);
+      border-radius: 16px;
+      background: var(--blue-soft);
+      box-shadow: 0 10px 18px rgba(56, 38, 31, 0.09);
+      font-family: "Space Mono", monospace;
+      font-size: 19px;
+      font-weight: 700;
+      color: var(--ink);
+      transform: rotate(2deg);
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: transparent;
+      }
+
+      .ph-canvas {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ph-canvas template-seoul-snap-y2k" role="img" aria-label="Polara Seoul Snap Y2K photobooth frame">
+    <div class="camera-shell">
+      <div class="top-bar">
+        <div class="top-left">
+          <span class="rec-dot"></span>
+          <span class="cam-label">DIGI CAM 2003</span>
+        </div>
+        <div class="top-right">
+          <span class="top-heart">♡</span>
+          <span class="top-heart">♡</span>
+          <span class="flash-symbol">AUTO ⚡</span>
+          <span class="battery"></span>
+        </div>
+      </div>
+
+      <div class="side-panel">
+        <div class="side-button btn-plus">+</div>
+        <div class="slider"></div>
+        <div class="side-button btn-play">▶</div>
+        <div class="side-button btn-heart">♡</div>
+        <div class="side-button btn-star">✦</div>
+      </div>
+
+      <div class="right-meta">
+        <p class="meta-text">ISO 200 · AUTO · SO CUTE</p>
+        <div class="mini-dots">
+          <span></span><span></span><span></span><span></span>
+          <span></span><span></span><span></span><span></span>
+        </div>
+      </div>
+
+      <div class="ph-slot-wrap">
+        <div class="ph-slot" data-slot="1"></div>
+      </div>
+
+      <div class="bottom-console">
+        <div class="console-speaker"></div>
+        <div class="timestamp">00:02:03</div>
+
+        <!-- fallback text remains visible if PNG watermark is missing -->
+        <div class="brand-fallback">made with Polara</div>
+
+        <!--
+          OPTIONAL ASSET: Watermark sticker.
+          Expected file:
+          ../../../assets/poca/poca-porikura/stiker_lucu_made_with_polara.png
+          Remove this img if you prefer the CSS fallback only.
+        -->
+        <img
+          class="asset-watermark"
+          src="assets/poca/poca-porikura/watermark-made-with-polara.png"
+          alt=""
+          aria-hidden="true"
+        />
+
+        <div class="console-icons">
+          <div class="console-icon">▣</div>
+          <div class="console-icon">◉</div>
+          <div class="console-icon">♡</div>
+        </div>
+      </div>
+    </div>
+
+    <!--
+      OPTIONAL ASSET: Poca holding camera.
+      Expected file:
+      ../../../assets/poca/poca-porikura/kucing_lucu_dengan_kamera_pink.png
+      Remove this img if you want a cleaner Y2K template.
+    -->
+    <img
+      class="asset-poca-camera"
+      src="assets/poca/poca-porikura/poca-camera.png"
+      alt=""
+      aria-hidden="true"
+    />
+
+    <div class="y2k-sticker bubble bubble-love">love it</div>
+    <div class="y2k-sticker bubble bubble-cute">so cute</div>
+    <div class="y2k-sticker bubble bubble-vibe">00s vibe</div>
+
+    <div class="y2k-sticker pixel-heart heart-1">♥</div>
+    <div class="y2k-sticker pixel-heart heart-2">♥</div>
+    <div class="y2k-sticker pixel-heart heart-3">♥</div>
+
+    <div class="y2k-sticker sparkle sparkle-1">✦</div>
+    <div class="y2k-sticker sparkle gold sparkle-2">✦</div>
+    <div class="y2k-sticker sparkle pink sparkle-3">✦</div>
+    <div class="y2k-sticker sparkle sparkle-4">✦</div>
+
+    <div class="mini-device device-1"></div>
+    <div class="mini-device device-2"></div>
+
+    <div class="corner-tag">good day ♡</div>
+    <div class="shot-number">SHOT 01</div>
+
+    <div class="ph-caption">POLARA_PURR</div>
+    <div class="ph-date">2003 · 02 · 03</div>
+    <div class="ph-brand">made with Polara</div>
+    <div class="ph-sticker-layer"></div>
+  </div>
+</body>
+</html>

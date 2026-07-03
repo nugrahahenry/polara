@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080, initial-scale=1.0" />
+  <title>Polara Template — Cyber Y2K Neon Single</title>
+
+  <!--
+    Template: Cyber Y2K Neon Single
+    Type: CSS-heavy neon / cyber editorial photobooth template
+    Fonts: Orbitron, Space Mono, Rajdhani
+    Canvas: 1080 × 1350 px
+    Slots: 1 photo slot
+    Output target: PNG export from Polara compositor
+
+    Recommended file location:
+    C:\HenryDev\1HenryDev\polara\src\modules\templates\cyber-y2k-neon.single.html
+
+    Asset requirement:
+    - No required PNG assets.
+    - Neon grid, chrome panels, glitch lines, HUD labels, and glow are CSS-based.
+    - Designed as the bold/futuristic option in the Polara frame library.
+
+    Optional:
+    - You can add a small Polara/Poca watermark asset later if needed.
+    - Current .ph-brand uses clean CSS text.
+
+    Template contract:
+    - .ph-canvas
+    - .ph-slot[data-slot="1"]
+    - .ph-caption
+    - .ph-date
+    - .ph-brand
+    - .ph-sticker-layer
+
+    No JavaScript. No framework.
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800&family=Rajdhani:wght@600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --black: #070611;
+      --deep: #0d0a22;
+      --panel: rgba(17, 14, 46, 0.78);
+      --panel-2: rgba(255, 255, 255, 0.08);
+
+      --cyan: #34e7ff;
+      --cyan-soft: rgba(52, 231, 255, 0.36);
+      --blue: #3478ff;
+      --violet: #8f4dff;
+      --purple: #6b2dff;
+      --pink: #ff3dbb;
+      --pink-soft: rgba(255, 61, 187, 0.35);
+      --lime: #c6ff4a;
+      --white: #f8fbff;
+      --silver: #dce7ff;
+
+      --ink: #f8fbff;
+      --muted: rgba(248, 251, 255, 0.66);
+      --line: rgba(248, 251, 255, 0.18);
+      --shadow: rgba(0, 0, 0, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: #080711;
+      font-family: "Rajdhani", system-ui, sans-serif;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 40px;
+    }
+
+    .ph-canvas {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      isolation: isolate;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 18% 14%, rgba(255, 61, 187, 0.38) 0 12%, transparent 30%),
+        radial-gradient(circle at 82% 18%, rgba(52, 231, 255, 0.32) 0 12%, transparent 28%),
+        radial-gradient(circle at 50% 86%, rgba(143, 77, 255, 0.34) 0 16%, transparent 34%),
+        linear-gradient(180deg, #0b0618 0%, #090817 42%, #070611 100%);
+      box-shadow: 0 34px 100px rgba(0,0,0,0.48);
+    }
+
+    /* Cyber grid + noise */
+    .ph-canvas::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background-image:
+        linear-gradient(rgba(52, 231, 255, 0.12) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255, 61, 187, 0.10) 1px, transparent 1px),
+        radial-gradient(circle, rgba(248,251,255,0.3) 0 1px, transparent 1.4px);
+      background-size: 46px 46px, 46px 46px, 28px 28px;
+      background-position: 0 0, 0 0, 8px 10px;
+      opacity: 0.42;
+      mix-blend-mode: screen;
+    }
+
+    .ph-canvas::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 1;
+      pointer-events: none;
+      background:
+        linear-gradient(180deg, transparent 0 48%, rgba(52, 231, 255, 0.08) 49%, transparent 50% 100%),
+        linear-gradient(90deg, rgba(255, 61, 187, 0.18), transparent 20%, transparent 80%, rgba(52, 231, 255, 0.16)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(248,251,255,0.035) 0 2px,
+          transparent 2px 9px
+        );
+      opacity: 0.72;
+      mix-blend-mode: screen;
+    }
+
+    .outer-border {
+      position: absolute;
+      inset: 42px;
+      z-index: 2;
+      border-radius: 36px;
+      border: 3px solid rgba(52, 231, 255, 0.55);
+      box-shadow:
+        0 0 28px rgba(52, 231, 255, 0.28),
+        inset 0 0 42px rgba(255, 61, 187, 0.14);
+      pointer-events: none;
+    }
+
+    .outer-border::before,
+    .outer-border::after {
+      content: "";
+      position: absolute;
+      width: 154px;
+      height: 154px;
+      border-color: var(--pink);
+      border-style: solid;
+      filter: drop-shadow(0 0 18px rgba(255,61,187,0.55));
+    }
+
+    .outer-border::before {
+      left: -4px;
+      top: -4px;
+      border-width: 8px 0 0 8px;
+      border-radius: 34px 0 0 0;
+    }
+
+    .outer-border::after {
+      right: -4px;
+      bottom: -4px;
+      border-width: 0 8px 8px 0;
+      border-radius: 0 0 34px 0;
+    }
+
+    .chrome-orb {
+      position: absolute;
+      z-index: 2;
+      border-radius: 999px;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 30% 25%, rgba(255,255,255,0.95) 0 8%, transparent 9%),
+        radial-gradient(circle at 70% 75%, rgba(255,61,187,0.62), transparent 45%),
+        linear-gradient(135deg, rgba(52,231,255,0.85), rgba(143,77,255,0.8), rgba(255,61,187,0.78));
+      box-shadow:
+        0 0 24px rgba(52,231,255,0.36),
+        inset 0 0 30px rgba(255,255,255,0.2);
+      opacity: 0.82;
+    }
+
+    .orb-1 {
+      width: 130px;
+      height: 130px;
+      left: 76px;
+      top: 210px;
+    }
+
+    .orb-2 {
+      width: 88px;
+      height: 88px;
+      right: 84px;
+      top: 280px;
+      transform: rotate(20deg);
+    }
+
+    .orb-3 {
+      width: 116px;
+      height: 116px;
+      right: 96px;
+      bottom: 246px;
+      transform: rotate(-12deg);
+    }
+
+    .top-hud {
+      position: absolute;
+      left: 82px;
+      right: 82px;
+      top: 70px;
+      z-index: 8;
+      height: 132px;
+      display: grid;
+      grid-template-columns: 190px 1fr 190px;
+      gap: 18px;
+      align-items: center;
+    }
+
+    .hud-box {
+      min-height: 86px;
+      border: 2px solid rgba(248, 251, 255, 0.2);
+      background:
+        linear-gradient(135deg, rgba(52, 231, 255, 0.12), rgba(255, 61, 187, 0.1)),
+        rgba(7, 6, 17, 0.5);
+      box-shadow:
+        0 0 18px rgba(52, 231, 255, 0.12),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      backdrop-filter: blur(14px);
+      padding: 14px;
+      display: grid;
+      align-content: center;
+      font-family: "Space Mono", monospace;
+      font-size: 13px;
+      line-height: 1.35;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+
+    .hud-box strong {
+      color: var(--cyan);
+      text-shadow: 0 0 10px rgba(52,231,255,0.5);
+    }
+
+    .title-block {
+      text-align: center;
+      align-self: center;
+    }
+
+    .template-title {
+      margin: 0;
+      font-family: "Orbitron", "Rajdhani", sans-serif;
+      font-size: 56px;
+      line-height: 0.9;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-shadow:
+        0 0 10px rgba(52,231,255,0.54),
+        0 0 30px rgba(255,61,187,0.28);
+    }
+
+    .template-title span {
+      color: var(--pink);
+      text-shadow:
+        0 0 12px rgba(255,61,187,0.68),
+        0 0 34px rgba(255,61,187,0.32);
+    }
+
+    .template-subtitle {
+      margin: 12px 0 0;
+      font-family: "Space Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: var(--cyan);
+      text-transform: uppercase;
+    }
+
+    .main-panel {
+      position: absolute;
+      left: 102px;
+      top: 240px;
+      width: 876px;
+      height: 872px;
+      z-index: 5;
+      border-radius: 36px;
+      padding: 18px;
+      background:
+        linear-gradient(135deg, rgba(52,231,255,0.18), rgba(255,61,187,0.14)),
+        rgba(9, 8, 23, 0.72);
+      border: 2px solid rgba(248,251,255,0.18);
+      box-shadow:
+        0 0 0 1px rgba(52,231,255,0.24),
+        0 0 40px rgba(52,231,255,0.16),
+        0 28px 70px rgba(0,0,0,0.42),
+        inset 0 0 46px rgba(255,61,187,0.08);
+      backdrop-filter: blur(8px);
+    }
+
+    .main-panel::before {
+      content: "";
+      position: absolute;
+      inset: -12px;
+      border-radius: 48px;
+      border: 3px solid rgba(255, 61, 187, 0.34);
+      box-shadow:
+        0 0 24px rgba(255,61,187,0.28),
+        inset 0 0 22px rgba(52,231,255,0.1);
+      pointer-events: none;
+    }
+
+    .main-panel::after {
+      content: "";
+      position: absolute;
+      left: 34px;
+      right: 34px;
+      top: -8px;
+      height: 16px;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--pink), transparent);
+      filter: blur(12px);
+      opacity: 0.78;
+      pointer-events: none;
+    }
+
+    .ph-slot {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border-radius: 26px;
+      border: 3px solid rgba(52, 231, 255, 0.48);
+      background:
+        radial-gradient(circle at 20% 15%, rgba(255,61,187,0.24), transparent 34%),
+        radial-gradient(circle at 82% 80%, rgba(52,231,255,0.22), transparent 34%),
+        linear-gradient(135deg, rgba(255,255,255,0.08), rgba(7,6,17,0.88));
+      display: grid;
+      place-items: center;
+      box-shadow:
+        inset 0 0 60px rgba(0,0,0,0.45),
+        0 0 24px rgba(52,231,255,0.18);
+    }
+
+    .ph-slot::before {
+      content: "FOTO 1";
+      position: absolute;
+      z-index: 1;
+      padding: 16px 28px;
+      border: 2px solid rgba(248,251,255,0.24);
+      background: rgba(7, 6, 17, 0.52);
+      color: rgba(248,251,255,0.52);
+      font-family: "Orbitron", "Space Mono", monospace;
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-shadow: 0 0 12px rgba(52,231,255,0.28);
+      clip-path: polygon(8% 0, 100% 0, 92% 100%, 0 100%);
+    }
+
+    .ph-slot img {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: contrast(1.04) saturate(1.1);
+    }
+
+    .ph-slot::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 3;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, rgba(255,61,187,0.14), transparent 18%, transparent 82%, rgba(52,231,255,0.14)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(248,251,255,0.035) 0 2px,
+          transparent 2px 8px
+        );
+      mix-blend-mode: screen;
+    }
+
+    .corner-hud {
+      position: absolute;
+      z-index: 7;
+      width: 168px;
+      height: 86px;
+      border: 2px solid rgba(52,231,255,0.42);
+      background: rgba(7,6,17,0.5);
+      box-shadow: 0 0 18px rgba(52,231,255,0.18);
+      display: grid;
+      align-content: center;
+      padding: 10px 14px;
+      font-family: "Space Mono", monospace;
+      font-size: 12px;
+      font-weight: 700;
+      line-height: 1.35;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .corner-hud b {
+      color: var(--pink);
+      text-shadow: 0 0 10px rgba(255,61,187,0.48);
+    }
+
+    .hud-a {
+      left: 72px;
+      top: 482px;
+      transform: rotate(-5deg);
+    }
+
+    .hud-b {
+      right: 68px;
+      top: 872px;
+      transform: rotate(5deg);
+    }
+
+    .side-label {
+      position: absolute;
+      z-index: 8;
+      font-family: "Space Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      color: rgba(248,251,255,0.58);
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+      text-shadow: 0 0 12px rgba(52,231,255,0.22);
+    }
+
+    .side-left {
+      left: 54px;
+      top: 356px;
+    }
+
+    .side-right {
+      right: 54px;
+      bottom: 310px;
+      transform: rotate(180deg);
+    }
+
+    .glitch-line {
+      position: absolute;
+      z-index: 9;
+      height: 8px;
+      border-radius: 999px;
+      pointer-events: none;
+      background: linear-gradient(90deg, transparent, var(--cyan), var(--pink), transparent);
+      filter: blur(0.3px) drop-shadow(0 0 14px rgba(52,231,255,0.5));
+      opacity: 0.82;
+    }
+
+    .g1 {
+      width: 220px;
+      left: 82px;
+      top: 224px;
+      transform: rotate(-4deg);
+    }
+
+    .g2 {
+      width: 280px;
+      right: 74px;
+      bottom: 276px;
+      transform: rotate(3deg);
+    }
+
+    .g3 {
+      width: 160px;
+      right: 160px;
+      top: 1142px;
+      transform: rotate(-2deg);
+    }
+
+    .bottom-console {
+      position: absolute;
+      left: 104px;
+      right: 104px;
+      bottom: 74px;
+      height: 158px;
+      z-index: 8;
+      border-radius: 28px;
+      border: 2px solid rgba(248,251,255,0.18);
+      background:
+        linear-gradient(135deg, rgba(52,231,255,0.12), rgba(255,61,187,0.1)),
+        rgba(7, 6, 17, 0.66);
+      box-shadow:
+        0 0 28px rgba(52,231,255,0.12),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      backdrop-filter: blur(14px);
+    }
+
+    .ph-caption {
+      position: absolute;
+      left: 136px;
+      right: 136px;
+      bottom: 164px;
+      z-index: 11;
+      min-height: 56px;
+      padding: 12px 22px;
+      border: 2px solid rgba(52,231,255,0.38);
+      background: rgba(7,6,17,0.54);
+      box-shadow:
+        0 0 18px rgba(52,231,255,0.12),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      font-family: "Orbitron", "Rajdhani", sans-serif;
+      font-size: 26px;
+      line-height: 1.15;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-align: center;
+      color: var(--white);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-transform: uppercase;
+      text-shadow: 0 0 14px rgba(52,231,255,0.38);
+      clip-path: polygon(3% 0, 100% 0, 97% 100%, 0 100%);
+      backdrop-filter: blur(10px);
+    }
+
+    .ph-date {
+      position: absolute;
+      left: 140px;
+      bottom: 110px;
+      z-index: 11;
+      font-family: "Space Mono", monospace;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      color: var(--cyan);
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(52,231,255,0.48);
+    }
+
+    .ph-brand {
+      position: absolute;
+      right: 136px;
+      bottom: 98px;
+      z-index: 11;
+      padding: 10px 15px;
+      border: 2px solid rgba(255,61,187,0.38);
+      background: rgba(7,6,17,0.54);
+      box-shadow:
+        0 0 18px rgba(255,61,187,0.16),
+        inset 0 0 0 1px rgba(255,255,255,0.06);
+      font-family: "Space Mono", monospace;
+      font-size: 14px;
+      font-weight: 700;
+      line-height: 1;
+      letter-spacing: 0.08em;
+      color: var(--pink);
+      text-transform: uppercase;
+      text-shadow: 0 0 12px rgba(255,61,187,0.45);
+      white-space: nowrap;
+    }
+
+    .console-dots {
+      position: absolute;
+      left: 34px;
+      bottom: 28px;
+      width: 170px;
+      display: grid;
+      grid-template-columns: repeat(8, 1fr);
+      gap: 7px;
+      z-index: 10;
+    }
+
+    .console-dots span {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: rgba(52,231,255,0.72);
+      box-shadow: 0 0 10px rgba(52,231,255,0.42);
+    }
+
+    .console-code {
+      position: absolute;
+      right: 34px;
+      bottom: 28px;
+      z-index: 10;
+      font-family: "Space Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      color: rgba(248,251,255,0.56);
+      text-transform: uppercase;
+      text-align: right;
+    }
+
+    .floating-text {
+      position: absolute;
+      z-index: 10;
+      pointer-events: none;
+      user-select: none;
+      padding: 10px 16px;
+      border: 2px solid rgba(248,251,255,0.22);
+      background: rgba(7,6,17,0.48);
+      box-shadow: 0 0 18px rgba(52,231,255,0.16);
+      font-family: "Orbitron", "Rajdhani", sans-serif;
+      font-size: 18px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--white);
+      text-shadow: 0 0 12px rgba(255,61,187,0.3);
+    }
+
+    .ft-1 {
+      left: 66px;
+      top: 306px;
+      transform: rotate(-7deg);
+      color: var(--pink);
+    }
+
+    .ft-2 {
+      right: 70px;
+      top: 654px;
+      transform: rotate(7deg);
+      color: var(--cyan);
+    }
+
+    .ft-3 {
+      left: 76px;
+      bottom: 304px;
+      transform: rotate(5deg);
+      color: var(--lime);
+    }
+
+    .ph-sticker-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: transparent;
+      }
+
+      .ph-canvas {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ph-canvas template-cyber-y2k-neon" role="img" aria-label="Polara Cyber Y2K Neon photobooth frame">
+    <div class="outer-border"></div>
+
+    <div class="chrome-orb orb-1"></div>
+    <div class="chrome-orb orb-2"></div>
+    <div class="chrome-orb orb-3"></div>
+
+    <header class="top-hud">
+      <div class="hud-box">
+        <strong>MODE</strong>
+        CYBER SNAP<br>
+        AUTO FLASH
+      </div>
+
+      <div class="title-block">
+        <h1 class="template-title">Cyber <span>Y2K</span></h1>
+        <p class="template-subtitle">neon photobooth interface</p>
+      </div>
+
+      <div class="hud-box">
+        <strong>OUTPUT</strong>
+        4:5 PNG<br>
+        READY TO SHARE
+      </div>
+    </header>
+
+    <div class="glitch-line g1"></div>
+    <div class="glitch-line g2"></div>
+    <div class="glitch-line g3"></div>
+
+    <div class="main-panel">
+      <div class="ph-slot" data-slot="1"></div>
+    </div>
+
+    <div class="corner-hud hud-a">
+      <b>SCAN</b>
+      FACE LOCK<br>
+      STYLE 02
+    </div>
+
+    <div class="corner-hud hud-b">
+      <b>LIVE</b>
+      BOOTH UI<br>
+      FRAME OK
+    </div>
+
+    <div class="side-label side-left">chrome heart interface</div>
+    <div class="side-label side-right">polara digital booth</div>
+
+    <div class="floating-text ft-1">neo cute</div>
+    <div class="floating-text ft-2">flash!</div>
+    <div class="floating-text ft-3">glitch love</div>
+
+    <div class="bottom-console"></div>
+    <div class="console-dots">
+      <span></span><span></span><span></span><span></span>
+      <span></span><span></span><span></span><span></span>
+    </div>
+    <div class="console-code">
+      ISO 800 · 00:02:03<br>
+      NO FILTER / PURE ENERGY
+    </div>
+
+    <div class="ph-caption">Nama · Cyber Moment</div>
+    <div class="ph-date">02 Jul 2026</div>
+    <div class="ph-brand">made with Polara</div>
+
+    <div class="ph-sticker-layer"></div>
+  </div>
+</body>
+</html>

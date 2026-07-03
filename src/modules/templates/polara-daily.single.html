@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=1080, initial-scale=1.0" />
+  <title>Polara Template — Polara Daily Single</title>
+
+  <!--
+    Template: Polara Daily Single
+    Type: CSS-heavy newspaper/editorial photobooth template
+    Fonts: Newsreader, Libre Baskerville, Space Mono
+    Canvas: 1080 × 1350 px
+    Output target: PNG export from Polara compositor
+
+    Recommended file location:
+    C:\HenryDev\1HenryDev\polara\src\modules\templates\polara-daily.single.html
+
+    Asset requirement:
+    - No required PNG assets.
+    - This template intentionally avoids cute mascot assets so it feels editorial,
+      viral, and Blok M newspaper-inspired.
+    - Polara branding is rendered as clean text/stamp via CSS.
+
+    Template contract:
+    - .ph-canvas
+    - .ph-slot[data-slot="1"]
+    - .ph-caption
+    - .ph-date
+    - .ph-brand
+    - .ph-sticker-layer
+
+    No JavaScript. No framework.
+  -->
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Newsreader:opsz,wght@6..72,500;6..72,700;6..72,800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --paper: #f6eedd;
+      --paper-light: #fff9ec;
+      --paper-dark: #dbc9a8;
+      --sepia: #a98b63;
+      --sepia-dark: #73593c;
+      --ink: #181512;
+      --charcoal: #2f2f2f;
+      --muted: #777066;
+      --line: rgba(24, 21, 18, 0.62);
+      --line-soft: rgba(24, 21, 18, 0.18);
+      --white: #fffdf6;
+      --shadow: rgba(24, 21, 18, 0.18);
+      --stamp: #8b332d;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      margin: 0;
+      background: #e6dfd2;
+      font-family: "Libre Baskerville", Georgia, serif;
+    }
+
+    body {
+      display: grid;
+      place-items: center;
+      padding: 40px;
+    }
+
+    .ph-canvas {
+      position: relative;
+      width: 1080px;
+      height: 1350px;
+      overflow: hidden;
+      isolation: isolate;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 16% 10%, rgba(255, 255, 255, 0.55) 0 8%, transparent 9%),
+        radial-gradient(circle at 82% 86%, rgba(169, 139, 99, 0.16) 0 18%, transparent 20%),
+        linear-gradient(180deg, var(--paper-light) 0%, var(--paper) 46%, #efe1c7 100%);
+      box-shadow: 0 30px 90px rgba(24, 21, 18, 0.24);
+    }
+
+    /* subtle newsprint grain */
+    .ph-canvas::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      opacity: 0.22;
+      pointer-events: none;
+      background-image:
+        radial-gradient(circle, rgba(24, 21, 18, 0.22) 0 1px, transparent 1.4px),
+        linear-gradient(90deg, rgba(24, 21, 18, 0.055) 1px, transparent 1px),
+        linear-gradient(rgba(24, 21, 18, 0.045) 1px, transparent 1px);
+      background-size: 9px 9px, 34px 34px, 34px 34px;
+      background-position: 0 0, 8px 0, 0 8px;
+      mix-blend-mode: multiply;
+    }
+
+    .ph-canvas::after {
+      content: "";
+      position: absolute;
+      inset: 34px;
+      z-index: 1;
+      border: 4px double var(--line);
+      pointer-events: none;
+    }
+
+    .newspaper-page {
+      position: absolute;
+      inset: 58px;
+      z-index: 2;
+      display: grid;
+      grid-template-rows: 138px 38px 62px 1fr 112px;
+      gap: 18px;
+    }
+
+    .masthead {
+      position: relative;
+      border-bottom: 7px solid var(--ink);
+      display: grid;
+      grid-template-columns: 164px 1fr 164px;
+      align-items: center;
+      padding-bottom: 14px;
+    }
+
+    .issue-box {
+      border: 3px solid var(--ink);
+      padding: 12px 10px;
+      min-height: 92px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-family: "Space Mono", monospace;
+      font-size: 16px;
+      line-height: 1.35;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--charcoal);
+      background: rgba(255, 253, 246, 0.3);
+    }
+
+    .paper-title {
+      margin: 0;
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 92px;
+      font-weight: 800;
+      line-height: 0.84;
+      letter-spacing: -0.07em;
+      text-align: center;
+      color: var(--ink);
+    }
+
+    .paper-title span {
+      display: block;
+      font-size: 28px;
+      letter-spacing: 0.32em;
+      font-family: "Space Mono", monospace;
+      font-weight: 700;
+      margin-top: 10px;
+      color: var(--sepia-dark);
+      text-transform: uppercase;
+    }
+
+    .price-box {
+      border: 3px solid var(--ink);
+      padding: 12px 10px;
+      min-height: 92px;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      font-family: "Space Mono", monospace;
+      font-size: 15px;
+      line-height: 1.35;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--charcoal);
+      background: rgba(255, 253, 246, 0.3);
+    }
+
+    .ticker {
+      height: 38px;
+      border-top: 2px solid var(--ink);
+      border-bottom: 2px solid var(--ink);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 18px;
+      font-family: "Space Mono", monospace;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--charcoal);
+    }
+
+    .ticker strong {
+      color: var(--stamp);
+    }
+
+    .headline-block {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 252px;
+      gap: 24px;
+      border-bottom: 3px solid var(--ink);
+      padding-bottom: 14px;
+    }
+
+    .main-headline {
+      margin: 0;
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 55px;
+      font-weight: 800;
+      line-height: 0.86;
+      letter-spacing: -0.035em;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .headline-note {
+      border-left: 3px solid var(--ink);
+      padding-left: 16px;
+      font-family: "Libre Baskerville", Georgia, serif;
+      font-size: 15px;
+      line-height: 1.45;
+      color: var(--charcoal);
+    }
+
+    .content-grid {
+      position: relative;
+      display: grid;
+      grid-template-columns: 240px 1fr 192px;
+      gap: 22px;
+      min-height: 0;
+    }
+
+    .left-column,
+    .right-column {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      min-height: 0;
+    }
+
+    .column-card {
+      border-top: 3px solid var(--ink);
+      padding-top: 10px;
+    }
+
+    .column-title {
+      margin: 0 0 8px;
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 25px;
+      font-weight: 800;
+      line-height: 0.95;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+    }
+
+    .fake-copy {
+      margin: 0;
+      font-size: 13px;
+      line-height: 1.48;
+      color: var(--charcoal);
+      text-align: justify;
+    }
+
+    .fake-copy + .fake-copy {
+      margin-top: 7px;
+    }
+
+    .mini-photo-box {
+      height: 126px;
+      border: 3px solid var(--ink);
+      background:
+        linear-gradient(135deg, rgba(24,21,18,0.1), transparent),
+        repeating-linear-gradient(
+          -45deg,
+          rgba(24,21,18,0.06) 0 8px,
+          rgba(255,253,246,0.28) 8px 16px
+        );
+      display: grid;
+      place-items: center;
+      font-family: "Space Mono", monospace;
+      font-size: 14px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+    }
+
+    .main-photo-area {
+      position: relative;
+      min-height: 0;
+      border-left: 3px solid var(--ink);
+      border-right: 3px solid var(--ink);
+      padding: 0 18px;
+    }
+
+    .ph-slot-wrap {
+      position: relative;
+      width: 100%;
+      height: 760px;
+      border: 5px solid var(--ink);
+      background: var(--white);
+      padding: 12px;
+      box-shadow:
+        12px 12px 0 rgba(24, 21, 18, 0.12),
+        inset 0 0 0 2px rgba(24, 21, 18, 0.08);
+    }
+
+    .ph-slot {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      border: 2px solid var(--line);
+      background:
+        linear-gradient(135deg, rgba(169, 139, 99, 0.18), rgba(255, 253, 246, 0.4)),
+        repeating-linear-gradient(
+          0deg,
+          rgba(24, 21, 18, 0.06) 0 2px,
+          transparent 2px 7px
+        );
+      display: grid;
+      place-items: center;
+    }
+
+    .ph-slot::before {
+      content: "FOTO 1";
+      position: absolute;
+      z-index: 1;
+      padding: 14px 24px;
+      border: 3px solid var(--line);
+      background: rgba(255, 253, 246, 0.68);
+      font-family: "Space Mono", monospace;
+      font-size: 34px;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      color: rgba(24, 21, 18, 0.42);
+    }
+
+    .ph-slot img {
+      position: relative;
+      z-index: 2;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      filter: grayscale(0.1) contrast(1.04) saturate(0.92);
+    }
+
+    .photo-caption-bar {
+      position: absolute;
+      left: 30px;
+      right: 30px;
+      bottom: 22px;
+      z-index: 5;
+      padding: 10px 14px;
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+      background: rgba(246, 238, 221, 0.72);
+      backdrop-filter: blur(3px);
+      font-family: "Space Mono", monospace;
+      font-size: 15px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-align: center;
+      color: var(--ink);
+      text-transform: uppercase;
+    }
+
+    .special-stamp {
+      position: absolute;
+      right: -4px;
+      top: -22px;
+      z-index: 6;
+      width: 172px;
+      height: 172px;
+      border: 8px double var(--stamp);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      transform: rotate(14deg);
+      background: rgba(246, 238, 221, 0.6);
+      color: var(--stamp);
+      font-family: "Space Mono", monospace;
+      font-size: 18px;
+      line-height: 1.1;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-align: center;
+      text-transform: uppercase;
+      opacity: 0.86;
+      mix-blend-mode: multiply;
+    }
+
+    .special-stamp span {
+      display: block;
+      font-size: 28px;
+      font-family: "Newsreader", Georgia, serif;
+      letter-spacing: 0.02em;
+    }
+
+    .photo-meta {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 14px;
+      font-family: "Space Mono", monospace;
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--charcoal);
+      text-transform: uppercase;
+    }
+
+    .photo-meta div {
+      border-top: 2px solid var(--line);
+      border-bottom: 2px solid var(--line);
+      padding: 8px 0;
+    }
+
+    .right-column .column-card {
+      padding-left: 0;
+    }
+
+    .quote-box {
+      border: 3px solid var(--ink);
+      padding: 14px;
+      background: rgba(255, 253, 246, 0.36);
+    }
+
+    .quote-box p {
+      margin: 0;
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 0.98;
+      letter-spacing: -0.02em;
+    }
+
+    .quote-box small {
+      display: block;
+      margin-top: 10px;
+      font-family: "Space Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .paw-mark {
+      width: 72px;
+      height: 72px;
+      border: 3px solid var(--ink);
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      margin: 0 auto;
+      font-size: 36px;
+      background: rgba(255, 253, 246, 0.42);
+      transform: rotate(-8deg);
+    }
+
+    .footer-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 220px;
+      gap: 24px;
+      border-top: 6px solid var(--ink);
+      padding-top: 14px;
+      align-items: end;
+    }
+
+    .ph-caption {
+      position: relative;
+      z-index: 8;
+      min-height: 58px;
+      border-top: 3px solid var(--ink);
+      border-bottom: 3px solid var(--ink);
+      padding: 12px 0;
+      font-family: "Newsreader", Georgia, serif;
+      font-size: 36px;
+      font-weight: 800;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--ink);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .footer-copy {
+      margin-top: 8px;
+      font-family: "Space Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      text-transform: uppercase;
+    }
+
+    .brand-area {
+      position: relative;
+      display: grid;
+      gap: 8px;
+      justify-items: end;
+    }
+
+    .ph-date {
+      position: relative;
+      z-index: 8;
+      font-family: "Space Mono", monospace;
+      font-size: 17px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      color: var(--ink);
+      text-transform: uppercase;
+      text-align: right;
+    }
+
+    .ph-brand {
+      position: relative;
+      z-index: 8;
+      width: max-content;
+      max-width: 220px;
+      padding: 10px 13px;
+      border: 3px solid var(--ink);
+      background: rgba(255, 253, 246, 0.48);
+      font-family: "Space Mono", monospace;
+      font-size: 14px;
+      line-height: 1;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      color: var(--ink);
+      text-transform: uppercase;
+      transform: rotate(-1deg);
+      box-shadow: 5px 5px 0 rgba(24, 21, 18, 0.1);
+    }
+
+    .ph-sticker-layer {
+      position: absolute;
+      inset: 0;
+      z-index: 30;
+      pointer-events: none;
+    }
+
+    .edge-label {
+      position: absolute;
+      z-index: 4;
+      font-family: "Space Mono", monospace;
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      color: rgba(24, 21, 18, 0.5);
+      text-transform: uppercase;
+      writing-mode: vertical-rl;
+    }
+
+    .edge-left {
+      left: 18px;
+      top: 250px;
+    }
+
+    .edge-right {
+      right: 18px;
+      bottom: 250px;
+      transform: rotate(180deg);
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        background: transparent;
+      }
+
+      .ph-canvas {
+        box-shadow: none;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="ph-canvas template-polara-daily" role="img" aria-label="Polara Daily newspaper photobooth frame">
+    <div class="edge-label edge-left">instant booth edition</div>
+    <div class="edge-label edge-right">share-worthy memories</div>
+
+    <main class="newspaper-page">
+      <header class="masthead">
+        <div class="issue-box">
+          VOL. 01<br>
+          NO. 07<br>
+          SPECIAL SNAP
+        </div>
+
+        <h1 class="paper-title">
+          Polara Daily
+          <span>Instant Photobooth Gazette</span>
+        </h1>
+
+        <div class="price-box">
+          DIGITAL<br>
+          EDITION<br>
+          FREE / PNG
+        </div>
+      </header>
+
+      <section class="ticker">
+        <span>Breaking: <strong>Every Snap</strong> Becomes A Story</span>
+        <span>★</span>
+        <span>Made For Feed & Story</span>
+      </section>
+
+      <section class="headline-block">
+        <h2 class="main-headline">Local Stars Caught In Their Best Moment</h2>
+        <div class="headline-note">
+          A playful editorial frame for photos that deserve more than a plain border.
+          Snap once, frame instantly, and share the edition.
+        </div>
+      </section>
+
+      <section class="content-grid">
+        <aside class="left-column">
+          <article class="column-card">
+            <h3 class="column-title">The Moment Report</h3>
+            <p class="fake-copy">
+              Polara presents a digital booth experience made for spontaneous poses, soft flash, and instant memories.
+            </p>
+            <p class="fake-copy">
+              This edition is crafted with classic lines, warm paper, and editorial rhythm.
+            </p>
+          </article>
+
+          <div class="mini-photo-box">ARCHIVE</div>
+
+          <article class="column-card">
+            <h3 class="column-title">Tiny Headlines</h3>
+            <p class="fake-copy">
+              Friends, campus events, cafe nights, and everyday snapshots now deserve a front-page treatment.
+            </p>
+          </article>
+
+          <article class="column-card">
+            <h3 class="column-title">Social Proof</h3>
+            <p class="fake-copy">
+              Designed to make people ask, “Where did you make this?”
+            </p>
+          </article>
+        </aside>
+
+        <section class="main-photo-area">
+          <div class="special-stamp">
+            Special<br>
+            <span>Edition</span>
+          </div>
+
+          <div class="ph-slot-wrap">
+            <div class="ph-slot" data-slot="1"></div>
+            <div class="photo-caption-bar">Exclusive Polara portrait · ready to share</div>
+          </div>
+
+          <div class="photo-meta">
+            <div>Format: 4:5 Single</div>
+            <div>Output: PNG</div>
+          </div>
+        </section>
+
+        <aside class="right-column">
+          <div class="quote-box">
+            <p>“A simple photo, but make it front-page.”</p>
+            <small>POLARA STYLE DESK</small>
+          </div>
+
+          <article class="column-card">
+            <h3 class="column-title">Frame Notes</h3>
+            <p class="fake-copy">
+              Inspired by vintage editorial layouts, old newsprint, and modern digital sharing culture.
+            </p>
+          </article>
+
+          <div class="paw-mark">🐾</div>
+
+          <article class="column-card">
+            <h3 class="column-title">Why It Works</h3>
+            <p class="fake-copy">
+              The newspaper look feels unique in a social feed full of ordinary selfies and repeated borders.
+            </p>
+          </article>
+        </aside>
+      </section>
+
+      <footer class="footer-row">
+        <div>
+          <div class="ph-caption">Memories That Stay</div>
+          <div class="footer-copy">Personal headline can be replaced with name, campus, event, or campaign title.</div>
+        </div>
+
+        <div class="brand-area">
+          <div class="ph-date">02 Jul 2026</div>
+          <div class="ph-brand">made with Polara</div>
+        </div>
+      </footer>
+    </main>
+
+    <div class="ph-sticker-layer"></div>
+  </div>
+</body>
+</html>
