@@ -28,7 +28,7 @@
     .app-header { display: flex; align-items: center; gap: 14px; padding: 18px 28px; }
     .brand-logo { height: 46px; width: auto; display: block; filter: drop-shadow(0 4px 8px rgba(75,46,31,.16)); }
     .brand-tag {
-      font-family: var(--font-display); font-weight: 600; color: var(--pink-deep);
+      font-family: var(--font-display); font-weight: 600; color: #a62f6b; /* a11y: ≥4.5:1 di atas putih */
       background: var(--white); border: 2px solid var(--outline); border-radius: var(--radius-pill);
       padding: 5px 15px; font-size: .82rem; box-shadow: var(--shadow-sticker);
       transform: rotate(-2deg);
@@ -49,19 +49,27 @@
     }
     .panel-title .star { color: var(--butter); -webkit-text-stroke: 1.5px var(--outline); }
 
-    /* ── template picker ── */
-    #templateList { display: flex; flex-direction: column; gap: 10px; }
+    /* ── template picker (dengan thumbnail preview) ── */
+    #templateList { display: flex; flex-direction: column; gap: 12px; }
     .tpl-btn {
       cursor: pointer; text-align: left; font: inherit; color: var(--text);
       border: 2px solid var(--border); border-radius: var(--radius);
-      padding: 11px 14px; background: var(--cream-2);
+      padding: 8px; background: var(--cream-2); overflow: hidden;
+      display: flex; flex-direction: column; gap: 8px;
       transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
     }
-    .tpl-btn > div:first-child { font-family: var(--font-display); font-weight: 600; }
-    .tpl-btn:hover { transform: translateY(-2px) rotate(-.5deg); border-color: var(--pink); }
-    .tpl-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+    .tpl-btn:hover { transform: translateY(-2px); border-color: var(--pink); }
+    .tpl-btn:focus-visible { outline: 2px solid var(--outline); outline-offset: 2px; box-shadow: var(--ring); }
     .tpl-btn.active { border-color: var(--outline); background: var(--pink-soft); box-shadow: var(--shadow-sticker); }
-    .tpl-btn .cat { font-size: .7rem; color: var(--muted); margin-top: 2px; text-transform: capitalize; }
+    .tpl-thumb {
+      position: relative; display: block; width: 100%; height: 150px; overflow: hidden;
+      border-radius: 14px; border: 2px solid var(--border);
+      background: repeating-conic-gradient(#f3e7db 0 25%, #fff 0 50%) 0 0 / 18px 18px;
+    }
+    .tpl-thumb-frame { position: absolute; top: 0; left: 0; border: 0; transform-origin: top left; pointer-events: none; }
+    .tpl-meta { display: flex; flex-direction: column; gap: 1px; padding: 0 2px 2px; }
+    .tpl-name { font-family: var(--font-display); font-weight: 600; font-size: .92rem; line-height: 1.15; }
+    .tpl-btn .cat { font-size: .68rem; color: var(--muted); text-transform: capitalize; }
 
     /* ── panggung (kamera / hasil) ── */
     #stage { display: flex; flex-direction: column; align-items: center; gap: 16px; }
@@ -70,7 +78,7 @@
       border-radius: var(--radius-lg); padding: 14px; box-shadow: var(--shadow-sticker);
       width: 100%; display: flex; justify-content: center;
     }
-    #cameraWrap { position: relative; line-height: 0; border-radius: var(--radius); overflow: hidden; transition: filter .1s; }
+    #cameraWrap { position: relative; width: min(460px, 100%); min-height: 340px; line-height: 0; border-radius: var(--radius); overflow: hidden; transition: filter .1s; }
     video { display: block; width: 100%; max-width: 460px; border-radius: var(--radius); transform: scaleX(-1); background: var(--cream); }
     #canvasScale { transform-origin: top center; display: none; border-radius: var(--radius); overflow: hidden; }
 
@@ -80,6 +88,15 @@
       text-shadow: 0 0 0 var(--outline), 0 8px 24px rgba(75,46,31,.4);
       -webkit-text-stroke: 5px var(--outline); paint-order: stroke fill;
     }
+
+    /* ── empty-state kamera (loading / ditolak) ── */
+    #cameraOverlay {
+      position: absolute; inset: 0; display: none; flex-direction: column; gap: 12px;
+      align-items: center; justify-content: center; text-align: center; padding: 24px; line-height: 1.4;
+      background: linear-gradient(180deg, var(--cream-2), var(--pink-soft));
+    }
+    #cameraOverlay img { width: 130px; height: auto; }
+    #camMsg { margin: 0; font-family: var(--font-display); font-weight: 600; color: var(--brown); max-width: 260px; font-size: .95rem; }
 
     /* ── sticker tray ── */
     #stickerTray {
@@ -97,7 +114,7 @@
       transition: transform .16s ease, border-color .16s ease;
     }
     .sticker-btn:hover { transform: translateY(-3px) rotate(-3deg); border-color: var(--pink); }
-    .sticker-btn:focus-visible { outline: none; box-shadow: var(--ring); }
+    .sticker-btn:focus-visible { outline: 2px solid var(--outline); outline-offset: 2px; box-shadow: var(--ring); }
     .sticker-btn img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
     /* ── kontrol ── */
@@ -112,7 +129,7 @@
     .btn svg { width: 20px; height: 20px; }
     .btn:hover { transform: translateY(-2px); }
     .btn:active { transform: translateY(1px); }
-    .btn:focus-visible { outline: none; box-shadow: var(--ring), var(--shadow-sticker); }
+    .btn:focus-visible { outline: 2px solid var(--outline); outline-offset: 2px; box-shadow: var(--ring), var(--shadow-sticker); }
     .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     .btn-primary { background: var(--pink); }
     .btn-primary:hover { background: var(--pink-soft); }
@@ -137,7 +154,8 @@
       .app-header { padding: 14px 18px; }
       main.studio { grid-template-columns: 1fr; padding: 4px 14px 24px; gap: 14px; }
       #templateList { flex-direction: row; overflow-x: auto; padding-bottom: 6px; }
-      .tpl-btn { flex: 0 0 auto; min-width: 130px; }
+      .tpl-btn { flex: 0 0 auto; width: 132px; }
+      .tpl-thumb { height: 116px; }
       #countdown { font-size: 6rem; }
     }
 
@@ -153,7 +171,7 @@
   </header>
 
   <main class="studio">
-    <aside class="panel picker">
+    <aside class="panel picker" aria-label="Pilih frame">
       <h2 class="panel-title"><span class="star">✦</span> Pilih Frame</h2>
       <div id="templateList"></div>
     </aside>
@@ -162,6 +180,10 @@
       <div class="stage-card">
         <div id="cameraWrap">
           <video id="video" autoplay playsinline muted width="460" height="575"></video>
+          <div id="cameraOverlay">
+            <img src="assets/mascot/mascot-poca-hero.png" alt="" aria-hidden="true" />
+            <p id="camMsg">Menyalakan kamera…</p>
+          </div>
           <div id="countdown"></div>
         </div>
         <div id="canvasScale"></div>
@@ -187,10 +209,10 @@
         </button>
       </div>
 
-      <p class="status" id="status">Pilih frame, lalu jepret. (Browser bakal minta izin kamera.)</p>
+      <p class="status" id="status" role="status" aria-live="polite">Pilih frame, lalu jepret. (Browser bakal minta izin kamera.)</p>
     </section>
 
-    <aside class="panel info">
+    <aside class="panel info" aria-label="Info privasi">
       <img class="greeter" src="assets/mascot/mascot-poca-hero.png" alt="Poca, maskot Polara" />
       <h3>Privasi dulu ✦</h3>
       <p>Fotomu nggak dikirim ke mana-mana — semua diproses di HP/browser-mu sendiri. Hasil tinggal disimpan.</p>

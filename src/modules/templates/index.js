@@ -3,7 +3,7 @@
 // { id, name, category, premium, file } — file di-load lazy lewat loader.js
 // (fetch + DOMParser, ambil <style>+.ph-canvas dari file HTML standalone GPT).
 // Prioritas viral (RISET.md): Newspaper, Y2K Korean, Vintage Film, Purikura, Live Frame.
-import { loadTemplateFragment } from './loader.js';
+import { loadTemplateFragment, loadTemplateDoc, buildTemplateDoc } from './loader.js';
 
 const kosmik = {
   id: 'kosmik', name: 'Kosmik', category: 'kosmik', premium: false,
@@ -55,4 +55,13 @@ export const getTemplate = (id) => templates.find(t => t.id === id) || templates
 // Balikin markup .ph-canvas (+ style) siap-pakai, baik dari `html` inline maupun `file` lazy-load.
 export async function resolveTemplateHtml(template) {
   return template.file ? loadTemplateFragment(template.file) : template.html;
+}
+
+// Dimensi kanvas: file *.strip.* = 720×1800 (photobooth strip), sisanya 1080×1350 (4:5).
+export const templateDims = (t) => (t.file && t.file.includes('.strip.')) ? { w: 720, h: 1800 } : { w: 1080, h: 1350 };
+
+// Dokumen HTML utuh buat iframe thumbnail preview (lihat loader.js).
+const KOSMIK_FONT = '<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">';
+export async function resolveTemplateDoc(t) {
+  return t.file ? loadTemplateDoc(t.file) : buildTemplateDoc(KOSMIK_FONT, '', t.html);
 }

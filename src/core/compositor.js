@@ -76,10 +76,12 @@ export function placeSticker(canvasEl, stickerFile) {
   img.style.cssText = 'display:block;width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(0 8px 14px rgba(0,0,0,.28));';
   wrap.appendChild(img);
 
-  const removeBtn = document.createElement('span');
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
   removeBtn.textContent = '✕';
-  removeBtn.setAttribute('data-export-hide', '1'); // disembunyikan pas export PNG (lihat exportPng)
-  removeBtn.style.cssText = 'position:absolute;top:-11px;right:-11px;width:26px;height:26px;border-radius:50%;' +
+  removeBtn.setAttribute('aria-label', 'Hapus stiker');       // a11y: keyboard + screen reader
+  removeBtn.setAttribute('data-export-hide', '1');            // disembunyikan pas export PNG (lihat exportPng)
+  removeBtn.style.cssText = 'position:absolute;top:-11px;right:-11px;width:26px;height:26px;border:0;padding:0;border-radius:50%;' +
     'background:#ff5f7a;color:#fff;font-size:14px;line-height:26px;text-align:center;cursor:pointer;' +
     'box-shadow:0 2px 6px rgba(0,0,0,.3);';
   removeBtn.onclick = (e) => { e.stopPropagation(); wrap.remove(); };

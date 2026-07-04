@@ -4,15 +4,28 @@ Format: [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) · Versi: [SemV
 Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
-> **⏳ NUNGGU ASET TRANSPARAN dari Henry** (regenerate GPT, PNG transparan ~2000px, acuan `assets/Polara Final Brand Kit.png`). Yang UDAH bener: `assets/brand/logo-polara.png` (transparan). Yang MASIH no-alpha (background putih ke-bake, perlu diganti):
+> **⏳ NUNGGU ASET TRANSPARAN dari Henry** (regenerate GPT, PNG transparan ~2000px, acuan `assets/Polara Final Brand Kit.png`). Yang UDAH bener: `assets/brand/logo-polara.png`. Yang MASIH no-alpha (background putih ke-bake — muncul sbg kotak putih di frame, sticker tray, & thumbnail preview):
 > - `assets/mascot/`: `poca-wink` · `poca-camera` · `poca-peeking` · `mascot-poca-hero`
 > - `assets/stickers/`: `sticker-cute` · `sticker-snap` · `sticker-purrfect`
 > - `assets/brand/`: `app-icon` · `watermark-made-with-polara` · `secondary-app-icon`
-> (Sementara: mascot-hero ditaruh di kartu putih biar background putihnya nyatu; `sticker-cute` direstore dari `_originals/`.)
-- **Preview template sebelum jepret** — masih belum ada (frame baru muncul setelah jepret). Rencana: render frame + live-camera di slot pas milih template (perlu sentuh `app.js` dikit).
-- Tes flow kamera → composite → download di device asli (preview headless nggak ada kamera).
 - Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
 - Sticker tray cuma buat kategori `purikura` — kategori lain butuh set stiker sendiri.
+- Catatan code-review (low, keputusan Henry): `.tpl-btn` (`<button>`) memuat `<iframe>` thumbnail — teknis "interactive content" di dalam button = HTML kurang valid, TAPI fungsional aman & keyboard OK (iframe `tabindex=-1` + `pointer-events:none`, verified). Strict-valid = ganti ke `div[role=button]` + keydown handler.
+- Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
+- Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
+
+## [0.6.0] - 2026-07-04
+### Added
+- **Preview frame di picker** (jawab keluhan "nggak ada preview"): tiap template nampil thumbnail live-nya — render via `<iframe srcdoc>` (isolasi CSS penuh, nggak perlu scoping), di-scale pas tinggi kotak + center horizontal. Dimensi single 1080×1350 / strip 720×1800 (`templateDims`). Additive & aman: kalau gagal, kotak kosong tapi tombol tetap jalan. `loader.js` +`loadTemplateDoc`/`buildTemplateDoc`; `templates/index.js` +`resolveTemplateDoc`/`templateDims`.
+- **Empty-state kamera**: pas kamera loading/ditolak, tampil mascot Poca + pesan ramah (bukan kotak kosong). Tombol Jepret di-disable kalau kamera nggak aktif (cegah capture kosong).
+- **`serve.py`** — dev server no-cache + multi-thread; ganti `python -m http.server`. Fix DUA masalah lama: (1) browser nyimpen CSS/JS lama (nggak perlu hard-refresh terus), (2) single-thread bikin gambar gede kadang gagal load bareng. `run-polara.bat` diupdate.
+### Fixed (accessibility — audit WCAG 2.1 AA)
+- Kontras teks lolos AA: kategori `.cat` (`--muted` #9c8577→#6b4a37 = 3.35→7.61) & tagline "share the fun" (#ec5e9e→#a62f6b = 3.15→6.48).
+- `#status` +`role="status"`+`aria-live="polite"` → update/error dibacain screen reader (4.1.3).
+- Tombol hapus stiker ✕: `<span>`→`<button>`+`aria-label` → keyboard-accessible (2.1.1/4.1.2).
+- Focus indicator +`outline` solid (2.4.7/1.4.11); `<aside>` +`aria-label`; judul dobel `<h3>Template` dihapus; thumbnail iframe `aria-hidden`.
+### Changed
+- Picker dibangun sekali (klik = update active class, bukan rebuild) → thumbnail nggak regenerate/flicker.
 
 ## [0.5.0] - 2026-07-04
 ### Added

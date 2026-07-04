@@ -19,7 +19,7 @@
   --bg:          var(--cream);
   --surface:     var(--white);
   --text:        var(--brown);
-  --muted:       #9c8577;
+  --muted:       #6b4a37;   /* a11y: kontras ≥4.5:1 di atas cream & pink-soft */
   --accent:      var(--pink);
   --accent-dim:  rgba(255, 143, 189, 0.30);
   --accent-strong: var(--pink-deep);

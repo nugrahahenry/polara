@@ -31,6 +31,31 @@ export async function loadTemplateFragment(path) {
   return html;
 }
 
+// ── Dokumen HTML utuh buat iframe thumbnail (preview frame di picker) ──
+// Iframe MENGISOLASI CSS, jadi nggak perlu di-scope: pakai raw <style> + font,
+// canvas ditaruh top-left, body reset. Cache biar rebuild picker nggak fetch ulang.
+const docCache = new Map();
+
+export async function loadTemplateDoc(path) {
+  if (docCache.has(path)) return docCache.get(path);
+  const res = await fetch(path);
+  if (!res.ok) throw new Error(`Gagal load template ${path}: ${res.status}`);
+  const doc = new DOMParser().parseFromString(await res.text(), 'text/html');
+  const fonts = [...doc.querySelectorAll('link[href*="fonts.googleapis.com"]')].map(l => l.outerHTML).join('');
+  const rawCss = [...doc.querySelectorAll('style')].map(s => s.textContent).join('\n');
+  const canvas = doc.querySelector('.ph-canvas');
+  if (!canvas) throw new Error(`Template ${path} nggak punya .ph-canvas`);
+  const out = buildTemplateDoc(fonts, rawCss, canvas.outerHTML);
+  docCache.set(path, out);
+  return out;
+}
+
+export function buildTemplateDoc(fonts, rawCss, canvasHtml) {
+  return `<!doctype html><html><head><meta charset="utf-8">${fonts}<style>${rawCss}
+    html,body{margin:0!important;padding:0!important;background:transparent!important;display:block!important;overflow:hidden!important}
+  </style></head><body>${canvasHtml}</body></html>`;
+}
+
 // Scope semua rule CSS ke `scope` (.ph-canvas) pakai CSSOM browser (handle @media,
 // @keyframes, dst dengan benar). Rule level-halaman (html/body) dibuang; :root & *
 // diarahkan ke scope biar CSS variables & reset tetap jalan TAPI nggak bocor keluar.
