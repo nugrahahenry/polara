@@ -57,8 +57,8 @@ export async function resolveTemplateHtml(template) {
   return template.file ? loadTemplateFragment(template.file) : template.html;
 }
 
-// Dimensi kanvas: file *.strip.* = 720×1800 (photobooth strip), sisanya 1080×1350 (4:5).
-export const templateDims = (t) => (t.file && t.file.includes('.strip.')) ? { w: 720, h: 1800 } : { w: 1080, h: 1350 };
+// Dimensi kanvas: file *.strip.* = 720×1800 (3 slot foto), sisanya 1080×1350 (1 slot, 4:5).
+export const templateDims = (t) => (t.file && t.file.includes('.strip.')) ? { w: 720, h: 1800, slots: 3 } : { w: 1080, h: 1350, slots: 1 };
 
 // Dokumen HTML utuh buat iframe thumbnail preview (lihat loader.js).
 const KOSMIK_FONT = '<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&display=swap" rel="stylesheet">';

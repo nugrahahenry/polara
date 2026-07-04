@@ -12,11 +12,21 @@ export function renderTemplate(containerEl, html) {
   return containerEl.querySelector('.ph-canvas');
 }
 
-// Inject foto ke SEMUA slot (MVP: satu foto isi semua slot; multi-capture = backlog).
+// Inject foto ke SEMUA slot (dipakai kalau cuma 1 foto buat semua slot).
 export function setPhoto(canvasEl, photoDataUrl) {
-  canvasEl.querySelectorAll('.ph-slot').forEach(slot => {
-    slot.innerHTML = `<img src="${photoDataUrl}" alt="foto" style="width:100%;height:100%;object-fit:cover;" />`;
-  });
+  canvasEl.querySelectorAll('.ph-slot').forEach(slot => fillSlot(slot, photoDataUrl));
+}
+
+// Inject foto ke SATU slot (buat multi-capture strip: slot 1/2/3 foto beda).
+// Cari by data-slot dulu, fallback ke urutan ke-n (1-based).
+export function setPhotoSlot(canvasEl, slotNum, photoDataUrl) {
+  const slot = canvasEl.querySelector(`.ph-slot[data-slot="${slotNum}"]`)
+            || canvasEl.querySelectorAll('.ph-slot')[slotNum - 1];
+  if (slot) fillSlot(slot, photoDataUrl);
+}
+
+function fillSlot(slot, url) {
+  slot.innerHTML = `<img src="${url}" alt="foto" style="width:100%;height:100%;object-fit:cover;" />`;
 }
 
 // Isi caption / tanggal / brand kalau template punya elemennya.

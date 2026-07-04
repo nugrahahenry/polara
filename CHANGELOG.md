@@ -9,10 +9,22 @@ Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 > - `assets/stickers/`: `sticker-cute` · `sticker-snap` · `sticker-purrfect`
 > - `assets/brand/`: `app-icon` · `watermark-made-with-polara` · `secondary-app-icon`
 - Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
-- Sticker tray cuma buat kategori `purikura` — kategori lain butuh set stiker sendiri.
+- Sticker tray sekarang UNIVERSAL (semua frame), tapi 5 dari 6 stiker masih opaque (kotak putih) sampai aset transparan siap.
 - Catatan code-review (low, keputusan Henry): `.tpl-btn` (`<button>`) memuat `<iframe>` thumbnail — teknis "interactive content" di dalam button = HTML kurang valid, TAPI fungsional aman & keyboard OK (iframe `tabindex=-1` + `pointer-events:none`, verified). Strict-valid = ganti ke `div[role=button]` + keydown handler.
 - Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
 - Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
+
+## [0.7.0] - 2026-07-04
+### Added
+- **Mode 1× / 3× + filter frame (#1)**: pilih mode dulu (1 Foto / 3 Strip) di atas picker → frame otomatis difilter (single 1080×1350 vs strip 720×1800). `templateDims` +`slots` (1/3). Segmented control.
+- **Multi-capture strip (#1)**: mode 3× jepret 3× berurutan (countdown tiap shot, jeda 700ms), tiap foto masuk slot 1/2/3 lewat `setPhotoSlot`. Slot-filling VERIFIED (3 slot beda foto); loop kamera 3× perlu test device asli.
+- **Stepper (#5)**: indikator tahap **Mode → Frame → Jepret → Stiker → Simpan** di atas panggung, update tiap tahap.
+### Fixed
+- **Frame nggak muncul bener di hasil (#4)**: `fitStage` dulu pakai `window.innerWidth*0.42` (sisa layout lama) → frame kecil/nyangkut di kartu putih, banyak ruang kosong. Sekarang scale container-based (fit lebar kartu × maxH 560; `.ph-canvas` di-`transform`, `#canvasScale` di-size + overflow hidden) → frame ngepas & ke-center. **Preview = persis hasil download.**
+- **Logo kekecilan (#3)**: `logo-polara.png` di-crop dari 2000×2000 (padding transparan 666px atas-bawah bikin wordmark cuma ~15px di header) → 1686×716 ngepas. Header height 50px (42px mobile).
+- **Sticker cuma di purikura (#2)**: tray sekarang **universal** — muncul di semua frame abis jepret.
+### Changed
+- Compositor: `setPhoto` (isi semua slot) + `setPhotoSlot` baru (per-slot, buat strip). Picker difilter per mode.
 
 ## [0.6.0] - 2026-07-04
 ### Added
