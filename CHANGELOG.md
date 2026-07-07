@@ -4,12 +4,11 @@ Format: [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) · Versi: [SemV
 Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
-> **⏳ NUNGGU ASET TRANSPARAN dari Henry** (regenerate GPT, PNG transparan ~2000px, acuan `assets/Polara Final Brand Kit.png`). Yang UDAH bener: `assets/brand/logo-polara.png`. Yang MASIH no-alpha (background putih ke-bake — muncul sbg kotak putih di frame, sticker tray, & thumbnail preview):
-> - `assets/mascot/`: `poca-wink` · `poca-camera` · `poca-peeking` · `mascot-poca-hero`
-> - `assets/stickers/`: `sticker-cute` · `sticker-snap` · `sticker-purrfect`
-> - `assets/brand/`: `app-icon` · `watermark-made-with-polara` · `secondary-app-icon`
+> **✅ Aset transparan (4 Jul 2026):** versi transparan mascot/sticker ternyata udah ada di `assets/poca/poca-porikura/_originals/` (2000px RGBA) — dipindah + resize 800px ke folder runtime: `mascot/` (poca-wink/camera/peeking), `stickers/` (cute/snap/purrfect), `brand/watermark`. `logo-polara` di-crop. Total 8 aset transparan & kepasang.
+> **⏳ SISA opaque (Henry regenerate):** `mascot/mascot-poca-hero` (sedang), `brand/app-icon` + `brand/secondary-app-icon` (opsional, favicon).
+> **➕ Aset baru:** potong `assets/Polara Sticker Pack.png` → ~10-12 stiker transparan individual di `assets/stickers/` (variasi tray).
 - Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
-- Sticker tray sekarang UNIVERSAL (semua frame), tapi 5 dari 6 stiker masih opaque (kotak putih) sampai aset transparan siap.
+- Sticker tray UNIVERSAL (semua frame) — 6 stiker sekarang semua transparan ✓ (bisa ditambah variasi dari sticker pack sheet).
 - Catatan code-review (low, keputusan Henry): `.tpl-btn` (`<button>`) memuat `<iframe>` thumbnail — teknis "interactive content" di dalam button = HTML kurang valid, TAPI fungsional aman & keyboard OK (iframe `tabindex=-1` + `pointer-events:none`, verified). Strict-valid = ganti ke `div[role=button]` + keydown handler.
 - Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
 - Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
