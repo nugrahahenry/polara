@@ -1,6 +1,6 @@
 // ─── app.js ──────────────────────────────────────────────────────────────────
-// Flow: pilih MODE (1 / 3 foto) → pilih FRAME (difilter mode) → JEPRET (1× atau
-// 3× berurutan) → tempel STIKER → SIMPAN. Stepper nunjukin tahapan.
+// Flow: pilih MODE (1 / 3 foto) → pilih FRAME (difilter mode) → JEPRET (1x atau
+// 3x berurutan) → tempel STIKER → SIMPAN. Stepper nunjukin tahapan.
 // Logika berat di core/ (camera, compositor) & modules/ (templates, stickers).
 import { startCamera, captureFrame } from './core/camera.js';
 import { renderTemplate, setPhotoSlot, setMeta, exportPng, download, placeSticker } from './core/compositor.js';
@@ -62,7 +62,7 @@ function setMode(m) {
   renderList();
   resetToCamera();
   setStep('frame');
-  statusEl.textContent = mode === 3 ? 'Mode strip: pilih frame, nanti jepret 3×.' : 'Pilih frame, lalu jepret ✦';
+  statusEl.textContent = mode === 3 ? 'Mode strip! Pilih frame-nya, nanti kamu jepret 3 kali.' : 'Pilih frame dulu, terus jepret ya.';
 }
 modeChoose.querySelectorAll('.mode-btn').forEach(b => (b.onclick = () => setMode(Number(b.dataset.mode))));
 
@@ -108,8 +108,8 @@ function selectTemplate(t) {
   setStep('shoot');
   snapBtn.disabled = !camReady;
   statusEl.textContent = camReady
-    ? (mode === 3 ? 'Siap! Klik Jepret buat mulai 3 foto ✦' : 'Siap! Klik Jepret ✦')
-    : 'Nyalain kamera dulu (izinin akses) ✦';
+    ? (mode === 3 ? 'Udah siap. Klik Jepret, nanti diambil 3 foto.' : 'Udah siap. Klik Jepret kalau kamu udah oke.')
+    : 'Nyalain kameranya dulu ya (izinin aksesnya).';
 }
 
 // ── thumbnail = iframe (isolasi CSS), di-scale pas tinggi kotak + center ──
@@ -174,21 +174,21 @@ function fitStage(dims) {
   }
 }
 
-// ── jepret (single = 1×, strip = 3× berurutan) ──
+// ── jepret (single = 1x, strip = 3x berurutan) ──
 snapBtn.onclick = async () => {
   if (!currentTpl || !camReady) return;
   snapBtn.disabled = true; flipBtn.disabled = true;
   const dims = templateDims(currentTpl);
   const photos = [];
   for (let i = 1; i <= dims.slots; i++) {
-    if (dims.slots > 1) statusEl.textContent = `Foto ${i} dari ${dims.slots} — siap-siap!`;
+    if (dims.slots > 1) statusEl.textContent = `Foto ke-${i} dari ${dims.slots}, siap-siap ya!`;
     await countdown(3);
     flash();
     photos.push(captureFrame(video));
     if (dims.slots > 1 && i < dims.slots) await new Promise(r => setTimeout(r, 700));
   }
 
-  statusEl.textContent = 'Menyiapkan hasil…';
+  statusEl.textContent = 'Bentar ya, lagi disiapin hasilnya...';
   const html = await resolveTemplateHtml(currentTpl);
   phCanvas = renderTemplate(stage, html);
   photos.forEach((p, i) => setPhotoSlot(phCanvas, i + 1, p));
@@ -202,7 +202,7 @@ snapBtn.onclick = async () => {
   flipBtn.disabled = false;
   renderStickerTray();
   setStep('sticker');
-  statusEl.textContent = 'Suka? Tempel stiker, terus Simpan ✦ — atau Ulangi.';
+  statusEl.textContent = 'Gimana? Tempel stiker terus Simpan. Kalau mau ulang, klik Ulangi.';
 };
 
 // ── balik ke kamera ──
@@ -217,7 +217,7 @@ function resetToCamera() {
 retakeBtn.onclick = () => {
   resetToCamera();
   setStep(currentTpl ? 'shoot' : 'frame');
-  statusEl.textContent = 'Oke, jepret lagi ✦';
+  statusEl.textContent = 'Oke, jepret lagi ya.';
 };
 
 // ── sticker tray (universal) ──
@@ -239,14 +239,14 @@ function renderStickerTray() {
 // ── simpan ──
 downloadBtn.onclick = async () => {
   downloadBtn.disabled = true;
-  statusEl.textContent = 'Menyiapkan PNG…';
+  statusEl.textContent = 'Bentar ya, lagi disimpan...';
   try {
     const url = await exportPng(phCanvas);
     download(url, `polara-${currentTpl.id}-${Date.now()}.png`);
     setStep('save');
-    statusEl.textContent = 'Tersimpan! ✦ Cek folder Download-mu.';
+    statusEl.textContent = 'Udah kesimpen! Cek folder Download kamu ya.';
   } catch (e) {
-    statusEl.textContent = 'Gagal export: ' + e.message;
+    statusEl.textContent = 'Waduh, gagal simpan. ' + e.message;
   }
   downloadBtn.disabled = false;
 };
@@ -256,18 +256,16 @@ flipBtn.onclick = () => { facing = facing === 'user' ? 'environment' : 'user'; s
 function showOverlay(msg) { if (camMsg) camMsg.textContent = msg; if (cameraOverlay) cameraOverlay.style.display = 'flex'; }
 function hideOverlay() { if (cameraOverlay) cameraOverlay.style.display = 'none'; }
 async function startCam() {
-  showOverlay('Menyalakan kamera…');
+  showOverlay('Lagi nyalain kamera...');
   snapBtn.disabled = true; camReady = false;
   try {
     await startCamera(video, facing);
     hideOverlay(); camReady = true;
     snapBtn.disabled = !currentTpl;
-    if (statusEl.textContent.startsWith('⚠️') || statusEl.textContent.startsWith('Menyalakan')) {
-      statusEl.textContent = currentTpl ? 'Siap! Klik Jepret ✦' : 'Pilih frame, lalu jepret ✦';
-    }
+    statusEl.textContent = currentTpl ? 'Udah siap. Klik Jepret ya.' : 'Pilih frame dulu, terus jepret ya.';
   } catch (err) {
-    showOverlay('Kamera belum aktif — izinin akses kamera di browser dulu ya ✦');
-    statusEl.textContent = '⚠️ Nggak bisa akses kamera: ' + err.message;
+    showOverlay('Kameranya belum nyala. Izinin akses kamera di browser dulu ya.');
+    statusEl.textContent = 'Kameranya nggak kebuka. Coba cek izin kamera di browser ya.';
   }
 }
 

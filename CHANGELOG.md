@@ -7,11 +7,23 @@ Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 > **✅ Aset transparan (4 Jul 2026):** versi transparan mascot/sticker ternyata udah ada di `assets/poca/poca-porikura/_originals/` (2000px RGBA) — dipindah + resize 800px ke folder runtime: `mascot/` (poca-wink/camera/peeking), `stickers/` (cute/snap/purrfect), `brand/watermark`. `logo-polara` di-crop. Total 8 aset transparan & kepasang.
 > **⏳ SISA opaque (Henry regenerate):** `mascot/mascot-poca-hero` (sedang), `brand/app-icon` + `brand/secondary-app-icon` (opsional, favicon).
 > **➕ Aset baru:** potong `assets/Polara Sticker Pack.png` → ~10-12 stiker transparan individual di `assets/stickers/` (variasi tray).
+> **🔜 RENCANA BESAR (review Henry 5 Jul, nunggu keputusan strategi frame):** flow diubah jadi "JEPRET DULU baru pilih frame" (preview frame pas milih kurang guna); mode + pilihan timer (3/5/10 dtk); mode-3 jelas atas/tengah/bawah; frame declare support 1&3 / 1-only / 3-only (butuh kembangin frame); stiker + field nama/kampus pindah ke panel KANAN.
 - Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
 - Sticker tray UNIVERSAL (semua frame) — 6 stiker sekarang semua transparan ✓ (bisa ditambah variasi dari sticker pack sheet).
 - Catatan code-review (low, keputusan Henry): `.tpl-btn` (`<button>`) memuat `<iframe>` thumbnail — teknis "interactive content" di dalam button = HTML kurang valid, TAPI fungsional aman & keyboard OK (iframe `tabindex=-1` + `pointer-events:none`, verified). Strict-valid = ganti ke `div[role=button]` + keydown handler.
 - Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
 - Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
+
+## [0.7.2] - 2026-07-05
+### Fixed
+- **BUG hasil download aneh (frame mungil di pojok kanvas gede).** `fitStage` nge-scale `.ph-canvas` buat pas di layar, tapi `exportPng` ikut nangkep transform itu. Fix: kasih `style:{transform:'none'}` ke html-to-image (di-apply ke CLONE, elemen layar aman) → export selalu ukuran asli. Verified: single 2160×2700, strip 1440×3600 @2x.
+- **Copy di-humanize**: buang semua em-dash, `…`, dan `✦` dari teks status/privasi. Bahasa dibikin natural/casual (`app.js` + `index.html`).
+### Added
+- **Footer**: privasi dipindah ke bawah + "Dibikin sama Henry" + link GitHub/LinkedIn (mirip catmoji).
+### Changed
+- Daftar frame (`#templateList`) scroll INTERNAL (max-height 64vh) — bukan nge-scroll seluruh layar.
+- Panel kanan jadi kartu sapaan Poca (teks privasi udah pindah ke footer).
+- Project dipindah Henry ke `C:\HenryDev\1HenryDev\HenryLabs\polara`.
 
 ## [0.7.0] - 2026-07-04
 ### Added

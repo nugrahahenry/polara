@@ -46,17 +46,21 @@ export async function exportPng(canvasEl, attempt = 1) {
   hideEls.forEach(el => (el.style.display = 'none'));
   try {
     return await toPng(canvasEl, {
-      width: canvasEl.offsetWidth,    // 1080 (transform parent nggak ngubah offsetWidth)
-      height: canvasEl.offsetHeight,  // 1350
+      width: canvasEl.offsetWidth,    // ukuran ASLI (1080 / 720), bukan yang di-scale buat display
+      height: canvasEl.offsetHeight,
       pixelRatio: 2,                  // hasil 2x lebih tajam
-      cacheBust: false,               // gambar udah ke-load di DOM — nggak perlu fetch ulang paksa
+      cacheBust: false,               // gambar udah ke-load di DOM, nggak perlu fetch ulang
+      // PENTING: fitStage() nge-scale .ph-canvas biar pas di layar. Kalau transform itu
+      // ikut ke-export, hasilnya frame mungil di kanvas gede. `style` di-apply ke CLONE
+      // html-to-image -> export full-size, elemen di layar nggak keganggu.
+      style: { transform: 'none', transformOrigin: 'top left' },
     });
   } catch (e) {
     if (attempt < 3) {
       await new Promise(r => setTimeout(r, 400 * attempt));
       return exportPng(canvasEl, attempt + 1);
     }
-    throw new Error('Export gagal setelah beberapa percobaan — cek koneksi.');
+    throw new Error('Gagal simpan. Coba lagi ya.');
   } finally {
     hideEls.forEach(el => (el.style.display = ''));
   }
