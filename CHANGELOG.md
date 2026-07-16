@@ -8,12 +8,24 @@ Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 > **⏳ SISA opaque (Henry regenerate):** `mascot/mascot-poca-hero` (sedang), `brand/app-icon` + `brand/secondary-app-icon` (opsional, favicon).
 > **➕ Aset baru:** potong `assets/Polara Sticker Pack.png` → ~10-12 stiker transparan individual di `assets/stickers/` (variasi tray).
 > **✅ Flow "jepret dulu" + timer + share + footer = DONE di v0.8.0.** Sisa: frame yang bisa 1 DAN 3 (kembangin frame; strategi diputus "kembangin yang ada dulu"), per-photo retake buat mode-3.
-> **⏳ NUNGGU DATA Henry buat footer** (taruh di CLAUDE.md general): URL portofolio, handle Instagram, nomor WhatsApp (sekarang placeholder `#`; GitHub udah kepasang). Nomor WA bakal public di repo — konfirmasi mau pakai nomor pribadi atau khusus.
+> **✅ Footer sosmed kepasang (5 Jul):** Instagram @hnrydev + WhatsApp (0895..., Henry OK dipublik) + GitHub. SISA: URL portofolio (Henry lagi bangun) buat link nama.
 - Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
 - Sticker tray UNIVERSAL (semua frame) — 6 stiker sekarang semua transparan ✓ (bisa ditambah variasi dari sticker pack sheet).
 - Catatan code-review (low, keputusan Henry): `.tpl-btn` (`<button>`) memuat `<iframe>` thumbnail — teknis "interactive content" di dalam button = HTML kurang valid, TAPI fungsional aman & keyboard OK (iframe `tabindex=-1` + `pointer-events:none`, verified). Strict-valid = ganti ke `div[role=button]` + keydown handler.
 - Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
 - Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
+
+## [0.8.1] - 2026-07-05
+### Added
+- **Stiker bisa RESIZE + ROTATE + hapus** (bukan cuma geser). Handle muncul pas stiker dipilih: ✕ merah (hapus), ↻ biru (putar), ⤢ kuning (ubah ukuran). Titik tengah dijaga pas resize. Outline seleksi + handle otomatis disembunyiin pas export. (#4)
+### Fixed
+- **Foto kepotong (2 orang) → `captureFrame` sekarang WYSIWYG.** Dulu capture full-native (lebih lebar dari preview) → yang ke-foto beda dari yang keliatan, orang kepotong pas masuk slot. Sekarang center-crop persis ke rasio kotak preview. Hasil = apa yang kamu lihat. (#3)
+- **Title jadi "Polara - Photobooth"** (strip, bukan em-dash). (#2)
+### Changed — kembangin frame (#3, batch 1)
+- **Kosmik** dirombak: aurora + planet glow + sparkles + slot foto **4:5** (800×1000, cocok sama hasil capture → nggak kepotong) + buang em-dash placeholder. (dulu terlalu polos)
+### Notes
+- Sisa kembangin frame (batch 2, next): Poca Purikura declutter (biar user hias sendiri), Polara Daily dirapiin, Trading Card dirapiin.
+- **RENCANA #1 (rework capture strip, next):** preview strip live pas jepret + jepret MANUAL per-slot (klik kamera tiap foto biar siap pose, atas→bawah) + jepret ulang per-foto (silang). Butuh test device.
 
 ## [0.8.0] - 2026-07-05
 ### Changed — REWORK BESAR: flow "jepret dulu"
