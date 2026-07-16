@@ -10,7 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles/tokens.css" />
   <style>
-    /* ── shell layout (struktur; warna/font dari tokens.css) ── */
     * { box-sizing: border-box; }
     body {
       margin: 0; min-height: 100vh; color: var(--text);
@@ -28,28 +27,32 @@
     .app-header { display: flex; align-items: center; gap: 14px; padding: 18px 28px; }
     .brand-logo { height: 50px; width: auto; display: block; filter: drop-shadow(0 4px 8px rgba(75,46,31,.16)); }
     .brand-tag {
-      font-family: var(--font-display); font-weight: 600; color: #a62f6b; /* a11y: ≥4.5:1 di atas putih */
+      font-family: var(--font-display); font-weight: 600; color: #a62f6b;
       background: var(--white); border: 2px solid var(--outline); border-radius: var(--radius-pill);
-      padding: 5px 15px; font-size: .82rem; box-shadow: var(--shadow-sticker);
-      transform: rotate(-2deg);
+      padding: 5px 15px; font-size: .82rem; box-shadow: var(--shadow-sticker); transform: rotate(-2deg);
     }
 
     /* ── grid utama ── */
     main.studio {
       flex: 1; width: 100%; max-width: 1180px; margin: 0 auto; padding: 4px 24px 28px;
-      display: grid; grid-template-columns: 230px 1fr 250px; gap: 20px; align-items: start;
+      display: grid; grid-template-columns: 260px 1fr 250px; gap: 20px; align-items: start;
     }
     .panel {
       background: var(--surface); border: 2px solid var(--outline);
       border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sticker);
     }
     .panel-title {
-      margin: 2px 0 12px; font-family: var(--font-display); font-weight: 700; font-size: 1.15rem;
+      margin: 0 0 12px; font-family: var(--font-display); font-weight: 700; font-size: 1.1rem;
       display: flex; align-items: center; gap: 8px;
     }
-    .panel-title .star { color: var(--butter); -webkit-text-stroke: 1.5px var(--outline); }
+    .panel-title .num {
+      display: grid; place-items: center; width: 26px; height: 26px; flex: 0 0 auto;
+      border-radius: 50%; background: var(--butter); border: 2px solid var(--outline); font-size: .85rem;
+    }
+    .sub-label { margin: 14px 0 8px; font-family: var(--font-display); font-weight: 600; font-size: .82rem; color: var(--brown-soft); }
+    [hidden] { display: none !important; }
 
-    /* ── stepper (tahapan) ── */
+    /* ── stepper ── */
     .stepper { list-style: none; margin: 0 0 2px; padding: 0; display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; width: 100%; }
     .step { display: flex; align-items: center; gap: 6px; font-size: .8rem; color: var(--muted); }
     .step:not(:last-child)::after { content: ''; width: 16px; height: 2px; background: var(--border); border-radius: 2px; margin-left: 6px; }
@@ -60,93 +63,96 @@
     .step.done { color: var(--brown-soft); }
     .step.done .step-n { border-color: var(--outline); background: var(--butter); }
 
-    /* ── mode chooser (1 / 3 foto) ── */
-    .mode-choose { display: flex; gap: 8px; margin-bottom: 14px; }
-    .mode-btn {
+    /* ── segmented (mode / timer) ── */
+    .seg { display: flex; gap: 8px; }
+    .seg-btn {
       flex: 1; cursor: pointer; font-family: var(--font-display); font-weight: 600; color: var(--brown);
       border: 2px solid var(--outline); border-radius: var(--radius); padding: 9px 6px; background: var(--white);
       display: flex; align-items: center; justify-content: center; gap: 7px; transition: transform .16s ease, background .16s ease;
     }
-    .mode-btn:hover { transform: translateY(-1px); }
-    .mode-btn:focus-visible { outline: 2px solid var(--outline); outline-offset: 2px; box-shadow: var(--ring); }
-    .mode-btn.active { background: var(--pink); box-shadow: var(--shadow-sticker); }
-    .mode-n { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--butter); border: 2px solid var(--outline); font-size: .8rem; }
+    .seg-btn:hover { transform: translateY(-1px); }
+    .seg-btn:focus-visible { outline: 2px solid var(--outline); outline-offset: 2px; box-shadow: var(--ring); }
+    .seg-btn.active { background: var(--pink); box-shadow: var(--shadow-sticker); }
+    .seg-badge { display: grid; place-items: center; width: 22px; height: 22px; border-radius: 50%; background: var(--butter); border: 2px solid var(--outline); font-size: .8rem; }
 
-    /* ── template picker (dengan thumbnail preview) ── */
-    /* list-nya sendiri yang scroll (bukan layar) kalau frame kebanyakan */
-    #templateList { display: flex; flex-direction: column; gap: 12px; max-height: 64vh; overflow-y: auto; padding-right: 4px; }
+    /* ── frame picker (grid 2 kolom, scroll internal) ── */
+    #templateList { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; max-height: 60vh; overflow-y: auto; padding-right: 4px; }
     .tpl-btn {
       cursor: pointer; text-align: left; font: inherit; color: var(--text);
       border: 2px solid var(--border); border-radius: var(--radius);
-      padding: 8px; background: var(--cream-2); overflow: hidden;
-      display: flex; flex-direction: column; gap: 8px;
+      padding: 6px; background: var(--cream-2); overflow: hidden;
+      display: flex; flex-direction: column; gap: 6px;
       transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
     }
     .tpl-btn:hover { transform: translateY(-2px); border-color: var(--pink); }
     .tpl-btn:focus-visible { outline: 2px solid var(--outline); outline-offset: 2px; box-shadow: var(--ring); }
     .tpl-btn.active { border-color: var(--outline); background: var(--pink-soft); box-shadow: var(--shadow-sticker); }
     .tpl-thumb {
-      position: relative; display: block; width: 100%; height: 150px; overflow: hidden;
-      border-radius: 14px; border: 2px solid var(--border);
-      background: repeating-conic-gradient(#f3e7db 0 25%, #fff 0 50%) 0 0 / 18px 18px;
+      position: relative; display: block; width: 100%; height: 118px; overflow: hidden;
+      border-radius: 12px; border: 2px solid var(--border);
+      background: repeating-conic-gradient(#f3e7db 0 25%, #fff 0 50%) 0 0 / 16px 16px;
     }
     .tpl-thumb-frame { position: absolute; top: 0; left: 0; border: 0; transform-origin: top left; pointer-events: none; }
-    .tpl-meta { display: flex; flex-direction: column; gap: 1px; padding: 0 2px 2px; }
-    .tpl-name { font-family: var(--font-display); font-weight: 600; font-size: .92rem; line-height: 1.15; }
-    .tpl-btn .cat { font-size: .68rem; color: var(--muted); text-transform: capitalize; }
+    .tpl-meta { padding: 0 2px 2px; }
+    .tpl-name { font-family: var(--font-display); font-weight: 600; font-size: .82rem; line-height: 1.1; display: block; }
 
-    /* ── panggung (kamera / hasil) ── */
+    /* ── panggung ── */
     #stage { display: flex; flex-direction: column; align-items: center; gap: 16px; }
     .stage-card {
       position: relative; background: var(--white); border: 2px solid var(--outline);
-      border-radius: var(--radius-lg); padding: 14px; box-shadow: var(--shadow-sticker);
-      width: 100%; display: flex; justify-content: center;
+      border-radius: var(--radius-lg); padding: 16px; box-shadow: var(--shadow-sticker);
+      width: 100%; min-height: 420px; display: flex; align-items: center; justify-content: center;
     }
-    #cameraWrap { position: relative; width: min(460px, 100%); min-height: 340px; line-height: 0; border-radius: var(--radius); overflow: hidden; transition: filter .1s; }
-    video { display: block; width: 100%; max-width: 460px; border-radius: var(--radius); transform: scaleX(-1); background: var(--cream); }
-    #canvasScale { transform-origin: top center; display: none; border-radius: var(--radius); overflow: hidden; }
+    #cameraWrap { position: relative; width: min(460px, 100%); aspect-ratio: 4 / 5; line-height: 0; border-radius: var(--radius); overflow: hidden; background: var(--cream); transition: filter .1s; }
+    video { display: block; width: 100%; height: 100%; object-fit: cover; border-radius: var(--radius); transform: scaleX(-1); }
+    #canvasScale { transform-origin: top center; display: none; border-radius: var(--radius); overflow: hidden; box-shadow: 0 10px 30px rgba(75,46,31,.14); }
 
     #countdown {
       position: absolute; inset: 0; display: none; align-items: center; justify-content: center;
       font-family: var(--font-display); font-weight: 700; font-size: 8rem; color: var(--white);
-      text-shadow: 0 0 0 var(--outline), 0 8px 24px rgba(75,46,31,.4);
       -webkit-text-stroke: 5px var(--outline); paint-order: stroke fill;
     }
+    .shot-badge {
+      position: absolute; top: 14px; left: 50%; transform: translateX(-50%); display: none;
+      background: var(--pink); border: 2px solid var(--outline); border-radius: var(--radius-pill);
+      padding: 5px 16px; font-family: var(--font-display); font-weight: 700; font-size: .9rem; color: var(--brown);
+      box-shadow: var(--shadow-sticker); z-index: 5;
+    }
 
-    /* ── empty-state kamera (loading / ditolak) ── */
+    /* ── empty-state kamera ── */
     #cameraOverlay {
       position: absolute; inset: 0; display: none; flex-direction: column; gap: 12px;
       align-items: center; justify-content: center; text-align: center; padding: 24px; line-height: 1.4;
       background: linear-gradient(180deg, var(--cream-2), var(--pink-soft));
     }
-    #cameraOverlay img { width: 130px; height: auto; }
+    #cameraOverlay img { width: 128px; height: auto; filter: drop-shadow(0 8px 12px rgba(75,46,31,.18)); }
     #camMsg { margin: 0; font-family: var(--font-display); font-weight: 600; color: var(--brown); max-width: 260px; font-size: .95rem; }
 
     /* ── sticker tray ── */
-    #stickerTray {
-      display: none; flex-wrap: wrap; gap: 10px; justify-content: center;
-      width: 100%; max-width: 480px; padding: 12px;
-      background: var(--cream-2); border: 2px dashed var(--pink); border-radius: var(--radius-lg);
-    }
-    #stickerTray::before {
-      content: 'Tempel stiker di sini'; flex-basis: 100%; text-align: center;
-      font-family: var(--font-display); font-size: .82rem; color: var(--brown-soft);
-    }
+    #stickerTray { display: flex; flex-wrap: wrap; gap: 8px; }
     .sticker-btn {
-      cursor: pointer; width: 58px; height: 58px; padding: 5px;
-      background: var(--white); border: 2px solid var(--border); border-radius: 16px;
+      cursor: pointer; width: 54px; height: 54px; padding: 4px;
+      background: var(--white); border: 2px solid var(--border); border-radius: 14px;
       transition: transform .16s ease, border-color .16s ease;
     }
     .sticker-btn:hover { transform: translateY(-3px) rotate(-3deg); border-color: var(--pink); }
     .sticker-btn:focus-visible { outline: 2px solid var(--outline); outline-offset: 2px; box-shadow: var(--ring); }
     .sticker-btn img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
+    /* ── input nama/kampus ── */
+    .field-label { display: block; margin: 16px 0 6px; font-family: var(--font-display); font-weight: 600; font-size: .82rem; color: var(--brown-soft); }
+    .caption-input {
+      width: 100%; font: inherit; font-weight: 600; color: var(--brown);
+      border: 2px solid var(--outline); border-radius: var(--radius); padding: 10px 12px; background: var(--cream-2);
+    }
+    .caption-input:focus-visible { outline: 2px solid var(--pink); outline-offset: 1px; }
+
     /* ── kontrol ── */
     .controls { display: flex; gap: 12px; flex-wrap: wrap; justify-content: center; }
     .btn {
       cursor: pointer; font-family: var(--font-display); font-weight: 600; font-size: 1rem;
       display: inline-flex; align-items: center; gap: 9px;
-      border: 2px solid var(--outline); border-radius: var(--radius-pill); padding: 12px 24px;
+      border: 2px solid var(--outline); border-radius: var(--radius-pill); padding: 12px 22px;
       color: var(--brown); background: var(--white);
       box-shadow: var(--shadow-sticker); transition: transform .18s ease, background .18s ease;
     }
@@ -157,43 +163,48 @@
     .btn:disabled { opacity: .5; cursor: not-allowed; transform: none; }
     .btn-primary { background: var(--pink); }
     .btn-primary:hover { background: var(--pink-soft); }
+    .btn-share { background: var(--blue); }
     .btn-icon { padding: 12px; }
 
-    .status { margin: 2px 0 0; text-align: center; color: var(--brown-soft); font-size: .9rem; max-width: 460px; }
+    .status { margin: 2px 0 0; text-align: center; color: var(--brown-soft); font-size: .9rem; max-width: 460px; min-height: 1.2em; }
 
-    /* ── info card ── */
-    .info .greeter {
-      display: block; width: 100%; border-radius: var(--radius); margin-bottom: 12px;
-      border: 2px solid var(--outline);
+    /* ── greeter card ── */
+    .greeter { display: block; width: 100%; max-width: 180px; margin: 0 auto 10px; }
+    .info h3 { margin: 4px 0 6px; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; text-align: center; }
+    .info p { margin: 0; font-size: .86rem; color: var(--brown-soft); line-height: 1.5; text-align: center; }
+
+    /* ── footer ── */
+    .app-footer { padding: 26px 24px 30px; border-top: 2px dashed var(--border); background: rgba(255,255,255,.4); }
+    .footer-inner { max-width: 520px; margin: 0 auto; text-align: center; display: flex; flex-direction: column; align-items: center; gap: 12px; }
+    .footer-credit { margin: 0; font-family: var(--font-display); font-weight: 600; font-size: 1rem; color: var(--brown); }
+    .footer-credit a { color: #a62f6b; text-decoration: none; border-bottom: 2px solid var(--pink-soft); }
+    .footer-credit a:hover { border-bottom-color: #a62f6b; }
+    .footer-socials { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+    .social-chip {
+      display: inline-flex; align-items: center; gap: 7px; text-decoration: none;
+      font-family: var(--font-display); font-weight: 600; font-size: .85rem; color: var(--brown);
+      background: var(--white); border: 2px solid var(--outline); border-radius: var(--radius-pill);
+      padding: 7px 14px; box-shadow: var(--shadow-sticker); transition: transform .16s ease, background .16s ease;
     }
-    .info h3 { margin: 4px 0 6px; font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; }
-    .info p { margin: 0; font-size: .86rem; color: var(--brown-soft); line-height: 1.5; }
-
-    /* ── footer (privasi + credit) ── */
-    .app-footer { padding: 22px 24px 28px; text-align: center; border-top: 2px dashed var(--border); }
-    .app-footer p { margin: 4px 0; color: var(--brown-soft); font-size: .85rem; line-height: 1.5; }
-    .app-footer .footer-credit { font-family: var(--font-display); }
-    .app-footer a { color: #a62f6b; font-weight: 700; text-decoration: none; }
-    .app-footer a:hover { text-decoration: underline; }
-    .app-footer a:focus-visible { outline: 2px solid var(--outline); outline-offset: 2px; border-radius: 4px; }
+    .social-chip:hover { transform: translateY(-2px); background: var(--cream-2); }
+    .social-chip:focus-visible { outline: 2px solid var(--outline); outline-offset: 2px; }
+    .social-chip svg { width: 18px; height: 18px; }
+    .footer-privacy { margin: 2px 0 0; font-size: .8rem; color: var(--brown-soft); }
+    .footer-socials a[href="#"] { opacity: .55; }
 
     /* ── responsif ── */
     @media (max-width: 1024px) {
-      main.studio { grid-template-columns: 200px 1fr; }
-      .info { display: none; }
+      main.studio { grid-template-columns: 220px 1fr; }
+      .decorate-aside { grid-column: 1 / -1; }
     }
-    @media (max-width: 720px) {
+    @media (max-width: 760px) {
       .app-header { padding: 14px 18px; }
-      main.studio { grid-template-columns: 1fr; padding: 4px 14px 24px; gap: 14px; }
       .brand-logo { height: 42px; }
-      #templateList { flex-direction: row; overflow-x: auto; overflow-y: visible; max-height: none; padding-bottom: 6px; }
-      .tpl-btn { flex: 0 0 auto; width: 132px; }
-      .tpl-thumb { height: 116px; }
-      .mode-choose { max-width: 320px; }
+      main.studio { grid-template-columns: 1fr; padding: 4px 14px 24px; gap: 14px; }
+      #templateList { grid-template-columns: 1fr 1fr; max-height: none; }
       .step-l { display: none; }
       #countdown { font-size: 6rem; }
     }
-
     @media (prefers-reduced-motion: reduce) {
       * { transition: none !important; animation: none !important; }
     }
@@ -206,30 +217,43 @@
   </header>
 
   <main class="studio">
-    <aside class="panel picker" aria-label="Pilih frame">
-      <h2 class="panel-title"><span class="star">✦</span> Pilih Frame</h2>
-      <div class="mode-choose" id="modeChoose" role="group" aria-label="Jumlah foto">
-        <button type="button" class="mode-btn active" data-mode="1" aria-pressed="true"><span class="mode-n">1</span> Foto</button>
-        <button type="button" class="mode-btn" data-mode="3" aria-pressed="false"><span class="mode-n">3</span> Strip</button>
+    <!-- KIRI: setup (mode + timer) morph jadi frame picker -->
+    <aside class="panel workbench" aria-label="Pengaturan">
+      <div id="setupCard">
+        <h2 class="panel-title"><span class="num">1</span> Mau berapa foto?</h2>
+        <div class="seg" id="modeChoose" role="group" aria-label="Jumlah foto">
+          <button type="button" class="seg-btn active" data-mode="1" aria-pressed="true"><span class="seg-badge">1</span> Foto</button>
+          <button type="button" class="seg-btn" data-mode="3" aria-pressed="false"><span class="seg-badge">3</span> Strip</button>
+        </div>
+        <p class="sub-label">Timer (detik)</p>
+        <div class="seg" id="timerChoose" role="group" aria-label="Timer">
+          <button type="button" class="seg-btn active" data-timer="3" aria-pressed="true">3</button>
+          <button type="button" class="seg-btn" data-timer="5" aria-pressed="false">5</button>
+          <button type="button" class="seg-btn" data-timer="10" aria-pressed="false">10</button>
+        </div>
       </div>
-      <div id="templateList"></div>
+
+      <div id="frameCard" hidden>
+        <h2 class="panel-title"><span class="num">3</span> Pilih Frame</h2>
+        <div id="templateList"></div>
+      </div>
     </aside>
 
+    <!-- TENGAH: panggung -->
     <section id="stage">
       <ol class="stepper" id="stepper" aria-label="Tahapan"></ol>
       <div class="stage-card">
         <div id="cameraWrap">
-          <video id="video" autoplay playsinline muted width="460" height="575"></video>
+          <video id="video" autoplay playsinline muted></video>
+          <div class="shot-badge" id="shotBadge"></div>
           <div id="cameraOverlay">
-            <img src="assets/mascot/mascot-poca-hero.png" alt="" aria-hidden="true" />
+            <img src="assets/mascot/poca-wink.png" alt="" aria-hidden="true" />
             <p id="camMsg">Lagi nyalain kamera...</p>
           </div>
           <div id="countdown"></div>
         </div>
         <div id="canvasScale"></div>
       </div>
-
-      <div id="stickerTray"></div>
 
       <div class="controls">
         <button class="btn btn-primary" id="snapBtn">
@@ -238,30 +262,60 @@
         </button>
         <button class="btn" id="retakeBtn" style="display:none;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
-          Ulangi
+          Jepret Ulang
         </button>
         <button class="btn btn-primary" id="downloadBtn" style="display:none;">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
           Simpan
+        </button>
+        <button class="btn btn-share" id="shareBtn" style="display:none;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.6" y1="13.5" x2="15.4" y2="17.5"/><line x1="15.4" y1="6.5" x2="8.6" y2="10.5"/></svg>
+          Bagikan
         </button>
         <button class="btn btn-icon" id="flipBtn" title="Ganti kamera" aria-label="Ganti kamera">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 4v6h-6"/><path d="M1 20v-6h6"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>
         </button>
       </div>
 
-      <p class="status" id="status" role="status" aria-live="polite">Pilih frame dulu, terus jepret ya. (Nanti browser minta izin kamera.)</p>
+      <p class="status" id="status" role="status" aria-live="polite">Atur dulu mau berapa foto sama timer-nya, terus jepret ya.</p>
     </section>
 
-    <aside class="panel info" aria-label="Kenalan sama Poca">
-      <img class="greeter" src="assets/mascot/mascot-poca-hero.png" alt="Poca, maskot Polara" />
-      <h3>Hai, aku Poca!</h3>
-      <p>Pilih frame, jepret, tempel stiker, terus simpan. Gampang kok, selamat bersenang-senang!</p>
+    <!-- KANAN: greeter morph jadi panel hias -->
+    <aside class="panel info decorate-aside" aria-label="Hias">
+      <div id="greeterCard">
+        <img class="greeter" src="assets/mascot/poca-wink.png" alt="Poca, maskot Polara" />
+        <h3>Hai, aku Poca!</h3>
+        <p>Atur foto, jepret, pilih frame, tempel stiker, terus simpan. Gampang kok, selamat bersenang-senang!</p>
+      </div>
+
+      <div id="hiasCard" hidden>
+        <h2 class="panel-title"><span class="num">4</span> Hias</h2>
+        <div id="stickerTray"></div>
+        <label class="field-label" for="captionInput">Nama / Kampus</label>
+        <input class="caption-input" id="captionInput" type="text" maxlength="40" placeholder="mis. Henry · UBM" />
+      </div>
     </aside>
   </main>
 
   <footer class="app-footer">
-    <p class="footer-privacy">Fotonya diproses langsung di HP kamu, nggak diupload ke mana-mana. Aman.</p>
-    <p class="footer-credit">Dibikin sama <strong>Henry</strong> · <a href="https://github.com/nugrahahenry" target="_blank" rel="noopener">GitHub</a> · <a href="https://linkedin.com/in/nugrahahenry" target="_blank" rel="noopener">LinkedIn</a></p>
+    <div class="footer-inner">
+      <p class="footer-credit">Dibikin sama <a id="portoLink" href="#" title="Portofolio (segera hadir)">Henry Nugraha</a></p>
+      <nav class="footer-socials" aria-label="Sosial media">
+        <a class="social-chip" id="igLink" href="#" target="_blank" rel="noopener" aria-label="Instagram">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+          Instagram
+        </a>
+        <a class="social-chip" href="https://github.com/nugrahahenry" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 1.5a10.5 10.5 0 0 0-3.32 20.47c.52.1.71-.23.71-.5v-1.74c-2.9.63-3.52-1.4-3.52-1.4-.47-1.2-1.16-1.52-1.16-1.52-.95-.65.07-.64.07-.64 1.05.08 1.6 1.08 1.6 1.08.94 1.6 2.46 1.14 3.06.87.1-.68.37-1.14.66-1.4-2.32-.26-4.76-1.16-4.76-5.15 0-1.14.4-2.06 1.08-2.79-.11-.27-.47-1.33.1-2.76 0 0 .88-.28 2.88 1.06a9.9 9.9 0 0 1 5.24 0c2-1.34 2.88-1.06 2.88-1.06.57 1.43.21 2.49.1 2.76.67.73 1.07 1.65 1.07 2.79 0 4-2.45 4.88-4.78 5.14.38.32.71.95.71 1.92v2.85c0 .27.19.61.72.5A10.5 10.5 0 0 0 12 1.5Z"/></svg>
+          GitHub
+        </a>
+        <a class="social-chip" id="waLink" href="#" target="_blank" rel="noopener" aria-label="WhatsApp">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2a10 10 0 0 0-8.5 15.3L2 22l4.8-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.4-6c-.2-.1-1.4-.7-1.6-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1-.7-.3-1.4-.6-2-1.4-.4-.5-.7-1.1-.8-1.3-.1-.2 0-.4.1-.5l.4-.4c.1-.1.1-.2.2-.4 0-.1 0-.3 0-.4l-.7-1.7c-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.4.1-.6.3-.2.2-.8.8-.8 1.9s.8 2.2 1 2.4c.1.2 1.6 2.4 3.8 3.3 1.4.6 2 .7 2.6.6.4 0 1.3-.5 1.5-1 .2-.5.2-1 .1-1.1 0-.1-.2-.2-.4-.3Z"/></svg>
+          WhatsApp
+        </a>
+      </nav>
+      <p class="footer-privacy">Fotonya diproses langsung di HP kamu, nggak diupload ke mana-mana. Aman.</p>
+    </div>
   </footer>
 
   <script type="module" src="src/app.js"></script>

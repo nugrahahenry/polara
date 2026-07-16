@@ -7,12 +7,28 @@ Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 > **✅ Aset transparan (4 Jul 2026):** versi transparan mascot/sticker ternyata udah ada di `assets/poca/poca-porikura/_originals/` (2000px RGBA) — dipindah + resize 800px ke folder runtime: `mascot/` (poca-wink/camera/peeking), `stickers/` (cute/snap/purrfect), `brand/watermark`. `logo-polara` di-crop. Total 8 aset transparan & kepasang.
 > **⏳ SISA opaque (Henry regenerate):** `mascot/mascot-poca-hero` (sedang), `brand/app-icon` + `brand/secondary-app-icon` (opsional, favicon).
 > **➕ Aset baru:** potong `assets/Polara Sticker Pack.png` → ~10-12 stiker transparan individual di `assets/stickers/` (variasi tray).
-> **🔜 RENCANA BESAR (review Henry 5 Jul, nunggu keputusan strategi frame):** flow diubah jadi "JEPRET DULU baru pilih frame" (preview frame pas milih kurang guna); mode + pilihan timer (3/5/10 dtk); mode-3 jelas atas/tengah/bawah; frame declare support 1&3 / 1-only / 3-only (butuh kembangin frame); stiker + field nama/kampus pindah ke panel KANAN.
+> **✅ Flow "jepret dulu" + timer + share + footer = DONE di v0.8.0.** Sisa: frame yang bisa 1 DAN 3 (kembangin frame; strategi diputus "kembangin yang ada dulu"), per-photo retake buat mode-3.
+> **⏳ NUNGGU DATA Henry buat footer** (taruh di CLAUDE.md general): URL portofolio, handle Instagram, nomor WhatsApp (sekarang placeholder `#`; GitHub udah kepasang). Nomor WA bakal public di repo — konfirmasi mau pakai nomor pribadi atau khusus.
 - Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
 - Sticker tray UNIVERSAL (semua frame) — 6 stiker sekarang semua transparan ✓ (bisa ditambah variasi dari sticker pack sheet).
 - Catatan code-review (low, keputusan Henry): `.tpl-btn` (`<button>`) memuat `<iframe>` thumbnail — teknis "interactive content" di dalam button = HTML kurang valid, TAPI fungsional aman & keyboard OK (iframe `tabindex=-1` + `pointer-events:none`, verified). Strict-valid = ganti ke `div[role=button]` + keydown handler.
 - Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
 - Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
+
+## [0.8.0] - 2026-07-05
+### Changed — REWORK BESAR: flow "jepret dulu"
+- Flow dibalik: `Mode + Timer` → **JEPRET** → `Pilih Frame` (preview-nya udah ada fotomu) → `Hias` → `Simpan / Bagikan`. Frame nggak dipilih di awal lagi (dulu bikin bingung + preview kosong). Stepper baru: Foto → Frame → Hias → Simpan.
+- Panel KIRI morph: setup (mode + timer) → frame picker (grid **2 kolom**, scroll internal) setelah jepret. Mode-3 → cuma nampilin strip frame.
+- Panel KANAN morph: greeter Poca → panel **Hias** (stiker + input **Nama/Kampus** live).
+### Added
+- **Timer pilihan 3 / 5 / 10 detik** (default 3). Mode-3 ada badge "Foto x dari 3".
+- **Jepret Ulang**: balik ke kamera buat re-shoot (mode + timer tetap).
+- **Tombol Bagikan** (Web Share API): share PNG langsung — di HP muncul share sheet, di browser yang nggak support fallback ke download. Pesan default di-humanize.
+### Fixed
+- **Kamera & hasil sekarang KE-CENTER** di kartu (`.stage-card` align+justify center, `#cameraWrap` aspect-ratio 4:5). (#3)
+- **Mascot di greeter + overlay kamera pakai `poca-wink.png` (transparan)** — ganti `mascot-poca-hero` opaque yang kotak putihnya ganggu pas loading/ganti kamera. (#3)
+### Notes
+- Loop jepret 1×/3× dari kamera asli + share sheet di HP: perlu test device Henry (nggak bisa dites headless).
 
 ## [0.7.2] - 2026-07-05
 ### Fixed
