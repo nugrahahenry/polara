@@ -15,6 +15,10 @@ Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 - Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
 - Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
 
+## [0.8.4] - 2026-07-05
+### Changed — Trading Card dirapiin (#3)
+- Buang **pola garis grid** yang bikin "garis-garis nggak rapi" (di `.ph-canvas::before` + `.card-inner::before`) → sekarang cuma starfield titik halus, nggak ada garis kotak-kotak. Streak holografik (`::after`) dihaluskan (stop gradient lebih lebar, opacity 0.72→0.6) biar lebih smooth. Verified render + export.
+
 ## [0.8.3] - 2026-07-05
 ### Changed — kembangin frame batch 2 (#3)
 - **Poca Purikura di-declutter**: buang semua hiasan bawaan (3 blob, 3 mascot Poca, sparkle/heart/paw, 3 kata-stiker, watermark img). Sekarang cuma frame + slot bersih, biar user hias sendiri pakai tray. `.ph-brand` dibikin keliatan (tadinya `font-size:0`, pakai watermark img yang udah dibuang). Verified: 0 dekorasi bawaan.
