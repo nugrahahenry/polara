@@ -15,6 +15,13 @@ Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 - Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
 - Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
 
+## [0.8.3] - 2026-07-05
+### Changed — kembangin frame batch 2 (#3)
+- **Poca Purikura di-declutter**: buang semua hiasan bawaan (3 blob, 3 mascot Poca, sparkle/heart/paw, 3 kata-stiker, watermark img). Sekarang cuma frame + slot bersih, biar user hias sendiri pakai tray. `.ph-brand` dibikin keliatan (tadinya `font-size:0`, pakai watermark img yang udah dibuang). Verified: 0 dekorasi bawaan.
+- **Polara Daily dirapiin + foto nggak kepotong**: buang kolom kiri (3 artikel koran palsu + mini-photo box) yang bikin sempit & berantakan. Content-grid 3-kolom → 2-kolom (foto `1fr` + 1 kolom kanan). Slot foto dari aspek **~0.64 (kesempitan → orang kepotong) jadi ~0.78 (≈4:5)**. Verified.
+### Notes
+- **Trading Card DITAHAN** — feedback "belum rapih" masih umum + layout kartu holografik rumit, ngubah tanpa lihat hasil visual berisiko bikin makin berantakan. Butuh Henry spesifikin bagian mana yang kurang rapi. (Slot ~1:1, foto 4:5 kepotong atas-bawah — bisa dibenerin sekalian nanti.)
+
 ## [0.8.2] - 2026-07-05
 ### Added — rework capture strip (#1) + link di foto
 - **Mode 3: jepret MANUAL per-slot** (bukan auto 3x beruntun). Muncul strip 3 slot (atas/tengah/bawah) di samping kamera: klik slot → aktif → klik Jepret → countdown (timer pilihan) → foto masuk slot itu → auto lanjut slot berikutnya. Bisa **silang ✕** buat foto ulang slot tertentu. Tombol **"Lanjut ke Frame"** muncul pas 3 slot keisi. Verified: strip toggle per mode, slot selection, ✕. Loop kamera per-slot perlu test device.
