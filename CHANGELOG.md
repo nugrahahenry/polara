@@ -15,6 +15,14 @@ Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 - Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
 - Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
 
+## [0.8.2] - 2026-07-05
+### Added — rework capture strip (#1) + link di foto
+- **Mode 3: jepret MANUAL per-slot** (bukan auto 3x beruntun). Muncul strip 3 slot (atas/tengah/bawah) di samping kamera: klik slot → aktif → klik Jepret → countdown (timer pilihan) → foto masuk slot itu → auto lanjut slot berikutnya. Bisa **silang ✕** buat foto ulang slot tertentu. Tombol **"Lanjut ke Frame"** muncul pas 3 slot keisi. Verified: strip toggle per mode, slot selection, ✕. Loop kamera per-slot perlu test device.
+- **Link Polara ke-bake di foto** (biar orang langsung nyoba): `.ph-brand` semua frame diisi `Polara · polara.app`, jadi walau platform (IG dll) strip teks pas share file, link tetap kelihatan DI gambar. Pesan share juga nyebut link.
+### Notes
+- ⚠️ `POLARA_URL='polara.app'` masih PLACEHOLDER (`src/app.js`) — ganti ke URL asli setelah app di-deploy biar link beneran kebuka.
+- Frame batch 2 (Poca Purikura declutter, Polara Daily, Trading Card dirapiin) belum — next.
+
 ## [0.8.1] - 2026-07-05
 ### Added
 - **Stiker bisa RESIZE + ROTATE + hapus** (bukan cuma geser). Handle muncul pas stiker dipilih: ✕ merah (hapus), ↻ biru (putar), ⤢ kuning (ubah ukuran). Titik tengah dijaga pas resize. Outline seleksi + handle otomatis disembunyiin pas export. (#4)

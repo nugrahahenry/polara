@@ -1,19 +1,24 @@
 // ─── app.js ──────────────────────────────────────────────────────────────────
-// Flow "jepret dulu": atur MODE (1/3) + TIMER → JEPRET (1x atau 3x) → pilih FRAME
-// (preview-nya udah ada fotomu) → HIAS (stiker + nama) → SIMPAN / BAGIKAN.
+// Flow "jepret dulu": atur MODE (1/3) + TIMER → JEPRET → pilih FRAME → HIAS → SIMPAN/BAGIKAN.
+// Mode 3 (strip): jepret manual per-slot (atas→tengah→bawah), bisa silang & jepret ulang.
 import { startCamera, captureFrame } from './core/camera.js';
 import { renderTemplate, setPhotoSlot, setMeta, exportPng, download, placeSticker } from './core/compositor.js';
 import { templates, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js';
 import { getStickerPack } from './modules/stickers/index.js';
 
+// GANTI setelah app di-deploy (biar link di foto + share beneran bisa dibuka orang).
+const POLARA_URL = 'polara.app';
+const BRAND_LINE = 'Polara · ' + POLARA_URL;
+
 const $ = (id) => document.getElementById(id);
 const video = $('video'), stage = $('canvasScale'), listEl = $('templateList');
-const snapBtn = $('snapBtn'), retakeBtn = $('retakeBtn'), downloadBtn = $('downloadBtn'), shareBtn = $('shareBtn');
+const snapBtn = $('snapBtn'), retakeBtn = $('retakeBtn'), downloadBtn = $('downloadBtn'), shareBtn = $('shareBtn'), nextBtn = $('nextBtn');
 const flipBtn = $('flipBtn'), countdownEl = $('countdown'), statusEl = $('status'), cameraWrap = $('cameraWrap');
 const stickerTray = $('stickerTray'), cameraOverlay = $('cameraOverlay'), camMsg = $('camMsg'), shotBadge = $('shotBadge');
 const stepperEl = $('stepper'), modeChoose = $('modeChoose'), timerChoose = $('timerChoose');
 const setupCard = $('setupCard'), frameCard = $('frameCard'), greeterCard = $('greeterCard'), hiasCard = $('hiasCard');
-const captionInput = $('captionInput');
+const captionInput = $('captionInput'), captureStrip = $('captureStrip');
+const capSlots = [...document.querySelectorAll('#captureStrip .cap-slot')];
 
 let mode = 1;             // 1 = single, 3 = strip
 let timerSec = 3;         // 3 / 5 / 10
@@ -21,7 +26,9 @@ let facing = 'user';
 let currentTpl = null;
 let phCanvas = null;
 let camReady = false;
-let photos = [];          // hasil jepret
+let shooting = false;
+let photos = [];          // per-slot, null = kosong
+let activeSlot = 0;       // slot yang lagi dituju (mode strip)
 let captionText = '';
 let tplButtons = [];
 const thumbFrames = [];
@@ -57,12 +64,49 @@ function wireSeg(container, apply) {
     };
   });
 }
-wireSeg(modeChoose, (btn) => { mode = Number(btn.dataset.mode); statusEl.textContent = mode === 3 ? 'Mode strip! Nanti kamu jepret 3 kali.' : 'Atur timer-nya, terus jepret ya.'; });
+wireSeg(modeChoose, (btn) => {
+  mode = Number(btn.dataset.mode);
+  initCapture();
+  statusEl.textContent = mode === 3 ? 'Mode strip! Isi 3 foto satu-satu, klik Jepret tiap slot.' : 'Atur timer-nya, terus jepret ya.';
+});
 wireSeg(timerChoose, (btn) => { timerSec = Number(btn.dataset.timer); });
+
+// ── capture strip (mode 3): jepret manual per-slot ──
+function initCapture() {
+  photos = mode === 3 ? [null, null, null] : [null];
+  activeSlot = 0;
+  captureStrip.hidden = mode !== 3;
+  renderCaptureStrip();
+}
+function renderCaptureStrip() {
+  capSlots.forEach((slot, i) => {
+    const filled = !!photos[i];
+    slot.classList.toggle('filled', filled);
+    slot.classList.toggle('active', i === activeSlot);
+    const img = slot.querySelector('.cap-img'), x = slot.querySelector('.cap-x'), num = slot.querySelector('.cap-num');
+    img.hidden = !filled; num.hidden = filled; x.hidden = !filled;
+    if (filled) img.src = photos[i];
+  });
+  const allFilled = mode === 3 && photos.length === 3 && photos.every(Boolean);
+  nextBtn.style.display = (allFilled && !setupCard.hidden) ? '' : 'none';
+}
+capSlots.forEach((slot) => {
+  slot.addEventListener('click', (e) => {
+    if (e.target.closest('.cap-x')) return;           // klik ✕ ditangani terpisah
+    activeSlot = Number(slot.dataset.i); renderCaptureStrip();
+    statusEl.textContent = `Slot ${activeSlot + 1} siap. Klik Jepret buat foto slot ini.`;
+  });
+  slot.querySelector('.cap-x').addEventListener('click', (e) => {
+    e.stopPropagation();
+    const i = Number(e.currentTarget.dataset.i);
+    photos[i] = null; activeSlot = i; renderCaptureStrip();
+    statusEl.textContent = `Foto slot ${i + 1} dihapus. Klik Jepret buat foto ulang.`;
+  });
+});
+const nextEmpty = () => { const i = photos.findIndex(p => !p); return i === -1 ? activeSlot : i; };
 
 // ── daftar frame (grid, difilter mode) ──
 const framesForMode = () => templates.filter(t => templateDims(t).slots === mode);
-
 function renderList() {
   listEl.innerHTML = '';
   thumbFrames.length = 0;
@@ -141,7 +185,7 @@ function fitStage(dims) {
   if (phCanvas) { phCanvas.style.transformOrigin = 'top left'; phCanvas.style.transform = `scale(${scale})`; }
 }
 
-// ── FASE FOTO (kamera) vs FASE HASIL ──
+// ── FASE FOTO vs HASIL ──
 function showFotoPhase() {
   setupCard.hidden = false; frameCard.hidden = true;
   greeterCard.hidden = false; hiasCard.hidden = true;
@@ -149,40 +193,55 @@ function showFotoPhase() {
   cameraWrap.style.display = '';
   snapBtn.style.display = ''; flipBtn.style.display = '';
   retakeBtn.style.display = 'none'; downloadBtn.style.display = 'none'; shareBtn.style.display = 'none';
+  initCapture();
   snapBtn.disabled = !camReady;
 }
 function showResultPhase() {
   setupCard.hidden = true; frameCard.hidden = false;
   greeterCard.hidden = true; hiasCard.hidden = false;
+  captureStrip.hidden = true; nextBtn.style.display = 'none';
   cameraWrap.style.display = 'none';
   stage.style.display = 'block';
   snapBtn.style.display = 'none'; flipBtn.style.display = 'none';
   retakeBtn.style.display = ''; downloadBtn.style.display = ''; shareBtn.style.display = '';
 }
 
-// ── JEPRET (1x atau 3x pakai timer pilihan) ──
+// ── JEPRET ──
 snapBtn.onclick = async () => {
-  if (!camReady) return;
-  snapBtn.disabled = true; flipBtn.disabled = true;
-  const slots = mode;
-  photos = [];
-  for (let i = 1; i <= slots; i++) {
-    if (slots > 1) { shotBadge.style.display = 'block'; shotBadge.textContent = `Foto ${i} dari ${slots}`; }
-    statusEl.textContent = slots > 1 ? `Siap-siap foto ke-${i}!` : 'Siap-siap, senyum!';
-    await countdown(timerSec);
-    flash();
-    photos.push(captureFrame(video));
-    if (slots > 1 && i < slots) await new Promise(r => setTimeout(r, 900));
+  if (!camReady || shooting) return;
+  shooting = true; snapBtn.disabled = true; flipBtn.disabled = true;
+
+  if (mode === 1) {
+    statusEl.textContent = 'Siap-siap, senyum!';
+    await countdown(timerSec); flash();
+    photos = [captureFrame(video)];
+    shooting = false; flipBtn.disabled = false;
+    goToResult();
+    return;
   }
+
+  // mode 3: jepret slot aktif
+  const slot = activeSlot;
+  shotBadge.style.display = 'block'; shotBadge.textContent = `Foto slot ${slot + 1}`;
+  statusEl.textContent = `Siap-siap buat slot ${slot + 1}!`;
+  await countdown(timerSec); flash();
+  photos[slot] = captureFrame(video);
   shotBadge.style.display = 'none';
-  goToResult();
+  activeSlot = nextEmpty();
+  renderCaptureStrip();
+  shooting = false; snapBtn.disabled = false; flipBtn.disabled = false;
+  if (photos.every(Boolean)) statusEl.textContent = 'Ketiga foto udah keisi! Klik Lanjut, atau silang buat foto ulang.';
+  else statusEl.textContent = `Sip! Sekarang slot ${activeSlot + 1}. Klik Jepret kalau udah siap.`;
 };
+
+// ── Lanjut ke frame (mode 3, setelah 3 foto) ──
+nextBtn.onclick = () => { if (photos.every(Boolean)) goToResult(); };
 
 // ── setelah jepret: pilih frame + hias ──
 function goToResult() {
   captionText = ''; captionInput.value = '';
-  renderList();                           // grid frame difilter mode
-  currentTpl = framesForMode()[0];        // auto-pilih frame pertama
+  renderList();
+  currentTpl = framesForMode()[0];
   renderResult();
   renderStickerTray();
   showResultPhase();
@@ -195,21 +254,17 @@ function renderResult() {
   const dims = templateDims(currentTpl);
   resolveTemplateHtml(currentTpl).then(html => {
     phCanvas = renderTemplate(stage, html);
-    photos.forEach((p, i) => setPhotoSlot(phCanvas, i + 1, p));
+    photos.forEach((p, i) => { if (p) setPhotoSlot(phCanvas, i + 1, p); });
     setMeta(phCanvas, {
       date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
       caption: captionText || undefined,
+      brand: BRAND_LINE,                      // link Polara ke-bake di foto (buat share)
     });
     fitStage(dims);
     updateActive();
   });
 }
-
-function selectTemplate(t) {
-  currentTpl = t;
-  updateActive();
-  renderResult();
-}
+function selectTemplate(t) { currentTpl = t; updateActive(); renderResult(); }
 
 // ── nama / kampus ──
 captionInput.oninput = () => {
@@ -218,7 +273,7 @@ captionInput.oninput = () => {
   if (stepIdx < 2) setStep('hias');
 };
 
-// ── sticker tray (di panel kanan) ──
+// ── sticker tray ──
 function renderStickerTray() {
   const pack = getStickerPack(currentTpl ? currentTpl.category : null);
   stickerTray.innerHTML = '';
@@ -232,9 +287,9 @@ function renderStickerTray() {
   });
 }
 
-// ── jepret ulang (balik ke kamera, mode/timer tetap) ──
+// ── jepret ulang (balik ke kamera) ──
 retakeBtn.onclick = () => {
-  photos = []; phCanvas = null; currentTpl = null;
+  phCanvas = null; currentTpl = null;
   showFotoPhase();
   setStep('foto');
   statusEl.textContent = 'Oke, jepret lagi ya. Mode sama timer masih sama.';
@@ -259,7 +314,7 @@ downloadBtn.onclick = async () => {
 shareBtn.onclick = async () => {
   shareBtn.disabled = true;
   statusEl.textContent = 'Bentar, lagi disiapin buat dibagikan...';
-  const msg = 'Nih hasil fotoku pakai Polara! Coba juga yuk, seru.';
+  const msg = `Nih hasil fotoku pakai Polara! Bikin punyamu juga di ${POLARA_URL} 🐱`;
   try {
     const url = await exportPng(phCanvas);
     const blob = await (await fetch(url)).blob();
@@ -289,9 +344,9 @@ async function startCam() {
   try {
     await startCamera(video, facing);
     hideOverlay(); camReady = true; flipBtn.disabled = false;
-    if (setupCard.hidden === false) snapBtn.disabled = false;
+    if (!setupCard.hidden) snapBtn.disabled = false;
     if (statusEl.textContent.startsWith('Lagi nyalain') || statusEl.textContent.startsWith('Kameranya'))
-      statusEl.textContent = mode === 3 ? 'Mode strip! Nanti kamu jepret 3 kali.' : 'Atur mode & timer, terus jepret ya.';
+      statusEl.textContent = mode === 3 ? 'Mode strip! Isi 3 foto satu-satu, klik Jepret tiap slot.' : 'Atur mode & timer, terus jepret ya.';
   } catch (err) {
     showOverlay('Kameranya belum nyala. Izinin akses kamera di browser dulu ya.');
     statusEl.textContent = 'Kameranya nggak kebuka. Coba cek izin kamera di browser ya.';
