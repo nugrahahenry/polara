@@ -7,7 +7,7 @@ import { templates, resolveTemplateHtml, resolveTemplateDoc, templateDims } from
 import { getStickerPack } from './modules/stickers/index.js';
 
 // GANTI setelah app di-deploy (biar link di foto + share beneran bisa dibuka orang).
-const POLARA_URL = 'polara.app';
+const POLARA_URL = 'polara.vercel.app';
 const BRAND_LINE = 'Polara · ' + POLARA_URL;
 
 const $ = (id) => document.getElementById(id);
@@ -17,7 +17,8 @@ const flipBtn = $('flipBtn'), countdownEl = $('countdown'), statusEl = $('status
 const stickerTray = $('stickerTray'), cameraOverlay = $('cameraOverlay'), camMsg = $('camMsg'), shotBadge = $('shotBadge');
 const stepperEl = $('stepper'), modeChoose = $('modeChoose'), timerChoose = $('timerChoose');
 const setupCard = $('setupCard'), frameCard = $('frameCard'), greeterCard = $('greeterCard'), hiasCard = $('hiasCard');
-const captionInput = $('captionInput'), captureStrip = $('captureStrip');
+const captionInput = $('captionInput'), captureStrip = $('captureStrip'), noFrameBtn = $('noFrameBtn');
+const captureArea = document.querySelector('.capture-area');
 const capSlots = [...document.querySelectorAll('#captureStrip .cap-slot')];
 
 let mode = 1;             // 1 = single, 3 = strip
@@ -190,9 +191,10 @@ function showFotoPhase() {
   setupCard.hidden = false; frameCard.hidden = true;
   greeterCard.hidden = false; hiasCard.hidden = true;
   stage.style.display = 'none'; stage.innerHTML = ''; stage.style.transform = '';
+  if (captureArea) captureArea.style.display = '';   // tampilin area kamera lagi
   cameraWrap.style.display = '';
   snapBtn.style.display = ''; flipBtn.style.display = '';
-  retakeBtn.style.display = 'none'; downloadBtn.style.display = 'none'; shareBtn.style.display = 'none';
+  retakeBtn.style.display = 'none'; downloadBtn.style.display = 'none'; shareBtn.style.display = 'none'; noFrameBtn.style.display = 'none';
   initCapture();
   snapBtn.disabled = !camReady;
 }
@@ -200,10 +202,11 @@ function showResultPhase() {
   setupCard.hidden = true; frameCard.hidden = false;
   greeterCard.hidden = true; hiasCard.hidden = false;
   captureStrip.hidden = true; nextBtn.style.display = 'none';
+  if (captureArea) captureArea.style.display = 'none'; // sembunyiin area kamera → hasil ke-center
   cameraWrap.style.display = 'none';
   stage.style.display = 'block';
   snapBtn.style.display = 'none'; flipBtn.style.display = 'none';
-  retakeBtn.style.display = ''; downloadBtn.style.display = ''; shareBtn.style.display = '';
+  retakeBtn.style.display = ''; downloadBtn.style.display = ''; shareBtn.style.display = ''; noFrameBtn.style.display = '';
 }
 
 // ── JEPRET ──
@@ -308,6 +311,33 @@ downloadBtn.onclick = async () => {
     statusEl.textContent = 'Waduh, gagal simpan. ' + e.message;
   }
   downloadBtn.disabled = false;
+};
+
+// ── simpan TANPA frame (foto mentah; strip = 3 foto ditumpuk) ──
+function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
+noFrameBtn.onclick = async () => {
+  const valid = photos.filter(Boolean);
+  if (!valid.length) return;
+  noFrameBtn.disabled = true;
+  statusEl.textContent = 'Nyiapin foto tanpa frame...';
+  try {
+    if (valid.length === 1) {
+      download(valid[0], `polara-foto-${Date.now()}.png`);
+    } else {
+      const imgs = await Promise.all(valid.map(loadImg));
+      const gap = 24, w = Math.min(...imgs.map(i => i.width));
+      const hs = imgs.map(i => Math.round(w * (i.height / i.width)));
+      const c = document.createElement('canvas');
+      c.width = w; c.height = hs.reduce((a, b) => a + b, 0) + gap * (imgs.length - 1);
+      const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
+      let y = 0; imgs.forEach((im, i) => { ctx.drawImage(im, 0, y, w, hs[i]); y += hs[i] + gap; });
+      download(c.toDataURL('image/png'), `polara-strip-${Date.now()}.png`);
+    }
+    statusEl.textContent = 'Foto tanpa frame kesimpen! Yang pakai frame juga masih bisa.';
+  } catch (e) {
+    statusEl.textContent = 'Waduh, gagal simpan foto mentah. ' + (e.message || '');
+  }
+  noFrameBtn.disabled = false;
 };
 
 // ── bagikan (Web Share API) ──

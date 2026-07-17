@@ -15,6 +15,17 @@ Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 - Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
 - Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
 
+## [0.8.5] - 2026-07-05
+### Fixed
+- **Frame nggak ke-center** (desktop & HP): `.capture-area` (width 100%) masih makan tempat pas fase hasil → frame kedorong ke kanan. Sekarang `.capture-area` disembunyiin pas showResultPhase → frame ke-center. Verified (gap kiri=kanan).
+### Added
+- **Download 2 versi**: tombol **"Foto Aja"** simpan foto MENTAH (tanpa frame). Single = foto langsung; strip = 3 foto ditumpuk vertikal. (Yang pakai frame tetap ada via Simpan.)
+### Changed
+- **Deploy live**: `POLARA_URL` = `polara.vercel.app` (di-import dari GitHub ke Vercel, auto-redeploy tiap push). Link ke-bake di foto + share sekarang beneran kebuka.
+- **Instagram** dibetulin: `@hnry.dev` (bukan @hnrydev).
+### Notes
+- Belum: (2) rapiin garis Daily/Trading yang masih "gak lurus" (butuh Henry tunjuk bagian spesifik), (3) perbanyak frame strip 3-foto, (spec aset variasi stiker udah dikasih ke Henry buat GPT).
+
 ## [0.8.4] - 2026-07-05
 ### Changed — Trading Card dirapiin (#3)
 - Buang **pola garis grid** yang bikin "garis-garis nggak rapi" (di `.ph-canvas::before` + `.card-inner::before`) → sekarang cuma starfield titik halus, nggak ada garis kotak-kotak. Streak holografik (`::after`) dihaluskan (stop gradient lebih lebar, opacity 0.72→0.6) biar lebih smooth. Verified render + export.
