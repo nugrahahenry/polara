@@ -1,9 +1,18 @@
 # Changelog — Polara (Photobooth Digital)
 
 Format: [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) · Versi: [SemVer](https://semver.org/lang/id/).
-Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
+Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
+
+## [0.9.1] - 2026-08-01
+### Changed
+- Sinkronkan metadata rilis dan handoff setelah checkpoint P0 `v0.9.0` masuk ke `main` dan `origin/main`.
+- Tegaskan positioning Polara sebagai photobooth digital tanpa klaim AI pada konteks workspace global.
+- Daftarkan Polara pada tabel konvensi versi workspace agar checkpoint berikutnya memakai format commit canonical.
+- Perbaiki tautan changelog ke dokumen konvensi versi setelah seluruh project pindah ke `HenryLabs/`.
+
+## [0.9.0] - 2026-08-01
 
 ### Added — P0 prototype integration
 - Flow enam tahap: **Start → Kamera → Review → Frame → Hias → Reveal**, dengan Strip 3 sebagai mode hero/default.
