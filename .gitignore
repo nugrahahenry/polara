@@ -10,6 +10,9 @@ dist/
 # Docs = konteks pribadi (PRD/DESIGN/brief) — JANGAN di-track, sama kayak neurova/canox
 docs/
 
+# Spesifikasi produk/teknis internal untuk handoff agent (lokal, bukan dokumentasi publik)
+spec/
+
 .DS_Store
 
 # ─── Windows launcher scripts (lokal, jangan masuk GitHub) ───
@@ -18,3 +21,9 @@ docs/
 
 # Backup aset asli sebelum di-resize (lokal aja, jangan ke GitHub — nambah berat repo)
 assets/**/_originals/
+
+# Personal export pack for ChatGPT brainstorming (generated locally)
+Polara-Brainstorm-Pack-*.zip
+
+# Source/implementation pack dari ChatGPT (arsip lokal; hasil ekstrak disimpan di docs/prototypes/)
+Polara-*-Implementation-Pack-*.zip

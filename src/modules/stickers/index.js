@@ -1,18 +1,72 @@
 // ─── modules/stickers/index.js ────────────────────────────────────────────────
-// Registry stiker. Sekarang UNIVERSAL — pack yang sama muncul di semua frame
-// (dulu cuma purikura). Aset: mascot Poca di assets/mascot/, kata-stiker di
-// assets/stickers/. Tambah stiker: taruh PNG transparan, daftarin di array.
+// Registry tunggal untuk asset UI dan asset editor. Mascot tidak pernah masuk
+// export otomatis; hanya item type=sticker yang dapat dibuat menjadi objek editor.
 const MASCOT = 'assets/mascot/';
 const STICKER = 'assets/stickers/';
 
-const universal = [
-  { id: 'sticker-cute', name: 'Cute!', file: STICKER + 'sticker-cute.png' },
-  { id: 'sticker-snap', name: 'Snap!', file: STICKER + 'sticker-snap.png' },
-  { id: 'sticker-purrfect', name: 'Purr-fect!', file: STICKER + 'sticker-purrfect.png' },
-  { id: 'poca-wink', name: 'Poca Wink', file: MASCOT + 'poca-wink.png' },
-  { id: 'poca-camera', name: 'Poca Kamera', file: MASCOT + 'poca-camera.png' },
-  { id: 'poca-peeking', name: 'Poca Ngintip', file: MASCOT + 'poca-peeking.png' },
+export const mascots = [
+  { id: 'poca-wave', type: 'mascot', name: 'Poca melambai', src: MASCOT + 'poca-wave.png', usage: 'start', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-sleepy-loading', type: 'mascot', name: 'Poca menunggu', src: MASCOT + 'poca-sleepy-loading.png', usage: 'processing', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-pointing-down', type: 'mascot', name: 'Poca menunjuk', src: MASCOT + 'poca-pointing-down.png', usage: 'guidance', loading: 'lazy', exportPolicy: 'ui-only' },
+  { id: 'poca-peace', type: 'mascot', name: 'Poca peace', src: MASCOT + 'poca-peace.png', usage: 'reveal', loading: 'lazy-before-reveal', exportPolicy: 'ui-only' },
+  { id: 'poca-face', type: 'mascot', name: 'Wajah Poca', src: MASCOT + 'poca-face.png', usage: 'tray', loading: 'lazy', exportPolicy: 'ui-only' },
 ];
 
-// category diabaikan buat sekarang (pack universal); nanti bisa per-kategori.
-export const getStickerPack = (_category) => universal;
+export const stickers = [
+  {
+    id: 'text-pose', type: 'sticker', name: 'POSE!', src: STICKER + 'text-pose.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .72, scale: .22, rotation: -6 }, minScale: .08, maxScale: .38,
+  },
+  {
+    id: 'sparkle-blue', type: 'sticker', name: 'Sparkle Biru', src: STICKER + 'sparkle-blue.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .17, y: .18, scale: .14, rotation: -8 }, minScale: .08, maxScale: .38,
+  },
+  {
+    id: 'heart-pink', type: 'sticker', name: 'Hati Pink', src: STICKER + 'heart-pink.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .83, y: .18, scale: .14, rotation: 9 }, minScale: .08, maxScale: .38,
+  },
+  {
+    id: 'paw-purple', type: 'sticker', name: 'Paw Ungu', src: STICKER + 'paw-purple.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .18, y: .8, scale: .14, rotation: -8 }, minScale: .08, maxScale: .38,
+  },
+  // Aset lama tetap dipertahankan setelah audit karena masih konsisten sebagai word sticker.
+  {
+    id: 'sticker-cute', type: 'sticker', name: 'Cute!', src: STICKER + 'sticker-cute.png',
+    exportPolicy: 'preview-and-export', legacy: true, defaultTransform: { x: .5, y: .32, scale: .2, rotation: -4 }, minScale: .08, maxScale: .4,
+  },
+  {
+    id: 'sticker-snap', type: 'sticker', name: 'Snap!', src: STICKER + 'sticker-snap.png',
+    exportPolicy: 'preview-and-export', legacy: true, defaultTransform: { x: .76, y: .78, scale: .2, rotation: 6 }, minScale: .08, maxScale: .4,
+  },
+  {
+    id: 'sticker-purrfect', type: 'sticker', name: 'Purr-fect!', src: STICKER + 'sticker-purrfect.png',
+    exportPolicy: 'preview-and-export', legacy: true, defaultTransform: { x: .5, y: .84, scale: .22, rotation: -3 }, minScale: .08, maxScale: .42,
+  },
+];
+
+export const getStickerPack = () => stickers;
+export const getMascot = (id) => mascots.find((asset) => asset.id === id) || null;
+
+export function createStickerInstance(asset) {
+  const transform = asset.defaultTransform || { x: .5, y: .5, scale: .2, rotation: 0 };
+  const uid = globalThis.crypto?.randomUUID?.() || `${asset.id}-${Date.now()}-${Math.random().toString(16).slice(2)}`;
+  return {
+    uid,
+    assetId: asset.id,
+    name: asset.name,
+    src: asset.src,
+    x: transform.x,
+    y: transform.y,
+    scale: transform.scale,
+    rotation: transform.rotation,
+    minScale: asset.minScale || .08,
+    maxScale: asset.maxScale || .42,
+  };
+}
+
+export function preloadMascots() {
+  mascots.filter((asset) => asset.loading === 'preload').forEach((asset) => {
+    const image = new Image();
+    image.src = asset.src;
+  });
+}

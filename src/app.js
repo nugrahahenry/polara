@@ -1,389 +1,814 @@
 // ─── app.js ──────────────────────────────────────────────────────────────────
-// Flow "jepret dulu": atur MODE (1/3) + TIMER → JEPRET → pilih FRAME → HIAS → SIMPAN/BAGIKAN.
-// Mode 3 (strip): jepret manual per-slot (atas→tengah→bawah), bisa silang & jepret ulang.
-import { startCamera, captureFrame } from './core/camera.js';
-import { renderTemplate, setPhotoSlot, setMeta, exportPng, download, placeSticker } from './core/compositor.js';
-import { templates, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js';
-import { getStickerPack } from './modules/stickers/index.js';
+// State flow P0: Start → Camera → Review → Frame → Decorate → Reveal.
+import {
+  startCamera, stopCamera, captureFrame, createDemoCapture, classifyCameraError,
+} from './core/camera.js';
+import {
+  renderTemplate, setPhotoSlot, refreshPhotoSlots, setMeta, exportPng, exportRawPng,
+  download, renderStickerLayer, setStickerSelection,
+} from './core/compositor.js';
+import { patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
+import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js';
+import { stickers, createStickerInstance, preloadMascots } from './modules/stickers/index.js';
 
-// GANTI setelah app di-deploy (biar link di foto + share beneran bisa dibuka orang).
 const POLARA_URL = 'polara.vercel.app';
-const BRAND_LINE = 'Polara · ' + POLARA_URL;
-
+const BRAND_LINE = `Polara · ${POLARA_URL}`;
 const $ = (id) => document.getElementById(id);
-const video = $('video'), stage = $('canvasScale'), listEl = $('templateList');
-const snapBtn = $('snapBtn'), retakeBtn = $('retakeBtn'), downloadBtn = $('downloadBtn'), shareBtn = $('shareBtn'), nextBtn = $('nextBtn');
-const flipBtn = $('flipBtn'), countdownEl = $('countdown'), statusEl = $('status'), cameraWrap = $('cameraWrap');
-const stickerTray = $('stickerTray'), cameraOverlay = $('cameraOverlay'), camMsg = $('camMsg'), shotBadge = $('shotBadge');
-const stepperEl = $('stepper'), modeChoose = $('modeChoose'), timerChoose = $('timerChoose');
-const setupCard = $('setupCard'), frameCard = $('frameCard'), greeterCard = $('greeterCard'), hiasCard = $('hiasCard');
-const captionInput = $('captionInput'), captureStrip = $('captureStrip'), noFrameBtn = $('noFrameBtn');
-const captureArea = document.querySelector('.capture-area');
-const capSlots = [...document.querySelectorAll('#captureStrip .cap-slot')];
 
-let mode = 1;             // 1 = single, 3 = strip
-let timerSec = 3;         // 3 / 5 / 10
-let facing = 'user';
-let currentTpl = null;
-let phCanvas = null;
-let camReady = false;
-let shooting = false;
-let photos = [];          // per-slot, null = kosong
-let activeSlot = 0;       // slot yang lagi dituju (mode strip)
-let captionText = '';
-let tplButtons = [];
-const thumbFrames = [];
+const refs = {
+  workspace: $('appWorkspace'), progress: $('progressWrap'), progressList: $('progressList'),
+  startView: $('startView'), cameraView: $('cameraView'), reviewView: $('reviewView'), canvasView: $('canvasView'),
+  controlScroll: $('controlScroll'), panels: [...document.querySelectorAll('[data-panel]')],
+  primary: $('primaryBtn'), secondary: $('secondaryBtn'), tertiary: $('tertiaryBtn'), back: $('backBtn'),
+  status: $('status'), countdownLive: $('countdownLive'),
+  modeChoose: $('modeChoose'), timerChoose: $('timerChoose'),
+  video: $('video'), cameraWrap: $('cameraWrap'), cameraOverlay: $('cameraOverlay'),
+  cameraMessage: $('cameraMessage'), cameraOverlayActions: $('cameraOverlayActions'),
+  retryCamera: $('retryCameraBtn'), demoMode: $('demoModeBtn'), countdown: $('countdown'), flash: $('flashLayer'),
+  shotBadge: $('shotBadge'), cameraSlots: $('cameraSlots'), cameraPanelTitle: $('cameraPanelTitle'),
+  cameraPanelCopy: $('cameraPanelCopy'), cameraStateNote: $('cameraStateNote'),
+  reviewPhoto: $('reviewPhoto'), reviewCaption: $('reviewCaption'), reviewSlots: $('reviewSlots'),
+  stage: $('canvasScale'), revealBuddy: $('revealBuddy'), templateList: $('templateList'),
+  photoSlotTabs: $('photoSlotTabs'), fitContain: $('fitContainBtn'), fitCover: $('fitCoverBtn'),
+  zoom: $('zoomInput'), panX: $('panXInput'), panY: $('panYInput'),
+  zoomOutput: $('zoomOutput'), panXOutput: $('panXOutput'), panYOutput: $('panYOutput'), resetPhoto: $('resetPhotoBtn'),
+  caption: $('captionInput'), stickerTray: $('stickerTray'), undoSticker: $('undoStickerBtn'), resetSticker: $('resetStickerBtn'),
+  newSession: $('newSessionBtn'), dialog: $('newSessionDialog'), cancelNewSession: $('cancelNewSessionBtn'), confirmNewSession: $('confirmNewSessionBtn'),
+};
 
-// ── stepper ──
 const STEPS = [
-  { id: 'foto', label: 'Foto' },
+  { id: 'start', label: 'Start' },
+  { id: 'camera', label: 'Kamera' },
+  { id: 'review', label: 'Review' },
   { id: 'frame', label: 'Frame' },
-  { id: 'hias', label: 'Hias' },
-  { id: 'simpan', label: 'Simpan' },
+  { id: 'decorate', label: 'Hias' },
+  { id: 'reveal', label: 'Reveal' },
 ];
-let stepIdx = 0;
-function setStep(id) {
-  const i = STEPS.findIndex(s => s.id === id);
-  if (i >= 0) stepIdx = i;
-  stepperEl.innerHTML = '';
-  STEPS.forEach((s, i) => {
-    const li = document.createElement('li');
-    li.className = 'step' + (i < stepIdx ? ' done' : i === stepIdx ? ' active' : '');
-    if (i === stepIdx) li.setAttribute('aria-current', 'step');
-    li.innerHTML = `<span class="step-n">${i < stepIdx ? '✓' : i + 1}</span><span class="step-l">${s.label}</span>`;
-    stepperEl.appendChild(li);
+
+function initialState() {
+  return {
+    step: 'start', mode: 3, timer: 3, facing: 'user', demo: false,
+    cameraStatus: 'idle', cameraError: null, shooting: false,
+    photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null,
+    frameId: null, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
+    revealReady: false, busy: false, scroll: { frame: 0, decorate: 0, panels: {} },
+  };
+}
+
+let state = initialState();
+let phCanvas = null;
+let renderToken = 0;
+let cameraRequestId = 0;
+let thumbFrames = [];
+let resizeTimer = null;
+const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+
+function status(message) {
+  refs.status.textContent = message;
+}
+
+function meaningfulSession() {
+  return state.photos.some(Boolean) || state.caption || state.stickers.length || state.step !== 'start';
+}
+
+function saveScrollState() {
+  state.scroll.panels[state.step] = refs.controlScroll.scrollTop;
+  if (state.step === 'frame') state.scroll.frame = refs.templateList.scrollTop;
+  if (state.step === 'decorate') state.scroll.decorate = refs.stickerTray.scrollTop;
+}
+
+function restoreScrollState() {
+  requestAnimationFrame(() => {
+    refs.controlScroll.scrollTop = state.scroll.panels[state.step] || 0;
+    if (state.step === 'frame') refs.templateList.scrollTop = state.scroll.frame || 0;
+    if (state.step === 'decorate') refs.stickerTray.scrollTop = state.scroll.decorate || 0;
   });
 }
 
-// ── segmented control (mode + timer) ──
-function wireSeg(container, apply) {
-  container.querySelectorAll('.seg-btn').forEach(btn => {
-    btn.onclick = () => {
-      container.querySelectorAll('.seg-btn').forEach(b => { b.classList.remove('active'); b.setAttribute('aria-pressed', 'false'); });
-      btn.classList.add('active'); btn.setAttribute('aria-pressed', 'true');
-      apply(btn);
-    };
+function renderProgress() {
+  const activeIndex = STEPS.findIndex((step) => step.id === state.step);
+  refs.progress.setAttribute('aria-valuenow', String(activeIndex + 1));
+  refs.progressList.innerHTML = '';
+  STEPS.forEach((step, index) => {
+    const item = document.createElement('li');
+    item.className = `progress-item${index < activeIndex ? ' done' : index === activeIndex ? ' active' : ''}`;
+    if (index === activeIndex) item.setAttribute('aria-current', 'step');
+    item.innerHTML = `<span class="progress-dot">${index < activeIndex ? '✓' : index + 1}</span><span class="progress-label">${step.label}</span>`;
+    refs.progressList.appendChild(item);
   });
 }
-wireSeg(modeChoose, (btn) => {
-  mode = Number(btn.dataset.mode);
-  initCapture();
-  statusEl.textContent = mode === 3 ? 'Mode strip! Isi 3 foto satu-satu, klik Jepret tiap slot.' : 'Atur timer-nya, terus jepret ya.';
+
+function setButton(button, { label = '', hidden = false, disabled = false, tone = '' } = {}) {
+  button.textContent = label;
+  button.hidden = hidden;
+  button.disabled = disabled || state.busy;
+  button.classList.toggle('btn-primary', tone === 'primary');
+  button.classList.toggle('btn-secondary', tone === 'secondary');
+  button.classList.toggle('btn-ghost', tone === 'ghost');
+}
+
+function updateActions() {
+  setButton(refs.back, { label: 'Kembali', hidden: state.step === 'start', tone: 'ghost' });
+  setButton(refs.secondary, { hidden: true });
+  setButton(refs.tertiary, { hidden: true });
+
+  if (state.step === 'start') {
+    setButton(refs.primary, { label: 'Buka kamera', tone: 'primary' });
+  } else if (state.step === 'camera') {
+    const ready = state.cameraStatus === 'ready' || state.cameraStatus === 'demo';
+    setButton(refs.primary, { label: state.shooting ? 'Mengambil foto…' : 'Jepret', tone: 'primary', disabled: !ready || state.shooting });
+    setButton(refs.secondary, { label: 'Ganti kamera', tone: 'secondary', hidden: state.demo, disabled: state.cameraStatus !== 'ready' || state.shooting });
+    setButton(refs.tertiary, { label: 'Mode demo', tone: 'ghost', hidden: state.demo, disabled: state.shooting });
+  } else if (state.step === 'review') {
+    setButton(refs.primary, { label: 'Pilih frame', tone: 'primary' });
+    setButton(refs.secondary, { label: `Foto ulang ${state.mode === 3 ? `slot ${state.selectedSlot + 1}` : ''}`.trim(), tone: 'secondary' });
+  } else if (state.step === 'frame') {
+    setButton(refs.primary, { label: 'Lanjut menghias', tone: 'primary', disabled: !state.frameId });
+  } else if (state.step === 'decorate') {
+    setButton(refs.primary, { label: 'Lihat hasil', tone: 'primary' });
+  } else if (state.step === 'reveal') {
+    setButton(refs.primary, { label: 'Bagikan', tone: 'primary', disabled: !state.revealReady });
+    setButton(refs.secondary, { label: 'Simpan PNG', tone: 'secondary', hidden: false, disabled: !state.revealReady });
+    setButton(refs.tertiary, { label: 'Foto aja', tone: 'ghost', hidden: false, disabled: !state.revealReady });
+  }
+}
+
+async function goToStep(nextStep, message) {
+  if (!STEPS.some((step) => step.id === nextStep)) return;
+  saveScrollState();
+  if (state.step === 'camera' && nextStep !== 'camera') stopCamera();
+  state.step = nextStep;
+  refs.panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== nextStep; });
+  refs.startView.hidden = nextStep !== 'start';
+  refs.cameraView.hidden = nextStep !== 'camera';
+  refs.reviewView.hidden = nextStep !== 'review';
+  refs.canvasView.hidden = !['frame', 'decorate', 'reveal'].includes(nextStep);
+  refs.revealBuddy.hidden = nextStep !== 'reveal';
+  refs.canvasView.classList.remove('revealing');
+
+  renderProgress();
+  if (nextStep === 'start') syncStartControls();
+  if (nextStep === 'camera') renderCameraPanel();
+  if (nextStep === 'review') renderReview();
+  if (nextStep === 'frame') {
+    ensureCurrentFrame();
+    await renderTemplateList();
+    renderPhotoTabs();
+    syncPhotoControls();
+    await renderCanvas();
+  }
+  if (nextStep === 'decorate') {
+    refs.caption.value = state.caption;
+    renderStickerTray();
+    await renderCanvas();
+  }
+  if (nextStep === 'reveal') await startReveal();
+
+  if (message) status(message);
+  updateActions();
+  if (nextStep === 'start') window.scrollTo({ top: 0, behavior: 'auto' });
+  restoreScrollState();
+}
+
+function syncStartControls() {
+  refs.modeChoose.querySelectorAll('[data-mode]').forEach((button) => {
+    const active = Number(button.dataset.mode) === state.mode;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+  refs.timerChoose.querySelectorAll('[data-timer]').forEach((button) => {
+    const active = Number(button.dataset.timer) === state.timer;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
+}
+
+refs.modeChoose.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-mode]');
+  if (!button) return;
+  state.mode = Number(button.dataset.mode);
+  state.photos = Array(state.mode === 3 ? 3 : 1).fill(null);
+  state.activeSlot = 0;
+  state.selectedSlot = 0;
+  state.frameId = null;
+  syncStartControls();
+  status(state.mode === 3 ? 'Strip 3 dipilih. Siapkan tiga pose terbaik kalian.' : 'Single dipilih. Satu pose besar, satu momen utama.');
 });
-wireSeg(timerChoose, (btn) => { timerSec = Number(btn.dataset.timer); });
 
-// ── capture strip (mode 3): jepret manual per-slot ──
-function initCapture() {
-  photos = mode === 3 ? [null, null, null] : [null];
-  activeSlot = 0;
-  captureStrip.hidden = mode !== 3;
-  renderCaptureStrip();
-}
-function renderCaptureStrip() {
-  capSlots.forEach((slot, i) => {
-    const filled = !!photos[i];
-    slot.classList.toggle('filled', filled);
-    slot.classList.toggle('active', i === activeSlot);
-    const img = slot.querySelector('.cap-img'), x = slot.querySelector('.cap-x'), num = slot.querySelector('.cap-num');
-    img.hidden = !filled; num.hidden = filled; x.hidden = !filled;
-    if (filled) img.src = photos[i];
-  });
-  const allFilled = mode === 3 && photos.length === 3 && photos.every(Boolean);
-  nextBtn.style.display = (allFilled && !setupCard.hidden) ? '' : 'none';
-}
-capSlots.forEach((slot) => {
-  slot.addEventListener('click', (e) => {
-    if (e.target.closest('.cap-x')) return;           // klik ✕ ditangani terpisah
-    activeSlot = Number(slot.dataset.i); renderCaptureStrip();
-    statusEl.textContent = `Slot ${activeSlot + 1} siap. Klik Jepret buat foto slot ini.`;
-  });
-  slot.querySelector('.cap-x').addEventListener('click', (e) => {
-    e.stopPropagation();
-    const i = Number(e.currentTarget.dataset.i);
-    photos[i] = null; activeSlot = i; renderCaptureStrip();
-    statusEl.textContent = `Foto slot ${i + 1} dihapus. Klik Jepret buat foto ulang.`;
-  });
+refs.timerChoose.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-timer]');
+  if (!button) return;
+  state.timer = Number(button.dataset.timer);
+  syncStartControls();
+  status(`Timer ${state.timer} detik dipilih.`);
 });
-const nextEmpty = () => { const i = photos.findIndex(p => !p); return i === -1 ? activeSlot : i; };
 
-// ── daftar frame (grid, difilter mode) ──
-const framesForMode = () => templates.filter(t => templateDims(t).slots === mode);
-function renderList() {
-  listEl.innerHTML = '';
-  thumbFrames.length = 0;
-  tplButtons = framesForMode().map(t => {
-    const btn = document.createElement('button');
-    btn.type = 'button'; btn.className = 'tpl-btn'; btn.setAttribute('aria-pressed', 'false');
-    const { w, h } = templateDims(t);
-    const thumb = document.createElement('span'); thumb.className = 'tpl-thumb'; btn.appendChild(thumb);
-    const meta = document.createElement('span'); meta.className = 'tpl-meta';
-    meta.innerHTML = `<span class="tpl-name">${t.name}</span>`;
-    btn.appendChild(meta);
-    btn.onclick = () => selectTemplate(t);
-    listEl.appendChild(btn);
-    buildThumb(t, thumb, w, h);
-    return { t, btn };
-  });
-  updateActive();
-}
-function updateActive() {
-  tplButtons.forEach(({ t, btn }) => {
-    const on = !!(currentTpl && t.id === currentTpl.id);
-    btn.classList.toggle('active', on);
-    btn.setAttribute('aria-pressed', String(on));
-  });
+async function beginCamera({ retake = false } = {}) {
+  if (!retake) {
+    const slots = state.mode === 3 ? 3 : 1;
+    if (state.photos.length !== slots) state.photos = Array(slots).fill(null);
+    state.activeSlot = state.photos.findIndex((photo) => !photo);
+    if (state.activeSlot < 0) state.activeSlot = state.selectedSlot;
+  }
+  await goToStep('camera', retake ? 'Foto lama tetap aman sampai penggantinya berhasil.' : 'Izinkan kamera, lalu siap-siap pose.');
+  if (state.demo) {
+    state.cameraStatus = 'demo';
+    showCameraState();
+  } else {
+    await requestCamera();
+  }
 }
 
-// ── thumbnail = iframe design preview ──
-async function buildThumb(t, mount, w, h) {
+async function requestCamera() {
+  const requestId = ++cameraRequestId;
+  state.cameraStatus = state.cameraStatus === 'ready' ? 'switching' : 'requesting';
+  state.cameraError = null;
+  showCameraState();
   try {
-    const doc = await resolveTemplateDoc(t);
+    await startCamera(refs.video, state.facing);
+    if (requestId !== cameraRequestId || state.step !== 'camera' || state.demo) { stopCamera(); return; }
+    state.cameraStatus = 'ready';
+    refs.video.style.transform = state.facing === 'user' ? 'scaleX(-1)' : 'none';
+    showCameraState();
+    status('Kamera siap. Pastikan semua masuk guide, lalu tekan Jepret.');
+  } catch (error) {
+    if (requestId !== cameraRequestId || state.demo) return;
+    state.cameraStatus = classifyCameraError(error);
+    state.cameraError = error;
+    showCameraState();
+    status(state.cameraStatus === 'denied' ? 'Akses kamera ditolak. Izinkan lewat pengaturan browser atau gunakan mode demo.' : 'Kamera tidak tersedia. Kamu tetap bisa mencoba flow lewat mode demo.');
+  }
+}
+
+function showCameraState() {
+  const ready = state.cameraStatus === 'ready';
+  const demo = state.cameraStatus === 'demo';
+  refs.cameraOverlay.hidden = ready || demo;
+  refs.cameraOverlayActions.hidden = ready || demo || state.cameraStatus === 'idle';
+  refs.retryCamera.hidden = !['denied', 'unavailable'].includes(state.cameraStatus);
+  refs.demoMode.hidden = ready || demo;
+  if (state.cameraStatus === 'requesting') refs.cameraMessage.textContent = 'Poca lagi meminta izin kamera…';
+  else if (state.cameraStatus === 'switching') refs.cameraMessage.textContent = 'Sedang mengganti kamera…';
+  else if (state.cameraStatus === 'denied') refs.cameraMessage.textContent = 'Izin kamera belum diberikan. Cek pengaturan browser atau coba tanpa kamera.';
+  else if (state.cameraStatus === 'unavailable') refs.cameraMessage.textContent = 'Kamera tidak ditemukan atau tidak didukung di browser ini.';
+  else if (state.cameraStatus === 'idle') refs.cameraMessage.textContent = 'Kamera belum dimulai.';
+  refs.video.hidden = demo;
+  refs.cameraStateNote.textContent = demo
+    ? 'Mode demo aktif. Setiap Jepret membuat placeholder lokal untuk menguji flow.'
+    : state.cameraStatus === 'ready' ? 'Kamera siap. Foto penuh akan disimpan tanpa crop permanen.' : 'Sesi dan foto yang sudah ada tetap aman.';
+  updateActions();
+}
+
+function renderSlotCards(container, onSelect) {
+  container.innerHTML = '';
+  state.photos.forEach((photo, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `slot-card${index === (state.step === 'camera' ? state.activeSlot : state.selectedSlot) ? ' active' : ''}`;
+    button.setAttribute('aria-label', photo ? `Pilih foto slot ${index + 1}` : `Slot ${index + 1} belum diisi`);
+    button.setAttribute('aria-pressed', String(index === (state.step === 'camera' ? state.activeSlot : state.selectedSlot)));
+    button.innerHTML = photo
+      ? `<img src="${photo.src}" alt="Preview foto ${index + 1}" /><span class="slot-number">${index + 1}</span>`
+      : `<span class="slot-empty">Slot ${index + 1}</span><span class="slot-number">${index + 1}</span>`;
+    button.addEventListener('click', () => onSelect(index));
+    container.appendChild(button);
+  });
+  wireCollectionKeyboard(container, '.slot-card');
+}
+
+function renderCameraPanel() {
+  const slot = state.activeSlot + 1;
+  refs.cameraPanelTitle.textContent = state.retakeSlot != null ? `Foto ulang slot ${slot}` : state.mode === 3 ? `Pose untuk slot ${slot}` : 'Satu pose utama';
+  refs.cameraPanelCopy.textContent = state.retakeSlot != null
+    ? 'Foto lama tidak dihapus sekarang. Ia baru diganti setelah capture baru berhasil.'
+    : 'Kamera menyimpan frame penuh. Atur contain, cover, zoom, dan pan setelah memilih frame.';
+  renderSlotCards(refs.cameraSlots, (index) => {
+    state.activeSlot = index;
+    state.retakeSlot = state.photos[index] ? index : null;
+    renderCameraPanel();
+    status(state.photos[index] ? `Slot ${index + 1} dipilih untuk foto ulang; foto lama masih aman.` : `Slot ${index + 1} siap diisi.`);
+  });
+  showCameraState();
+}
+
+async function runCountdown(seconds) {
+  refs.countdown.hidden = false;
+  for (let number = seconds; number > 0; number -= 1) {
+    refs.countdown.textContent = String(number);
+    refs.countdownLive.textContent = `${number}`;
+    await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 300 : 760));
+  }
+  refs.countdown.hidden = true;
+  refs.countdownLive.textContent = 'Foto diambil';
+}
+
+function flash() {
+  refs.flash.classList.remove('flash');
+  void refs.flash.offsetWidth;
+  refs.flash.classList.add('flash');
+}
+
+async function takePhoto() {
+  if (state.shooting || !['ready', 'demo'].includes(state.cameraStatus)) return;
+  state.shooting = true;
+  updateActions();
+  const slot = state.activeSlot;
+  refs.shotBadge.hidden = false;
+  refs.shotBadge.textContent = state.mode === 3 ? `Slot ${slot + 1}` : 'Single';
+  status(`Siap-siap untuk foto ${slot + 1}…`);
+
+  try {
+    await runCountdown(state.timer);
+    flash();
+    const replacement = state.demo
+      ? createDemoCapture(slot, state.mode)
+      : captureFrame(refs.video, { mirror: state.facing === 'user' });
+    // Commit pengganti hanya setelah capture sukses.
+    state.photos[slot] = replacement;
+    state.selectedSlot = slot;
+    refs.shotBadge.hidden = true;
+
+    if (state.retakeSlot != null) {
+      state.retakeSlot = null;
+      state.shooting = false;
+      await goToStep('review', `Slot ${slot + 1} berhasil diganti. Slot lain tetap sama.`);
+      return;
+    }
+
+    const nextEmpty = state.photos.findIndex((photo) => !photo);
+    if (nextEmpty === -1) {
+      state.shooting = false;
+      await goToStep('review', state.mode === 3 ? 'Tiga foto sudah lengkap. Cek satu per satu sebelum memilih frame.' : 'Foto sudah jadi. Cek dulu sebelum memilih frame.');
+      return;
+    }
+
+    state.activeSlot = nextEmpty;
+    state.shooting = false;
+    renderCameraPanel();
+    status(`Foto masuk ke slot ${slot + 1}. Sekarang siapkan pose slot ${nextEmpty + 1}.`);
+  } catch (error) {
+    state.shooting = false;
+    refs.shotBadge.hidden = true;
+    status(`Foto belum berhasil diambil. ${error.message || 'Coba lagi ya.'}`);
+  }
+  updateActions();
+}
+
+function renderReview() {
+  state.selectedSlot = Math.min(state.selectedSlot, state.photos.length - 1);
+  const photo = state.photos[state.selectedSlot] || state.photos.find(Boolean);
+  if (photo) refs.reviewPhoto.src = photo.src;
+  refs.reviewCaption.textContent = state.mode === 3 ? `Slot ${state.selectedSlot + 1} dari 3 · rasio sumber ${photo?.naturalWidth || 0}:${photo?.naturalHeight || 0}` : `Foto single · rasio sumber ${photo?.naturalWidth || 0}:${photo?.naturalHeight || 0}`;
+  renderSlotCards(refs.reviewSlots, (index) => {
+    state.selectedSlot = index;
+    renderReview();
+    updateActions();
+  });
+}
+
+function startRetake() {
+  state.retakeSlot = state.selectedSlot;
+  state.activeSlot = state.selectedSlot;
+  beginCamera({ retake: true });
+}
+
+const framesForMode = () => templates.filter((template) => templateDims(template).slots === state.mode);
+
+function ensureCurrentFrame() {
+  const available = framesForMode();
+  if (!available.some((template) => template.id === state.frameId)) {
+    const hero = state.mode === 3 ? 'poca-purikura.strip' : 'poca-purikura.single';
+    state.frameId = available.find((template) => template.id === hero)?.id || available[0]?.id || null;
+  }
+}
+
+async function renderTemplateList() {
+  refs.templateList.innerHTML = '';
+  thumbFrames = [];
+  const available = framesForMode();
+  available.forEach((template) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `tpl-btn${template.id === state.frameId ? ' active' : ''}`;
+    button.dataset.templateId = template.id;
+    button.setAttribute('role', 'option');
+    button.setAttribute('aria-selected', String(template.id === state.frameId));
+    const thumb = document.createElement('span');
+    thumb.className = 'tpl-thumb';
+    const name = document.createElement('span');
+    name.className = 'tpl-name';
+    name.textContent = template.name;
+    button.append(thumb, name);
+    button.addEventListener('click', async () => {
+      saveScrollState();
+      state.frameId = template.id;
+      updateTemplateSelection();
+      await renderCanvas();
+      status(`${template.name} dipilih. Transform foto tetap dipertahankan.`);
+    });
+    refs.templateList.appendChild(button);
+    buildTemplateThumb(template, thumb);
+  });
+  wireCollectionKeyboard(refs.templateList, '.tpl-btn');
+}
+
+function updateTemplateSelection() {
+  refs.templateList.querySelectorAll('.tpl-btn').forEach((button) => {
+    const active = button.dataset.templateId === state.frameId;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-selected', String(active));
+  });
+}
+
+async function buildTemplateThumb(template, mount) {
+  try {
+    const { w, h } = templateDims(template);
     const frame = document.createElement('iframe');
     frame.className = 'tpl-thumb-frame';
-    frame.setAttribute('scrolling', 'no'); frame.setAttribute('tabindex', '-1'); frame.setAttribute('aria-hidden', 'true');
-    frame.style.width = w + 'px'; frame.style.height = h + 'px';
-    frame.srcdoc = doc;
+    frame.tabIndex = -1;
+    frame.setAttribute('aria-hidden', 'true');
+    frame.setAttribute('scrolling', 'no');
+    frame.style.width = `${w}px`;
+    frame.style.height = `${h}px`;
+    frame.srcdoc = await resolveTemplateDoc(template);
     mount.appendChild(frame);
     thumbFrames.push({ frame, w, h });
     requestAnimationFrame(() => scaleThumb(frame, w, h));
-  } catch (e) { console.debug('Thumbnail gagal:', t.id, e); }
+  } catch (error) {
+    mount.textContent = 'Preview tidak tersedia';
+    console.debug('Thumbnail frame gagal:', template.id, error);
+  }
 }
-function scaleThumb(frame, w, h) {
-  const box = frame.parentElement;
-  if (!box || !box.clientHeight) return;
-  const s = box.clientHeight / h;
-  const offX = Math.max(0, (box.clientWidth - w * s) / 2);
-  frame.style.transform = `translateX(${offX}px) scale(${s})`;
-}
-let rescaleTimer = null;
-window.addEventListener('resize', () => {
-  clearTimeout(rescaleTimer);
-  rescaleTimer = setTimeout(() => thumbFrames.forEach(({ frame, w, h }) => scaleThumb(frame, w, h)), 120);
-});
 
-// ── countdown & flash ──
-function countdown(n) {
-  return new Promise((resolve) => {
-    countdownEl.style.display = 'flex';
-    const tick = () => {
-      if (n <= 0) { countdownEl.style.display = 'none'; resolve(); return; }
-      countdownEl.textContent = n--; setTimeout(tick, 800);
-    };
-    tick();
-  });
+function scaleThumb(frame, width, height) {
+  const box = frame.parentElement;
+  if (!box?.clientHeight) return;
+  const scale = box.clientHeight / height;
+  const offsetX = Math.max(0, (box.clientWidth - width * scale) / 2);
+  frame.style.transform = `translateX(${offsetX}px) scale(${scale})`;
 }
-function flash() {
-  cameraWrap.style.filter = 'brightness(3)';
-  setTimeout(() => (cameraWrap.style.filter = ''), 120);
+
+async function renderCanvas() {
+  ensureCurrentFrame();
+  const template = getTemplate(state.frameId);
+  if (!template) return;
+  const token = ++renderToken;
+  try {
+    const html = await resolveTemplateHtml(template);
+    if (token !== renderToken) return;
+    phCanvas = renderTemplate(refs.stage, html);
+    refreshPhotoSlots(phCanvas, state.photos);
+    setMeta(phCanvas, {
+      caption: state.caption || 'Polara memory',
+      date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
+      brand: BRAND_LINE,
+    });
+    fitStage(templateDims(template));
+    refreshPhotoSlots(phCanvas, state.photos);
+    renderEditorStickers();
+  } catch (error) {
+    status(`Frame gagal dimuat. Sesi tetap aman; pilih frame lain atau coba lagi. ${error.message || ''}`);
+  }
 }
 
 function fitStage(dims) {
-  const card = stage.closest('.stage-card');
-  const availW = Math.min((card ? card.clientWidth : 460) - 34, 460);
-  const scale = Math.min(availW / dims.w, 540 / dims.h) || 0.4;
-  stage.style.width = Math.round(dims.w * scale) + 'px';
-  stage.style.height = Math.round(dims.h * scale) + 'px';
-  if (phCanvas) { phCanvas.style.transformOrigin = 'top left'; phCanvas.style.transform = `scale(${scale})`; }
+  if (!phCanvas) return;
+  const width = Math.max(260, refs.canvasView.clientWidth - 36);
+  const height = Math.max(300, refs.canvasView.clientHeight - 34);
+  const scale = Math.min(width / dims.w, height / dims.h, 1) || .35;
+  refs.stage.style.width = `${Math.round(dims.w * scale)}px`;
+  refs.stage.style.height = `${Math.round(dims.h * scale)}px`;
+  phCanvas.style.transformOrigin = 'top left';
+  phCanvas.style.transform = `scale(${scale})`;
+  phCanvas.dataset.displayScale = String(scale);
 }
 
-// ── FASE FOTO vs HASIL ──
-function showFotoPhase() {
-  setupCard.hidden = false; frameCard.hidden = true;
-  greeterCard.hidden = false; hiasCard.hidden = true;
-  stage.style.display = 'none'; stage.innerHTML = ''; stage.style.transform = '';
-  if (captureArea) captureArea.style.display = '';   // tampilin area kamera lagi
-  cameraWrap.style.display = '';
-  snapBtn.style.display = ''; flipBtn.style.display = '';
-  retakeBtn.style.display = 'none'; downloadBtn.style.display = 'none'; shareBtn.style.display = 'none'; noFrameBtn.style.display = 'none';
-  initCapture();
-  snapBtn.disabled = !camReady;
-}
-function showResultPhase() {
-  setupCard.hidden = true; frameCard.hidden = false;
-  greeterCard.hidden = true; hiasCard.hidden = false;
-  captureStrip.hidden = true; nextBtn.style.display = 'none';
-  if (captureArea) captureArea.style.display = 'none'; // sembunyiin area kamera → hasil ke-center
-  cameraWrap.style.display = 'none';
-  stage.style.display = 'block';
-  snapBtn.style.display = 'none'; flipBtn.style.display = 'none';
-  retakeBtn.style.display = ''; downloadBtn.style.display = ''; shareBtn.style.display = ''; noFrameBtn.style.display = '';
-}
-
-// ── JEPRET ──
-snapBtn.onclick = async () => {
-  if (!camReady || shooting) return;
-  shooting = true; snapBtn.disabled = true; flipBtn.disabled = true;
-
-  if (mode === 1) {
-    statusEl.textContent = 'Siap-siap, senyum!';
-    await countdown(timerSec); flash();
-    photos = [captureFrame(video)];
-    shooting = false; flipBtn.disabled = false;
-    goToResult();
-    return;
-  }
-
-  // mode 3: jepret slot aktif
-  const slot = activeSlot;
-  shotBadge.style.display = 'block'; shotBadge.textContent = `Foto slot ${slot + 1}`;
-  statusEl.textContent = `Siap-siap buat slot ${slot + 1}!`;
-  await countdown(timerSec); flash();
-  photos[slot] = captureFrame(video);
-  shotBadge.style.display = 'none';
-  activeSlot = nextEmpty();
-  renderCaptureStrip();
-  shooting = false; snapBtn.disabled = false; flipBtn.disabled = false;
-  if (photos.every(Boolean)) statusEl.textContent = 'Ketiga foto udah keisi! Klik Lanjut, atau silang buat foto ulang.';
-  else statusEl.textContent = `Sip! Sekarang slot ${activeSlot + 1}. Klik Jepret kalau udah siap.`;
-};
-
-// ── Lanjut ke frame (mode 3, setelah 3 foto) ──
-nextBtn.onclick = () => { if (photos.every(Boolean)) goToResult(); };
-
-// ── setelah jepret: pilih frame + hias ──
-function goToResult() {
-  captionText = ''; captionInput.value = '';
-  renderList();
-  currentTpl = framesForMode()[0];
-  renderResult();
-  renderStickerTray();
-  showResultPhase();
-  setStep('frame');
-  statusEl.textContent = 'Pilih frame yang kamu suka, terus hias di kanan.';
-}
-
-function renderResult() {
-  if (!currentTpl) return;
-  const dims = templateDims(currentTpl);
-  resolveTemplateHtml(currentTpl).then(html => {
-    phCanvas = renderTemplate(stage, html);
-    photos.forEach((p, i) => { if (p) setPhotoSlot(phCanvas, i + 1, p); });
-    setMeta(phCanvas, {
-      date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
-      caption: captionText || undefined,
-      brand: BRAND_LINE,                      // link Polara ke-bake di foto (buat share)
+function renderPhotoTabs() {
+  refs.photoSlotTabs.innerHTML = '';
+  state.photos.forEach((_, index) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = `slot-tab${index === state.selectedSlot ? ' active' : ''}`;
+    button.textContent = String(index + 1);
+    button.setAttribute('role', 'tab');
+    button.setAttribute('aria-selected', String(index === state.selectedSlot));
+    button.addEventListener('click', () => {
+      state.selectedSlot = index;
+      renderPhotoTabs();
+      syncPhotoControls();
     });
-    fitStage(dims);
-    updateActive();
+    refs.photoSlotTabs.appendChild(button);
   });
+  wireCollectionKeyboard(refs.photoSlotTabs, '.slot-tab');
 }
-function selectTemplate(t) { currentTpl = t; updateActive(); renderResult(); }
 
-// ── nama / kampus ──
-captionInput.oninput = () => {
-  captionText = captionInput.value.trim();
-  if (phCanvas) setMeta(phCanvas, { caption: captionText || undefined });
-  if (stepIdx < 2) setStep('hias');
-};
+function syncPhotoControls() {
+  const photo = state.photos[state.selectedSlot];
+  if (!photo) return;
+  refs.fitContain.classList.toggle('active', photo.fit === 'contain');
+  refs.fitCover.classList.toggle('active', photo.fit === 'cover');
+  refs.fitContain.setAttribute('aria-pressed', String(photo.fit === 'contain'));
+  refs.fitCover.setAttribute('aria-pressed', String(photo.fit === 'cover'));
+  refs.zoom.value = String(photo.zoom);
+  refs.panX.value = String(photo.offsetX);
+  refs.panY.value = String(photo.offsetY);
+  refs.zoomOutput.textContent = `${photo.zoom.toFixed(2)}×`;
+  refs.panXOutput.textContent = String(Math.round(photo.offsetX * 100));
+  refs.panYOutput.textContent = String(Math.round(photo.offsetY * 100));
+}
 
-// ── sticker tray ──
+function updateSelectedPhoto(patch) {
+  const photo = state.photos[state.selectedSlot];
+  if (!photo) return;
+  state.photos[state.selectedSlot] = patchPhotoTransform(photo, patch);
+  if (phCanvas) setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot]);
+  syncPhotoControls();
+}
+
+refs.fitContain.addEventListener('click', () => updateSelectedPhoto({ fit: 'contain' }));
+refs.fitCover.addEventListener('click', () => updateSelectedPhoto({ fit: 'cover' }));
+refs.zoom.addEventListener('input', () => updateSelectedPhoto({ zoom: Number(refs.zoom.value) }));
+refs.panX.addEventListener('input', () => updateSelectedPhoto({ offsetX: Number(refs.panX.value) }));
+refs.panY.addEventListener('input', () => updateSelectedPhoto({ offsetY: Number(refs.panY.value) }));
+refs.resetPhoto.addEventListener('click', () => {
+  const photo = state.photos[state.selectedSlot];
+  if (!photo) return;
+  state.photos[state.selectedSlot] = resetPhotoTransform(photo);
+  setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot]);
+  syncPhotoControls();
+  status(`Transform slot ${state.selectedSlot + 1} dikembalikan ke Foto utuh.`);
+});
+
+function snapshotStickers() {
+  const snapshot = JSON.stringify(state.stickers);
+  if (state.stickerHistory[state.stickerHistory.length - 1] !== snapshot) {
+    state.stickerHistory.push(snapshot);
+    if (state.stickerHistory.length > 30) state.stickerHistory.shift();
+  }
+  updateStickerActions();
+}
+
+function renderEditorStickers() {
+  if (!phCanvas) return;
+  renderStickerLayer(phCanvas, state.stickers, {
+    selectedId: state.selectedSticker,
+    onSelect: (uid) => { state.selectedSticker = uid; setStickerSelection(phCanvas, uid); },
+    onInteractionStart: snapshotStickers,
+    onChange: () => {},
+    onDelete: (uid) => {
+      state.stickers = state.stickers.filter((item) => item.uid !== uid);
+      if (state.selectedSticker === uid) state.selectedSticker = null;
+      renderEditorStickers();
+      updateStickerActions();
+    },
+    onAssetError: (item) => status(`Sticker ${item.name} gagal dimuat. Sticker lain dan sesi tetap aman.`),
+  });
+  updateStickerActions();
+}
+
 function renderStickerTray() {
-  const pack = getStickerPack(currentTpl ? currentTpl.category : null);
-  stickerTray.innerHTML = '';
-  pack.forEach(s => {
-    const b = document.createElement('button');
-    b.type = 'button'; b.className = 'sticker-btn'; b.title = s.name;
-    b.setAttribute('aria-label', 'Tempel stiker ' + s.name);
-    b.innerHTML = `<img src="${s.file}" alt="" />`;
-    b.onclick = () => { if (phCanvas) { placeSticker(phCanvas, s.file); if (stepIdx < 2) setStep('hias'); } };
-    stickerTray.appendChild(b);
+  refs.stickerTray.innerHTML = '';
+  stickers.forEach((asset) => {
+    const button = document.createElement('button');
+    button.type = 'button';
+    button.className = 'sticker-btn';
+    button.setAttribute('role', 'option');
+    button.setAttribute('aria-label', `Tambahkan sticker ${asset.name}`);
+    const image = document.createElement('img');
+    image.src = asset.src;
+    image.alt = '';
+    image.loading = 'lazy';
+    image.onerror = () => { button.disabled = true; button.hidden = true; status(`Asset ${asset.name} tidak tersedia; item dilewati tanpa mereset sesi.`); };
+    button.appendChild(image);
+    button.addEventListener('click', () => {
+      snapshotStickers();
+      const item = createStickerInstance(asset);
+      state.stickers.push(item);
+      state.selectedSticker = item.uid;
+      renderEditorStickers();
+      status(`${asset.name} ditambahkan. Geser langsung di foto atau gunakan keyboard.`);
+    });
+    refs.stickerTray.appendChild(button);
+  });
+  wireCollectionKeyboard(refs.stickerTray, '.sticker-btn');
+  updateStickerActions();
+}
+
+function updateStickerActions() {
+  refs.undoSticker.disabled = !state.stickerHistory.length;
+  refs.resetSticker.disabled = !state.stickers.length;
+}
+
+refs.undoSticker.addEventListener('click', () => {
+  const previous = state.stickerHistory.pop();
+  if (previous == null) return;
+  state.stickers = JSON.parse(previous);
+  state.selectedSticker = null;
+  renderEditorStickers();
+  status('Perubahan sticker terakhir diurungkan.');
+});
+
+refs.resetSticker.addEventListener('click', () => {
+  if (!state.stickers.length) return;
+  snapshotStickers();
+  state.stickers = [];
+  state.selectedSticker = null;
+  renderEditorStickers();
+  status('Semua sticker dihapus. Kamu masih bisa mengurungkannya.');
+});
+
+refs.caption.addEventListener('input', () => {
+  state.caption = refs.caption.value;
+  if (phCanvas) setMeta(phCanvas, { caption: state.caption || 'Polara memory' });
+});
+
+async function startReveal() {
+  state.revealReady = false;
+  updateActions();
+  await renderCanvas();
+  refs.canvasView.classList.remove('revealing');
+  void refs.canvasView.offsetWidth;
+  refs.canvasView.classList.add('revealing');
+  status('Poca lagi mengeluarkan hasil dari booth…');
+  await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 20 : 980));
+  state.revealReady = true;
+  updateActions();
+  status('Hasil siap dibagikan atau disimpan.');
+}
+
+async function withBusy(message, task) {
+  if (state.busy) return;
+  state.busy = true;
+  updateActions();
+  status(message);
+  try { await task(); }
+  finally { state.busy = false; updateActions(); }
+}
+
+async function downloadFramed() {
+  await withBusy('Membuat PNG ukuran asli…', async () => {
+    try {
+      const url = await exportPng(phCanvas);
+      await assertExportDimensions(url, state.mode === 3 ? 720 : 1080, state.mode === 3 ? 1800 : 1350);
+      const template = getTemplate(state.frameId);
+      download(url, `polara-${template.id}-${Date.now()}.png`);
+      status(`PNG tersimpan (${state.mode === 3 ? '720×1800' : '1080×1350'}).`);
+    } catch (error) {
+      status(error.message || 'Export gagal. Hasilmu tetap aman; coba lagi.');
+    }
   });
 }
 
-// ── jepret ulang (balik ke kamera) ──
-retakeBtn.onclick = () => {
-  phCanvas = null; currentTpl = null;
-  showFotoPhase();
-  setStep('foto');
-  statusEl.textContent = 'Oke, jepret lagi ya. Mode sama timer masih sama.';
-};
-
-// ── simpan ──
-downloadBtn.onclick = async () => {
-  downloadBtn.disabled = true;
-  statusEl.textContent = 'Bentar ya, lagi disimpan...';
-  try {
-    const url = await exportPng(phCanvas);
-    download(url, `polara-${currentTpl.id}-${Date.now()}.png`);
-    setStep('simpan');
-    statusEl.textContent = 'Udah kesimpen! Cek folder Download kamu ya.';
-  } catch (e) {
-    statusEl.textContent = 'Waduh, gagal simpan. ' + e.message;
-  }
-  downloadBtn.disabled = false;
-};
-
-// ── simpan TANPA frame (foto mentah; strip = 3 foto ditumpuk) ──
-function loadImg(src) { return new Promise((res, rej) => { const i = new Image(); i.onload = () => res(i); i.onerror = rej; i.src = src; }); }
-noFrameBtn.onclick = async () => {
-  const valid = photos.filter(Boolean);
-  if (!valid.length) return;
-  noFrameBtn.disabled = true;
-  statusEl.textContent = 'Nyiapin foto tanpa frame...';
-  try {
-    if (valid.length === 1) {
-      download(valid[0], `polara-foto-${Date.now()}.png`);
-    } else {
-      const imgs = await Promise.all(valid.map(loadImg));
-      const gap = 24, w = Math.min(...imgs.map(i => i.width));
-      const hs = imgs.map(i => Math.round(w * (i.height / i.width)));
-      const c = document.createElement('canvas');
-      c.width = w; c.height = hs.reduce((a, b) => a + b, 0) + gap * (imgs.length - 1);
-      const ctx = c.getContext('2d'); ctx.fillStyle = '#fff'; ctx.fillRect(0, 0, c.width, c.height);
-      let y = 0; imgs.forEach((im, i) => { ctx.drawImage(im, 0, y, w, hs[i]); y += hs[i] + gap; });
-      download(c.toDataURL('image/png'), `polara-strip-${Date.now()}.png`);
+async function downloadRaw() {
+  await withBusy('Menyiapkan foto tanpa frame…', async () => {
+    try {
+      const url = await exportRawPng(state.photos, state.mode);
+      await assertExportDimensions(url, state.mode === 3 ? 720 : 1080, state.mode === 3 ? 1800 : 1350);
+      download(url, `polara-foto-aja-${Date.now()}.png`);
+      status('Foto tanpa frame tersimpan. Hasil ber-frame tetap ada di sesi ini.');
+    } catch (error) {
+      status(`Foto mentah gagal dibuat. ${error.message || 'Coba lagi ya.'}`);
     }
-    statusEl.textContent = 'Foto tanpa frame kesimpen! Yang pakai frame juga masih bisa.';
-  } catch (e) {
-    statusEl.textContent = 'Waduh, gagal simpan foto mentah. ' + (e.message || '');
-  }
-  noFrameBtn.disabled = false;
-};
-
-// ── bagikan (Web Share API) ──
-shareBtn.onclick = async () => {
-  shareBtn.disabled = true;
-  statusEl.textContent = 'Bentar, lagi disiapin buat dibagikan...';
-  const msg = `Nih hasil fotoku pakai Polara! Bikin punyamu juga di ${POLARA_URL} 🐱`;
-  try {
-    const url = await exportPng(phCanvas);
-    const blob = await (await fetch(url)).blob();
-    const file = new File([blob], `polara-${currentTpl.id}.png`, { type: 'image/png' });
-    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-      await navigator.share({ files: [file], text: msg });
-      setStep('simpan');
-      statusEl.textContent = 'Yay, kebagikan! Makasih udah pakai Polara.';
-    } else {
-      download(url, `polara-${currentTpl.id}-${Date.now()}.png`);
-      statusEl.textContent = 'Browser ini belum bisa share langsung, jadi aku download-in aja ya. Tinggal kamu kirim manual.';
-    }
-  } catch (e) {
-    if (e && e.name === 'AbortError') statusEl.textContent = 'Oke, share-nya dibatalin.';
-    else statusEl.textContent = 'Waduh, gagal bagikan. ' + (e.message || '');
-  }
-  shareBtn.disabled = false;
-};
-
-// ── kamera ──
-flipBtn.onclick = () => { facing = facing === 'user' ? 'environment' : 'user'; startCam(); };
-function showOverlay(msg) { if (camMsg) camMsg.textContent = msg; if (cameraOverlay) cameraOverlay.style.display = 'flex'; }
-function hideOverlay() { if (cameraOverlay) cameraOverlay.style.display = 'none'; }
-async function startCam() {
-  showOverlay('Lagi nyalain kamera...');
-  snapBtn.disabled = true; camReady = false;
-  try {
-    await startCamera(video, facing);
-    hideOverlay(); camReady = true; flipBtn.disabled = false;
-    if (!setupCard.hidden) snapBtn.disabled = false;
-    if (statusEl.textContent.startsWith('Lagi nyalain') || statusEl.textContent.startsWith('Kameranya'))
-      statusEl.textContent = mode === 3 ? 'Mode strip! Isi 3 foto satu-satu, klik Jepret tiap slot.' : 'Atur mode & timer, terus jepret ya.';
-  } catch (err) {
-    showOverlay('Kameranya belum nyala. Izinin akses kamera di browser dulu ya.');
-    statusEl.textContent = 'Kameranya nggak kebuka. Coba cek izin kamera di browser ya.';
-  }
+  });
 }
 
-// ── init ──
-showFotoPhase();
-setStep('foto');
-startCam();
+async function shareResult() {
+  await withBusy('Menyiapkan hasil untuk dibagikan…', async () => {
+    try {
+      const url = await exportPng(phCanvas);
+      await assertExportDimensions(url, state.mode === 3 ? 720 : 1080, state.mode === 3 ? 1800 : 1350);
+      const blob = await (await fetch(url)).blob();
+      const file = new File([blob], `polara-${state.frameId}.png`, { type: 'image/png' });
+      const text = `Nih hasil fotoku pakai Polara! Bikin punyamu juga di ${POLARA_URL} 🐱`;
+      if (navigator.canShare?.({ files: [file] })) {
+        await navigator.share({ files: [file], text });
+        status('Yay, hasilnya berhasil dibagikan!');
+      } else {
+        download(url, `polara-${state.frameId}-${Date.now()}.png`);
+        status('Share file belum didukung browser ini, jadi PNG sudah diunduh sebagai fallback.');
+      }
+    } catch (error) {
+      if (error?.name === 'AbortError') status('Share dibatalkan. Hasil tetap ada dan bisa dicoba lagi.');
+      else status(`Belum berhasil membagikan. ${error.message || 'Hasil tetap aman; coba lagi.'}`);
+    }
+  });
+}
+
+function assertExportDimensions(dataUrl, expectedWidth, expectedHeight) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => {
+      if (image.naturalWidth === expectedWidth && image.naturalHeight === expectedHeight) resolve();
+      else reject(new Error(`Ukuran export ${image.naturalWidth}×${image.naturalHeight}, seharusnya ${expectedWidth}×${expectedHeight}. Hasil tidak diunduh.`));
+    };
+    image.onerror = () => reject(new Error('Hasil export tidak dapat diverifikasi. Hasil tidak diunduh.'));
+    image.src = dataUrl;
+  });
+}
+
+refs.primary.addEventListener('click', async () => {
+  if (state.step === 'start') await beginCamera();
+  else if (state.step === 'camera') await takePhoto();
+  else if (state.step === 'review') await goToStep('frame', 'Pilih frame favoritmu. Foto masih bisa diatur tanpa crop permanen.');
+  else if (state.step === 'frame') await goToStep('decorate', 'Tambahkan caption dan sticker. Foto serta frame tetap sama saat kembali.');
+  else if (state.step === 'decorate') await goToStep('reveal');
+  else if (state.step === 'reveal') await shareResult();
+});
+
+refs.secondary.addEventListener('click', async () => {
+  if (state.step === 'camera') {
+    state.facing = state.facing === 'user' ? 'environment' : 'user';
+    await requestCamera();
+  } else if (state.step === 'review') startRetake();
+  else if (state.step === 'reveal') await downloadFramed();
+});
+
+refs.tertiary.addEventListener('click', async () => {
+  if (state.step === 'camera') activateDemoMode();
+  else if (state.step === 'reveal') await downloadRaw();
+});
+
+refs.back.addEventListener('click', async () => {
+  if (state.step === 'camera') {
+    if (state.retakeSlot != null || state.photos.some(Boolean)) {
+      state.retakeSlot = null;
+      await goToStep('review', 'Foto yang sudah ada tetap dipertahankan.');
+    } else {
+      await goToStep('start', 'Pilihan format dan timer masih sama.');
+    }
+  } else if (state.step === 'review') {
+    state.retakeSlot = state.selectedSlot;
+    state.activeSlot = state.selectedSlot;
+    await beginCamera({ retake: true });
+  } else if (state.step === 'frame') await goToStep('review', 'Kembali ke review tanpa mereset pilihan foto.');
+  else if (state.step === 'decorate') await goToStep('frame', 'Caption dan sticker tetap tersimpan saat memilih frame lain.');
+  else if (state.step === 'reveal') await goToStep('decorate', 'Hasil tetap utuh. Silakan lanjut menghias.');
+});
+
+refs.retryCamera.addEventListener('click', async () => { state.demo = false; await requestCamera(); });
+function activateDemoMode() {
+  cameraRequestId += 1;
+  stopCamera();
+  state.demo = true;
+  state.cameraStatus = 'demo';
+  showCameraState();
+  status('Mode demo aktif. Ini hanya placeholder untuk mencoba pengalaman Polara.');
+}
+refs.demoMode.addEventListener('click', activateDemoMode);
+
+refs.newSession.addEventListener('click', () => {
+  if (!meaningfulSession()) { resetSession(); return; }
+  refs.dialog.showModal();
+});
+refs.cancelNewSession.addEventListener('click', () => refs.dialog.close());
+refs.confirmNewSession.addEventListener('click', () => { refs.dialog.close(); resetSession(); });
+refs.dialog.addEventListener('cancel', () => status('Sesi sekarang tetap dilanjutkan.'));
+
+async function resetSession() {
+  cameraRequestId += 1;
+  stopCamera();
+  state = initialState();
+  phCanvas = null;
+  refs.stage.innerHTML = '';
+  refs.caption.value = '';
+  await goToStep('start', 'Sesi baru siap. Pilih format dan timer.');
+}
+
+function wireCollectionKeyboard(container, selector) {
+  if (container.dataset.collectionKeyboard === selector) return;
+  container.dataset.collectionKeyboard = selector;
+  container.addEventListener('keydown', (event) => {
+    const current = event.target.closest(selector);
+    if (!current) return;
+    const items = [...container.querySelectorAll(selector)].filter((item) => !item.disabled && !item.hidden);
+    const index = items.indexOf(current);
+    let next = null;
+    if (event.key === 'ArrowRight' || event.key === 'ArrowDown') next = items[(index + 1) % items.length];
+    else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = items[(index - 1 + items.length) % items.length];
+    else if (event.key === 'Home') next = items[0];
+    else if (event.key === 'End') next = items[items.length - 1];
+    if (next) { event.preventDefault(); next.focus(); }
+  });
+}
+
+function handleResize() {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => {
+    thumbFrames.forEach(({ frame, w, h }) => scaleThumb(frame, w, h));
+    if (phCanvas && ['frame', 'decorate', 'reveal'].includes(state.step)) {
+      fitStage(templateDims(getTemplate(state.frameId)));
+      refreshPhotoSlots(phCanvas, state.photos);
+      renderEditorStickers();
+    }
+  }, 120);
+}
+
+window.addEventListener('resize', handleResize);
+window.visualViewport?.addEventListener('resize', handleResize);
+window.addEventListener('pagehide', stopCamera);
+document.querySelectorAll('.mascot-runtime').forEach((image) => {
+  image.addEventListener('error', () => { image.hidden = true; });
+});
+
+preloadMascots();
+goToStep('start', 'Pilih format dan timer, lalu buka kamera saat siap.');

@@ -4,16 +4,33 @@ Format: [Keep a Changelog](https://keepachangelog.com/id/1.1.0/) · Versi: [SemV
 Lihat aturan lengkap di `../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
-> **✅ Aset transparan (4 Jul 2026):** versi transparan mascot/sticker ternyata udah ada di `assets/poca/poca-porikura/_originals/` (2000px RGBA) — dipindah + resize 800px ke folder runtime: `mascot/` (poca-wink/camera/peeking), `stickers/` (cute/snap/purrfect), `brand/watermark`. `logo-polara` di-crop. Total 8 aset transparan & kepasang.
-> **⏳ SISA opaque (Henry regenerate):** `mascot/mascot-poca-hero` (sedang), `brand/app-icon` + `brand/secondary-app-icon` (opsional, favicon).
-> **➕ Aset baru:** potong `assets/Polara Sticker Pack.png` → ~10-12 stiker transparan individual di `assets/stickers/` (variasi tray).
-> **✅ Flow "jepret dulu" + timer + share + footer = DONE di v0.8.0.** Sisa: frame yang bisa 1 DAN 3 (kembangin frame; strategi diputus "kembangin yang ada dulu"), per-photo retake buat mode-3.
-> **✅ Footer sosmed kepasang (5 Jul):** Instagram @hnrydev + WhatsApp (0895..., Henry OK dipublik) + GitHub. SISA: URL portofolio (Henry lagi bangun) buat link nama.
-- Backlog: export GIF/video buat **Live Frame** (diferensiasi utama, lihat RISET.md).
-- Sticker tray UNIVERSAL (semua frame) — 6 stiker sekarang semua transparan ✓ (bisa ditambah variasi dari sticker pack sheet).
-- Catatan code-review (low, keputusan Henry): `.tpl-btn` (`<button>`) memuat `<iframe>` thumbnail — teknis "interactive content" di dalam button = HTML kurang valid, TAPI fungsional aman & keyboard OK (iframe `tabindex=-1` + `pointer-events:none`, verified). Strict-valid = ganti ke `div[role=button]` + keydown handler.
-- Placed sticker cuma bisa digeser pakai pointer (belum keyboard) — WCAG 2.1.1 minor; penempatan & hapus udah keyboard-OK.
-- Catatan code-review (low, PRE-EXISTING bukan regresi): pas `exportPng`, console kebanjiran `SecurityError: cssRules` dari `html-to-image` yang coba baca stylesheet cross-origin (Google Fonts). NON-FATAL — export tetap hasilin PNG benar. Kalau mau bersihin: embed font sendiri / pakai opsi `skipFonts`+`fontEmbedCSS` di html-to-image (task terpisah).
+
+### Added — P0 prototype integration
+- Flow enam tahap: **Start → Kamera → Review → Frame → Hias → Reveal**, dengan Strip 3 sebagai mode hero/default.
+- Camera state untuk requesting, ready, denied, unavailable, switching, dan fallback demo yang tetap dapat dipilih saat permintaan izin menggantung.
+- Review dan retake per slot; foto lama baru diganti setelah capture pengganti berhasil.
+- Shared photo geometry: **Foto utuh** (`contain`) sebagai default, **Penuhi frame** (`cover`) opt-in, zoom/pan per slot, dan transform tetap tersimpan saat ganti frame/back.
+- Registry P0: 5 mascot UI-only dan 4 sticker exportable transparan, ditambah fallback aman bila asset gagal dimuat.
+- Editor sticker berbasis state: select, drag, resize, rotate, delete, reset, undo, touch/pointer, dan keyboard.
+- Tiga keluarga frame hero tersedia untuk single dan strip: Vintage Film Lo-Fi, Poca Purikura, dan Seoul Snap Y2K. Existing frame tidak dihapus.
+- Reveal sebagai tahap khusus, reset-session dialog native, safe-area mobile, short-landscape split view, serta koleksi frame/sticker scroll-safe.
+
+### Changed
+- Capture menyimpan frame penuh beserta dimensi natural; crop tidak lagi dibakar permanen saat jepret.
+- Preview, reveal, dan export memakai geometry foto yang sama.
+- Export kembali ke dimensi exact produk: single **1080×1350**, strip **720×1800**, dengan validasi ukuran sebelum share/download.
+- Poca dipisahkan dari sticker editor agar maskot tidak otomatis ikut export.
+
+### Fixed
+- Mode demo tetap tersedia ketika prompt izin kamera belum memberi respons.
+- Kanvas strip tidak lagi memaksa panggung desktop memanjang; hasil diskalakan ke viewport.
+- Overflow horizontal pada viewport 320 px dihilangkan.
+- Handle sticker yang tidak terlihat tidak lagi ikut urutan Tab.
+
+### Validation pending
+- Kamera/switch camera, touch gesture, safe-area, download, dan native share sheet pada Android Chrome serta iPhone Safari nyata.
+- Dogfooding 3–5 teman dan pencatatan actual share.
+- Log `SecurityError: cssRules` dari `html-to-image` saat membaca Google Fonts masih non-fatal; PNG tetap berhasil dibuat.
 
 ## [0.8.5] - 2026-07-05
 ### Fixed
