@@ -5,6 +5,22 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.9.2] - 2026-08-02
+### Changed
+- Capture kamera disimpan sebagai JPEG kualitas tinggi dengan sisi maksimum 1920 px agar tiga slot lebih hemat memori pada HP tanpa mengubah rasio sumber atau ukuran PNG export.
+- Reveal menyiapkan dan memvalidasi file ber-frame sebelum tombol share aktif, sehingga native file share dapat dipanggil saat user activation masih tersedia.
+- Download framed/raw memakai Blob Object URL dan selalu menjadwalkan `revokeObjectURL` setelah file dipicu.
+
+### Fixed
+- Cegah race dan kebocoran stream ketika permission kamera masih menggantung lalu user memilih demo, keluar dari camera room, atau memulai request baru.
+- Bersihkan stream bila `video.play()` gagal, kamera terputus, halaman disembunyikan, atau sesi ditutup.
+- Jeda dan batalkan countdown dengan aman saat Polara tidak terlihat tanpa mengubah foto yang sudah tersimpan.
+- Deteksi facing mode aktual; bila pergantian kamera gagal, pulihkan kamera sebelumnya serta state mirror yang benar.
+- Native share cancel mempertahankan sesi, sedangkan share yang tidak didukung atau gagal membuka sheet jatuh ke download PNG yang sama.
+
+### Validation pending
+- Kamera/switch camera, touch gesture, safe-area/keyboard, dan native share sheet/cancel pada Android Chrome serta iPhone Safari nyata.
+
 ## [0.9.1] - 2026-08-01
 ### Changed
 - Sinkronkan metadata rilis dan handoff setelah checkpoint P0 `v0.9.0` masuk ke `main` dan `origin/main`.

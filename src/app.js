@@ -5,7 +5,7 @@ import {
 } from './core/camera.js';
 import {
   renderTemplate, setPhotoSlot, refreshPhotoSlots, setMeta, exportPng, exportRawPng,
-  download, renderStickerLayer, setStickerSelection,
+  download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
 import { patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
 import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js';
@@ -59,6 +59,10 @@ let state = initialState();
 let phCanvas = null;
 let renderToken = 0;
 let cameraRequestId = 0;
+let countdownRequestId = 0;
+let revealRequestId = 0;
+let preparedExportRequestId = 0;
+let preparedFramedExport = null;
 let thumbFrames = [];
 let resizeTimer = null;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
@@ -108,7 +112,7 @@ function setButton(button, { label = '', hidden = false, disabled = false, tone 
 }
 
 function updateActions() {
-  setButton(refs.back, { label: 'Kembali', hidden: state.step === 'start', tone: 'ghost' });
+  setButton(refs.back, { label: 'Kembali', hidden: state.step === 'start', tone: 'ghost', disabled: state.shooting });
   setButton(refs.secondary, { hidden: true });
   setButton(refs.tertiary, { hidden: true });
 
@@ -136,7 +140,16 @@ function updateActions() {
 async function goToStep(nextStep, message) {
   if (!STEPS.some((step) => step.id === nextStep)) return;
   saveScrollState();
-  if (state.step === 'camera' && nextStep !== 'camera') stopCamera();
+  if (state.step === 'camera' && nextStep !== 'camera') {
+    cameraRequestId += 1;
+    cancelCountdown();
+    state.shooting = false;
+    stopCamera();
+  }
+  if (state.step === 'reveal' && nextStep !== 'reveal') {
+    revealRequestId += 1;
+    invalidatePreparedExport();
+  }
   state.step = nextStep;
   refs.panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== nextStep; });
   refs.startView.hidden = nextStep !== 'start';
@@ -219,24 +232,32 @@ async function beginCamera({ retake = false } = {}) {
   }
 }
 
-async function requestCamera() {
+async function requestCamera({ switching = false } = {}) {
   const requestId = ++cameraRequestId;
-  state.cameraStatus = state.cameraStatus === 'ready' ? 'switching' : 'requesting';
+  state.cameraStatus = switching ? 'switching' : 'requesting';
   state.cameraError = null;
   showCameraState();
   try {
-    await startCamera(refs.video, state.facing);
-    if (requestId !== cameraRequestId || state.step !== 'camera' || state.demo) { stopCamera(); return; }
+    const stream = await startCamera(refs.video, state.facing);
+    if (requestId !== cameraRequestId || state.step !== 'camera' || state.demo) { stopCamera(); return false; }
+    const actualFacing = stream.getVideoTracks()[0]?.getSettings?.().facingMode;
+    if (actualFacing === 'user' || actualFacing === 'environment') state.facing = actualFacing;
     state.cameraStatus = 'ready';
     refs.video.style.transform = state.facing === 'user' ? 'scaleX(-1)' : 'none';
+    stream.getVideoTracks()[0]?.addEventListener('ended', () => {
+      if (requestId !== cameraRequestId || state.step !== 'camera' || state.demo) return;
+      suspendCameraSession('Kamera terputus. Foto yang sudah ada tetap aman; nyalakan kamera lagi untuk melanjutkan.');
+    }, { once: true });
     showCameraState();
     status('Kamera siap. Pastikan semua masuk guide, lalu tekan Jepret.');
+    return true;
   } catch (error) {
-    if (requestId !== cameraRequestId || state.demo) return;
+    if (requestId !== cameraRequestId || state.demo || error?.name === 'AbortError') return false;
     state.cameraStatus = classifyCameraError(error);
     state.cameraError = error;
     showCameraState();
     status(state.cameraStatus === 'denied' ? 'Akses kamera ditolak. Izinkan lewat pengaturan browser atau gunakan mode demo.' : 'Kamera tidak tersedia. Kamu tetap bisa mencoba flow lewat mode demo.');
+    return false;
   }
 }
 
@@ -245,18 +266,38 @@ function showCameraState() {
   const demo = state.cameraStatus === 'demo';
   refs.cameraOverlay.hidden = ready || demo;
   refs.cameraOverlayActions.hidden = ready || demo || state.cameraStatus === 'idle';
-  refs.retryCamera.hidden = !['denied', 'unavailable'].includes(state.cameraStatus);
+  refs.retryCamera.hidden = !['denied', 'unavailable', 'paused'].includes(state.cameraStatus);
   refs.demoMode.hidden = ready || demo;
   if (state.cameraStatus === 'requesting') refs.cameraMessage.textContent = 'Poca lagi meminta izin kamera…';
   else if (state.cameraStatus === 'switching') refs.cameraMessage.textContent = 'Sedang mengganti kamera…';
   else if (state.cameraStatus === 'denied') refs.cameraMessage.textContent = 'Izin kamera belum diberikan. Cek pengaturan browser atau coba tanpa kamera.';
   else if (state.cameraStatus === 'unavailable') refs.cameraMessage.textContent = 'Kamera tidak ditemukan atau tidak didukung di browser ini.';
+  else if (state.cameraStatus === 'paused') refs.cameraMessage.textContent = 'Kamera dijeda untuk menjaga privasi dan baterai.';
   else if (state.cameraStatus === 'idle') refs.cameraMessage.textContent = 'Kamera belum dimulai.';
   refs.video.hidden = demo;
   refs.cameraStateNote.textContent = demo
     ? 'Mode demo aktif. Setiap Jepret membuat placeholder lokal untuk menguji flow.'
-    : state.cameraStatus === 'ready' ? 'Kamera siap. Foto penuh akan disimpan tanpa crop permanen.' : 'Sesi dan foto yang sudah ada tetap aman.';
+    : state.cameraStatus === 'ready' ? 'Kamera siap. Foto penuh akan disimpan tanpa crop permanen.'
+      : state.cameraStatus === 'paused' ? 'Tekan Coba lagi untuk menyalakan kamera. Foto yang sudah ada tidak berubah.'
+        : 'Sesi dan foto yang sudah ada tetap aman.';
   updateActions();
+}
+
+function cancelCountdown() {
+  countdownRequestId += 1;
+  refs.countdown.hidden = true;
+  refs.countdownLive.textContent = '';
+}
+
+function suspendCameraSession(message) {
+  if (state.step !== 'camera' || state.demo) return;
+  cameraRequestId += 1;
+  cancelCountdown();
+  state.shooting = false;
+  stopCamera();
+  state.cameraStatus = 'paused';
+  showCameraState();
+  status(message);
 }
 
 function renderSlotCards(container, onSelect) {
@@ -292,14 +333,28 @@ function renderCameraPanel() {
 }
 
 async function runCountdown(seconds) {
+  const requestId = ++countdownRequestId;
   refs.countdown.hidden = false;
-  for (let number = seconds; number > 0; number -= 1) {
-    refs.countdown.textContent = String(number);
-    refs.countdownLive.textContent = `${number}`;
-    await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 300 : 760));
+  try {
+    for (let number = seconds; number > 0; number -= 1) {
+      if (requestId !== countdownRequestId || document.hidden || state.step !== 'camera') {
+        const error = new Error('Countdown dibatalkan.');
+        error.name = 'AbortError';
+        throw error;
+      }
+      refs.countdown.textContent = String(number);
+      refs.countdownLive.textContent = `${number}`;
+      await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 300 : 760));
+    }
+    if (requestId !== countdownRequestId || document.hidden || state.step !== 'camera') {
+      const error = new Error('Countdown dibatalkan.');
+      error.name = 'AbortError';
+      throw error;
+    }
+    refs.countdownLive.textContent = 'Foto diambil';
+  } finally {
+    if (requestId === countdownRequestId) refs.countdown.hidden = true;
   }
-  refs.countdown.hidden = true;
-  refs.countdownLive.textContent = 'Foto diambil';
 }
 
 function flash() {
@@ -349,7 +404,11 @@ async function takePhoto() {
   } catch (error) {
     state.shooting = false;
     refs.shotBadge.hidden = true;
-    status(`Foto belum berhasil diambil. ${error.message || 'Coba lagi ya.'}`);
+    if (state.step === 'camera') {
+      status(error?.name === 'AbortError'
+        ? 'Pengambilan foto dijeda. Foto yang sudah ada tetap aman.'
+        : `Foto belum berhasil diambil. ${error.message || 'Coba lagi ya.'}`);
+    }
   }
   updateActions();
 }
@@ -622,15 +681,68 @@ refs.caption.addEventListener('input', () => {
   if (phCanvas) setMeta(phCanvas, { caption: state.caption || 'Polara memory' });
 });
 
+function framedExportSize() {
+  return state.mode === 3
+    ? { width: 720, height: 1800 }
+    : { width: 1080, height: 1350 };
+}
+
+function invalidatePreparedExport() {
+  preparedExportRequestId += 1;
+  preparedFramedExport = null;
+}
+
+async function prepareFramedExport() {
+  if (preparedFramedExport) return preparedFramedExport;
+  if (!phCanvas || !state.frameId) throw new Error('Frame hasil belum siap.');
+
+  const requestId = ++preparedExportRequestId;
+  const { width, height } = framedExportSize();
+  const dataUrl = await exportPng(phCanvas);
+  await assertExportDimensions(dataUrl, width, height);
+  const blob = await dataUrlToBlob(dataUrl);
+  if (requestId !== preparedExportRequestId || state.step !== 'reveal') {
+    const error = new Error('Persiapan hasil dibatalkan.');
+    error.name = 'AbortError';
+    throw error;
+  }
+
+  const filename = `polara-${state.frameId}-${Date.now()}.png`;
+  let file = null;
+  if (typeof File === 'function') {
+    try { file = new File([blob], filename, { type: 'image/png' }); }
+    catch { /* Browser tanpa File constructor tetap mendapat fallback download. */ }
+  }
+  preparedFramedExport = { blob, file, filename, width, height };
+  return preparedFramedExport;
+}
+
+function supportsPreparedFileShare(prepared) {
+  if (!prepared?.file || typeof navigator.share !== 'function' || typeof navigator.canShare !== 'function') return false;
+  try { return navigator.canShare({ files: [prepared.file] }); }
+  catch { return false; }
+}
+
 async function startReveal() {
+  const requestId = ++revealRequestId;
+  invalidatePreparedExport();
   state.revealReady = false;
   updateActions();
   await renderCanvas();
+  if (requestId !== revealRequestId || state.step !== 'reveal') return;
   refs.canvasView.classList.remove('revealing');
   void refs.canvasView.offsetWidth;
   refs.canvasView.classList.add('revealing');
   status('Poca lagi mengeluarkan hasil dari booth…');
   await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 20 : 980));
+  if (requestId !== revealRequestId || state.step !== 'reveal') return;
+  status('Hasil terlihat. Polara sedang menyiapkan file agar share di HP lebih andal…');
+  try {
+    await prepareFramedExport();
+  } catch (error) {
+    if (error?.name !== 'AbortError') status('Hasil siap dilihat. File akan dicoba lagi saat kamu menyimpan atau membagikan.');
+  }
+  if (requestId !== revealRequestId || state.step !== 'reveal') return;
   state.revealReady = true;
   updateActions();
   status('Hasil siap dibagikan atau disimpan.');
@@ -648,11 +760,9 @@ async function withBusy(message, task) {
 async function downloadFramed() {
   await withBusy('Membuat PNG ukuran asli…', async () => {
     try {
-      const url = await exportPng(phCanvas);
-      await assertExportDimensions(url, state.mode === 3 ? 720 : 1080, state.mode === 3 ? 1800 : 1350);
-      const template = getTemplate(state.frameId);
-      download(url, `polara-${template.id}-${Date.now()}.png`);
-      status(`PNG tersimpan (${state.mode === 3 ? '720×1800' : '1080×1350'}).`);
+      const prepared = await prepareFramedExport();
+      await download(prepared.blob, prepared.filename);
+      status(`PNG tersimpan (${prepared.width}×${prepared.height}).`);
     } catch (error) {
       status(error.message || 'Export gagal. Hasilmu tetap aman; coba lagi.');
     }
@@ -664,7 +774,8 @@ async function downloadRaw() {
     try {
       const url = await exportRawPng(state.photos, state.mode);
       await assertExportDimensions(url, state.mode === 3 ? 720 : 1080, state.mode === 3 ? 1800 : 1350);
-      download(url, `polara-foto-aja-${Date.now()}.png`);
+      const blob = await dataUrlToBlob(url);
+      await download(blob, `polara-foto-aja-${Date.now()}.png`);
       status('Foto tanpa frame tersimpan. Hasil ber-frame tetap ada di sesi ini.');
     } catch (error) {
       status(`Foto mentah gagal dibuat. ${error.message || 'Coba lagi ya.'}`);
@@ -674,22 +785,30 @@ async function downloadRaw() {
 
 async function shareResult() {
   await withBusy('Menyiapkan hasil untuk dibagikan…', async () => {
-    try {
-      const url = await exportPng(phCanvas);
-      await assertExportDimensions(url, state.mode === 3 ? 720 : 1080, state.mode === 3 ? 1800 : 1350);
-      const blob = await (await fetch(url)).blob();
-      const file = new File([blob], `polara-${state.frameId}.png`, { type: 'image/png' });
-      const text = `Nih hasil fotoku pakai Polara! Bikin punyamu juga di ${POLARA_URL} 🐱`;
-      if (navigator.canShare?.({ files: [file] })) {
-        await navigator.share({ files: [file], text });
+    const preparedAtClick = preparedFramedExport;
+    const text = `Nih hasil fotoku pakai Polara! Bikin punyamu juga di ${POLARA_URL} 🐱`;
+
+    if (supportsPreparedFileShare(preparedAtClick)) {
+      try {
+        // Panggil sebelum await pertama agar transient user activation di HP tidak hilang.
+        await navigator.share({ files: [preparedAtClick.file], text });
         status('Yay, hasilnya berhasil dibagikan!');
-      } else {
-        download(url, `polara-${state.frameId}-${Date.now()}.png`);
-        status('Share file belum didukung browser ini, jadi PNG sudah diunduh sebagai fallback.');
+        return;
+      } catch (error) {
+        if (error?.name === 'AbortError') {
+          status('Share dibatalkan. Hasil tetap ada dan bisa dicoba lagi.');
+          return;
+        }
+        status('Native share belum berhasil. Polara menyiapkan download sebagai fallback…');
       }
+    }
+
+    try {
+      const prepared = preparedAtClick || await prepareFramedExport();
+      await download(prepared.blob, prepared.filename);
+      status('Share file belum didukung atau gagal dibuka, jadi PNG sudah diunduh sebagai fallback.');
     } catch (error) {
-      if (error?.name === 'AbortError') status('Share dibatalkan. Hasil tetap ada dan bisa dicoba lagi.');
-      else status(`Belum berhasil membagikan. ${error.message || 'Hasil tetap aman; coba lagi.'}`);
+      status(`Belum berhasil membagikan. ${error.message || 'Hasil tetap aman; coba lagi.'}`);
     }
   });
 }
@@ -717,8 +836,18 @@ refs.primary.addEventListener('click', async () => {
 
 refs.secondary.addEventListener('click', async () => {
   if (state.step === 'camera') {
-    state.facing = state.facing === 'user' ? 'environment' : 'user';
-    await requestCamera();
+    const previousFacing = state.facing;
+    state.facing = previousFacing === 'user' ? 'environment' : 'user';
+    const switched = await requestCamera({ switching: true });
+    if (switched && state.facing === previousFacing) {
+      status('Kamera lain tidak ditemukan; kamera yang aktif tetap dipakai. Foto dan sesi tetap aman.');
+    }
+    if (!switched) state.facing = previousFacing;
+    if (!switched && state.cameraStatus !== 'denied' && state.step === 'camera' && !state.demo) {
+      status('Kamera tujuan tidak tersedia. Polara sedang memulihkan kamera sebelumnya…');
+      const restored = await requestCamera({ switching: true });
+      if (restored) status('Kamera sebelumnya berhasil dipulihkan. Foto dan sesi tetap aman.');
+    }
   } else if (state.step === 'review') startRetake();
   else if (state.step === 'reveal') await downloadFramed();
 });
@@ -748,6 +877,8 @@ refs.back.addEventListener('click', async () => {
 refs.retryCamera.addEventListener('click', async () => { state.demo = false; await requestCamera(); });
 function activateDemoMode() {
   cameraRequestId += 1;
+  cancelCountdown();
+  state.shooting = false;
   stopCamera();
   state.demo = true;
   state.cameraStatus = 'demo';
@@ -766,6 +897,9 @@ refs.dialog.addEventListener('cancel', () => status('Sesi sekarang tetap dilanju
 
 async function resetSession() {
   cameraRequestId += 1;
+  revealRequestId += 1;
+  cancelCountdown();
+  invalidatePreparedExport();
   stopCamera();
   state = initialState();
   phCanvas = null;
@@ -805,7 +939,14 @@ function handleResize() {
 
 window.addEventListener('resize', handleResize);
 window.visualViewport?.addEventListener('resize', handleResize);
-window.addEventListener('pagehide', stopCamera);
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) suspendCameraSession('Kamera dijeda saat Polara tidak terlihat. Foto yang sudah ada tetap aman.');
+});
+window.addEventListener('pagehide', () => {
+  cameraRequestId += 1;
+  cancelCountdown();
+  stopCamera();
+});
 document.querySelectorAll('.mascot-runtime').forEach((image) => {
   image.addEventListener('error', () => { image.hidden = true; });
 });

@@ -83,13 +83,32 @@ export async function exportPng(canvasEl, attempt = 1) {
   }
 }
 
-export function download(dataUrl, filename = 'polara.png') {
+export async function dataUrlToBlob(dataUrl) {
+  const response = await fetch(dataUrl);
+  if (!response.ok) throw new Error('File hasil tidak dapat disiapkan.');
+  return response.blob();
+}
+
+export async function download(source, filename = 'polara.png') {
+  let objectUrl = null;
   const anchor = document.createElement('a');
-  anchor.href = dataUrl;
+  if (source instanceof Blob && URL.createObjectURL) {
+    objectUrl = URL.createObjectURL(source);
+    anchor.href = objectUrl;
+  } else if (typeof source === 'string') {
+    anchor.href = source;
+  } else {
+    throw new Error('Format file download tidak didukung.');
+  }
   anchor.download = filename;
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
+  anchor.rel = 'noopener';
+  try {
+    document.body.appendChild(anchor);
+    anchor.click();
+  } finally {
+    anchor.remove();
+    if (objectUrl) setTimeout(() => URL.revokeObjectURL(objectUrl), 30_000);
+  }
 }
 
 export function setStickerSelection(canvasEl, selectedId) {

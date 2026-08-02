@@ -4,6 +4,26 @@
 import { createPhotoRecord } from './photo-geometry.js';
 
 let _stream = null;
+let _videoEl = null;
+let _pendingStream = null;
+let _pendingVideoEl = null;
+let _requestId = 0;
+const _stoppedStreams = new WeakSet();
+
+const MAX_CAPTURE_EDGE = 1920;
+const CAPTURE_QUALITY = 0.92;
+
+function stopStream(stream) {
+  if (!stream || _stoppedStreams.has(stream)) return;
+  _stoppedStreams.add(stream);
+  stream.getTracks().forEach((track) => track.stop());
+}
+
+function abortError(message = 'Permintaan kamera dibatalkan.') {
+  const error = new Error(message);
+  error.name = 'AbortError';
+  return error;
+}
 
 export async function startCamera(videoEl, facingMode = 'user') {
   if (!navigator.mediaDevices?.getUserMedia) {
@@ -13,19 +33,61 @@ export async function startCamera(videoEl, facingMode = 'user') {
   }
 
   stopCamera();
-  _stream = await navigator.mediaDevices.getUserMedia({
-    video: { facingMode, width: { ideal: 1920 }, height: { ideal: 1920 } },
+  const requestId = ++_requestId;
+  const candidate = await navigator.mediaDevices.getUserMedia({
+    video: { facingMode: { ideal: facingMode }, width: { ideal: 1920 }, height: { ideal: 1920 } },
     audio: false,
   });
-  videoEl.srcObject = _stream;
-  await videoEl.play();
-  return _stream;
+
+  if (requestId !== _requestId) {
+    stopStream(candidate);
+    throw abortError();
+  }
+
+  _pendingStream = candidate;
+  _pendingVideoEl = videoEl;
+  try {
+    videoEl.srcObject = candidate;
+    await videoEl.play();
+  } catch (error) {
+    stopStream(candidate);
+    if (videoEl.srcObject === candidate) videoEl.srcObject = null;
+    if (_pendingStream === candidate) {
+      _pendingStream = null;
+      _pendingVideoEl = null;
+    }
+    throw error;
+  }
+
+  if (requestId !== _requestId) {
+    stopStream(candidate);
+    if (videoEl.srcObject === candidate) videoEl.srcObject = null;
+    if (_pendingStream === candidate) {
+      _pendingStream = null;
+      _pendingVideoEl = null;
+    }
+    throw abortError();
+  }
+
+  _pendingStream = null;
+  _pendingVideoEl = null;
+  _stream = candidate;
+  _videoEl = videoEl;
+  return candidate;
 }
 
 export function stopCamera() {
-  if (!_stream) return;
-  _stream.getTracks().forEach((track) => track.stop());
+  _requestId += 1;
+  const stream = _stream;
+  const pendingStream = _pendingStream;
+  stopStream(stream);
+  if (pendingStream !== stream) stopStream(pendingStream);
+  if (_videoEl?.srcObject === stream) _videoEl.srcObject = null;
+  if (_pendingVideoEl?.srcObject === pendingStream) _pendingVideoEl.srcObject = null;
   _stream = null;
+  _videoEl = null;
+  _pendingStream = null;
+  _pendingVideoEl = null;
 }
 
 export function classifyCameraError(error) {
@@ -36,19 +98,29 @@ export function classifyCameraError(error) {
 }
 
 export function captureFrame(videoEl, { mirror = true } = {}) {
-  const width = videoEl.videoWidth || 1280;
-  const height = videoEl.videoHeight || 960;
+  if (!videoEl.videoWidth || !videoEl.videoHeight || videoEl.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
+    throw new Error('Kamera belum mengirim frame. Tunggu sebentar lalu coba lagi.');
+  }
+
+  const sourceWidth = videoEl.videoWidth;
+  const sourceHeight = videoEl.videoHeight;
+  const resizeScale = Math.min(1, MAX_CAPTURE_EDGE / Math.max(sourceWidth, sourceHeight));
+  const width = Math.max(1, Math.round(sourceWidth * resizeScale));
+  const height = Math.max(1, Math.round(sourceHeight * resizeScale));
   const canvas = document.createElement('canvas');
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Browser tidak dapat menyiapkan kanvas foto.');
 
   if (mirror) {
     ctx.translate(width, 0);
     ctx.scale(-1, 1);
   }
-  ctx.drawImage(videoEl, 0, 0, width, height);
-  return createPhotoRecord({ src: canvas.toDataURL('image/png'), naturalWidth: width, naturalHeight: height });
+  ctx.drawImage(videoEl, 0, 0, sourceWidth, sourceHeight, 0, 0, width, height);
+  const src = canvas.toDataURL('image/jpeg', CAPTURE_QUALITY);
+  if (!src || src === 'data:,') throw new Error('Browser gagal menyimpan frame kamera.');
+  return createPhotoRecord({ src, naturalWidth: width, naturalHeight: height });
 }
 
 // Fallback eksplisit untuk mencoba flow tanpa kamera. Ini bukan foto user dan
@@ -60,6 +132,7 @@ export function createDemoCapture(slotIndex = 0, mode = 3) {
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d');
+  if (!ctx) throw new Error('Browser tidak dapat menyiapkan foto demo.');
   const palettes = [
     ['#ffd4e6', '#8fd3ff'],
     ['#cab8ff', '#ffe26f'],
