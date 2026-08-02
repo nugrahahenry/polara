@@ -639,6 +639,10 @@ function renderStickerTray() {
     image.loading = 'lazy';
     image.onerror = () => { button.disabled = true; button.hidden = true; status(`Asset ${asset.name} tidak tersedia; item dilewati tanpa mereset sesi.`); };
     button.appendChild(image);
+    const label = document.createElement('span');
+    label.className = 'sticker-label';
+    label.textContent = asset.name;
+    button.appendChild(label);
     button.addEventListener('click', () => {
       snapshotStickers();
       const item = createStickerInstance(asset);
@@ -726,6 +730,7 @@ function supportsPreparedFileShare(prepared) {
 async function startReveal() {
   const requestId = ++revealRequestId;
   invalidatePreparedExport();
+  state.selectedSticker = null;
   state.revealReady = false;
   updateActions();
   await renderCanvas();

@@ -137,9 +137,10 @@
     .tray-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
     .tray-head img { width: 60px; height: 60px; object-fit: contain; }
     #stickerTray { display: grid; grid-template-columns: repeat(4, minmax(54px, 1fr)); gap: 9px; max-height: 270px; overflow-y: auto; padding: 3px 4px 86px 3px; scroll-padding-bottom: 86px; }
-    .sticker-btn { min-width: 54px; min-height: 64px; padding: 5px; border: 2px solid rgba(75,46,31,.18); border-radius: 16px; background: #fff; cursor: pointer; }
+    .sticker-btn { min-width: 54px; min-height: 84px; display: grid; justify-items: center; align-content: start; gap: 3px; padding: 5px; border: 2px solid rgba(75,46,31,.18); border-radius: 16px; background: #fff; cursor: pointer; }
     .sticker-btn:hover { transform: translateY(-2px) rotate(-2deg); border-color: var(--pink-deep); }
     .sticker-btn img { width: 100%; height: 54px; display: block; object-fit: contain; }
+    .sticker-label { width: 100%; overflow: hidden; color: var(--brown-soft); font: 700 .62rem/1.2 var(--font-display); text-align: center; text-overflow: ellipsis; white-space: nowrap; }
     .editor-actions { display: flex; gap: 8px; margin: 10px 0 4px; }
 
     .reveal-panel { text-align: center; }
@@ -320,8 +321,7 @@
         </section>
 
         <section class="control-panel" data-panel="frame" hidden>
-          <p class="eyebrow">Pilih frame</p>
-          <h2 class="panel-title">Kasih suasana ke memorimu</h2>
+          <div class="tray-head"><div><p class="eyebrow">Pilih frame</p><h2 class="panel-title">Kasih suasana ke memorimu</h2></div><img class="mascot-runtime" src="assets/mascot/poca-holding-photo-frame.png" alt="Poca membantu memilih frame" loading="lazy" /></div>
           <p class="panel-copy">Foto tetap dominan. Pilih frame dulu, lalu atur foto per slot bila memang perlu.</p>
           <div id="templateList" role="listbox" aria-label="Koleksi frame"></div>
           <div class="photo-adjust">
@@ -353,7 +353,7 @@
         </section>
 
         <section class="control-panel reveal-panel" data-panel="reveal" hidden>
-          <img class="mascot-runtime" src="assets/mascot/poca-peace.png" alt="Poca membuat pose peace" loading="lazy" />
+          <img class="mascot-runtime" src="assets/mascot/poca-excited-jump.png" alt="Poca melompat merayakan hasil foto" loading="lazy" />
           <p class="eyebrow">Reveal</p>
           <h2 class="panel-title">Purr-fect. Ini momen kalian!</h2>
           <p class="panel-copy">Bagikan langsung bila perangkat mendukungnya, atau simpan PNG dengan ukuran asli.</p>

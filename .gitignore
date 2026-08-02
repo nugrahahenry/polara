@@ -19,7 +19,8 @@ spec/
 *.bat
 *.vbs
 
-# Backup aset asli sebelum di-resize (lokal aja, jangan ke GitHub — nambah berat repo)
+# Master/source aset lokal (jangan ke GitHub — nambah berat repo)
+assets/_originals/
 assets/**/_originals/
 
 # Personal export pack for ChatGPT brainstorming (generated locally)
@@ -27,3 +28,7 @@ Polara-Brainstorm-Pack-*.zip
 
 # Source/implementation pack dari ChatGPT (arsip lokal; hasil ekstrak disimpan di docs/prototypes/)
 Polara-*-Implementation-Pack-*.zip
+
+# Asset handoff dan QA pack lokal; ekstrak evidence canonical ke docs/ sebelum arsip dihapus
+Polara-*-Asset-Handoff-*.zip
+Polara-*-QA-Pack-*.zip

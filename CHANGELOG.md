@@ -5,6 +5,28 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.10.0] - 2026-08-02
+
+### Added
+- Integrasikan dua maskot UI P1: Poca memegang frame untuk tahap pemilihan frame dan Poca melompat untuk perayaan Reveal.
+- Tambahkan enam stiker P1 yang dapat diedit dan ikut export: Paw Pink, Sparkle Kuning, Kamera, Bintang Poca, Balon Kata, dan Photo Buddy.
+- Tampilkan label eksternal pada seluruh item tray agar aset berteks kecil seperti Photo Buddy tetap dapat dikenali.
+
+### Changed
+- Rapikan pohon aset produksi: reference sheet, master sheet, dan source legacy dipindahkan ke `assets/_originals/` lokal dengan penamaan lowercase-kebab-case.
+- Simpan evidence QA gabungan serta handoff P1 pada dokumentasi internal, lalu aktifkan registry setelah 29/29 file handoff terverifikasi identik.
+
+### Fixed
+- Bersihkan selection sticker saat masuk Reveal sehingga outline dan handle editor tidak mengganggu tampilan hasil akhir; handle tetap dikeluarkan dari PNG export.
+
+### Removed
+- Keluarkan mascot hero lama yang opaque serta 12 sheet review/master yang tidak dipakai runtime dari pohon aset publik.
+- Hapus seluruh archive ZIP yang sudah selesai diekstrak dan diverifikasi; source/master serta evidence tetap tersimpan di lokasi canonical lokal.
+
+### Validation pending
+- Kamera, touch gesture, safe-area/keyboard, dan native share sheet/cancel pada Android Chrome serta iPhone Safari nyata.
+- `html-to-image` masih menulis log `SecurityError: cssRules` saat membaca Google Fonts cross-origin; non-fatal dan PNG exact-size tetap berhasil.
+
 ## [0.9.2] - 2026-08-02
 ### Changed
 - Capture kamera disimpan sebagai JPEG kualitas tinggi dengan sisi maksimum 1920 px agar tiga slot lebih hemat memori pada HP tanpa mengubah rasio sumber atau ukuran PNG export.

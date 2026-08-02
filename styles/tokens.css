@@ -1,5 +1,5 @@
 /* tokens.css — design system Polara "Polara Purr / Sticker Pop".
-   Acuan: assets/Polara Final Brand Kit.png. Semua warna/font = CSS variables
+   Acuan canonical: spec/ASSET-BRIEF.md. Semua warna/font = CSS variables
    biar gampang diutak-atik (redesign = ubah token, bukan hardcode). */
 :root {
   /* ── palet brand ── */
