@@ -5,6 +5,22 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.10.1] - 2026-08-04
+
+### Added
+- Pasang Web Icon Pack v3 berbasis RC2: favicon 16/32/48, multi-frame ICO, Apple Touch icon, ikon 192/512, maskable icon, Safari pinned tab, dan web app manifest.
+- Tambahkan cache bust `?v=3` pada metadata `<head>` dan seluruh sumber ikon manifest.
+
+### Changed
+- Gunakan bubblegum pink sebagai `theme-color` browser agar konsisten dengan ikon dan identitas Polara.
+- Layani seluruh file web icon dari root aplikasi vanilla agar URL absolut bekerja sama pada server lokal dan Vercel.
+
+### Removed
+- Keluarkan `app-icon.png` dan `secondary-app-icon.png` lama yang tidak lagi direferensikan dari runtime publik; salinan source tetap disimpan lokal di `assets/_originals/legacy-brand/`.
+
+### Validation pending
+- Add to Home Screen, Safari pinned tab, serta cache refresh ikon pada iPhone dan Android nyata setelah deploy.
+
 ## [0.10.0] - 2026-08-02
 
 ### Added
