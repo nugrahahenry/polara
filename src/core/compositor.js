@@ -13,7 +13,8 @@ export function setPhotoSlot(canvasEl, slotNum, photo) {
     || canvasEl.querySelectorAll('.ph-slot')[slotNum - 1];
   if (!slot || !photo) return;
 
-  slot.style.position = 'relative';
+  const slotPosition = slot.ownerDocument.defaultView?.getComputedStyle(slot).position;
+  if (!slotPosition || slotPosition === 'static') slot.style.position = 'relative';
   slot.style.overflow = 'hidden';
   slot.querySelectorAll(':scope > .ph-photo').forEach((item) => item.remove());
   const image = document.createElement('img');
@@ -69,7 +70,12 @@ export async function exportPng(canvasEl, attempt = 1) {
       canvasHeight: height,
       pixelRatio: 1,
       cacheBust: false,
-      style: { transform: 'none', transformOrigin: 'top left' },
+      style: {
+        position: 'relative',
+        inset: 'auto',
+        transform: 'none',
+        transformOrigin: 'top left',
+      },
     });
   } catch (error) {
     if (attempt < 3) {

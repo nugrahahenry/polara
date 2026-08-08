@@ -535,8 +535,11 @@ function fitStage(dims) {
   const width = Math.max(260, refs.canvasView.clientWidth - 36);
   const height = Math.max(300, refs.canvasView.clientHeight - 34);
   const scale = Math.min(width / dims.w, height / dims.h, 1) || .35;
+  refs.stage.style.position = 'relative';
   refs.stage.style.width = `${Math.round(dims.w * scale)}px`;
   refs.stage.style.height = `${Math.round(dims.h * scale)}px`;
+  phCanvas.style.position = 'absolute';
+  phCanvas.style.inset = '0 auto auto 0';
   phCanvas.style.transformOrigin = 'top left';
   phCanvas.style.transform = `scale(${scale})`;
   phCanvas.dataset.displayScale = String(scale);

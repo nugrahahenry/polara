@@ -5,6 +5,19 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.10.2] - 2026-08-08
+
+### Added
+- Tambahkan social preview 1200×630 beserta metadata Open Graph dan Twitter Card untuk halaman publik Polara.
+- Simpan master Poca Wave 1024×1024 secara lokal di pohon source aset yang di-ignore.
+
+### Changed
+- Ganti runtime Poca Wave dengan hotfix transparan 512×512 yang memulihkan lengan terangkat dan tetap terbaca pada ukuran kecil.
+- Posisikan kanvas preview di dalam panggung berskala tanpa membiarkan ukuran layout mentah menciptakan area scroll kosong.
+
+### Fixed
+- Pertahankan posisi absolut slot bawaan template saat foto dipasang, sehingga foto ketiga pada Poca Purikura Strip dan Seoul Snap Strip tidak lagi terpotong di luar kanvas.
+
 ## [0.10.1] - 2026-08-04
 
 ### Added
