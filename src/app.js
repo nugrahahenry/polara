@@ -8,7 +8,7 @@ import {
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
 import { patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
-import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js';
+import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=11';
 import { stickers, createStickerInstance, preloadMascots } from './modules/stickers/index.js';
 
 const POLARA_URL = 'polara.vercel.app';
@@ -443,27 +443,44 @@ function ensureCurrentFrame() {
 
 async function renderTemplateList() {
   refs.templateList.innerHTML = '';
+  refs.templateList.classList.toggle('mode-strip', state.mode === 3);
   thumbFrames = [];
   const available = framesForMode();
   available.forEach((template) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `tpl-btn${template.id === state.frameId ? ' active' : ''}`;
+    button.className = `tpl-btn${template.id === state.frameId ? ' active' : ''}${template.status === 'experimental-static' ? ' experimental' : ''}`;
     button.dataset.templateId = template.id;
     button.setAttribute('role', 'option');
     button.setAttribute('aria-selected', String(template.id === state.frameId));
     const thumb = document.createElement('span');
     thumb.className = 'tpl-thumb';
+    thumb.dataset.mode = template.mode;
     const name = document.createElement('span');
     name.className = 'tpl-name';
     name.textContent = template.name;
-    button.append(thumb, name);
+    const meta = document.createElement('span');
+    meta.className = 'tpl-meta';
+    const detail = document.createElement('span');
+    detail.className = 'tpl-detail';
+    detail.textContent = template.pickerDetail || (template.mode === 'strip' ? '3 foto' : '1 foto');
+    button.setAttribute('aria-label', [template.name, template.pickerBadge, detail.textContent].filter(Boolean).join(', '));
+    meta.append(name, detail);
+    if (template.pickerBadge) {
+      const badge = document.createElement('span');
+      badge.className = 'tpl-badge';
+      badge.textContent = template.pickerBadge;
+      thumb.appendChild(badge);
+    }
+    button.append(thumb, meta);
     button.addEventListener('click', async () => {
       saveScrollState();
       state.frameId = template.id;
       updateTemplateSelection();
       await renderCanvas();
-      status(`${template.name} dipilih. Transform foto tetap dipertahankan.`);
+      status(template.status === 'experimental-static'
+        ? 'Live Frame adalah konsep visual eksperimental. Hasilnya tetap PNG statis, bukan GIF atau video.'
+        : `${template.name} dipilih. Transform foto tetap dipertahankan.`);
     });
     refs.templateList.appendChild(button);
     buildTemplateThumb(template, thumb);
@@ -491,20 +508,28 @@ async function buildTemplateThumb(template, mount) {
     frame.style.height = `${h}px`;
     frame.srcdoc = await resolveTemplateDoc(template);
     mount.appendChild(frame);
-    thumbFrames.push({ frame, w, h });
-    requestAnimationFrame(() => scaleThumb(frame, w, h));
+    const focus = template.thumbnailFocus ?? .14;
+    thumbFrames.push({ frame, w, h, mode: template.mode, focus });
+    requestAnimationFrame(() => scaleThumb(frame, w, h, template.mode, focus));
   } catch (error) {
     mount.textContent = 'Preview tidak tersedia';
     console.debug('Thumbnail frame gagal:', template.id, error);
   }
 }
 
-function scaleThumb(frame, width, height) {
+function scaleThumb(frame, width, height, mode = 'single', focus = .14) {
   const box = frame.parentElement;
   if (!box?.clientHeight) return;
-  const scale = box.clientHeight / height;
-  const offsetX = Math.max(0, (box.clientWidth - width * scale) / 2);
-  frame.style.transform = `translateX(${offsetX}px) scale(${scale})`;
+  const scale = mode === 'strip'
+    ? box.clientWidth / width
+    : Math.min(box.clientWidth / width, box.clientHeight / height);
+  const scaledWidth = width * scale;
+  const scaledHeight = height * scale;
+  const offsetX = Math.max(0, (box.clientWidth - scaledWidth) / 2);
+  const offsetY = mode === 'strip'
+    ? Math.min(0, (box.clientHeight - scaledHeight) * focus)
+    : Math.max(0, (box.clientHeight - scaledHeight) / 2);
+  frame.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 }
 
 async function renderCanvas() {
@@ -936,7 +961,7 @@ function wireCollectionKeyboard(container, selector) {
 function handleResize() {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    thumbFrames.forEach(({ frame, w, h }) => scaleThumb(frame, w, h));
+    thumbFrames.forEach(({ frame, w, h, mode, focus }) => scaleThumb(frame, w, h, mode, focus));
     if (phCanvas && ['frame', 'decorate', 'reveal'].includes(state.step)) {
       fitStage(templateDims(getTemplate(state.frameId)));
       refreshPhotoSlots(phCanvas, state.photos);

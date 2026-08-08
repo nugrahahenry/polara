@@ -5,6 +5,21 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.11.0] - 2026-08-08
+
+### Added
+- Tambahkan metadata picker untuk jumlah foto, status Hero, dan status Eksperimental yang ikut membentuk nama aksesibel setiap frame.
+- Tambahkan penjelasan langsung bahwa Live Frame saat ini menghasilkan PNG statis, bukan GIF atau video.
+
+### Changed
+- Perbesar thumbnail Strip dari preview penuh yang sempit menjadi crop detail selebar kartu agar gaya frame lebih mudah dibandingkan.
+- Selaraskan tiga keluarga hero lintas format: Poca Strip memakai Sticker Pop, Seoul Strip memakai kamera digital Y2K, dan Vintage Single memakai bahasa film analog.
+- Ganti font fallback Kosmik menjadi Fredoka/Nunito agar konsisten dengan design system Polara.
+- Tambahkan cache bust modul v11 untuk shell dan registry template.
+
+### Fixed
+- Pertahankan layout picker dua kolom dan akses item terakhir pada desktop/mobile tanpa membuat overflow horizontal.
+
 ## [0.10.2] - 2026-08-08
 
 ### Added
