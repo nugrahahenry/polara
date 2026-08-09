@@ -5,6 +5,30 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.12.0] - 2026-08-09
+
+### Added
+- Tambahkan enam overlay Hero PNG transparan beserta thumbnail: Poca Purikura, Vintage Film Lo-Fi, dan Seoul Snap Y2K untuk Single serta Strip 3.
+- Tambahkan manifest geometry canonical, schema JSON, generator registry, verifier aset Python, 13 tes Node, dan 3 tes Python untuk registry, renderer, z-order, thumbnail, state editor, caption contract, fallback, serta path traversal manifest.
+- Simpan source HTML enam Hero selama satu release sebagai rollback internal tanpa memasukkannya lagi ke registry runtime.
+
+### Changed
+- Alihkan enam Hero dari frame HTML/CSS ke renderer PNG-first: photo slot pada z-index 10, overlay pada 20, metadata opsional pada 25, dan sticker pada 30.
+- Gunakan thumbnail PNG final pada picker Hero; frame legacy tetap memakai preview iframe.
+- Sembunyikan input caption pada enam Hero final karena manifest tidak menyediakan zona teks dinamis; nilai caption tetap tersimpan dan muncul kembali saat frame yang mendukung teks dipilih.
+- Tambahkan cache bust modul v12 dan jadikan Poca Purikura sebagai Hero default sehat untuk masing-masing format.
+
+### Fixed
+- Bila overlay gagal dimuat, tandai frame tersebut tidak tersedia dan pindah ke Hero sehat atau frame legacy dalam mode yang sama tanpa mereset foto, transform, caption, atau sticker.
+- Jangan menimpa pesan fallback dengan pesan sukses dari frame yang sebenarnya gagal dipilih.
+
+### Removed
+- Hapus ZIP context, asset handoff, architecture handoff, folder ekstraksi audit, dan artefak preview sementara setelah source serta evidence tersimpan di lokasi canonical.
+
+### Validation pending
+- Dogfooding enam Hero pada Android Chrome dan iPhone Safari nyata, termasuk kamera depan/belakang, touch, safe-area, keyboard virtual, share sheet/cancel, serta hasil download.
+- QA headless Windows membuktikan fallback, preservasi state, sticker, dan reveal Strip 720×1800, tetapi koneksi localhost sesekali me-reset dua PNG saat banyak resource picker dimuat bersamaan. Integritas keenam file tetap lolos; validasi visual akhir lintas-browser/perangkat nyata masih wajib.
+
 ## [0.11.0] - 2026-08-08
 
 ### Added

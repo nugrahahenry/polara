@@ -1,0 +1,291 @@
+{
+  "version": "frame-overlay-v1",
+  "generatedAt": "2026-08-09",
+  "frames": [
+    {
+      "id": "poca-purikura.single",
+      "family": "poca-purikura",
+      "name": "Poca Purikura",
+      "category": "purikura",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "overlaySrc": "assets/frames/poca-purikura-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "photoWindows": [
+        {
+          "x": 124,
+          "y": 270,
+          "width": 832,
+          "height": 840
+        }
+      ],
+      "masterSrc": "assets/_originals/frames/poca-purikura-single-overlay-master.png",
+      "sha256": "6e461789d6363a23676c86b8167a3494ae3d089a6ccf1d2053cad298afffea75",
+      "byteSize": 383044,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v1",
+      "slotBackground": "#fff7ef",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Footer tengah bersih; metadata dinamis tidak diaktifkan pada v1.",
+      "decorativeElements": [
+        "Polara wordmark",
+        "Poca ribbon",
+        "Poca peeking",
+        "Poca wave",
+        "heart/paw/star/sparkle",
+        "pink gingham"
+      ]
+    },
+    {
+      "id": "poca-purikura.strip",
+      "family": "poca-purikura",
+      "name": "Poca Purikura",
+      "category": "purikura",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "overlaySrc": "assets/frames/poca-purikura-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "photoWindows": [
+        {
+          "x": 76,
+          "y": 214,
+          "width": 568,
+          "height": 388
+        },
+        {
+          "x": 76,
+          "y": 640,
+          "width": 568,
+          "height": 388
+        },
+        {
+          "x": 76,
+          "y": 1066,
+          "width": 568,
+          "height": 388
+        }
+      ],
+      "masterSrc": "assets/_originals/frames/poca-purikura-strip-overlay-master.png",
+      "sha256": "850052f0d2ecd7c44fdf0ca26d36ec39ffd9b18a8122d55742a52ae1c49dc7e5",
+      "byteSize": 283456,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v1",
+      "slotBackground": "#fff7ef",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Footer dekoratif; metadata dinamis tidak diaktifkan pada v1.",
+      "decorativeElements": [
+        "compact Polara wordmark",
+        "Poca ribbon",
+        "two Poca footer accents",
+        "heart/paw/star/sparkle",
+        "pink gingham"
+      ]
+    },
+    {
+      "id": "vintage-film-lofi.single",
+      "family": "vintage-film-lofi",
+      "name": "Vintage Film Lo-Fi",
+      "category": "vintage-film",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "overlaySrc": "assets/frames/vintage-film-lofi-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "photoWindows": [
+        {
+          "x": 96,
+          "y": 174,
+          "width": 888,
+          "height": 960
+        }
+      ],
+      "masterSrc": "assets/_originals/frames/vintage-film-lofi-single-overlay-master.png",
+      "sha256": "ac10fffafd6a01796a0342cf8e1a1f2bb7c07d6304c6a28e7a8f86018040e41b",
+      "byteSize": 244721,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v1",
+      "slotBackground": "#1c191b",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Cream labels menjaga kontras; metadata dinamis tidak diaktifkan pada v1.",
+      "decorativeElements": [
+        "sprocket rails",
+        "subtle grain",
+        "warm film burn",
+        "cream technical labels",
+        "35MM/ISO marks"
+      ]
+    },
+    {
+      "id": "vintage-film-lofi.strip",
+      "family": "vintage-film-lofi",
+      "name": "Vintage Film Lo-Fi",
+      "category": "vintage-film",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "overlaySrc": "assets/frames/vintage-film-lofi-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "photoWindows": [
+        {
+          "x": 159,
+          "y": 255,
+          "width": 402,
+          "height": 384
+        },
+        {
+          "x": 159,
+          "y": 702,
+          "width": 402,
+          "height": 384
+        },
+        {
+          "x": 159,
+          "y": 1149,
+          "width": 402,
+          "height": 384
+        }
+      ],
+      "masterSrc": "assets/_originals/frames/vintage-film-lofi-strip-overlay-master.png",
+      "sha256": "676133313d0d40bc9336c1d1c4a966f2887e036fe209a1a1ab800c55831ec62d",
+      "byteSize": 284802,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v1",
+      "slotBackground": "#1c191b",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Footer teknis dekoratif; metadata dinamis tidak diaktifkan pada v1.",
+      "decorativeElements": [
+        "sprocket rails",
+        "three film frames",
+        "subtle grain",
+        "warm film burn",
+        "F01/F02/F03 marks"
+      ]
+    },
+    {
+      "id": "seoul-snap-y2k.single",
+      "family": "seoul-snap-y2k",
+      "name": "Seoul Snap Y2K",
+      "category": "y2k-korean",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "overlaySrc": "assets/frames/seoul-snap-y2k-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "photoWindows": [
+        {
+          "x": 279,
+          "y": 311,
+          "width": 726,
+          "height": 774
+        }
+      ],
+      "masterSrc": "assets/_originals/frames/seoul-snap-y2k-single-overlay-master.png",
+      "sha256": "ef6774aed0f0376622a8c313402362be5dc597341e22398439b18c36997f7dfb",
+      "byteSize": 898882,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v1",
+      "slotBackground": "#fff7ef",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Console bawah dekoratif; metadata dinamis tidak diaktifkan pada v1.",
+      "decorativeElements": [
+        "pastel chrome shell",
+        "Seoul Snap Y2K title",
+        "decorative REC/battery",
+        "zoom rail",
+        "digi-cam console",
+        "focus brackets outside window"
+      ]
+    },
+    {
+      "id": "seoul-snap-y2k.strip",
+      "family": "seoul-snap-y2k",
+      "name": "Seoul Snap Y2K",
+      "category": "y2k-korean",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "overlaySrc": "assets/frames/seoul-snap-y2k-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "photoWindows": [
+        {
+          "x": 76,
+          "y": 214,
+          "width": 568,
+          "height": 388
+        },
+        {
+          "x": 76,
+          "y": 640,
+          "width": 568,
+          "height": 388
+        },
+        {
+          "x": 76,
+          "y": 1066,
+          "width": 568,
+          "height": 388
+        }
+      ],
+      "masterSrc": "assets/_originals/frames/seoul-snap-y2k-strip-overlay-master.png",
+      "sha256": "ee29b59dfac2b0eff741193cf045b578147975916fb8f492d6c35c224219707a",
+      "byteSize": 534628,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v1",
+      "slotBackground": "#fff7ef",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Footer console dekoratif; metadata dinamis tidak diaktifkan pada v1.",
+      "decorativeElements": [
+        "pastel compact-camera shell",
+        "decorative REC/battery",
+        "SHOT 01/02/03",
+        "status rails",
+        "Y2K console",
+        "focus brackets outside windows"
+      ]
+    }
+  ]
+}

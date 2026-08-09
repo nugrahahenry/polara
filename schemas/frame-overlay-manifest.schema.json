@@ -1,0 +1,221 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://polara.vercel.app/schemas/frame-overlay-manifest.schema.json",
+  "title": "Polara Frame Overlay Manifest",
+  "type": "object",
+  "required": [
+    "version",
+    "generatedAt",
+    "frames"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "version": {
+      "type": "string",
+      "pattern": "^frame-overlay-v[0-9]+$"
+    },
+    "generatedAt": {
+      "type": "string",
+      "format": "date"
+    },
+    "frames": {
+      "type": "array",
+      "minItems": 6,
+      "items": {
+        "$ref": "#/$defs/frame"
+      }
+    }
+  },
+  "$defs": {
+    "window": {
+      "type": "object",
+      "required": [
+        "x",
+        "y",
+        "width",
+        "height"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "x": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "y": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "width": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "height": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "zone": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "#/$defs/window"
+        }
+      ]
+    },
+    "frame": {
+      "type": "object",
+      "required": [
+        "id",
+        "family",
+        "name",
+        "category",
+        "mode",
+        "renderMode",
+        "overlaySrc",
+        "thumbnailSrc",
+        "canvasWidth",
+        "canvasHeight",
+        "photoWindows",
+        "masterSrc",
+        "sha256",
+        "byteSize",
+        "colorMode",
+        "hasAlpha",
+        "assetVersion",
+        "slotBackground",
+        "supportsDynamicText",
+        "metadataZones",
+        "metadataAreaNote",
+        "decorativeElements"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.(?:single|strip)$"
+        },
+        "family": {
+          "type": "string",
+          "enum": [
+            "poca-purikura",
+            "vintage-film-lofi",
+            "seoul-snap-y2k"
+          ]
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "enum": [
+            "purikura",
+            "vintage-film",
+            "y2k-korean"
+          ]
+        },
+        "mode": {
+          "type": "string",
+          "enum": [
+            "single",
+            "strip"
+          ]
+        },
+        "renderMode": {
+          "const": "png-overlay"
+        },
+        "overlaySrc": {
+          "type": "string",
+          "pattern": "^assets/frames/[a-z0-9-]+-overlay\\.png$"
+        },
+        "thumbnailSrc": {
+          "type": "string",
+          "pattern": "^assets/frames/thumbnails/[a-z0-9-]+-thumbnail\\.png$"
+        },
+        "canvasWidth": {
+          "type": "integer",
+          "enum": [
+            720,
+            1080
+          ]
+        },
+        "canvasHeight": {
+          "type": "integer",
+          "enum": [
+            1350,
+            1800
+          ]
+        },
+        "photoWindows": {
+          "type": "array",
+          "minItems": 1,
+          "maxItems": 3,
+          "items": {
+            "$ref": "#/$defs/window"
+          }
+        },
+        "masterSrc": {
+          "type": "string",
+          "pattern": "^assets/_originals/frames/[a-z0-9-]+-master\\.png$"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "byteSize": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "colorMode": {
+          "const": "RGBA"
+        },
+        "hasAlpha": {
+          "const": true
+        },
+        "assetVersion": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slotBackground": {
+          "type": "string",
+          "pattern": "^#[a-fA-F0-9]{6}$"
+        },
+        "supportsDynamicText": {
+          "type": "boolean"
+        },
+        "metadataZones": {
+          "type": "object",
+          "required": [
+            "caption",
+            "date",
+            "brand"
+          ],
+          "additionalProperties": false,
+          "properties": {
+            "caption": {
+              "$ref": "#/$defs/zone"
+            },
+            "date": {
+              "$ref": "#/$defs/zone"
+            },
+            "brand": {
+              "$ref": "#/$defs/zone"
+            }
+          }
+        },
+        "metadataAreaNote": {
+          "type": "string"
+        },
+        "decorativeElements": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

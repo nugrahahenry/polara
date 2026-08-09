@@ -8,7 +8,13 @@ import {
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
 import { patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
-import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=11';
+import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=12';
+import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=12';
+import {
+  findAvailableTemplate, getTemplatePreviewConfig, selectFramePreservingEditorState,
+  isRequestedFrameStillSelected,
+  templateSupportsDynamicText,
+} from './modules/templates/template-ui.js?v=12';
 import { stickers, createStickerInstance, preloadMascots } from './modules/stickers/index.js';
 
 const POLARA_URL = 'polara.vercel.app';
@@ -32,7 +38,8 @@ const refs = {
   photoSlotTabs: $('photoSlotTabs'), fitContain: $('fitContainBtn'), fitCover: $('fitCoverBtn'),
   zoom: $('zoomInput'), panX: $('panXInput'), panY: $('panYInput'),
   zoomOutput: $('zoomOutput'), panXOutput: $('panXOutput'), panYOutput: $('panYOutput'), resetPhoto: $('resetPhotoBtn'),
-  caption: $('captionInput'), stickerTray: $('stickerTray'), undoSticker: $('undoStickerBtn'), resetSticker: $('resetStickerBtn'),
+  caption: $('captionInput'), captionField: $('captionField'), captionNote: $('captionAvailabilityNote'),
+  stickerTray: $('stickerTray'), undoSticker: $('undoStickerBtn'), resetSticker: $('resetStickerBtn'),
   newSession: $('newSessionBtn'), dialog: $('newSessionDialog'), cancelNewSession: $('cancelNewSessionBtn'), confirmNewSession: $('confirmNewSessionBtn'),
 };
 
@@ -64,6 +71,7 @@ let revealRequestId = 0;
 let preparedExportRequestId = 0;
 let preparedFramedExport = null;
 let thumbFrames = [];
+const unavailableFrameIds = new Set();
 let resizeTimer = null;
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
@@ -431,13 +439,19 @@ function startRetake() {
   beginCamera({ retake: true });
 }
 
-const framesForMode = () => templates.filter((template) => templateDims(template).slots === state.mode);
+const templateModeForSession = () => (state.mode === 3 ? 'strip' : 'single');
+const framesForMode = ({ includeUnavailable = false } = {}) => templates.filter((template) => (
+  templateDims(template).slots === state.mode
+  && (includeUnavailable || !unavailableFrameIds.has(template.id))
+));
 
 function ensureCurrentFrame() {
   const available = framesForMode();
   if (!available.some((template) => template.id === state.frameId)) {
-    const hero = state.mode === 3 ? 'poca-purikura.strip' : 'poca-purikura.single';
-    state.frameId = available.find((template) => template.id === hero)?.id || available[0]?.id || null;
+    const fallback = findAvailableTemplate(templates, templateModeForSession(), unavailableFrameIds)
+      || available[0]
+      || null;
+    selectFramePreservingEditorState(state, fallback?.id || null);
   }
 }
 
@@ -445,11 +459,13 @@ async function renderTemplateList() {
   refs.templateList.innerHTML = '';
   refs.templateList.classList.toggle('mode-strip', state.mode === 3);
   thumbFrames = [];
-  const available = framesForMode();
+  const available = framesForMode({ includeUnavailable: true });
   available.forEach((template) => {
+    const unavailable = unavailableFrameIds.has(template.id);
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `tpl-btn${template.id === state.frameId ? ' active' : ''}${template.status === 'experimental-static' ? ' experimental' : ''}`;
+    button.className = `tpl-btn${template.id === state.frameId ? ' active' : ''}${template.status === 'experimental-static' ? ' experimental' : ''}${unavailable ? ' unavailable' : ''}`;
+    button.disabled = unavailable;
     button.dataset.templateId = template.id;
     button.setAttribute('role', 'option');
     button.setAttribute('aria-selected', String(template.id === state.frameId));
@@ -463,7 +479,7 @@ async function renderTemplateList() {
     meta.className = 'tpl-meta';
     const detail = document.createElement('span');
     detail.className = 'tpl-detail';
-    detail.textContent = template.pickerDetail || (template.mode === 'strip' ? '3 foto' : '1 foto');
+    detail.textContent = unavailable ? 'Tidak tersedia' : (template.pickerDetail || (template.mode === 'strip' ? '3 foto' : '1 foto'));
     button.setAttribute('aria-label', [template.name, template.pickerBadge, detail.textContent].filter(Boolean).join(', '));
     meta.append(name, detail);
     if (template.pickerBadge) {
@@ -474,10 +490,12 @@ async function renderTemplateList() {
     }
     button.append(thumb, meta);
     button.addEventListener('click', async () => {
+      if (unavailableFrameIds.has(template.id)) return;
       saveScrollState();
-      state.frameId = template.id;
+      selectFramePreservingEditorState(state, template.id);
       updateTemplateSelection();
       await renderCanvas();
+      if (!isRequestedFrameStillSelected(template.id, state.frameId)) return;
       status(template.status === 'experimental-static'
         ? 'Live Frame adalah konsep visual eksperimental. Hasilnya tetap PNG statis, bukan GIF atau video.'
         : `${template.name} dipilih. Transform foto tetap dipertahankan.`);
@@ -497,6 +515,25 @@ function updateTemplateSelection() {
 }
 
 async function buildTemplateThumb(template, mount) {
+  const preview = getTemplatePreviewConfig(template);
+  if (preview.kind === 'image') {
+    const image = document.createElement('img');
+    image.className = 'tpl-thumb-image';
+    image.src = preview.src;
+    image.alt = '';
+    image.loading = 'lazy';
+    image.decoding = 'async';
+    image.addEventListener('error', () => {
+      image.remove();
+      const fallback = document.createElement('span');
+      fallback.className = 'tpl-thumb-fallback';
+      fallback.textContent = 'Preview tidak tersedia';
+      mount.appendChild(fallback);
+    }, { once: true });
+    mount.appendChild(image);
+    return;
+  }
+
   try {
     const { w, h } = templateDims(template);
     const frame = document.createElement('iframe');
@@ -532,15 +569,25 @@ function scaleThumb(frame, width, height, mode = 'single', focus = .14) {
   frame.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 }
 
+function syncCaptionAvailability(template) {
+  const supportsDynamicText = templateSupportsDynamicText(template);
+  refs.captionField.hidden = !supportsDynamicText;
+  refs.caption.disabled = !supportsDynamicText;
+  refs.captionNote.hidden = supportsDynamicText;
+}
+
 async function renderCanvas() {
   ensureCurrentFrame();
   const template = getTemplate(state.frameId);
   if (!template) return;
+  syncCaptionAvailability(template);
   const token = ++renderToken;
   try {
     const html = await resolveTemplateHtml(template);
     if (token !== renderToken) return;
     phCanvas = renderTemplate(refs.stage, html);
+    await waitForOverlayImage(phCanvas);
+    if (token !== renderToken) return;
     refreshPhotoSlots(phCanvas, state.photos);
     setMeta(phCanvas, {
       caption: state.caption || 'Polara memory',
@@ -551,6 +598,24 @@ async function renderCanvas() {
     refreshPhotoSlots(phCanvas, state.photos);
     renderEditorStickers();
   } catch (error) {
+    if (template.renderMode === 'png-overlay') {
+      unavailableFrameIds.add(template.id);
+      const failedButton = refs.templateList.querySelector(`[data-template-id="${CSS.escape(template.id)}"]`);
+      if (failedButton) {
+        failedButton.disabled = true;
+        failedButton.classList.add('unavailable');
+        const detail = failedButton.querySelector('.tpl-detail');
+        if (detail) detail.textContent = 'Tidak tersedia';
+      }
+      const fallback = findAvailableTemplate(templates, templateModeForSession(), unavailableFrameIds);
+      if (fallback) {
+        selectFramePreservingEditorState(state, fallback.id);
+        updateTemplateSelection();
+        status(`${template.name} gagal dimuat. Polara beralih ke ${fallback.name}; foto dan hiasan tetap aman.`);
+        await renderCanvas();
+        return;
+      }
+    }
     status(`Frame gagal dimuat. Sesi tetap aman; pilih frame lain atau coba lagi. ${error.message || ''}`);
   }
 }
@@ -934,6 +999,7 @@ async function resetSession() {
   cancelCountdown();
   invalidatePreparedExport();
   stopCamera();
+  unavailableFrameIds.clear();
   state = initialState();
   phCanvas = null;
   refs.stage.innerHTML = '';

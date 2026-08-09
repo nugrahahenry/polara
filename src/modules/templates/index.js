@@ -4,6 +4,8 @@
 // (fetch + DOMParser, ambil <style>+.ph-canvas dari file HTML standalone GPT).
 // Prioritas viral (RISET.md): Newspaper, Y2K Korean, Vintage Film, Purikura, Live Frame.
 import { loadTemplateFragment, loadTemplateDoc, buildTemplateDoc } from './loader.js';
+import { frameOverlayTemplates } from './frame-overlays.generated.js';
+import { buildOverlayTemplateHtml } from './overlay-renderer.js';
 
 const kosmik = {
   id: 'kosmik', name: 'Kosmik', category: 'kosmik', mode: 'single', premium: false,
@@ -114,9 +116,15 @@ const darkRomanticEditorial = { id: 'dark-romantic-editorial', name: 'Dark Roman
 const cottagecoreBotanical = { id: 'cottagecore-botanical', name: 'Cottagecore', category: 'cottagecore', mode: 'single', premium: false, file: TEMPLATES_DIR + 'cottagecore-botanical.single.html' };
 const tradingCardId = { id: 'trading-card-id', name: 'Trading Card', category: 'trading-card', mode: 'single', premium: false, file: TEMPLATES_DIR + 'trading-card-id.single.html' };
 
-export const templates = [
+// Dipertahankan satu release sebagai rollback source, tetapi tidak lagi masuk
+// registry runtime. Hapus hanya setelah v0.12.0 lolos dogfooding.
+export const heroHtmlRollbackTemplates = [
   pocaPurikura, vintageFilmSingle, seoulSnapY2k,
   pocaPurikuraStrip, vintageFilmLofi, seoulSnapY2kStrip,
+];
+
+export const templates = [
+  ...frameOverlayTemplates,
   kosmik, polaraDaily, liveFrameCinemagraph,
   cyberY2kNeon, auraGradientDreamy, darkRomanticEditorial, cottagecoreBotanical, tradingCardId,
 ];
@@ -124,13 +132,16 @@ export const getTemplate = (id) => templates.find(t => t.id === id) || templates
 
 // Balikin markup .ph-canvas (+ style) siap-pakai, baik dari `html` inline maupun `file` lazy-load.
 export async function resolveTemplateHtml(template) {
+  if (template.renderMode === 'png-overlay') return buildOverlayTemplateHtml(template);
   return template.file ? loadTemplateFragment(template.file) : template.html;
 }
 
 // Dimensi kanvas: file *.strip.* = 720×1800 (3 slot foto), sisanya 1080×1350 (1 slot, 4:5).
-export const templateDims = (t) => t.mode === 'strip' || (t.file && t.file.includes('.strip.'))
-  ? { w: 720, h: 1800, slots: 3 }
-  : { w: 1080, h: 1350, slots: 1 };
+export const templateDims = (template) => template.canvas
+  ? { w: template.canvas.width, h: template.canvas.height, slots: template.photoWindows.length }
+  : template.mode === 'strip' || (template.file && template.file.includes('.strip.'))
+    ? { w: 720, h: 1800, slots: 3 }
+    : { w: 1080, h: 1350, slots: 1 };
 
 // Dokumen HTML utuh buat iframe thumbnail preview (lihat loader.js).
 const KOSMIK_FONT = '<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">';

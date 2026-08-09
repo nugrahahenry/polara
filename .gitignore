@@ -34,3 +34,11 @@ Polara-*-Asset-Handoff-*.zip
 Polara-*-QA-Pack-*.zip
 Polara-*-Icon-Pack-*.zip
 Polara-*-Hotfix-*.zip
+
+# Python verifier cache
+__pycache__/
+*.py[cod]
+
+# Frame overlay context, asset, dan architecture packs; evidence disimpan di docs/ yang ignored
+Polara-Frame-Overlay-*.zip
+Polara-PNG-First-Frame-Architecture-*.zip
