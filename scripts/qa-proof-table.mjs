@@ -131,9 +131,11 @@ async function offsetChapterView(page, viewport) {
 }
 
 async function auditChapterContinuity(page, step, viewport) {
-  await page.evaluate(() => new Promise((resolve) => {
-    requestAnimationFrame(() => requestAnimationFrame(resolve));
-  }));
+  await page.waitForFunction((activeStep) => {
+    const panel = document.querySelector(`[data-panel="${activeStep}"]`);
+    const title = panel?.querySelector('.panel-title');
+    return document.activeElement === title;
+  }, step, { timeout: 30_000 });
   const result = await page.evaluate((activeStep) => {
     const panel = document.querySelector(`[data-panel="${activeStep}"]`);
     const title = panel?.querySelector('.panel-title');
@@ -152,6 +154,43 @@ async function auditChapterContinuity(page, step, viewport) {
     assert.ok(result.windowScrollY <= 1, `${step}: stacked chapter must restore page anchor`);
   }
   return result;
+}
+
+async function auditCameraProofDocket(page) {
+  return page.evaluate(() => ({
+    state: document.querySelector('#cameraWrap')?.dataset.cameraState || '',
+    counter: document.querySelector('#cameraBayCounter')?.textContent.trim() || '',
+    localStatus: document.querySelector('#cameraBayLocal')?.textContent.trim() || '',
+    slotStates: [...document.querySelectorAll('#cameraSlots .slot-state')]
+      .map((node) => node.textContent.trim()),
+  }));
+}
+
+async function auditReviewInspection(page) {
+  return page.evaluate(() => ({
+    tag: document.querySelector('#reviewProofTag')?.textContent.trim() || '',
+    label: document.querySelector('#reviewProofLabel')?.textContent.trim() || '',
+    meta: document.querySelector('#reviewSourceMeta')?.textContent.trim() || '',
+    activeProof: document.querySelector('.review-photo-wrap')?.dataset.activeProof || '',
+    inspectingCount: [...document.querySelectorAll('#reviewSlots .slot-state')]
+      .filter((node) => node.textContent.trim() === 'Inspecting').length,
+  }));
+}
+
+async function auditStageCompanion(page, targetSelector) {
+  return page.evaluate((selector) => {
+    const overlap = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+    const buddy = document.querySelector('#proofBuddy')?.getBoundingClientRect();
+    const target = document.querySelector(selector)?.getBoundingClientRect();
+    const stage = document.querySelector('.stage-shell')?.getBoundingClientRect();
+    const bayFoot = document.querySelector('.capture-bay-foot')?.getBoundingClientRect();
+    return {
+      companionOverlapsTarget: Boolean(buddy && target && overlap(buddy, target)),
+      bayFooterWithinStage: !bayFoot || !stage || (bayFoot.top >= stage.top && bayFoot.bottom <= stage.bottom),
+      stageBounds: stage ? { top: stage.top, bottom: stage.bottom } : null,
+      bayFooterBounds: bayFoot ? { top: bayFoot.top, bottom: bayFoot.bottom } : null,
+    };
+  }, targetSelector);
 }
 
 async function auditRevealTheatre(page) {
@@ -239,13 +278,44 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   await page.locator('#primaryBtn').click();
   await waitForCameraReady(page);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-camera\.png$/);
+  const initialCameraDocket = await auditCameraProofDocket(page);
+  assert.equal(initialCameraDocket.state, 'ready');
+  assert.equal(initialCameraDocket.counter, 'Proof 1 / 3');
+  assert.equal(initialCameraDocket.localStatus, 'Local session');
+  assert.deepEqual(initialCameraDocket.slotStates, ['Next', 'Waiting', 'Waiting']);
+  const cameraCompanion = await auditStageCompanion(page, '#cameraWrap');
+  assert.equal(cameraCompanion.companionOverlapsTarget, false, 'Camera Poca must not cover the live proof');
+  assert.equal(cameraCompanion.bayFooterWithinStage, true, `Capture Bay footer must remain inside the stage: ${JSON.stringify(cameraCompanion)}`);
   await shot('02', 'camera');
   await captureProof(page);
+  if (await page.locator('[data-panel="camera"]').isVisible()) {
+    const nextCameraDocket = await auditCameraProofDocket(page);
+    assert.equal(nextCameraDocket.counter, 'Proof 2 / 3');
+    assert.deepEqual(nextCameraDocket.slotStates, ['Saved', 'Next', 'Waiting']);
+  }
   if (await page.locator('[data-panel="camera"]').isVisible()) await captureProof(page);
   if (await page.locator('[data-panel="camera"]').isVisible()) await captureProof(page);
   await waitForPanel(page, 'review');
   assert.equal(await page.locator('#reviewSlots .slot-card').count(), 3);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-peeking\.png$/);
+  const reviewSources = await page.locator('#reviewSlots .slot-card img').evaluateAll((images) => images.map((image) => image.src));
+  await page.locator('#reviewSlots .slot-card').nth(1).click();
+  const reviewInspection = await auditReviewInspection(page);
+  assert.equal(reviewInspection.tag, 'Proof 2 of 3');
+  assert.equal(reviewInspection.label, 'Proof 2 of 3');
+  assert.match(reviewInspection.meta, /^Original \d+×\d+ · kept locally$/);
+  assert.equal(reviewInspection.activeProof, '2');
+  assert.equal(reviewInspection.inspectingCount, 1);
+  const reviewCompanion = await auditStageCompanion(page, '#reviewPhoto');
+  assert.equal(reviewCompanion.companionOverlapsTarget, false, 'Review Poca must not cover the active proof');
+  await page.locator('#reviewSlots .slot-card').nth(1).focus();
+  await page.keyboard.press('ArrowRight');
+  assert.equal(await page.locator('#reviewSlots .slot-card').nth(2).getAttribute('aria-pressed'), 'true');
+  assert.equal(await page.locator('#controlScroll').evaluate((element) => element.scrollLeft), 0, 'Review keyboard selection must not shift the control sheet horizontally');
+  assert.deepEqual(
+    await page.locator('#reviewSlots .slot-card img').evaluateAll((images) => images.map((image) => image.src)),
+    reviewSources,
+  );
 
   if (retake) {
     const before = await page.locator('#reviewSlots .slot-card img').evaluateAll((images) => images.map((image) => image.src));
@@ -354,6 +424,14 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   if (exportStrip) exported = await downloadPng(page, 'polara-strip-proof-table.png');
   report.viewports[name] = {
     viewport, stages: stageAudit, frameRail, chapterContinuity, revealTheatre,
+    captureReview: {
+      camera: initialCameraDocket,
+      review: reviewInspection,
+      cameraCompanion,
+      reviewCompanion: {
+        companionOverlapsTarget: reviewCompanion.companionOverlapsTarget,
+      },
+    },
     retakePreservedOtherSlots: retake, labels,
   };
   await context.close();
@@ -427,6 +505,7 @@ try {
   const deniedPage = await startPage(deniedContext);
   await deniedPage.locator('#primaryBtn').click();
   await deniedPage.waitForFunction(() => document.querySelector('#cameraMessage')?.textContent.includes('not granted'), null, { timeout: 15_000 });
+  assert.equal(await deniedPage.locator('#cameraOverlayTitle').textContent(), 'Camera permission needed');
   report.camera.denied = {
     message: await deniedPage.locator('#cameraMessage').textContent(),
     recoveryActions: await deniedPage.locator('#cameraOverlayActions button:visible').allTextContents(),
@@ -446,7 +525,7 @@ try {
   assert.deepEqual(report.runtimeErrors, []);
   report.accessibility = {
     privacyDialog: 'native modal, Escape closes, trigger focus restored',
-    keyboardTrays: 'Home/End passed for frame and sticker trays; horizontal frame rail state restored after Back',
+    keyboardTrays: 'Arrow selection passed for Review; Home/End passed for frame and sticker trays; horizontal frame rail state restored after Back',
     touchTargets: 'all visible buttons and links at least 44×44 in audited stages',
     reducedMotion: 'all flows passed with prefers-reduced-motion: reduce',
     progress: 'six English labels, aria-current, status labels, and six Proof Stamps at ready',

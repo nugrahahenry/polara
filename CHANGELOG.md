@@ -5,6 +5,26 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.17.0] - 2026-08-14
+
+### Added
+- Tambahkan **Capture Bay** UI-only dengan label live proof, counter proof aktif, status kamera eksplisit, dan penanda sesi lokal tanpa mengubah sumber atau algoritma capture.
+- Tambahkan **Contact Sheet Inspection** pada Review dengan registration marks, label proof aktif, metadata ukuran asli, dan status `Inspecting`/`Saved` yang terbaca.
+
+### Changed
+- Selaraskan proof docket Camera dan Review melalui state `Next`, `Waiting`, `Saved`, `Retake safe`, dan `Inspecting`; retake tetap baru mengganti proof setelah capture pengganti berhasil.
+- Jadikan Arrow keys pada selector Review memindahkan sekaligus mengaktifkan proof tanpa menggeser control sheet atau mengubah isi foto.
+- Tempatkan Poca Camera dan Review pada sidecar responsif agar tidak menutupi live proof maupun active proof.
+- Ubah label tindakan menjadi `Retake proof X` agar konsisten dengan bahasa proof pada seluruh tahap.
+
+### Validation
+- Regression Camera dan Review direkam RED sebelum markup/state baru, lalu GREEN pada 390x844, 768x1024, 1440x900, dan 900x510.
+- Capture Bay footer, state ready/denied, recovery action, proof counter, proof docket, keyboard Review, active inspection, dan Poca no-overlap terverifikasi melalui browser QA.
+- Flow enam tahap, retake per-slot, rapid transition lock, reduced motion, target minimum 44×44 px, dan runtime error kosong tetap lulus.
+- Verifikasi final lulus: Node 28/28, Python 3/3, dan overlay 6/6.
+- Detector Impeccable menemukan satu initial `src` kosong pada foto Review; warning diperbaiki dengan source lokal dan regression test RED→GREEN.
+- Export tetap tepat Single 1080x1350 dan Strip 720x1800; seluruh Capture Bay, inspection mat, label, dan Poca UI tetap di luar canvas.
+
 ## [0.16.0] - 2026-08-14
 
 ### Added

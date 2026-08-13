@@ -21,6 +21,16 @@ import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } f
 const POLARA_URL = 'polara.vercel.app';
 const BRAND_LINE = `Polara · ${POLARA_URL}`;
 const $ = (id) => document.getElementById(id);
+const CAMERA_STATE_LABELS = {
+  idle: 'Camera standby',
+  requesting: 'Opening camera',
+  switching: 'Switching camera',
+  ready: 'Camera ready',
+  demo: 'Demo capture',
+  denied: 'Camera permission needed',
+  unavailable: 'Camera unavailable',
+  paused: 'Camera paused',
+};
 
 const refs = {
   workspace: $('appWorkspace'), progress: $('progressWrap'), progressList: $('progressList'),
@@ -30,11 +40,13 @@ const refs = {
   status: $('status'), countdownLive: $('countdownLive'),
   modeChoose: $('modeChoose'), timerChoose: $('timerChoose'),
   video: $('video'), cameraWrap: $('cameraWrap'), cameraOverlay: $('cameraOverlay'),
-  cameraMessage: $('cameraMessage'), cameraOverlayActions: $('cameraOverlayActions'),
+  cameraMessage: $('cameraMessage'), cameraOverlayTitle: $('cameraOverlayTitle'), cameraOverlayActions: $('cameraOverlayActions'),
+  cameraBayCounter: $('cameraBayCounter'), cameraBayStatus: $('cameraBayStatus'),
   retryCamera: $('retryCameraBtn'), demoMode: $('demoModeBtn'), countdown: $('countdown'), flash: $('flashLayer'),
   shotBadge: $('shotBadge'), cameraSlots: $('cameraSlots'), cameraPanelTitle: $('cameraPanelTitle'),
   cameraPanelCopy: $('cameraPanelCopy'), cameraStateNote: $('cameraStateNote'),
-  reviewPhoto: $('reviewPhoto'), reviewCaption: $('reviewCaption'), reviewSlots: $('reviewSlots'),
+  reviewPhoto: $('reviewPhoto'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
+  reviewProofTag: $('reviewProofTag'), reviewProofLabel: $('reviewProofLabel'), reviewSourceMeta: $('reviewSourceMeta'), reviewSlots: $('reviewSlots'),
   stage: $('canvasScale'), revealBuddy: $('revealBuddy'), templateList: $('templateList'),
   photoSlotTabs: $('photoSlotTabs'), fitContain: $('fitContainBtn'), fitCover: $('fitCoverBtn'),
   zoom: $('zoomInput'), panX: $('panXInput'), panY: $('panYInput'),
@@ -176,7 +188,7 @@ function updateActions() {
     setButton(refs.tertiary, { label: 'Demo mode', tone: 'ghost', hidden: state.demo, disabled: state.shooting });
   } else if (state.step === 'review') {
     setButton(refs.primary, { label: 'Choose frame', tone: 'primary' });
-    setButton(refs.secondary, { label: `Retake ${state.mode === 3 ? `slot ${state.selectedSlot + 1}` : ''}`.trim(), tone: 'secondary' });
+    setButton(refs.secondary, { label: `Retake proof ${state.selectedSlot + 1}`, tone: 'secondary' });
   } else if (state.step === 'frame') {
     setButton(refs.primary, { label: 'Continue to Decorate', tone: 'primary', disabled: !state.frameId });
   } else if (state.step === 'decorate') {
@@ -323,6 +335,10 @@ async function requestCamera({ switching = false } = {}) {
 function showCameraState() {
   const ready = state.cameraStatus === 'ready';
   const demo = state.cameraStatus === 'demo';
+  const stateLabel = CAMERA_STATE_LABELS[state.cameraStatus] || CAMERA_STATE_LABELS.idle;
+  refs.cameraWrap.dataset.cameraState = state.cameraStatus;
+  refs.cameraOverlayTitle.textContent = stateLabel;
+  refs.cameraBayStatus.textContent = stateLabel;
   refs.cameraOverlay.hidden = ready || demo;
   refs.cameraOverlayActions.hidden = ready || demo || state.cameraStatus === 'idle';
   refs.retryCamera.hidden = !['denied', 'unavailable', 'paused'].includes(state.cameraStatus);
@@ -362,22 +378,43 @@ function suspendCameraSession(message) {
 function renderSlotCards(container, onSelect) {
   container.innerHTML = '';
   state.photos.forEach((photo, index) => {
+    const activeIndex = state.step === 'camera' ? state.activeSlot : state.selectedSlot;
+    const selected = index === activeIndex;
+    let proofState = 'waiting';
+    let stateLabel = 'Waiting';
+    if (state.step === 'camera') {
+      if (photo && state.retakeSlot === index) {
+        proofState = 'retake-safe';
+        stateLabel = 'Retake safe';
+      } else if (photo) {
+        proofState = 'saved';
+        stateLabel = 'Saved';
+      } else if (selected) {
+        proofState = 'next';
+        stateLabel = 'Next';
+      }
+    } else if (photo) {
+      proofState = selected ? 'inspecting' : 'saved';
+      stateLabel = selected ? 'Inspecting' : 'Saved';
+    }
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = `slot-card${index === (state.step === 'camera' ? state.activeSlot : state.selectedSlot) ? ' active' : ''}`;
-    button.setAttribute('aria-label', photo ? `Choose proof ${index + 1}` : `Proof ${index + 1} is empty`);
-    button.setAttribute('aria-pressed', String(index === (state.step === 'camera' ? state.activeSlot : state.selectedSlot)));
+    button.className = `slot-card${selected ? ' active' : ''}`;
+    button.dataset.proofState = proofState;
+    button.setAttribute('aria-label', photo ? `Choose proof ${index + 1}, ${stateLabel}` : `Proof ${index + 1}, ${stateLabel}`);
+    button.setAttribute('aria-pressed', String(selected));
     button.innerHTML = photo
-      ? `<img src="${photo.src}" alt="Proof preview ${index + 1}" /><span class="slot-number">${index + 1}</span>`
-      : `<span class="slot-empty">Proof ${index + 1}</span><span class="slot-number">${index + 1}</span>`;
+      ? `<img src="${photo.src}" alt="Proof preview ${index + 1}" /><span class="slot-number">${index + 1}</span><span class="slot-state">${stateLabel}</span>`
+      : `<span class="slot-empty">Proof ${index + 1}</span><span class="slot-number">${index + 1}</span><span class="slot-state">${stateLabel}</span>`;
     button.addEventListener('click', () => onSelect(index));
     container.appendChild(button);
   });
-  wireCollectionKeyboard(container, '.slot-card');
+  wireCollectionKeyboard(container, '.slot-card', { activateOnMove: state.step === 'review' });
 }
 
 function renderCameraPanel() {
   const slot = state.activeSlot + 1;
+  refs.cameraBayCounter.textContent = `Proof ${slot} / ${state.mode}`;
   refs.cameraPanelTitle.textContent = state.retakeSlot != null ? `Retake slot ${slot}` : state.mode === 3 ? `Pose for proof ${slot}` : 'One main pose';
   refs.cameraPanelCopy.textContent = state.retakeSlot != null
     ? 'The previous proof stays in place until the replacement capture succeeds.'
@@ -475,8 +512,14 @@ async function takePhoto() {
 function renderReview() {
   state.selectedSlot = Math.min(state.selectedSlot, state.photos.length - 1);
   const photo = state.photos[state.selectedSlot] || state.photos.find(Boolean);
+  const activeProof = state.selectedSlot + 1;
+  const proofLabel = `Proof ${activeProof} of ${state.mode}`;
   if (photo) refs.reviewPhoto.src = photo.src;
-  refs.reviewCaption.textContent = state.mode === 3 ? `Proof ${state.selectedSlot + 1} of 3 · source ratio ${photo?.naturalWidth || 0}:${photo?.naturalHeight || 0}` : `Single proof · source ratio ${photo?.naturalWidth || 0}:${photo?.naturalHeight || 0}`;
+  refs.reviewPhoto.alt = `${proofLabel} under review`;
+  refs.reviewWrap.dataset.activeProof = String(activeProof);
+  refs.reviewProofTag.textContent = proofLabel;
+  refs.reviewProofLabel.textContent = proofLabel;
+  refs.reviewSourceMeta.textContent = `Original ${photo?.naturalWidth || 0}×${photo?.naturalHeight || 0} · kept locally`;
   renderSlotCards(refs.reviewSlots, (index) => {
     setActiveProof(index);
     renderReview();
@@ -1098,9 +1141,10 @@ async function resetSession() {
   await goToStep('start', 'New session ready. Choose a format and timer.');
 }
 
-function wireCollectionKeyboard(container, selector) {
-  if (container.dataset.collectionKeyboard === selector) return;
-  container.dataset.collectionKeyboard = selector;
+function wireCollectionKeyboard(container, selector, { activateOnMove = false } = {}) {
+  const keyboardKey = `${selector}:${activateOnMove ? 'activate' : 'focus'}`;
+  if (container.dataset.collectionKeyboard === keyboardKey) return;
+  container.dataset.collectionKeyboard = keyboardKey;
   container.addEventListener('keydown', (event) => {
     const current = event.target.closest(selector);
     if (!current) return;
@@ -1111,7 +1155,11 @@ function wireCollectionKeyboard(container, selector) {
     else if (event.key === 'ArrowLeft' || event.key === 'ArrowUp') next = items[(index - 1 + items.length) % items.length];
     else if (event.key === 'Home') next = items[0];
     else if (event.key === 'End') next = items[items.length - 1];
-    if (next) { event.preventDefault(); next.focus(); }
+    if (next) {
+      event.preventDefault();
+      next.focus();
+      if (activateOnMove) next.click();
+    }
   });
 }
 
