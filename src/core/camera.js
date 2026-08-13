@@ -19,7 +19,7 @@ function stopStream(stream) {
   stream.getTracks().forEach((track) => track.stop());
 }
 
-function abortError(message = 'Permintaan kamera dibatalkan.') {
+function abortError(message = 'Camera request was cancelled.') {
   const error = new Error(message);
   error.name = 'AbortError';
   return error;
@@ -27,7 +27,7 @@ function abortError(message = 'Permintaan kamera dibatalkan.') {
 
 export async function startCamera(videoEl, facingMode = 'user') {
   if (!navigator.mediaDevices?.getUserMedia) {
-    const error = new Error('Browser ini tidak menyediakan akses kamera.');
+    const error = new Error('This browser does not provide camera access.');
     error.name = 'NotSupportedError';
     throw error;
   }
@@ -99,7 +99,7 @@ export function classifyCameraError(error) {
 
 export function captureFrame(videoEl, { mirror = true } = {}) {
   if (!videoEl.videoWidth || !videoEl.videoHeight || videoEl.readyState < HTMLMediaElement.HAVE_CURRENT_DATA) {
-    throw new Error('Kamera belum mengirim frame. Tunggu sebentar lalu coba lagi.');
+    throw new Error('The camera has not delivered a frame yet. Wait a moment and try again.');
   }
 
   const sourceWidth = videoEl.videoWidth;
@@ -111,7 +111,7 @@ export function captureFrame(videoEl, { mirror = true } = {}) {
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('Browser tidak dapat menyiapkan kanvas foto.');
+  if (!ctx) throw new Error('The browser could not prepare the photo canvas.');
 
   if (mirror) {
     ctx.translate(width, 0);
@@ -119,7 +119,7 @@ export function captureFrame(videoEl, { mirror = true } = {}) {
   }
   ctx.drawImage(videoEl, 0, 0, sourceWidth, sourceHeight, 0, 0, width, height);
   const src = canvas.toDataURL('image/jpeg', CAPTURE_QUALITY);
-  if (!src || src === 'data:,') throw new Error('Browser gagal menyimpan frame kamera.');
+  if (!src || src === 'data:,') throw new Error('The browser could not save the camera frame.');
   return createPhotoRecord({ src, naturalWidth: width, naturalHeight: height });
 }
 
@@ -132,7 +132,7 @@ export function createDemoCapture(slotIndex = 0, mode = 3) {
   canvas.width = width;
   canvas.height = height;
   const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('Browser tidak dapat menyiapkan foto demo.');
+  if (!ctx) throw new Error('The browser could not prepare the demo proof.');
   const palettes = [
     ['#ffd4e6', '#8fd3ff'],
     ['#cab8ff', '#ffe26f'],
@@ -152,9 +152,9 @@ export function createDemoCapture(slotIndex = 0, mode = 3) {
   ctx.fillStyle = '#4b2e1f';
   ctx.font = `700 ${Math.round(Math.min(width, height) * .08)}px Fredoka, sans-serif`;
   ctx.textAlign = 'center';
-  ctx.fillText(`FOTO DEMO ${slotIndex + 1}`, width / 2, height * .76);
+  ctx.fillText(`DEMO PROOF ${slotIndex + 1}`, width / 2, height * .76);
   ctx.font = `600 ${Math.round(Math.min(width, height) * .035)}px Nunito, sans-serif`;
-  ctx.fillText('Ganti dengan kamera saat siap', width / 2, height * .84);
+  ctx.fillText('Use the camera when ready', width / 2, height * .84);
 
   return createPhotoRecord({ src: canvas.toDataURL('image/png'), naturalWidth: width, naturalHeight: height });
 }

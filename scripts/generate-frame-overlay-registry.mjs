@@ -35,6 +35,9 @@ function validateFrame(frame, ids) {
   if (ids.has(frame.id)) fail(`ID duplikat: ${frame.id}.`);
   ids.add(frame.id);
   if (frame.renderMode !== 'png-overlay') fail(`${frame.id}.renderMode harus png-overlay.`);
+  if (frame.pickerThumbnailSrc && !/^assets\/frames\/composites\/[a-z0-9-]+-thumbnail\.png$/.test(frame.pickerThumbnailSrc)) {
+    fail(`${frame.id}.pickerThumbnailSrc harus menunjuk composite picker PNG.`);
+  }
   if (!['single', 'strip'].includes(frame.mode)) fail(`${frame.id}.mode invalid.`);
   const expectedSlots = frame.mode === 'strip' ? 3 : 1;
   if (frame.photoWindows.length !== expectedSlots) {
@@ -76,6 +79,7 @@ const runtimeFields = manifest.frames.map((frame) => ({
   renderMode: frame.renderMode,
   overlaySrc: frame.overlaySrc,
   thumbnailSrc: frame.thumbnailSrc,
+  pickerThumbnailSrc: frame.pickerThumbnailSrc || frame.thumbnailSrc,
   canvas: { width: frame.canvasWidth, height: frame.canvasHeight },
   photoWindows: frame.photoWindows,
   assetVersion: frame.assetVersion,

@@ -1,12 +1,13 @@
 {
   "name": "polara",
-  "version": "0.12.0",
+  "version": "0.13.0",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node --test",
     "test:python": "python -m unittest tests/test_verify_frame_overlays.py",
     "test:all": "npm test && npm run test:python && npm run frames:verify",
+    "qa:proof-table": "node scripts/qa-proof-table.mjs",
     "frames:generate": "node scripts/generate-frame-overlay-registry.mjs assets/frames/frame-overlay-manifest.json src/modules/templates/frame-overlays.generated.js",
     "frames:verify": "python scripts/verify-frame-overlays.py ."
   }

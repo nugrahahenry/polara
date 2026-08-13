@@ -8,14 +8,15 @@ import {
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
 import { patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
-import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=12';
-import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=12';
+import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=13';
+import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
   findAvailableTemplate, getTemplatePreviewConfig, selectFramePreservingEditorState,
   isRequestedFrameStillSelected,
   templateSupportsDynamicText,
-} from './modules/templates/template-ui.js?v=12';
+} from './modules/templates/template-ui.js?v=13';
 import { stickers, createStickerInstance, preloadMascots } from './modules/stickers/index.js';
+import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 
 const POLARA_URL = 'polara.vercel.app';
 const BRAND_LINE = `Polara · ${POLARA_URL}`;
@@ -41,16 +42,12 @@ const refs = {
   caption: $('captionInput'), captionField: $('captionField'), captionNote: $('captionAvailabilityNote'),
   stickerTray: $('stickerTray'), undoSticker: $('undoStickerBtn'), resetSticker: $('resetStickerBtn'),
   newSession: $('newSessionBtn'), dialog: $('newSessionDialog'), cancelNewSession: $('cancelNewSessionBtn'), confirmNewSession: $('confirmNewSessionBtn'),
+  privacy: $('privacyBtn'), privacyDialog: $('privacyDialog'), closePrivacy: $('closePrivacyBtn'),
+  proofBuddy: $('proofBuddy'), proofBuddyImage: $('proofBuddyImage'), proofBuddyCaption: $('proofBuddyCaption'),
+  cameraPoca: $('cameraPoca'), revealPanelPoca: $('revealPanelPoca'), revealTitle: $('revealTitle'), revealProofStack: $('revealProofStack'),
 };
 
-const STEPS = [
-  { id: 'start', label: 'Start' },
-  { id: 'camera', label: 'Kamera' },
-  { id: 'review', label: 'Review' },
-  { id: 'frame', label: 'Frame' },
-  { id: 'decorate', label: 'Hias' },
-  { id: 'reveal', label: 'Reveal' },
-];
+const STEPS = PROOF_STEPS;
 
 function initialState() {
   return {
@@ -79,6 +76,23 @@ function status(message) {
   refs.status.textContent = message;
 }
 
+function syncPoca({ processing = false } = {}) {
+  const asset = getPocaForState({ step: state.step, stickerCount: state.stickers.length, processing, revealReady: state.revealReady });
+  refs.proofBuddy.dataset.state = state.step;
+  refs.proofBuddyImage.src = asset.src;
+  refs.proofBuddyImage.alt = asset.alt;
+  refs.proofBuddyCaption.textContent = asset.alt;
+  if (state.step === 'reveal') {
+    refs.revealPanelPoca.src = asset.src;
+    refs.revealPanelPoca.alt = asset.alt;
+    refs.revealTitle.textContent = state.revealReady ? 'Proof approved.' : 'Developing your print…';
+  }
+}
+
+function setActiveProof(index) {
+  state = selectActiveProof(state, index);
+}
+
 function meaningfulSession() {
   return state.photos.some(Boolean) || state.caption || state.stickers.length || state.step !== 'start';
 }
@@ -100,12 +114,30 @@ function restoreScrollState() {
 function renderProgress() {
   const activeIndex = STEPS.findIndex((step) => step.id === state.step);
   refs.progress.setAttribute('aria-valuenow', String(activeIndex + 1));
+  refs.progress.classList.toggle('rail-approved', state.step === 'reveal' && state.revealReady);
   refs.progressList.innerHTML = '';
   STEPS.forEach((step, index) => {
+    const stepStatus = getProofStepStatus(state, step.id);
     const item = document.createElement('li');
-    item.className = `progress-item${index < activeIndex ? ' done' : index === activeIndex ? ' active' : ''}`;
-    if (index === activeIndex) item.setAttribute('aria-current', 'step');
-    item.innerHTML = `<span class="progress-dot">${index < activeIndex ? '✓' : index + 1}</span><span class="progress-label">${step.label}</span>`;
+    item.className = `progress-item ${stepStatus}`;
+    item.dataset.status = stepStatus;
+    item.setAttribute('aria-label', `${step.label}: ${stepStatus}`);
+    if (stepStatus === 'current') item.setAttribute('aria-current', 'step');
+    const dot = document.createElement('span');
+    dot.className = 'progress-dot';
+    dot.textContent = String(index + 1);
+    if (stepStatus === 'complete') {
+      const stamp = document.createElement('img');
+      stamp.className = 'step-proof-stamp';
+      stamp.src = 'assets/badges/proof-stamp-approved.png';
+      stamp.alt = '';
+      stamp.setAttribute('aria-hidden', 'true');
+      dot.appendChild(stamp);
+    }
+    const label = document.createElement('span');
+    label.className = 'progress-label';
+    label.textContent = step.label;
+    item.append(dot, label);
     refs.progressList.appendChild(item);
   });
 }
@@ -120,28 +152,28 @@ function setButton(button, { label = '', hidden = false, disabled = false, tone 
 }
 
 function updateActions() {
-  setButton(refs.back, { label: 'Kembali', hidden: state.step === 'start', tone: 'ghost', disabled: state.shooting });
+  setButton(refs.back, { label: 'Back', hidden: state.step === 'start', tone: 'ghost', disabled: state.shooting });
   setButton(refs.secondary, { hidden: true });
   setButton(refs.tertiary, { hidden: true });
 
   if (state.step === 'start') {
-    setButton(refs.primary, { label: 'Buka kamera', tone: 'primary' });
+    setButton(refs.primary, { label: 'Open camera', tone: 'primary' });
   } else if (state.step === 'camera') {
     const ready = state.cameraStatus === 'ready' || state.cameraStatus === 'demo';
-    setButton(refs.primary, { label: state.shooting ? 'Mengambil foto…' : 'Jepret', tone: 'primary', disabled: !ready || state.shooting });
-    setButton(refs.secondary, { label: 'Ganti kamera', tone: 'secondary', hidden: state.demo, disabled: state.cameraStatus !== 'ready' || state.shooting });
-    setButton(refs.tertiary, { label: 'Mode demo', tone: 'ghost', hidden: state.demo, disabled: state.shooting });
+    setButton(refs.primary, { label: state.shooting ? 'Taking photo…' : 'Take photo', tone: 'primary', disabled: !ready || state.shooting });
+    setButton(refs.secondary, { label: 'Switch camera', tone: 'secondary', hidden: state.demo, disabled: state.cameraStatus !== 'ready' || state.shooting });
+    setButton(refs.tertiary, { label: 'Demo mode', tone: 'ghost', hidden: state.demo, disabled: state.shooting });
   } else if (state.step === 'review') {
-    setButton(refs.primary, { label: 'Pilih frame', tone: 'primary' });
-    setButton(refs.secondary, { label: `Foto ulang ${state.mode === 3 ? `slot ${state.selectedSlot + 1}` : ''}`.trim(), tone: 'secondary' });
+    setButton(refs.primary, { label: 'Choose frame', tone: 'primary' });
+    setButton(refs.secondary, { label: `Retake ${state.mode === 3 ? `slot ${state.selectedSlot + 1}` : ''}`.trim(), tone: 'secondary' });
   } else if (state.step === 'frame') {
-    setButton(refs.primary, { label: 'Lanjut menghias', tone: 'primary', disabled: !state.frameId });
+    setButton(refs.primary, { label: 'Continue to Decorate', tone: 'primary', disabled: !state.frameId });
   } else if (state.step === 'decorate') {
-    setButton(refs.primary, { label: 'Lihat hasil', tone: 'primary' });
+    setButton(refs.primary, { label: 'Reveal print', tone: 'primary' });
   } else if (state.step === 'reveal') {
-    setButton(refs.primary, { label: 'Bagikan', tone: 'primary', disabled: !state.revealReady });
-    setButton(refs.secondary, { label: 'Simpan PNG', tone: 'secondary', hidden: false, disabled: !state.revealReady });
-    setButton(refs.tertiary, { label: 'Foto aja', tone: 'ghost', hidden: false, disabled: !state.revealReady });
+    setButton(refs.primary, { label: 'Share', tone: 'primary', disabled: !state.revealReady });
+    setButton(refs.secondary, { label: 'Save PNG', tone: 'secondary', hidden: false, disabled: !state.revealReady });
+    setButton(refs.tertiary, { label: 'Photo only', tone: 'ghost', hidden: false, disabled: !state.revealReady });
   }
 }
 
@@ -164,7 +196,7 @@ async function goToStep(nextStep, message) {
   refs.cameraView.hidden = nextStep !== 'camera';
   refs.reviewView.hidden = nextStep !== 'review';
   refs.canvasView.hidden = !['frame', 'decorate', 'reveal'].includes(nextStep);
-  refs.revealBuddy.hidden = nextStep !== 'reveal';
+  refs.revealBuddy.hidden = true;
   refs.canvasView.classList.remove('revealing');
 
   renderProgress();
@@ -186,6 +218,7 @@ async function goToStep(nextStep, message) {
   if (nextStep === 'reveal') await startReveal();
 
   if (message) status(message);
+  syncPoca();
   updateActions();
   if (nextStep === 'start') window.scrollTo({ top: 0, behavior: 'auto' });
   restoreScrollState();
@@ -213,7 +246,7 @@ refs.modeChoose.addEventListener('click', (event) => {
   state.selectedSlot = 0;
   state.frameId = null;
   syncStartControls();
-  status(state.mode === 3 ? 'Strip 3 dipilih. Siapkan tiga pose terbaik kalian.' : 'Single dipilih. Satu pose besar, satu momen utama.');
+  status(state.mode === 3 ? 'Strip 3 selected. Get three poses ready.' : 'Single selected. One large proof, one main moment.');
 });
 
 refs.timerChoose.addEventListener('click', (event) => {
@@ -221,7 +254,7 @@ refs.timerChoose.addEventListener('click', (event) => {
   if (!button) return;
   state.timer = Number(button.dataset.timer);
   syncStartControls();
-  status(`Timer ${state.timer} detik dipilih.`);
+  status(`Timer ${state.timer} seconds selected.`);
 });
 
 async function beginCamera({ retake = false } = {}) {
@@ -231,7 +264,7 @@ async function beginCamera({ retake = false } = {}) {
     state.activeSlot = state.photos.findIndex((photo) => !photo);
     if (state.activeSlot < 0) state.activeSlot = state.selectedSlot;
   }
-  await goToStep('camera', retake ? 'Foto lama tetap aman sampai penggantinya berhasil.' : 'Izinkan kamera, lalu siap-siap pose.');
+  await goToStep('camera', retake ? 'The previous proof stays safe until its replacement succeeds.' : 'Allow camera access, then get ready to pose.');
   if (state.demo) {
     state.cameraStatus = 'demo';
     showCameraState();
@@ -254,17 +287,17 @@ async function requestCamera({ switching = false } = {}) {
     refs.video.style.transform = state.facing === 'user' ? 'scaleX(-1)' : 'none';
     stream.getVideoTracks()[0]?.addEventListener('ended', () => {
       if (requestId !== cameraRequestId || state.step !== 'camera' || state.demo) return;
-      suspendCameraSession('Kamera terputus. Foto yang sudah ada tetap aman; nyalakan kamera lagi untuk melanjutkan.');
+      suspendCameraSession('Camera disconnected. Existing proofs are safe; restart the camera to continue.');
     }, { once: true });
     showCameraState();
-    status('Kamera siap. Pastikan semua masuk guide, lalu tekan Jepret.');
+    status('Camera ready. Keep everyone inside the guide, then press Take photo.');
     return true;
   } catch (error) {
     if (requestId !== cameraRequestId || state.demo || error?.name === 'AbortError') return false;
     state.cameraStatus = classifyCameraError(error);
     state.cameraError = error;
     showCameraState();
-    status(state.cameraStatus === 'denied' ? 'Akses kamera ditolak. Izinkan lewat pengaturan browser atau gunakan mode demo.' : 'Kamera tidak tersedia. Kamu tetap bisa mencoba flow lewat mode demo.');
+    status(state.cameraStatus === 'denied' ? 'Camera access was denied. Allow it in browser settings or use demo mode.' : 'Camera is unavailable. You can still test the flow in demo mode.');
     return false;
   }
 }
@@ -276,18 +309,18 @@ function showCameraState() {
   refs.cameraOverlayActions.hidden = ready || demo || state.cameraStatus === 'idle';
   refs.retryCamera.hidden = !['denied', 'unavailable', 'paused'].includes(state.cameraStatus);
   refs.demoMode.hidden = ready || demo;
-  if (state.cameraStatus === 'requesting') refs.cameraMessage.textContent = 'Poca lagi meminta izin kamera…';
-  else if (state.cameraStatus === 'switching') refs.cameraMessage.textContent = 'Sedang mengganti kamera…';
-  else if (state.cameraStatus === 'denied') refs.cameraMessage.textContent = 'Izin kamera belum diberikan. Cek pengaturan browser atau coba tanpa kamera.';
-  else if (state.cameraStatus === 'unavailable') refs.cameraMessage.textContent = 'Kamera tidak ditemukan atau tidak didukung di browser ini.';
-  else if (state.cameraStatus === 'paused') refs.cameraMessage.textContent = 'Kamera dijeda untuk menjaga privasi dan baterai.';
-  else if (state.cameraStatus === 'idle') refs.cameraMessage.textContent = 'Kamera belum dimulai.';
+  if (state.cameraStatus === 'requesting') refs.cameraMessage.textContent = 'Poca is requesting camera permission…';
+  else if (state.cameraStatus === 'switching') refs.cameraMessage.textContent = 'Switching camera…';
+  else if (state.cameraStatus === 'denied') refs.cameraMessage.textContent = 'Camera permission was not granted. Check browser settings or continue without camera.';
+  else if (state.cameraStatus === 'unavailable') refs.cameraMessage.textContent = 'No supported camera was found in this browser.';
+  else if (state.cameraStatus === 'paused') refs.cameraMessage.textContent = 'Camera paused to protect privacy and battery.';
+  else if (state.cameraStatus === 'idle') refs.cameraMessage.textContent = 'Camera has not started.';
   refs.video.hidden = demo;
   refs.cameraStateNote.textContent = demo
-    ? 'Mode demo aktif. Setiap Jepret membuat placeholder lokal untuk menguji flow.'
-    : state.cameraStatus === 'ready' ? 'Kamera siap. Foto penuh akan disimpan tanpa crop permanen.'
-      : state.cameraStatus === 'paused' ? 'Tekan Coba lagi untuk menyalakan kamera. Foto yang sudah ada tidak berubah.'
-        : 'Sesi dan foto yang sudah ada tetap aman.';
+    ? 'Demo mode aktif. Setiap Take photo membuat placeholder lokal untuk menguji flow.'
+    : state.cameraStatus === 'ready' ? 'Camera ready. The full capture is kept without permanent cropping.'
+      : state.cameraStatus === 'paused' ? 'Press Try again to restart the camera. Existing proofs will not change.'
+        : 'The session and existing proofs remain safe.';
   updateActions();
 }
 
@@ -314,11 +347,11 @@ function renderSlotCards(container, onSelect) {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `slot-card${index === (state.step === 'camera' ? state.activeSlot : state.selectedSlot) ? ' active' : ''}`;
-    button.setAttribute('aria-label', photo ? `Pilih foto slot ${index + 1}` : `Slot ${index + 1} belum diisi`);
+    button.setAttribute('aria-label', photo ? `Choose proof ${index + 1}` : `Proof ${index + 1} is empty`);
     button.setAttribute('aria-pressed', String(index === (state.step === 'camera' ? state.activeSlot : state.selectedSlot)));
     button.innerHTML = photo
-      ? `<img src="${photo.src}" alt="Preview foto ${index + 1}" /><span class="slot-number">${index + 1}</span>`
-      : `<span class="slot-empty">Slot ${index + 1}</span><span class="slot-number">${index + 1}</span>`;
+      ? `<img src="${photo.src}" alt="Proof preview ${index + 1}" /><span class="slot-number">${index + 1}</span>`
+      : `<span class="slot-empty">Proof ${index + 1}</span><span class="slot-number">${index + 1}</span>`;
     button.addEventListener('click', () => onSelect(index));
     container.appendChild(button);
   });
@@ -327,15 +360,15 @@ function renderSlotCards(container, onSelect) {
 
 function renderCameraPanel() {
   const slot = state.activeSlot + 1;
-  refs.cameraPanelTitle.textContent = state.retakeSlot != null ? `Foto ulang slot ${slot}` : state.mode === 3 ? `Pose untuk slot ${slot}` : 'Satu pose utama';
+  refs.cameraPanelTitle.textContent = state.retakeSlot != null ? `Retake slot ${slot}` : state.mode === 3 ? `Pose for proof ${slot}` : 'One main pose';
   refs.cameraPanelCopy.textContent = state.retakeSlot != null
-    ? 'Foto lama tidak dihapus sekarang. Ia baru diganti setelah capture baru berhasil.'
-    : 'Kamera menyimpan frame penuh. Atur contain, cover, zoom, dan pan setelah memilih frame.';
+    ? 'The previous proof stays in place until the replacement capture succeeds.'
+    : 'Polara keeps the full capture. Adjust fit, zoom, and pan after choosing a frame.';
   renderSlotCards(refs.cameraSlots, (index) => {
     state.activeSlot = index;
     state.retakeSlot = state.photos[index] ? index : null;
     renderCameraPanel();
-    status(state.photos[index] ? `Slot ${index + 1} dipilih untuk foto ulang; foto lama masih aman.` : `Slot ${index + 1} siap diisi.`);
+    status(state.photos[index] ? `Proof ${index + 1} selected for retake; the previous proof is still safe.` : `Proof ${index + 1} is ready.`);
   });
   showCameraState();
 }
@@ -346,7 +379,7 @@ async function runCountdown(seconds) {
   try {
     for (let number = seconds; number > 0; number -= 1) {
       if (requestId !== countdownRequestId || document.hidden || state.step !== 'camera') {
-        const error = new Error('Countdown dibatalkan.');
+        const error = new Error('Countdown was cancelled.');
         error.name = 'AbortError';
         throw error;
       }
@@ -355,11 +388,11 @@ async function runCountdown(seconds) {
       await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 300 : 760));
     }
     if (requestId !== countdownRequestId || document.hidden || state.step !== 'camera') {
-      const error = new Error('Countdown dibatalkan.');
+      const error = new Error('Countdown was cancelled.');
       error.name = 'AbortError';
       throw error;
     }
-    refs.countdownLive.textContent = 'Foto diambil';
+    refs.countdownLive.textContent = 'Photo taken';
   } finally {
     if (requestId === countdownRequestId) refs.countdown.hidden = true;
   }
@@ -378,7 +411,7 @@ async function takePhoto() {
   const slot = state.activeSlot;
   refs.shotBadge.hidden = false;
   refs.shotBadge.textContent = state.mode === 3 ? `Slot ${slot + 1}` : 'Single';
-  status(`Siap-siap untuk foto ${slot + 1}…`);
+  status(`Get ready for proof ${slot + 1}…`);
 
   try {
     await runCountdown(state.timer);
@@ -394,28 +427,28 @@ async function takePhoto() {
     if (state.retakeSlot != null) {
       state.retakeSlot = null;
       state.shooting = false;
-      await goToStep('review', `Slot ${slot + 1} berhasil diganti. Slot lain tetap sama.`);
+      await goToStep('review', `Proof ${slot + 1} was replaced. Other proofs stay unchanged.`);
       return;
     }
 
     const nextEmpty = state.photos.findIndex((photo) => !photo);
     if (nextEmpty === -1) {
       state.shooting = false;
-      await goToStep('review', state.mode === 3 ? 'Tiga foto sudah lengkap. Cek satu per satu sebelum memilih frame.' : 'Foto sudah jadi. Cek dulu sebelum memilih frame.');
+      await goToStep('review', state.mode === 3 ? 'All three proofs are ready. Check each one before choosing a frame.' : 'Your proof is ready. Review it before choosing a frame.');
       return;
     }
 
     state.activeSlot = nextEmpty;
     state.shooting = false;
     renderCameraPanel();
-    status(`Foto masuk ke slot ${slot + 1}. Sekarang siapkan pose slot ${nextEmpty + 1}.`);
+    status(`Photo saved to proof ${slot + 1}. Prepare the pose for proof ${nextEmpty + 1}.`);
   } catch (error) {
     state.shooting = false;
     refs.shotBadge.hidden = true;
     if (state.step === 'camera') {
       status(error?.name === 'AbortError'
-        ? 'Pengambilan foto dijeda. Foto yang sudah ada tetap aman.'
-        : `Foto belum berhasil diambil. ${error.message || 'Coba lagi ya.'}`);
+        ? 'Capture paused. Existing proofs remain safe.'
+        : `The photo was not captured. ${error.message || 'Please try again.'}`);
     }
   }
   updateActions();
@@ -425,9 +458,9 @@ function renderReview() {
   state.selectedSlot = Math.min(state.selectedSlot, state.photos.length - 1);
   const photo = state.photos[state.selectedSlot] || state.photos.find(Boolean);
   if (photo) refs.reviewPhoto.src = photo.src;
-  refs.reviewCaption.textContent = state.mode === 3 ? `Slot ${state.selectedSlot + 1} dari 3 · rasio sumber ${photo?.naturalWidth || 0}:${photo?.naturalHeight || 0}` : `Foto single · rasio sumber ${photo?.naturalWidth || 0}:${photo?.naturalHeight || 0}`;
+  refs.reviewCaption.textContent = state.mode === 3 ? `Proof ${state.selectedSlot + 1} of 3 · source ratio ${photo?.naturalWidth || 0}:${photo?.naturalHeight || 0}` : `Single proof · source ratio ${photo?.naturalWidth || 0}:${photo?.naturalHeight || 0}`;
   renderSlotCards(refs.reviewSlots, (index) => {
-    state.selectedSlot = index;
+    setActiveProof(index);
     renderReview();
     updateActions();
   });
@@ -479,7 +512,7 @@ async function renderTemplateList() {
     meta.className = 'tpl-meta';
     const detail = document.createElement('span');
     detail.className = 'tpl-detail';
-    detail.textContent = unavailable ? 'Tidak tersedia' : (template.pickerDetail || (template.mode === 'strip' ? '3 foto' : '1 foto'));
+    detail.textContent = unavailable ? 'Unavailable' : (template.pickerDetail || (template.mode === 'strip' ? '3 photos' : '1 photo'));
     button.setAttribute('aria-label', [template.name, template.pickerBadge, detail.textContent].filter(Boolean).join(', '));
     meta.append(name, detail);
     if (template.pickerBadge) {
@@ -497,8 +530,8 @@ async function renderTemplateList() {
       await renderCanvas();
       if (!isRequestedFrameStillSelected(template.id, state.frameId)) return;
       status(template.status === 'experimental-static'
-        ? 'Live Frame adalah konsep visual eksperimental. Hasilnya tetap PNG statis, bukan GIF atau video.'
-        : `${template.name} dipilih. Transform foto tetap dipertahankan.`);
+        ? 'Live Frame is an experimental visual. The result remains a static PNG, not a GIF or video.'
+        : `${template.name} selected. Photo transforms are preserved.`);
     });
     refs.templateList.appendChild(button);
     buildTemplateThumb(template, thumb);
@@ -527,7 +560,7 @@ async function buildTemplateThumb(template, mount) {
       image.remove();
       const fallback = document.createElement('span');
       fallback.className = 'tpl-thumb-fallback';
-      fallback.textContent = 'Preview tidak tersedia';
+      fallback.textContent = 'Preview unavailable';
       mount.appendChild(fallback);
     }, { once: true });
     mount.appendChild(image);
@@ -549,8 +582,8 @@ async function buildTemplateThumb(template, mount) {
     thumbFrames.push({ frame, w, h, mode: template.mode, focus });
     requestAnimationFrame(() => scaleThumb(frame, w, h, template.mode, focus));
   } catch (error) {
-    mount.textContent = 'Preview tidak tersedia';
-    console.debug('Thumbnail frame gagal:', template.id, error);
+    mount.textContent = 'Preview unavailable';
+    console.debug('Frame thumbnail failed:', template.id, error);
   }
 }
 
@@ -605,18 +638,18 @@ async function renderCanvas() {
         failedButton.disabled = true;
         failedButton.classList.add('unavailable');
         const detail = failedButton.querySelector('.tpl-detail');
-        if (detail) detail.textContent = 'Tidak tersedia';
+        if (detail) detail.textContent = 'Unavailable';
       }
       const fallback = findAvailableTemplate(templates, templateModeForSession(), unavailableFrameIds);
       if (fallback) {
         selectFramePreservingEditorState(state, fallback.id);
         updateTemplateSelection();
-        status(`${template.name} gagal dimuat. Polara beralih ke ${fallback.name}; foto dan hiasan tetap aman.`);
+        status(`${template.name} failed to load. Polara switched to ${fallback.name}; photos and decorations remain safe.`);
         await renderCanvas();
         return;
       }
     }
-    status(`Frame gagal dimuat. Sesi tetap aman; pilih frame lain atau coba lagi. ${error.message || ''}`);
+    status(`Frame failed to load. The session is safe; choose another frame or try again. ${error.message || ''}`);
   }
 }
 
@@ -645,7 +678,7 @@ function renderPhotoTabs() {
     button.setAttribute('role', 'tab');
     button.setAttribute('aria-selected', String(index === state.selectedSlot));
     button.addEventListener('click', () => {
-      state.selectedSlot = index;
+      setActiveProof(index);
       renderPhotoTabs();
       syncPhotoControls();
     });
@@ -688,7 +721,7 @@ refs.resetPhoto.addEventListener('click', () => {
   state.photos[state.selectedSlot] = resetPhotoTransform(photo);
   setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot]);
   syncPhotoControls();
-  status(`Transform slot ${state.selectedSlot + 1} dikembalikan ke Foto utuh.`);
+  status(`Proof ${state.selectedSlot + 1} reset to Full photo.`);
 });
 
 function snapshotStickers() {
@@ -713,9 +746,10 @@ function renderEditorStickers() {
       renderEditorStickers();
       updateStickerActions();
     },
-    onAssetError: (item) => status(`Sticker ${item.name} gagal dimuat. Sticker lain dan sesi tetap aman.`),
+    onAssetError: (item) => status(`Sticker ${item.name} failed to load. Other stickers and the session remain safe.`),
   });
   updateStickerActions();
+  syncPoca();
 }
 
 function renderStickerTray() {
@@ -725,12 +759,12 @@ function renderStickerTray() {
     button.type = 'button';
     button.className = 'sticker-btn';
     button.setAttribute('role', 'option');
-    button.setAttribute('aria-label', `Tambahkan sticker ${asset.name}`);
+    button.setAttribute('aria-label', `Add sticker ${asset.name}`);
     const image = document.createElement('img');
     image.src = asset.src;
     image.alt = '';
     image.loading = 'lazy';
-    image.onerror = () => { button.disabled = true; button.hidden = true; status(`Asset ${asset.name} tidak tersedia; item dilewati tanpa mereset sesi.`); };
+    image.onerror = () => { button.disabled = true; button.hidden = true; status(`Asset ${asset.name} is unavailable; the item was skipped without resetting the session.`); };
     button.appendChild(image);
     const label = document.createElement('span');
     label.className = 'sticker-label';
@@ -742,7 +776,7 @@ function renderStickerTray() {
       state.stickers.push(item);
       state.selectedSticker = item.uid;
       renderEditorStickers();
-      status(`${asset.name} ditambahkan. Geser langsung di foto atau gunakan keyboard.`);
+      status(`${asset.name} added. Drag it on the proof or use the keyboard.`);
     });
     refs.stickerTray.appendChild(button);
   });
@@ -761,7 +795,7 @@ refs.undoSticker.addEventListener('click', () => {
   state.stickers = JSON.parse(previous);
   state.selectedSticker = null;
   renderEditorStickers();
-  status('Perubahan sticker terakhir diurungkan.');
+  status('The last sticker change was undone.');
 });
 
 refs.resetSticker.addEventListener('click', () => {
@@ -770,7 +804,7 @@ refs.resetSticker.addEventListener('click', () => {
   state.stickers = [];
   state.selectedSticker = null;
   renderEditorStickers();
-  status('Semua sticker dihapus. Kamu masih bisa mengurungkannya.');
+  status('All stickers were cleared. You can still undo.');
 });
 
 refs.caption.addEventListener('input', () => {
@@ -789,9 +823,22 @@ function invalidatePreparedExport() {
   preparedFramedExport = null;
 }
 
+function renderRevealProofStack() {
+  refs.revealProofStack.innerHTML = '';
+  framesForMode().filter((template) => template.id !== state.frameId && template.pickerThumbnailSrc).slice(0, 2).forEach((template) => {
+    const image = document.createElement('img');
+    image.src = template.pickerThumbnailSrc;
+    image.alt = '';
+    image.loading = 'eager';
+    image.decoding = 'async';
+    image.addEventListener('error', () => image.remove(), { once: true });
+    refs.revealProofStack.appendChild(image);
+  });
+}
+
 async function prepareFramedExport() {
   if (preparedFramedExport) return preparedFramedExport;
-  if (!phCanvas || !state.frameId) throw new Error('Frame hasil belum siap.');
+  if (!phCanvas || !state.frameId) throw new Error('The framed result is not ready.');
 
   const requestId = ++preparedExportRequestId;
   const { width, height } = framedExportSize();
@@ -799,7 +846,7 @@ async function prepareFramedExport() {
   await assertExportDimensions(dataUrl, width, height);
   const blob = await dataUrlToBlob(dataUrl);
   if (requestId !== preparedExportRequestId || state.step !== 'reveal') {
-    const error = new Error('Persiapan hasil dibatalkan.');
+    const error = new Error('Result preparation was cancelled.');
     error.name = 'AbortError';
     throw error;
   }
@@ -825,25 +872,31 @@ async function startReveal() {
   invalidatePreparedExport();
   state.selectedSticker = null;
   state.revealReady = false;
+  syncPoca({ processing: true });
+  renderProgress();
   updateActions();
   await renderCanvas();
+  renderRevealProofStack();
   if (requestId !== revealRequestId || state.step !== 'reveal') return;
   refs.canvasView.classList.remove('revealing');
   void refs.canvasView.offsetWidth;
   refs.canvasView.classList.add('revealing');
-  status('Poca lagi mengeluarkan hasil dari booth…');
+  status('Poca is developing your print…');
   await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 20 : 980));
   if (requestId !== revealRequestId || state.step !== 'reveal') return;
-  status('Hasil terlihat. Polara sedang menyiapkan file agar share di HP lebih andal…');
+  status('The proof is visible. Polara is preparing the file for reliable mobile sharing…');
   try {
     await prepareFramedExport();
   } catch (error) {
-    if (error?.name !== 'AbortError') status('Hasil siap dilihat. File akan dicoba lagi saat kamu menyimpan atau membagikan.');
+    if (error?.name !== 'AbortError') status('The proof is ready. File preparation will retry when you save or share.');
   }
   if (requestId !== revealRequestId || state.step !== 'reveal') return;
   state.revealReady = true;
+  refs.revealBuddy.hidden = false;
+  syncPoca();
+  renderProgress();
   updateActions();
-  status('Hasil siap dibagikan atau disimpan.');
+  status('Proof approved. Ready to share or save.');
 }
 
 async function withBusy(message, task) {
@@ -856,57 +909,57 @@ async function withBusy(message, task) {
 }
 
 async function downloadFramed() {
-  await withBusy('Membuat PNG ukuran asli…', async () => {
+  await withBusy('Creating the exact-size PNG…', async () => {
     try {
       const prepared = await prepareFramedExport();
       await download(prepared.blob, prepared.filename);
-      status(`PNG tersimpan (${prepared.width}×${prepared.height}).`);
+      status(`PNG saved (${prepared.width}×${prepared.height}).`);
     } catch (error) {
-      status(error.message || 'Export gagal. Hasilmu tetap aman; coba lagi.');
+      status(error.message || 'Export failed. Your proof is safe; try again.');
     }
   });
 }
 
 async function downloadRaw() {
-  await withBusy('Menyiapkan foto tanpa frame…', async () => {
+  await withBusy('Preparing the photo without a frame…', async () => {
     try {
       const url = await exportRawPng(state.photos, state.mode);
       await assertExportDimensions(url, state.mode === 3 ? 720 : 1080, state.mode === 3 ? 1800 : 1350);
       const blob = await dataUrlToBlob(url);
-      await download(blob, `polara-foto-aja-${Date.now()}.png`);
-      status('Foto tanpa frame tersimpan. Hasil ber-frame tetap ada di sesi ini.');
+      await download(blob, `polara-photo-only-${Date.now()}.png`);
+      status('The unframed photo was saved. The framed proof remains in this session.');
     } catch (error) {
-      status(`Foto mentah gagal dibuat. ${error.message || 'Coba lagi ya.'}`);
+      status(`The unframed photo could not be created. ${error.message || 'Please try again.'}`);
     }
   });
 }
 
 async function shareResult() {
-  await withBusy('Menyiapkan hasil untuk dibagikan…', async () => {
+  await withBusy('Preparing the proof for sharing…', async () => {
     const preparedAtClick = preparedFramedExport;
-    const text = `Nih hasil fotoku pakai Polara! Bikin punyamu juga di ${POLARA_URL} 🐱`;
+    const text = `Here is my Polara print! Make yours at ${POLARA_URL} 🐱`;
 
     if (supportsPreparedFileShare(preparedAtClick)) {
       try {
         // Panggil sebelum await pertama agar transient user activation di HP tidak hilang.
         await navigator.share({ files: [preparedAtClick.file], text });
-        status('Yay, hasilnya berhasil dibagikan!');
+        status('Your proof was shared.');
         return;
       } catch (error) {
         if (error?.name === 'AbortError') {
-          status('Share dibatalkan. Hasil tetap ada dan bisa dicoba lagi.');
+          status('Sharing was cancelled. The proof remains ready to try again.');
           return;
         }
-        status('Native share belum berhasil. Polara menyiapkan download sebagai fallback…');
+        status('Native sharing did not open. Polara is preparing a download fallback…');
       }
     }
 
     try {
       const prepared = preparedAtClick || await prepareFramedExport();
       await download(prepared.blob, prepared.filename);
-      status('Share file belum didukung atau gagal dibuka, jadi PNG sudah diunduh sebagai fallback.');
+      status('File sharing is unsupported or did not open, so the PNG was downloaded instead.');
     } catch (error) {
-      status(`Belum berhasil membagikan. ${error.message || 'Hasil tetap aman; coba lagi.'}`);
+      status(`Sharing did not complete. ${error.message || 'The proof is safe; try again.'}`);
     }
   });
 }
@@ -916,9 +969,9 @@ function assertExportDimensions(dataUrl, expectedWidth, expectedHeight) {
     const image = new Image();
     image.onload = () => {
       if (image.naturalWidth === expectedWidth && image.naturalHeight === expectedHeight) resolve();
-      else reject(new Error(`Ukuran export ${image.naturalWidth}×${image.naturalHeight}, seharusnya ${expectedWidth}×${expectedHeight}. Hasil tidak diunduh.`));
+      else reject(new Error(`Export size ${image.naturalWidth}×${image.naturalHeight}, expected ${expectedWidth}×${expectedHeight}. Nothing was downloaded.`));
     };
-    image.onerror = () => reject(new Error('Hasil export tidak dapat diverifikasi. Hasil tidak diunduh.'));
+    image.onerror = () => reject(new Error('Export dimensions could not be verified. Nothing was downloaded.'));
     image.src = dataUrl;
   });
 }
@@ -926,8 +979,8 @@ function assertExportDimensions(dataUrl, expectedWidth, expectedHeight) {
 refs.primary.addEventListener('click', async () => {
   if (state.step === 'start') await beginCamera();
   else if (state.step === 'camera') await takePhoto();
-  else if (state.step === 'review') await goToStep('frame', 'Pilih frame favoritmu. Foto masih bisa diatur tanpa crop permanen.');
-  else if (state.step === 'frame') await goToStep('decorate', 'Tambahkan caption dan sticker. Foto serta frame tetap sama saat kembali.');
+  else if (state.step === 'review') await goToStep('frame', 'Choose a frame. Photo adjustments remain reversible.');
+  else if (state.step === 'frame') await goToStep('decorate', 'Add a caption and stickers. Photos and frame remain unchanged when you go back.');
   else if (state.step === 'decorate') await goToStep('reveal');
   else if (state.step === 'reveal') await shareResult();
 });
@@ -938,13 +991,13 @@ refs.secondary.addEventListener('click', async () => {
     state.facing = previousFacing === 'user' ? 'environment' : 'user';
     const switched = await requestCamera({ switching: true });
     if (switched && state.facing === previousFacing) {
-      status('Kamera lain tidak ditemukan; kamera yang aktif tetap dipakai. Foto dan sesi tetap aman.');
+      status('No other camera was found; the active camera remains in use. Photos and session are safe.');
     }
     if (!switched) state.facing = previousFacing;
     if (!switched && state.cameraStatus !== 'denied' && state.step === 'camera' && !state.demo) {
-      status('Kamera tujuan tidak tersedia. Polara sedang memulihkan kamera sebelumnya…');
+      status('The requested camera is unavailable. Polara is restoring the previous camera…');
       const restored = await requestCamera({ switching: true });
-      if (restored) status('Kamera sebelumnya berhasil dipulihkan. Foto dan sesi tetap aman.');
+      if (restored) status('The previous camera was restored. Photos and session are safe.');
     }
   } else if (state.step === 'review') startRetake();
   else if (state.step === 'reveal') await downloadFramed();
@@ -959,17 +1012,17 @@ refs.back.addEventListener('click', async () => {
   if (state.step === 'camera') {
     if (state.retakeSlot != null || state.photos.some(Boolean)) {
       state.retakeSlot = null;
-      await goToStep('review', 'Foto yang sudah ada tetap dipertahankan.');
+      await goToStep('review', 'Existing proofs are preserved.');
     } else {
-      await goToStep('start', 'Pilihan format dan timer masih sama.');
+      await goToStep('start', 'Format and timer choices are unchanged.');
     }
   } else if (state.step === 'review') {
     state.retakeSlot = state.selectedSlot;
     state.activeSlot = state.selectedSlot;
     await beginCamera({ retake: true });
-  } else if (state.step === 'frame') await goToStep('review', 'Kembali ke review tanpa mereset pilihan foto.');
-  else if (state.step === 'decorate') await goToStep('frame', 'Caption dan sticker tetap tersimpan saat memilih frame lain.');
-  else if (state.step === 'reveal') await goToStep('decorate', 'Hasil tetap utuh. Silakan lanjut menghias.');
+  } else if (state.step === 'frame') await goToStep('review', 'Back to Review without resetting proof choices.');
+  else if (state.step === 'decorate') await goToStep('frame', 'Caption and stickers stay in the session while you choose another frame.');
+  else if (state.step === 'reveal') await goToStep('decorate', 'The proof stays intact. Continue decorating.');
 });
 
 refs.retryCamera.addEventListener('click', async () => { state.demo = false; await requestCamera(); });
@@ -981,7 +1034,7 @@ function activateDemoMode() {
   state.demo = true;
   state.cameraStatus = 'demo';
   showCameraState();
-  status('Mode demo aktif. Ini hanya placeholder untuk mencoba pengalaman Polara.');
+  status('Demo mode is active. These local placeholders only test the Polara flow.');
 }
 refs.demoMode.addEventListener('click', activateDemoMode);
 
@@ -991,7 +1044,25 @@ refs.newSession.addEventListener('click', () => {
 });
 refs.cancelNewSession.addEventListener('click', () => refs.dialog.close());
 refs.confirmNewSession.addEventListener('click', () => { refs.dialog.close(); resetSession(); });
-refs.dialog.addEventListener('cancel', () => status('Sesi sekarang tetap dilanjutkan.'));
+refs.dialog.addEventListener('cancel', () => status('The current session is still open.'));
+
+let privacyReturnFocus = null;
+refs.privacy.addEventListener('click', () => {
+  privacyReturnFocus = document.activeElement;
+  refs.privacyDialog.showModal();
+  requestAnimationFrame(() => refs.closePrivacy.focus());
+});
+refs.closePrivacy.addEventListener('click', () => refs.privacyDialog.close());
+refs.privacyDialog.addEventListener('close', () => {
+  if (privacyReturnFocus instanceof HTMLElement) privacyReturnFocus.focus();
+  privacyReturnFocus = null;
+});
+refs.privacyDialog.addEventListener('click', (event) => {
+  if (event.target !== refs.privacyDialog) return;
+  const box = refs.privacyDialog.getBoundingClientRect();
+  const inside = event.clientX >= box.left && event.clientX <= box.right && event.clientY >= box.top && event.clientY <= box.bottom;
+  if (!inside) refs.privacyDialog.close();
+});
 
 async function resetSession() {
   cameraRequestId += 1;
@@ -1004,7 +1075,7 @@ async function resetSession() {
   phCanvas = null;
   refs.stage.innerHTML = '';
   refs.caption.value = '';
-  await goToStep('start', 'Sesi baru siap. Pilih format dan timer.');
+  await goToStep('start', 'New session ready. Choose a format and timer.');
 }
 
 function wireCollectionKeyboard(container, selector) {
@@ -1039,7 +1110,7 @@ function handleResize() {
 window.addEventListener('resize', handleResize);
 window.visualViewport?.addEventListener('resize', handleResize);
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) suspendCameraSession('Kamera dijeda saat Polara tidak terlihat. Foto yang sudah ada tetap aman.');
+  if (document.hidden) suspendCameraSession('Camera paused while Polara is hidden. Existing proofs remain safe.');
 });
 window.addEventListener('pagehide', () => {
   cameraRequestId += 1;
@@ -1051,4 +1122,4 @@ document.querySelectorAll('.mascot-runtime').forEach((image) => {
 });
 
 preloadMascots();
-goToStep('start', 'Pilih format dan timer, lalu buka kamera saat siap.');
+goToStep('start', 'Choose a format and timer, then open the camera when ready.');

@@ -5,13 +5,17 @@ const MASCOT = 'assets/mascot/';
 const STICKER = 'assets/stickers/';
 
 export const mascots = [
-  { id: 'poca-wave', type: 'mascot', name: 'Poca melambai', src: MASCOT + 'poca-wave.png', usage: 'start', loading: 'preload', exportPolicy: 'ui-only' },
-  { id: 'poca-sleepy-loading', type: 'mascot', name: 'Poca menunggu', src: MASCOT + 'poca-sleepy-loading.png', usage: 'processing', loading: 'preload', exportPolicy: 'ui-only' },
-  { id: 'poca-pointing-down', type: 'mascot', name: 'Poca menunjuk', src: MASCOT + 'poca-pointing-down.png', usage: 'guidance', loading: 'lazy', exportPolicy: 'ui-only' },
-  { id: 'poca-peace', type: 'mascot', name: 'Poca peace', src: MASCOT + 'poca-peace.png', usage: 'reveal', loading: 'lazy-before-reveal', exportPolicy: 'ui-only' },
-  { id: 'poca-face', type: 'mascot', name: 'Wajah Poca', src: MASCOT + 'poca-face.png', usage: 'tray', loading: 'lazy', exportPolicy: 'ui-only' },
-  { id: 'poca-holding-photo-frame', type: 'mascot', name: 'Poca membawa frame', src: MASCOT + 'poca-holding-photo-frame.png', usage: 'frame-guidance', loading: 'lazy', exportPolicy: 'ui-only' },
-  { id: 'poca-excited-jump', type: 'mascot', name: 'Poca melompat', src: MASCOT + 'poca-excited-jump.png', usage: 'reveal-celebration', loading: 'lazy-before-reveal', exportPolicy: 'ui-only' },
+  { id: 'poca-excited-jump', type: 'mascot', name: 'Poca excited', src: MASCOT + 'poca-excited-jump.png', usage: 'start', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-camera', type: 'mascot', name: 'Poca camera', src: MASCOT + 'poca-camera.png', usage: 'camera', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-peeking', type: 'mascot', name: 'Poca peeking', src: MASCOT + 'poca-peeking.png', usage: 'review-decorated', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-holding-photo-frame', type: 'mascot', name: 'Poca with frame', src: MASCOT + 'poca-holding-photo-frame.png', usage: 'frames', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-decorate-guide', type: 'mascot', name: 'Poca decorate guide', src: MASCOT + 'poca-decorate-guide.png', usage: 'decorate-empty', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-sleepy-loading', type: 'mascot', name: 'Poca developing print', src: MASCOT + 'poca-sleepy-loading.png', usage: 'processing', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-proof-approved', type: 'mascot', name: 'Poca proof approved', src: MASCOT + 'poca-proof-approved.png', usage: 'reveal-ready', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-privacy-guardian', type: 'mascot', name: 'Poca privacy guardian', src: MASCOT + 'poca-privacy-guardian.png', usage: 'privacy-dialog', loading: 'preload', exportPolicy: 'ui-only' },
+  { id: 'poca-wave', type: 'mascot', name: 'Poca wave', src: MASCOT + 'poca-wave.png', usage: 'supporting', loading: 'lazy', exportPolicy: 'ui-only' },
+  { id: 'poca-peace', type: 'mascot', name: 'Poca peace', src: MASCOT + 'poca-peace.png', usage: 'supporting', loading: 'lazy', exportPolicy: 'ui-only' },
+  { id: 'poca-face', type: 'mascot', name: 'Poca face', src: MASCOT + 'poca-face.png', usage: 'tray', loading: 'lazy', exportPolicy: 'ui-only' },
 ];
 
 export const stickers = [

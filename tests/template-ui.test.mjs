@@ -25,6 +25,18 @@ test('thumbnail overlay memakai PNG versioned sedangkan legacy tetap iframe', ()
 });
 
 
+test('picker memakai composite bila tersedia tanpa mengganti thumbnail fallback', () => {
+  assert.deepEqual(
+    getTemplatePreviewConfig({
+      thumbnailSrc: 'assets/frames/thumbnails/plain.png',
+      pickerThumbnailSrc: 'assets/frames/composites/proof.png',
+      assetVersion: 'frame-overlay-v1',
+    }),
+    { kind: 'image', src: 'assets/frames/composites/proof.png?v=frame-overlay-v1' },
+  );
+});
+
+
 test('memilih frame hanya mengubah frameId dan menjaga semua state editor', () => {
   const photo = { src: 'photo', fit: 'cover', zoom: 1.4, offsetX: 0.2, offsetY: -0.15 };
   const sticker = { uid: 'paw-1', x: 0.5, y: 0.5, rotation: 13 };

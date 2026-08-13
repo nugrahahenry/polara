@@ -12,6 +12,10 @@ docs/
 
 # Spesifikasi produk/teknis internal untuk handoff agent (lokal, bukan dokumentasi publik)
 spec/
+PRODUCT.md
+DESIGN.md
+.impeccable/design.json
+.impeccable/design.local.json
 
 .DS_Store
 
@@ -42,3 +46,6 @@ __pycache__/
 # Frame overlay context, asset, dan architecture packs; evidence disimpan di docs/ yang ignored
 Polara-Frame-Overlay-*.zip
 Polara-PNG-First-Frame-Architecture-*.zip
+
+# Prototype Proof Table final; hasil audit/ekstrak canonical berada di docs/ yang ignored
+Polara-Print-Room-Proof-Table-*.zip

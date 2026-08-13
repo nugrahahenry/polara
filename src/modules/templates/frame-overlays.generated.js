@@ -15,6 +15,7 @@ export const frameOverlayTemplates = [
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/poca-purikura-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-single-thumbnail.png",
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -50,6 +51,7 @@ export const frameOverlayTemplates = [
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/poca-purikura-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-strip-thumbnail.png",
     "canvas": {
       "width": 720,
       "height": 1800
@@ -97,6 +99,7 @@ export const frameOverlayTemplates = [
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/vintage-film-lofi-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/vintage-film-lofi-single-thumbnail.png",
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -132,6 +135,7 @@ export const frameOverlayTemplates = [
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/vintage-film-lofi-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/vintage-film-lofi-strip-thumbnail.png",
     "canvas": {
       "width": 720,
       "height": 1800
@@ -179,6 +183,7 @@ export const frameOverlayTemplates = [
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/seoul-snap-y2k-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/seoul-snap-y2k-single-thumbnail.png",
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -214,6 +219,7 @@ export const frameOverlayTemplates = [
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/seoul-snap-y2k-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/seoul-snap-y2k-strip-thumbnail.png",
     "canvas": {
       "width": 720,
       "height": 1800
