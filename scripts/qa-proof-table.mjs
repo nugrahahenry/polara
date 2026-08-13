@@ -10,6 +10,7 @@ const projectRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '
 const outputRoot = path.resolve(projectRoot, process.argv[2] || 'docs/qa/proof-table-v2.1');
 const screenshotRoot = path.join(outputRoot, 'screenshots');
 const exportRoot = path.join(outputRoot, 'exports');
+const writeScreenshots = process.env.POLARA_QA_SCREENSHOTS !== '0';
 await fs.mkdir(screenshotRoot, { recursive: true });
 await fs.mkdir(exportRoot, { recursive: true });
 
@@ -92,6 +93,15 @@ async function captureProof(page) {
 async function auditCurrentPage(page) {
   return page.evaluate(() => {
     const overflow = document.documentElement.scrollWidth - document.documentElement.clientWidth;
+    const primaryAction = document.querySelector('#primaryBtn');
+    const primaryRect = primaryAction?.getBoundingClientRect();
+    const primaryActionInViewport = Boolean(primaryRect
+      && primaryRect.width > 0
+      && primaryRect.height > 0
+      && primaryRect.top >= 0
+      && primaryRect.left >= 0
+      && primaryRect.bottom <= window.innerHeight
+      && primaryRect.right <= window.innerWidth);
     const shortTargets = [...document.querySelectorAll('button, a[href]')]
       .filter((element) => {
         const style = getComputedStyle(element);
@@ -104,7 +114,7 @@ async function auditCurrentPage(page) {
         height: Math.round(element.getBoundingClientRect().height),
       }))
       .filter((item) => item.width < 44 || item.height < 44);
-    return { overflow, shortTargets };
+    return { overflow, shortTargets, primaryActionInViewport };
   });
 }
 
@@ -121,7 +131,10 @@ async function downloadPng(page, name) {
 async function startPage(context) {
   const page = await context.newPage();
   page.on('console', (message) => {
-    if (message.type() === 'error') report.runtimeErrors.push(`console: ${message.text()}`);
+    if (message.type() === 'error') {
+      const sourceUrl = message.location().url;
+      report.runtimeErrors.push(`console: ${message.text()}${sourceUrl ? ` @ ${sourceUrl}` : ''}`);
+    }
   });
   page.on('pageerror', (error) => report.runtimeErrors.push(`page: ${error.message}`));
   await page.goto(baseUrl, { waitUntil: 'load', timeout: 30_000 });
@@ -135,7 +148,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   const stageAudit = {};
   const shot = async (number, stage) => {
     stageAudit[stage] = await auditCurrentPage(page);
-    if (screenshots) await page.screenshot({ path: path.join(screenshotRoot, `${name}-${number}-${stage}.png`) });
+    if (screenshots && writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${name}-${number}-${stage}.png`) });
   };
 
   const labels = await page.locator('#progressList .progress-label').allTextContents();
@@ -257,10 +270,11 @@ try {
 
   assert.deepEqual({ width: report.exports.single.width, height: report.exports.single.height }, { width: 1080, height: 1350 });
   assert.deepEqual({ width: report.exports.strip.width, height: report.exports.strip.height }, { width: 720, height: 1800 });
-  for (const viewport of Object.values(report.viewports)) {
-    for (const stage of Object.values(viewport.stages)) {
+  for (const [viewportName, viewport] of Object.entries(report.viewports)) {
+    for (const [stageName, stage] of Object.entries(viewport.stages)) {
       assert.equal(stage.overflow, 0);
       assert.deepEqual(stage.shortTargets, []);
+      assert.equal(stage.primaryActionInViewport, true, `${viewportName} ${stageName}: primary action must remain fully inside the viewport`);
     }
   }
   assert.deepEqual(report.runtimeErrors, []);

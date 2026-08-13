@@ -247,8 +247,13 @@ body {
   .brand-tag { display: none; }
   .workspace { min-height: auto; grid-template-columns: 1fr; }
   .stage-shell { height: min(52dvh, 560px); min-height: 380px; }
-  .control-sheet { max-height: none; min-height: 430px; }
-  .control-scroll { padding-bottom: 130px; }
+  .control-sheet {
+    height: min(52dvh, 560px);
+    min-height: min(430px, 52dvh);
+    max-height: min(52dvh, 560px);
+  }
+  .control-scroll { min-height: 0; padding-bottom: 130px; }
+  .action-dock { position: relative; flex: 0 0 auto; }
   .start-visual { grid-template-columns: 1fr minmax(130px,.45fr); padding: 28px; }
   .start-copy h1 { font-size: clamp(2.7rem, 10vw, 5rem); }
   .proof-buddy { width: clamp(76px, 15vw, 112px); }
@@ -271,7 +276,7 @@ body {
   .stage-shell { height: 42dvh; min-height: 315px; padding: 10px; border-radius: 15px; }
   .stage-shell::before { inset: 8px; border-radius: 10px; }
   .stage-shell::after { inset: 15px; }
-  .control-sheet { min-height: 44dvh; border-radius: 15px; }
+  .control-sheet { height: 44dvh; min-height: min(360px, 44dvh); max-height: 44dvh; border-radius: 15px; }
   .control-scroll { padding: 20px 16px 130px; }
   .panel-title { font-size: 1.55rem; }
   .panel-copy { margin-bottom: 16px; font-size: .86rem; }

@@ -29,6 +29,7 @@ assets/**/_originals/
 
 # Personal export pack for ChatGPT brainstorming (generated locally)
 Polara-Brainstorm-Pack-*.zip
+PROMPT-MASTER-POLARA-*.md
 
 # Source/implementation pack dari ChatGPT (arsip lokal; hasil ekstrak disimpan di docs/prototypes/)
 Polara-*-Implementation-Pack-*.zip

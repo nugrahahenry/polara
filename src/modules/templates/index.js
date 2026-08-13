@@ -144,7 +144,7 @@ export const templateDims = (template) => template.canvas
     : { w: 1080, h: 1350, slots: 1 };
 
 // Dokumen HTML utuh buat iframe thumbnail preview (lihat loader.js).
-const KOSMIK_FONT = '<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;700&family=Nunito:wght@600;800&display=swap" rel="stylesheet">';
+const KOSMIK_FONT = '<link href="https://fonts.googleapis.com/css?family=Fredoka:500,700&display=swap" rel="stylesheet"><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;800&display=swap" rel="stylesheet">';
 export async function resolveTemplateDoc(t) {
   return t.file ? loadTemplateDoc(t.file) : buildTemplateDoc(KOSMIK_FONT, '', t.html);
 }

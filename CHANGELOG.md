@@ -5,6 +5,16 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.13.1] - 2026-08-13
+
+### Fixed
+- Jaga action dock tetap terlihat pada seluruh tahap mobile dengan membatasi tinggi control sheet dan memindahkan scroll panjang ke area kontrol internal.
+- Pulihkan Fredoka pada Chrome dengan memisahkannya dari endpoint CSS2 Google Fonts yang sedang mengirim URL WOFF2 404; template legacy memakai endpoint Fredoka yang sehat.
+
+### Validation
+- Regression browser membuktikan kondisi lama gagal pada `390x844 frames`, lalu seluruh primary action lulus pada enam tahap dan empat viewport setelah perbaikan.
+- Tidak ada overflow horizontal, target pendek, atau runtime error; export tetap tepat Single 1080x1350 dan Strip 720x1800.
+
 ## [0.13.0] - 2026-08-13
 
 ### Added
