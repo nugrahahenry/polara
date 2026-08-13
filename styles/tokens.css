@@ -25,6 +25,15 @@
   --accent-strong: var(--pink-deep);
   --border:      rgba(75, 46, 31, 0.14);
   --outline:     #4b2e1f;   /* garis tepi stiker */
+  --proof-paper: #fffdf9;
+  --proof-cream: #fff7ef;
+  --proof-ink: #4b2e1f;
+  --proof-muted: #70584b;
+  --proof-hairline: rgba(75, 46, 31, 0.16);
+  --proof-pink: #ff8fbd;
+  --proof-blue: #8fd3ff;
+  --proof-butter: #ffe26f;
+  --proof-lilac: #cab8ff;
 
   /* ── bentuk ── */
   --radius:      22px;
@@ -38,5 +47,5 @@
 
   /* ── tipografi ── */
   --font-display: 'Fredoka', system-ui, sans-serif;
-  --font-ui:      'Nunito', system-ui, sans-serif;
+  --font-ui:      'Inter', 'Nunito', system-ui, sans-serif;
 }

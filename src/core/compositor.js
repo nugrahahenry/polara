@@ -70,6 +70,7 @@ export async function exportPng(canvasEl, attempt = 1) {
       canvasHeight: height,
       pixelRatio: 1,
       cacheBust: false,
+      skipFonts: true,
       style: {
         position: 'relative',
         inset: 'auto',
@@ -82,7 +83,7 @@ export async function exportPng(canvasEl, attempt = 1) {
       await new Promise((resolve) => setTimeout(resolve, 350 * attempt));
       return exportPng(canvasEl, attempt + 1);
     }
-    throw new Error('Gagal membuat PNG. Hasilmu tetap aman; coba lagi ya.', { cause: error });
+    throw new Error('PNG creation failed. Your proof remains safe; try again.', { cause: error });
   } finally {
     hideEls.forEach((element) => { element.style.display = element.dataset.previousDisplay || ''; delete element.dataset.previousDisplay; });
     selected.forEach((element) => element.classList.add('selected'));
@@ -91,7 +92,7 @@ export async function exportPng(canvasEl, attempt = 1) {
 
 export async function dataUrlToBlob(dataUrl) {
   const response = await fetch(dataUrl);
-  if (!response.ok) throw new Error('File hasil tidak dapat disiapkan.');
+  if (!response.ok) throw new Error('The result file could not be prepared.');
   return response.blob();
 }
 
@@ -104,7 +105,7 @@ export async function download(source, filename = 'polara.png') {
   } else if (typeof source === 'string') {
     anchor.href = source;
   } else {
-    throw new Error('Format file download tidak didukung.');
+    throw new Error('This download format is unsupported.');
   }
   anchor.download = filename;
   anchor.rel = 'noopener';
@@ -340,7 +341,7 @@ function loadImage(src) {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error('Salah satu foto gagal dibaca.'));
+    image.onerror = () => reject(new Error('One of the photos could not be read.'));
     image.src = src;
   });
 }

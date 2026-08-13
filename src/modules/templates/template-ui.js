@@ -1,7 +1,8 @@
 export function getTemplatePreviewConfig(template) {
-  if (!template.thumbnailSrc) return { kind: 'iframe' };
+  const previewSrc = template.pickerThumbnailSrc || template.thumbnailSrc;
+  if (!previewSrc) return { kind: 'iframe' };
   const version = encodeURIComponent(template.assetVersion || '1');
-  return { kind: 'image', src: `${template.thumbnailSrc}?v=${version}` };
+  return { kind: 'image', src: `${previewSrc}?v=${version}` };
 }
 
 export function selectFramePreservingEditorState(state, frameId) {

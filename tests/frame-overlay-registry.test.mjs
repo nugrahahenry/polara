@@ -60,10 +60,12 @@ test('registry generated memuat tepat enam Hero PNG dengan geometry canonical', 
 });
 
 
-test('registry generated menunjuk overlay dan thumbnail runtime versioned', () => {
+test('registry generated memisahkan overlay export, thumbnail fallback, dan composite picker', () => {
   frameOverlayTemplates.forEach((template) => {
     assert.match(template.overlaySrc, /^assets\/frames\/[a-z0-9-]+-overlay\.png$/);
     assert.match(template.thumbnailSrc, /^assets\/frames\/thumbnails\/[a-z0-9-]+-thumbnail\.png$/);
+    assert.match(template.pickerThumbnailSrc, /^assets\/frames\/composites\/[a-z0-9-]+-thumbnail\.png$/);
+    assert.notEqual(template.pickerThumbnailSrc, template.overlaySrc);
     assert.equal(template.assetVersion, 'frame-overlay-v1');
     assert.equal(template.status, 'runtime-overlay');
   });

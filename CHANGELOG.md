@@ -5,6 +5,33 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.13.0] - 2026-08-13
+
+### Added
+- Tambahkan shell produksi Proof Table v2.1, rail enam tahap berbahasa Inggris, Proof Stamp PNG untuk tahap selesai, dialog Privacy native, active proof 1/2/3, proof stack Reveal, dan choreography Poca berbasis state.
+- Tambahkan tiga aset Poca produksi: Privacy Guardian, Decorate Guide, dan Proof Approved; tambahkan Proof Stamp serta enam composite picker thumbnail.
+- Tambahkan regression test state/aset/picker dan QA Playwright untuk 390×844, 768×1024, 1440×900, serta short landscape 900×510.
+
+### Changed
+- Adaptasi visual Light Table Studio + Proof Desk dari prototype terpilih tanpa membawa scene selector, simulasi share/save, localStorage fixture, atau portal workaround.
+- Gunakan composite hanya untuk thumbnail picker; preview dan export tetap memakai PNG overlay, photo window, transform, dan compositor produksi yang sama.
+- Gunakan Poca Excited pada Start, Camera pada Camera, Peeking pada Review/decorated state, Holding Frame pada Frames, Decorate Guide hanya saat kosong, Sleepy Loading saat processing, serta Proof Approved saat Reveal ready.
+- Ubah copy UI menjadi bahasa Inggris sesuai direction lock; dokumentasi dan laporan internal tetap berbahasa Indonesia.
+- Naikkan cache bust modul/UI menjadi v13 dan versi paket menjadi 0.13.0.
+
+### Fixed
+- Pertahankan proof lain saat retake satu slot dan sinkronkan active proof pada Review serta Frames.
+- Pertahankan tombol Privacy sebagai kontrol mengambang pada short landscape dan pastikan seluruh target interaktif yang terlihat minimal 44×44 px.
+- Hentikan percobaan embedding Google Fonts pada html-to-image agar export exact-size tidak menulis SecurityError lintas-origin ke console.
+
+### Validation
+- 20/20 tes Node, 3/3 tes Python, dan 6/6 verifier overlay lulus.
+- Flow penuh lulus tanpa overflow/runtime error pada empat viewport; Home/End tray, Escape/focus restore dialog, reduced motion, dan camera denied recovery lulus.
+- Download nyata terukur tepat Single 1080×1350 dan Strip 720×1800; retake proof 2 mempertahankan proof 1 dan 3.
+
+### Validation pending
+- Camera, safe-area/keyboard virtual, rotasi, native share/cancel, dan download perlu dogfooding ulang pada Android/iPhone fisik setelah branch diintegrasikan dan dideploy oleh Henry.
+
 ## [0.12.0] - 2026-08-09
 
 ### Added

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
@@ -31,8 +31,9 @@
   <link rel="manifest" href="/manifest.webmanifest?v=3" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="preload" as="image" href="assets/mascot/poca-wave.png" />
+  <!-- impeccable-disable-next-line overused-font: Proof Table v2.1 locks Inter as the workhorse face; Fredoka retains Polara's display personality. -->
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@500;600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="preload" as="image" href="assets/mascot/poca-excited-jump.png" />
   <link rel="preload" as="image" href="assets/mascot/poca-sleepy-loading.png" />
   <link rel="stylesheet" href="styles/tokens.css" />
   <style>
@@ -254,33 +255,46 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
+  <link rel="stylesheet" href="styles/proof-table.css?v=13" />
 </head>
 <body>
-  <a class="skip-link" href="#controlSheet">Lewati ke kontrol</a>
+  <!--
+    THESIS: A real proof desk for making a print, never a landing-page card gallery.
+    OWN-WORLD: Warm proof paper, registration marks, restrained pink/blue inks, real PNG stamps, and state-specific Poca assets.
+    STORY: Choose a session, capture locally, review each proof, frame it, decorate it, then reveal an approved exact-size print.
+    FIRST VIEWPORT: The proof stage dominates left/above; the scrollable control sheet sits right/below; the current action stays docked and reachable.
+    FORM: Proof Desk, the locked v2.1 first choice; seed key proof-table-v2-1.
+    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+  -->
+  <a class="skip-link" href="#controlSheet">Skip to controls</a>
   <header class="app-header">
     <div class="brand">
       <img class="brand-logo" src="assets/brand/logo-polara.png" alt="Polara" />
-      <span class="brand-tag">share the fun</span>
+      <span class="brand-tag">Print Room</span>
     </div>
-    <button type="button" class="header-action" id="newSessionBtn">Mulai ulang</button>
+    <div class="header-tools">
+      <button type="button" class="privacy-trigger" id="privacyBtn" aria-haspopup="dialog" aria-controls="privacyDialog">
+        <img src="assets/mascot/poca-peeking.png" alt="" />
+        <span>Private by design</span>
+      </button>
+      <button type="button" class="header-action" id="newSessionBtn">New session</button>
+    </div>
   </header>
 
-  <nav class="progress-wrap" id="progressWrap" role="progressbar" aria-label="Tahap pembuatan foto" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1">
+  <nav class="progress-wrap" id="progressWrap" role="progressbar" aria-label="Photo booth progress" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1">
     <ol class="progress-list" id="progressList"></ol>
   </nav>
 
   <main class="workspace" id="appWorkspace">
-    <section class="stage-shell" aria-label="Preview Polara">
+    <section class="stage-shell" aria-label="Polara proof preview">
       <section class="stage-view" id="startView">
         <div class="start-visual">
           <div class="start-copy">
-            <p class="eyebrow">Digital photobooth</p>
-            <h1>Satu momen.<br /><span>Kami banget.</span></h1>
-            <p>Ambil tiga pose, pilih frame, hias bareng Poca, lalu bagikan. Semua foto tetap diproses di perangkatmu.</p>
+            <h1>Your tiny<br /><span>print room.</span></h1>
+            <p>Take three proofs, choose a frame, decorate with Poca, then keep the print. Every photo stays on this device.</p>
           </div>
           <div class="hero-stack" aria-hidden="true">
             <div class="hero-strip"><div class="hero-photo"></div><div class="hero-photo"></div><div class="hero-photo"></div></div>
-            <img class="hero-poca mascot-runtime" src="assets/mascot/poca-wave.png" alt="" />
           </div>
         </div>
       </section>
@@ -293,11 +307,11 @@
             <div class="shot-badge" id="shotBadge" hidden></div>
             <div id="cameraOverlay">
               <div class="camera-overlay-inner">
-                <img class="mascot-runtime" src="assets/mascot/poca-sleepy-loading.png" alt="Poca menunggu kamera siap" />
-                <p id="cameraMessage">Kamera belum dimulai.</p>
+                <img class="mascot-runtime" id="cameraPoca" src="assets/mascot/poca-camera.png" alt="Poca waits for the camera." />
+                <p id="cameraMessage">Camera has not started.</p>
                 <div class="overlay-actions" id="cameraOverlayActions" hidden>
-                  <button type="button" class="mini-btn" id="retryCameraBtn">Coba lagi</button>
-                  <button type="button" class="mini-btn" id="demoModeBtn">Coba tanpa kamera</button>
+                  <button type="button" class="mini-btn" id="retryCameraBtn">Try again</button>
+                  <button type="button" class="mini-btn" id="demoModeBtn">Continue without camera</button>
                 </div>
               </div>
             </div>
@@ -309,125 +323,144 @@
 
       <section class="stage-view" id="reviewView" hidden>
         <div class="review-stage">
-          <!-- impeccable-disable-next-line broken-image: src diisi dari hasil capture sebelum Review ditampilkan -->
-          <div class="review-photo-wrap"><img id="reviewPhoto" alt="Foto yang sedang direview" /></div>
-          <p class="review-caption" id="reviewCaption">Pilih foto di panel untuk memeriksa atau mengambil ulang.</p>
+          <!-- impeccable-disable-next-line broken-image: src is assigned before Review opens -->
+          <div class="review-photo-wrap"><img id="reviewPhoto" alt="Active proof under review" /></div>
+          <p class="review-caption" id="reviewCaption">Choose a proof to inspect or retake.</p>
         </div>
       </section>
 
       <section class="stage-view canvas-stage" id="canvasView" hidden>
+        <div class="reveal-proof-stack" id="revealProofStack" aria-hidden="true"></div>
         <div id="canvasScale"></div>
-        <img class="reveal-buddy mascot-runtime" id="revealBuddy" src="assets/mascot/poca-peace.png" alt="Poca merayakan hasil fotomu" hidden />
+        <img class="reveal-buddy mascot-runtime" id="revealBuddy" src="assets/mascot/poca-proof-approved.png" alt="Poca approves your proof." hidden />
       </section>
+
+      <figure class="proof-buddy" id="proofBuddy" aria-live="polite">
+        <img class="mascot-runtime" id="proofBuddyImage" src="assets/mascot/poca-excited-jump.png" alt="Poca jumps excitedly." />
+        <figcaption class="sr-only" id="proofBuddyCaption">Poca is ready.</figcaption>
+      </figure>
     </section>
 
-    <aside class="control-sheet" id="controlSheet" aria-label="Kontrol Polara">
+    <aside class="control-sheet" id="controlSheet" aria-label="Polara controls">
       <div class="control-scroll" id="controlScroll">
         <section class="control-panel" data-panel="start">
-          <p class="eyebrow">Siapkan sesi</p>
-          <h2 class="panel-title">Mau bikin yang mana?</h2>
-          <p class="panel-copy">Strip tiga foto jadi pengalaman utama Polara. Single tetap ada kalau kamu ingin satu pose besar.</p>
-          <span class="section-label">Format foto</span>
-          <div class="segmented" id="modeChoose" role="group" aria-label="Format foto">
-            <button type="button" class="choice-btn" data-mode="1" aria-pressed="false">Single<small>1 foto · 4:5</small></button>
-            <button type="button" class="choice-btn active" data-mode="3" aria-pressed="true">Strip 3<small>Hero Polara</small></button>
+          <h2 class="panel-title">Set up your session</h2>
+          <p class="panel-copy">Strip 3 is the Polara default. Single stays available for one larger proof.</p>
+          <span class="section-label">Print format</span>
+          <div class="segmented" id="modeChoose" role="group" aria-label="Print format">
+            <button type="button" class="choice-btn" data-mode="1" aria-pressed="false">Single<small>1 photo · 4:5</small></button>
+            <button type="button" class="choice-btn active" data-mode="3" aria-pressed="true">Strip 3<small>Polara default</small></button>
           </div>
-          <span class="section-label">Timer per jepretan</span>
-          <div class="timer-grid" id="timerChoose" role="group" aria-label="Timer">
-            <button type="button" class="choice-btn active" data-timer="3" aria-pressed="true">3 dtk</button>
-            <button type="button" class="choice-btn" data-timer="5" aria-pressed="false">5 dtk</button>
-            <button type="button" class="choice-btn" data-timer="10" aria-pressed="false">10 dtk</button>
+          <span class="section-label">Timer per shot</span>
+          <div class="timer-grid" id="timerChoose" role="group" aria-label="Shot timer">
+            <button type="button" class="choice-btn active" data-timer="3" aria-pressed="true">3 sec</button>
+            <button type="button" class="choice-btn" data-timer="5" aria-pressed="false">5 sec</button>
+            <button type="button" class="choice-btn" data-timer="10" aria-pressed="false">10 sec</button>
           </div>
-          <p class="privacy-note">Privat dari awal: kamera dan foto hanya diproses di browser ini, tanpa upload atau akun.</p>
+          <p class="privacy-note">Camera and photos are processed only in this browser—no upload and no account.</p>
         </section>
 
         <section class="control-panel" data-panel="camera" hidden>
-          <p class="eyebrow">Ambil foto</p>
-          <h2 class="panel-title" id="cameraPanelTitle">Pose pertama dulu</h2>
-          <p class="panel-copy" id="cameraPanelCopy">Kamera menyimpan frame penuh. Crop baru terjadi kalau kamu memilihnya nanti.</p>
-          <div class="slot-list" id="cameraSlots" aria-label="Slot foto"></div>
-          <p class="privacy-note" id="cameraStateNote">Pilih Jepret saat semua sudah siap.</p>
+          <h2 class="panel-title" id="cameraPanelTitle">First proof</h2>
+          <p class="panel-copy" id="cameraPanelCopy">Polara keeps the full capture. Framing stays reversible.</p>
+          <div class="slot-list" id="cameraSlots" aria-label="Photo proofs"></div>
+          <p class="privacy-note" id="cameraStateNote">Press Take photo when everyone is ready.</p>
         </section>
 
         <section class="control-panel" data-panel="review" hidden>
-          <p class="eyebrow">Review</p>
-          <h2 class="panel-title">Semua wajah aman?</h2>
-          <p class="panel-copy">Foto lama tetap tersimpan sampai jepretan pengganti berhasil. Jadi retake satu slot tidak menghapus yang lain.</p>
-          <div class="slot-list" id="reviewSlots" aria-label="Pilih foto untuk direview"></div>
+          <h2 class="panel-title">Review your proofs</h2>
+          <p class="panel-copy">A retake replaces only the active proof after the new capture succeeds. Every other proof stays put.</p>
+          <span class="section-label">Active proof</span>
+          <div class="slot-list proof-selector" id="reviewSlots" aria-label="Choose active proof"></div>
         </section>
 
         <section class="control-panel" data-panel="frame" hidden>
-          <div class="tray-head"><div><p class="eyebrow">Pilih frame</p><h2 class="panel-title">Kasih suasana ke memorimu</h2></div><img class="mascot-runtime" src="assets/mascot/poca-holding-photo-frame.png" alt="Poca membantu memilih frame" loading="lazy" /></div>
-          <p class="panel-copy">Foto tetap dominan. Pilih frame dulu, lalu atur foto per slot bila memang perlu.</p>
-          <div id="templateList" role="listbox" aria-label="Koleksi frame"></div>
+          <h2 class="panel-title">Choose a frame</h2>
+          <p class="panel-copy">Composite images preview the whole look. Your export still uses the production PNG overlay and original proof geometry.</p>
+          <div id="templateList" role="listbox" aria-label="Frame tray"></div>
           <div class="photo-adjust">
-            <div class="tray-head"><h3 style="margin:0;font-size:1rem;">Atur foto</h3><button type="button" class="mini-btn" id="resetPhotoBtn">Reset foto</button></div>
-            <span class="section-label">Slot aktif</span>
-            <div class="slot-tabs" id="photoSlotTabs" role="tablist" aria-label="Slot foto"></div>
-            <span class="section-label">Tampilan</span>
-            <div class="fit-buttons" role="group" aria-label="Cara foto mengisi frame">
-              <button type="button" class="choice-btn" id="fitContainBtn">Foto utuh</button>
-              <button type="button" class="choice-btn" id="fitCoverBtn">Penuhi frame</button>
+            <div class="tray-head"><h3>Adjust proof</h3><button type="button" class="mini-btn" id="resetPhotoBtn">Reset proof</button></div>
+            <span class="section-label">Active proof</span>
+            <div class="slot-tabs" id="photoSlotTabs" role="tablist" aria-label="Active proof"></div>
+            <span class="section-label">Fit</span>
+            <div class="fit-buttons" role="group" aria-label="How the proof fills the frame">
+              <button type="button" class="choice-btn" id="fitContainBtn">Full photo</button>
+              <button type="button" class="choice-btn" id="fitCoverBtn">Fill frame</button>
             </div>
             <label class="range-field" for="zoomInput"><span>Zoom</span><input id="zoomInput" type="range" min="1" max="3" value="1" step="0.01" /><output id="zoomOutput">1.00×</output></label>
-            <label class="range-field" for="panXInput"><span>Geser X</span><input id="panXInput" type="range" min="-1" max="1" value="0" step="0.01" /><output id="panXOutput">0</output></label>
-            <label class="range-field" for="panYInput"><span>Geser Y</span><input id="panYInput" type="range" min="-1" max="1" value="0" step="0.01" /><output id="panYOutput">0</output></label>
+            <label class="range-field" for="panXInput"><span>Pan X</span><input id="panXInput" type="range" min="-1" max="1" value="0" step="0.01" /><output id="panXOutput">0</output></label>
+            <label class="range-field" for="panYInput"><span>Pan Y</span><input id="panYInput" type="range" min="-1" max="1" value="0" step="0.01" /><output id="panYOutput">0</output></label>
           </div>
         </section>
 
         <section class="control-panel" data-panel="decorate" hidden>
-          <div class="tray-head"><div><p class="eyebrow">Hias</p><h2 class="panel-title">Bikin “kami banget”</h2></div><img class="mascot-runtime" src="assets/mascot/poca-face.png" alt="Poca menemani saat menghias" loading="lazy" /></div>
-          <p class="panel-copy">Pilih sticker, lalu geser, putar, atau ubah ukurannya di foto. Keyboard juga bisa dipakai.</p>
+          <h2 class="panel-title">Decorate the proof</h2>
+          <p class="panel-copy">Add a sticker, then drag, rotate, resize, or use the keyboard directly on the proof.</p>
           <div id="captionField">
-          <label class="field-label" for="captionInput">Caption / nama / kampus</label>
-          <input class="caption-input" id="captionInput" type="text" maxlength="60" placeholder="mis. Henry · UBM · Summer Night" />
+            <label class="field-label" for="captionInput">Caption / name / place</label>
+            <input class="caption-input" id="captionInput" type="text" maxlength="60" placeholder="e.g. Henry · UBM · Summer Night" />
           </div>
-          <p class="caption-availability-note" id="captionAvailabilityNote" hidden>Frame Hero ini sudah punya layout final tanpa area teks dinamis. Caption tetap tersimpan dan muncul lagi saat kamu memilih frame lain.</p>
+          <p class="caption-availability-note" id="captionAvailabilityNote" hidden>This Hero frame has a locked layout without dynamic text. Your caption stays in the session and returns with a compatible frame.</p>
           <div class="editor-actions">
-            <button type="button" class="mini-btn" id="undoStickerBtn">Urungkan</button>
-            <button type="button" class="mini-btn" id="resetStickerBtn">Reset sticker</button>
+            <button type="button" class="mini-btn" id="undoStickerBtn">Undo</button>
+            <button type="button" class="mini-btn" id="resetStickerBtn">Clear stickers</button>
           </div>
-          <span class="section-label">Sticker</span>
-          <div id="stickerTray" role="listbox" aria-label="Koleksi sticker"></div>
+          <span class="section-label">Stickers</span>
+          <div id="stickerTray" role="listbox" aria-label="Sticker tray"></div>
         </section>
 
         <section class="control-panel reveal-panel" data-panel="reveal" hidden>
-          <img class="mascot-runtime" src="assets/mascot/poca-excited-jump.png" alt="Poca melompat merayakan hasil foto" loading="lazy" />
-          <p class="eyebrow">Reveal</p>
-          <h2 class="panel-title">Purr-fect. Ini momen kalian!</h2>
-          <p class="panel-copy">Bagikan langsung bila perangkat mendukungnya, atau simpan PNG dengan ukuran asli.</p>
-          <p class="privacy-note">Hasilmu masih aman di sesi ini bila share dibatalkan atau export gagal. Kamu bisa mencoba lagi tanpa mengulang foto.</p>
+          <img class="mascot-runtime" id="revealPanelPoca" src="assets/mascot/poca-sleepy-loading.png" alt="Poca waits while the print develops." loading="lazy" />
+          <h2 class="panel-title" id="revealTitle">Developing your print…</h2>
+          <p class="panel-copy">When the proof is approved, share it or save the exact-size PNG.</p>
+          <p class="privacy-note">The result remains in this local session if sharing is cancelled or export needs another try.</p>
         </section>
       </div>
 
       <div class="action-dock">
         <div class="action-row">
-          <button type="button" class="btn btn-ghost" id="backBtn" hidden>Kembali</button>
+          <button type="button" class="btn btn-ghost" id="backBtn" hidden>Back</button>
           <button type="button" class="btn" id="tertiaryBtn" hidden></button>
           <button type="button" class="btn btn-secondary" id="secondaryBtn" hidden></button>
-          <button type="button" class="btn btn-primary" id="primaryBtn">Buka kamera</button>
+          <button type="button" class="btn btn-primary" id="primaryBtn">Open camera</button>
         </div>
       </div>
     </aside>
   </main>
 
-  <p class="status-bar" id="status" role="status" aria-live="polite">Pilih format dan timer, lalu buka kamera saat siap.</p>
+  <p class="status-bar" id="status" role="status" aria-live="polite">Choose a format and timer, then open the camera when ready.</p>
   <p class="sr-only" id="countdownLive" aria-live="assertive"></p>
 
   <dialog id="newSessionDialog" aria-labelledby="newSessionTitle">
     <div class="dialog-body">
-      <h2 id="newSessionTitle">Mulai sesi baru?</h2>
-      <p>Foto, pilihan frame, caption, dan sticker di sesi ini akan dihapus dari browser.</p>
+      <h2 id="newSessionTitle">Start a new session?</h2>
+      <p>Photos, frame choice, caption, and stickers in this browser session will be cleared.</p>
       <div class="dialog-actions">
-        <button type="button" class="btn btn-ghost" id="cancelNewSessionBtn">Batal</button>
-        <button type="button" class="btn btn-primary" id="confirmNewSessionBtn">Ya, mulai ulang</button>
+        <button type="button" class="btn btn-ghost" id="cancelNewSessionBtn">Cancel</button>
+        <button type="button" class="btn btn-primary" id="confirmNewSessionBtn">Start over</button>
+      </div>
+    </div>
+  </dialog>
+
+  <dialog class="privacy-dialog" id="privacyDialog" aria-labelledby="privacyTitle" aria-describedby="privacyDescription">
+    <div class="privacy-dialog-body">
+      <img class="mascot-runtime" src="assets/mascot/poca-privacy-guardian.png" alt="Poca guards your private photos." />
+      <div>
+        <h2 id="privacyTitle">Your photos stay here.</h2>
+        <p id="privacyDescription">Camera frames, retakes, decoration, preview, and export are processed locally in this browser. Polara does not add an account, upload, cloud storage, or hidden copy.</p>
+        <ul>
+          <li>Camera permission is requested only when you enter Camera.</li>
+          <li>Closing or starting over clears the current in-memory session.</li>
+          <li>Only the PNG you explicitly save or share leaves this screen.</li>
+        </ul>
+        <button type="button" class="btn btn-primary" id="closePrivacyBtn">Got it</button>
       </div>
     </div>
   </dialog>
 
   <footer class="app-footer">
-    Dibikin oleh <a href="https://github.com/nugrahahenry" target="_blank" rel="noopener">Henry Nugraha</a> · Foto diproses lokal di perangkatmu.
+    Made by <a href="https://github.com/nugrahahenry" target="_blank" rel="noopener">Henry Nugraha</a> · Photos are processed locally on your device.
   </footer>
-  <script type="module" src="src/app.js?v=12"></script>
+  <script type="module" src="src/app.js?v=13"></script>
 </body>
 </html>
