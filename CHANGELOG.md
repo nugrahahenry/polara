@@ -5,6 +5,26 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.18.0] - 2026-08-14
+
+### Added
+- Tambahkan **Proof Sticker Bench** dengan status empty/placed/editing dan active sticker inspector UI-only yang memakai nama asset canonical serta ordinal untuk instance berulang.
+- Tambahkan view-model murni untuk menjaga count, selected instance, dan fallback stale-selection tetap konsisten.
+
+### Changed
+- Ubah picker sticker menjadi satu sticker rail horizontal tanpa nested vertical scroll, dengan sekitar tiga sampai empat pilihan terlihat pada mobile, tablet, desktop, dan short landscape.
+- Simpan posisi horizontal sticker rail ketika pengguna kembali ke Frames lalu melanjutkan Decorate.
+- Prioritaskan inspector aktif sebelum rail pada mobile; empty state tetap mendahulukan katalog sticker.
+- Perjelas disabled state Undo/Clear serta kelompokkan caption sebagai Proof note tanpa mengubah persistence maupun dukungan dynamic text tiap frame.
+- Pisahkan font UI Inter ke endpoint Google Fonts yang tervalidasi agar shell tidak menerima URL variable-font Inter/Nunito yang mengembalikan 404; fallback sistem tetap tersedia.
+
+### Validation
+- Regression unit direkam RED pada view-model kosong, count, ordinal instance berulang, dan stale selection lalu GREEN setelah implementasi.
+- Regression browser direkam RED pada struktur Proof Sticker Bench, disabled-state, active inspector, rail horizontal, dan tablet card density lalu GREEN pada empat viewport.
+- Add dua instance, selection lewat canvas focus, Undo, Clear, undo-clear, Back/Continue, Poca choreography, dan horizontal scroll restoration terverifikasi tanpa mengubah compositor.
+- Verifikasi final lulus: Node 33/33, Python 3/3, overlay 6/6, QA 24 kombinasi tahap/viewport, runtime error 0, dan detector Impeccable 0 temuan.
+- Exact export tetap tepat Single 1080x1350 (492110 byte) dan Strip 720x1800 (382380 byte); inspector, rail, status, serta Poca tetap berada di UI layer.
+
 ## [0.17.0] - 2026-08-14
 
 ### Added

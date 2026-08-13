@@ -33,7 +33,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css?family=Fredoka:500,600,700&display=swap" rel="stylesheet" />
   <!-- impeccable-disable-next-line overused-font: Proof Table v2.1 locks Inter as the workhorse face; Fredoka retains Polara's display personality. -->
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@500;600;700;800&family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css?family=Inter:500,600,700,800&amp;display=swap" rel="stylesheet" />
   <link rel="preload" as="image" href="assets/mascot/poca-excited-jump.png" />
   <link rel="preload" as="image" href="assets/mascot/poca-sleepy-loading.png" />
   <link rel="stylesheet" href="styles/tokens.css" />
@@ -289,7 +289,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=18" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=19" />
 </head>
 <body>
   <!--
@@ -444,20 +444,39 @@
           </div>
         </section>
 
-        <section class="control-panel" data-panel="decorate" hidden>
+        <section class="control-panel decorate-panel" data-panel="decorate" hidden>
           <h2 class="panel-title" tabindex="-1">Decorate the proof</h2>
-          <p class="panel-copy">Add a sticker, then drag, rotate, resize, or use the keyboard directly on the proof.</p>
-          <div id="captionField">
+          <p class="panel-copy">Choose a sticker, then work directly on the proof.</p>
+          <section class="proof-note" id="captionField" aria-labelledby="proofNoteTitle">
+            <h3 id="proofNoteTitle">Proof note</h3>
             <label class="field-label" for="captionInput">Caption / name / place</label>
             <input class="caption-input" id="captionInput" type="text" maxlength="60" placeholder="e.g. Henry · UBM · Summer Night" />
-          </div>
-          <p class="caption-availability-note" id="captionAvailabilityNote" hidden>This Hero frame has a locked layout without dynamic text. Your caption stays in the session and returns with a compatible frame.</p>
-          <div class="editor-actions">
-            <button type="button" class="mini-btn" id="undoStickerBtn">Undo</button>
-            <button type="button" class="mini-btn" id="resetStickerBtn">Clear stickers</button>
-          </div>
-          <span class="section-label">Stickers</span>
-          <div id="stickerTray" role="listbox" aria-label="Sticker tray"></div>
+            <p class="caption-availability-note" id="captionAvailabilityNote" hidden>This Hero frame has a locked layout without dynamic text. Your caption stays in the session and returns with a compatible frame.</p>
+          </section>
+          <section class="sticker-bench" id="stickerBench" data-state="empty" aria-labelledby="stickerBenchTitle">
+            <div class="sticker-bench-head">
+              <div>
+                <h3 id="stickerBenchTitle">Sticker bench</h3>
+                <p id="stickerBenchStatus" aria-live="polite" aria-atomic="true">Sticker bench · No stickers yet</p>
+              </div>
+              <div class="editor-actions" aria-label="Sticker history">
+                <button type="button" class="mini-btn" id="undoStickerBtn">Undo</button>
+                <button type="button" class="mini-btn" id="resetStickerBtn">Clear stickers</button>
+              </div>
+            </div>
+            <div class="sticker-rail-label" aria-hidden="true">
+              <span>Pick a sticker</span>
+              <small>Local assets</small>
+            </div>
+            <div id="stickerTray" role="listbox" aria-label="Add a sticker"></div>
+            <div class="sticker-inspector" id="stickerInspector" data-state="empty">
+              <img id="stickerInspectorImage" src="assets/brand/logo-polara.png" alt="" hidden loading="lazy" />
+              <div class="sticker-inspector-copy">
+                <strong id="stickerInspectorName">Pick a sticker from the rail</strong>
+                <p id="stickerInspectorHint">Each sticker is added locally and stays editable on the proof.</p>
+              </div>
+            </div>
+          </section>
         </section>
 
         <section class="control-panel reveal-panel" data-panel="reveal" hidden>
@@ -536,6 +555,6 @@
       <p class="footer-meta">© 2026 Polara · Digital photobooth</p>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=17"></script>
+  <script type="module" src="src/app.js?v=18"></script>
 </body>
 </html>

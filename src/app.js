@@ -17,6 +17,7 @@ import {
 } from './modules/templates/template-ui.js?v=13';
 import { stickers, createStickerInstance, preloadMascots } from './modules/stickers/index.js';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
+import { getStickerBenchView } from './ui/decorate-workshop.js?v=1';
 
 const POLARA_URL = 'polara.vercel.app';
 const BRAND_LINE = `Polara · ${POLARA_URL}`;
@@ -52,7 +53,10 @@ const refs = {
   zoom: $('zoomInput'), panX: $('panXInput'), panY: $('panYInput'),
   zoomOutput: $('zoomOutput'), panXOutput: $('panXOutput'), panYOutput: $('panYOutput'), resetPhoto: $('resetPhotoBtn'),
   caption: $('captionInput'), captionField: $('captionField'), captionNote: $('captionAvailabilityNote'),
-  stickerTray: $('stickerTray'), undoSticker: $('undoStickerBtn'), resetSticker: $('resetStickerBtn'),
+  stickerBench: $('stickerBench'), stickerBenchStatus: $('stickerBenchStatus'), stickerTray: $('stickerTray'),
+  stickerInspector: $('stickerInspector'), stickerInspectorImage: $('stickerInspectorImage'),
+  stickerInspectorName: $('stickerInspectorName'), stickerInspectorHint: $('stickerInspectorHint'),
+  undoSticker: $('undoStickerBtn'), resetSticker: $('resetStickerBtn'),
   newSession: $('newSessionBtn'), dialog: $('newSessionDialog'), cancelNewSession: $('cancelNewSessionBtn'), confirmNewSession: $('confirmNewSessionBtn'),
   privacy: $('privacyBtn'), privacyDialog: $('privacyDialog'), closePrivacy: $('closePrivacyBtn'),
   proofBuddy: $('proofBuddy'), proofBuddyImage: $('proofBuddyImage'), proofBuddyCaption: $('proofBuddyCaption'),
@@ -67,7 +71,7 @@ function initialState() {
     cameraStatus: 'idle', cameraError: null, shooting: false,
     photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null,
     frameId: null, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
-    revealReady: false, busy: false, scroll: { frameX: 0, decorate: 0 },
+    revealReady: false, busy: false, scroll: { frameX: 0, decorateX: 0 },
   };
 }
 
@@ -115,7 +119,7 @@ function meaningfulSession() {
 
 function saveScrollState() {
   if (state.step === 'frame') state.scroll.frameX = refs.templateList.scrollLeft;
-  if (state.step === 'decorate') state.scroll.decorate = refs.stickerTray.scrollTop;
+  if (state.step === 'decorate') state.scroll.decorateX = refs.stickerTray.scrollLeft;
 }
 
 function isStackedChapterViewport() {
@@ -127,7 +131,7 @@ async function restoreChapterView({ focusTitle = true } = {}) {
   await new Promise((resolve) => requestAnimationFrame(resolve));
   refs.controlScroll.scrollTop = 0;
   if (state.step === 'frame') refs.templateList.scrollLeft = state.scroll.frameX || 0;
-  if (state.step === 'decorate') refs.stickerTray.scrollTop = state.scroll.decorate || 0;
+  if (state.step === 'decorate') refs.stickerTray.scrollLeft = state.scroll.decorateX || 0;
   if (isStackedChapterViewport()) window.scrollTo({ top: 0, behavior: 'auto' });
   if (!focusTitle) return;
   const activePanel = refs.panels.find((panel) => panel.dataset.panel === state.step);
@@ -797,9 +801,16 @@ function snapshotStickers() {
 
 function renderEditorStickers() {
   if (!phCanvas) return;
+  if (state.selectedSticker && !state.stickers.some((item) => item.uid === state.selectedSticker)) {
+    state.selectedSticker = null;
+  }
   renderStickerLayer(phCanvas, state.stickers, {
     selectedId: state.selectedSticker,
-    onSelect: (uid) => { state.selectedSticker = uid; setStickerSelection(phCanvas, uid); },
+    onSelect: (uid) => {
+      state.selectedSticker = uid;
+      setStickerSelection(phCanvas, uid);
+      renderStickerBench();
+    },
     onInteractionStart: snapshotStickers,
     onChange: () => {},
     onDelete: (uid) => {
@@ -812,6 +823,25 @@ function renderEditorStickers() {
   });
   updateStickerActions();
   syncPoca();
+}
+
+function renderStickerBench() {
+  const view = getStickerBenchView(state.stickers, state.selectedSticker);
+  refs.stickerBench.dataset.state = view.state;
+  refs.stickerInspector.dataset.state = view.state;
+  if (refs.stickerBenchStatus.textContent !== view.status) {
+    refs.stickerBenchStatus.textContent = view.status;
+  }
+
+  refs.stickerInspectorImage.hidden = !view.active;
+  if (view.active) refs.stickerInspectorImage.src = view.active.src;
+  refs.stickerInspectorName.textContent = view.active?.instanceLabel
+    || (view.count
+      ? `${view.count} sticker${view.count === 1 ? '' : 's'} on this proof`
+      : 'Pick a sticker from the rail');
+  refs.stickerInspectorHint.textContent = view.active
+    ? 'Drag to move · handles resize and rotate · Arrow keys nudge · Delete removes'
+    : 'Each sticker is added locally and stays editable on the proof.';
 }
 
 function renderStickerTray() {
@@ -849,6 +879,7 @@ function renderStickerTray() {
 function updateStickerActions() {
   refs.undoSticker.disabled = !state.stickerHistory.length;
   refs.resetSticker.disabled = !state.stickers.length;
+  renderStickerBench();
 }
 
 refs.undoSticker.addEventListener('click', () => {

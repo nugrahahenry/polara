@@ -177,6 +177,41 @@ async function auditReviewInspection(page) {
   }));
 }
 
+async function auditDecorateWorkshop(page) {
+  return page.evaluate(() => {
+    const overlap = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+    const bench = document.querySelector('#stickerBench');
+    const rail = document.querySelector('#stickerTray');
+    const inspector = document.querySelector('#stickerInspector');
+    const proof = document.querySelector('#canvasScale');
+    const undo = document.querySelector('#undoStickerBtn');
+    const clear = document.querySelector('#resetStickerBtn');
+    const railStyle = rail ? getComputedStyle(rail) : null;
+    const inspectorBounds = inspector?.getBoundingClientRect();
+    const proofBounds = proof?.getBoundingClientRect();
+    const railBounds = rail?.getBoundingClientRect();
+    return {
+      exists: Boolean(bench && rail && inspector),
+      state: bench?.dataset.state || '',
+      status: document.querySelector('#stickerBenchStatus')?.textContent.trim() || '',
+      inspectorName: document.querySelector('#stickerInspectorName')?.textContent.trim() || '',
+      inspectorHint: document.querySelector('#stickerInspectorHint')?.textContent.trim() || '',
+      overflowX: railStyle?.overflowX || '',
+      overflowY: railStyle?.overflowY || '',
+      clientWidth: rail?.clientWidth || 0,
+      scrollWidth: rail?.scrollWidth || 0,
+      visibleCards: rail?.querySelector('.sticker-btn')
+        ? rail.clientWidth / rail.querySelector('.sticker-btn').getBoundingClientRect().width
+        : 0,
+      undoDisabled: undo?.disabled ?? false,
+      clearDisabled: clear?.disabled ?? false,
+      undoOpacity: undo ? Number(getComputedStyle(undo).opacity) : 1,
+      inspectorBeforeRail: Boolean(inspectorBounds && railBounds && inspectorBounds.top < railBounds.top),
+      inspectorOverlapsProof: Boolean(inspectorBounds && proofBounds && overlap(inspectorBounds, proofBounds)),
+    };
+  });
+}
+
 async function auditStageCompanion(page, targetSelector) {
   return page.evaluate((selector) => {
     const overlap = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
@@ -393,12 +428,80 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   await waitForPanel(page, 'decorate');
   chapterContinuity.decorateReturn = await auditChapterContinuity(page, 'decorate', viewport);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-decorate-guide\.png$/);
+  const emptyDecorateWorkshop = await auditDecorateWorkshop(page);
+  assert.equal(emptyDecorateWorkshop.exists, true, `${name}: Proof Sticker Bench must exist`);
+  assert.equal(emptyDecorateWorkshop.state, 'empty');
+  assert.equal(emptyDecorateWorkshop.status, 'Sticker bench · No stickers yet');
+  assert.equal(emptyDecorateWorkshop.overflowX, 'auto');
+  assert.equal(emptyDecorateWorkshop.overflowY, 'hidden');
+  assert.ok(emptyDecorateWorkshop.scrollWidth > emptyDecorateWorkshop.clientWidth, `${name}: sticker rail must overflow horizontally`);
+  assert.ok(emptyDecorateWorkshop.visibleCards >= 2.5 && emptyDecorateWorkshop.visibleCards <= 4.5, `${name}: sticker rail should reveal the next choices`);
+  assert.equal(emptyDecorateWorkshop.undoDisabled, true);
+  assert.equal(emptyDecorateWorkshop.clearDisabled, true);
+  assert.ok(emptyDecorateWorkshop.undoOpacity <= .55, `${name}: unavailable sticker history actions must read as disabled`);
+  assert.equal(emptyDecorateWorkshop.inspectorOverlapsProof, false);
   await shot('05', 'decorate');
   await page.locator('#stickerTray .sticker-btn').first().focus();
   await page.keyboard.press('End');
   assert.equal(await page.locator('#stickerTray .sticker-btn').last().evaluate((button) => document.activeElement === button), true);
+  await page.keyboard.press('Home');
+  assert.equal(await page.locator('#stickerTray .sticker-btn').first().evaluate((button) => document.activeElement === button), true);
+
+  const initialStickerRailX = await page.locator('#stickerTray').evaluate((rail) => {
+    rail.scrollLeft = rail.scrollWidth;
+    return rail.scrollLeft;
+  });
+  assert.ok(initialStickerRailX > 0, `${name}: sticker rail must accept horizontal scrolling`);
+
   await page.locator('#stickerTray .sticker-btn').first().click();
+  await page.locator('#stickerTray .sticker-btn').first().click();
+  assert.equal(await page.locator('.placed-sticker').count(), 2);
+  let activeDecorateWorkshop = await auditDecorateWorkshop(page);
+  assert.equal(activeDecorateWorkshop.state, 'editing');
+  assert.equal(activeDecorateWorkshop.status, 'Sticker bench · Editing POSE!');
+  assert.equal(activeDecorateWorkshop.inspectorName, 'POSE! · 2 of 2');
+  assert.match(activeDecorateWorkshop.inspectorHint, /Arrow keys nudge/);
+  assert.equal(activeDecorateWorkshop.inspectorBeforeRail, viewport.width <= 540);
+  assert.equal(activeDecorateWorkshop.inspectorOverlapsProof, false);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-peeking\.png$/);
+
+  await page.locator('.placed-sticker').first().evaluate((element) => element.focus({ preventScroll: true }));
+  activeDecorateWorkshop = await auditDecorateWorkshop(page);
+  assert.equal(activeDecorateWorkshop.inspectorName, 'POSE! · 1 of 2');
+  if (screenshots && writeScreenshots) {
+    await page.screenshot({ path: path.join(screenshotRoot, `${name}-05b-decorate-active.png`) });
+  }
+
+  await page.locator('#undoStickerBtn').click();
+  assert.equal(await page.locator('.placed-sticker').count(), 1);
+  assert.equal((await auditDecorateWorkshop(page)).status, 'Sticker bench · 1 sticker placed');
+  await page.locator('#resetStickerBtn').click();
+  assert.equal(await page.locator('.placed-sticker').count(), 0);
+  assert.equal((await auditDecorateWorkshop(page)).state, 'empty');
+  assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-decorate-guide\.png$/);
+  await page.locator('#undoStickerBtn').click();
+  assert.equal(await page.locator('.placed-sticker').count(), 1);
+
+  const persistedStickerRailX = await page.locator('#stickerTray').evaluate((rail) => {
+    rail.scrollLeft = rail.scrollWidth;
+    return rail.scrollLeft;
+  });
+  await page.locator('#backBtn').evaluate((button) => button.click());
+  await waitForPanel(page, 'frame');
+  await page.locator('#primaryBtn').evaluate((button) => button.click());
+  await waitForPanel(page, 'decorate');
+  await page.waitForFunction((expected) => {
+    const rail = document.querySelector('#stickerTray');
+    return rail && Math.abs(rail.scrollLeft - expected) <= 2;
+  }, persistedStickerRailX);
+  assert.equal(await page.locator('.placed-sticker').count(), 1);
+
+  const decorateWorkshop = {
+    empty: emptyDecorateWorkshop,
+    active: activeDecorateWorkshop,
+    restoredScrollLeft: persistedStickerRailX,
+    restoredStickerCount: 1,
+  };
 
   await offsetChapterView(page, viewport);
   await page.locator('#primaryBtn').evaluate((button) => button.click());
@@ -423,7 +526,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   let exported = null;
   if (exportStrip) exported = await downloadPng(page, 'polara-strip-proof-table.png');
   report.viewports[name] = {
-    viewport, stages: stageAudit, frameRail, chapterContinuity, revealTheatre,
+    viewport, stages: stageAudit, frameRail, decorateWorkshop, chapterContinuity, revealTheatre,
     captureReview: {
       camera: initialCameraDocket,
       review: reviewInspection,
@@ -525,7 +628,7 @@ try {
   assert.deepEqual(report.runtimeErrors, []);
   report.accessibility = {
     privacyDialog: 'native modal, Escape closes, trigger focus restored',
-    keyboardTrays: 'Arrow selection passed for Review; Home/End passed for frame and sticker trays; horizontal frame rail state restored after Back',
+    keyboardTrays: 'Arrow selection passed for Review; Home/End passed for frame and sticker trays; horizontal frame and sticker rail positions restored after Back',
     touchTargets: 'all visible buttons and links at least 44×44 in audited stages',
     reducedMotion: 'all flows passed with prefers-reduced-motion: reduce',
     progress: 'six English labels, aria-current, status labels, and six Proof Stamps at ready',

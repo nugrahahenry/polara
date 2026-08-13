@@ -423,9 +423,111 @@ body {
 .slot-tab.active { background: var(--proof-blue); }
 .caption-availability-note { border: 0; background: #fff7dc; }
 .tray-head > img { display: none; }
-#stickerTray { grid-template-columns: repeat(4,minmax(60px,1fr)); }
-.sticker-btn { min-height: 88px; border-radius: 12px; transition: transform 160ms ease, border-color 160ms ease, background 160ms ease; }
-.sticker-btn:hover { transform: translateY(-2px); }
+.decorate-panel .panel-copy { margin-bottom: 18px; }
+.proof-note {
+  padding: 13px 0 16px;
+  border-block: 1px solid var(--proof-hairline);
+}
+.proof-note h3,
+.sticker-bench h3 { margin: 0; color: var(--proof-ink); font-size: .96rem; }
+.proof-note .field-label { margin-top: 10px; }
+.proof-note .caption-availability-note { margin-bottom: 0; }
+.sticker-bench { margin-top: 18px; }
+.sticker-bench-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+#stickerBenchStatus {
+  margin: 4px 0 0;
+  color: var(--proof-muted);
+  font-size: .7rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.sticker-bench .editor-actions { flex: 0 0 auto; margin: 0; }
+.sticker-bench .mini-btn { min-height: 44px; padding-inline: 11px; }
+.sticker-bench .mini-btn:disabled {
+  opacity: .44;
+  border-color: var(--proof-hairline);
+  background: #f1eae4;
+  box-shadow: none;
+  transform: none;
+}
+.sticker-rail-label {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 14px 0 7px;
+  color: var(--proof-ink);
+  font-size: .72rem;
+}
+.sticker-rail-label span { font-family: var(--font-display); }
+.sticker-rail-label small { color: var(--proof-muted); font-size: .64rem; font-weight: 700; }
+#stickerTray {
+  grid-template-columns: none;
+  grid-auto-flow: column;
+  grid-auto-columns: clamp(92px, 29%, 112px);
+  gap: 10px;
+  max-height: none;
+  overflow-x: auto;
+  overflow-y: hidden;
+  padding: 3px 22px 12px 3px;
+  scroll-padding-inline: 3px 22px;
+  scroll-snap-type: x proximity;
+  overscroll-behavior-inline: contain;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(75,46,31,.28) transparent;
+}
+.sticker-btn {
+  min-width: 0;
+  min-height: 106px;
+  padding: 8px 7px 7px;
+  border-radius: 12px;
+  background: #fffaf5;
+  scroll-snap-align: start;
+  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
+}
+.sticker-btn img { height: 68px; }
+.sticker-btn:hover {
+  border-color: rgba(75,46,31,.38);
+  background: var(--proof-paper);
+  box-shadow: 0 8px 18px rgba(75,46,31,.09);
+  transform: translateY(-2px);
+}
+.sticker-inspector {
+  min-height: 86px;
+  display: grid;
+  grid-template-columns: 66px minmax(0,1fr);
+  gap: 12px;
+  align-items: center;
+  margin-top: 12px;
+  padding: 11px 12px;
+  border: 1px solid var(--proof-hairline);
+  border-radius: 14px;
+  background: #f7f0e9;
+  transition: border-color 180ms ease, background-color 180ms ease, box-shadow 180ms ease;
+}
+.sticker-inspector[data-state="empty"],
+.sticker-inspector[data-state="placed"] { grid-template-columns: minmax(0,1fr); }
+.sticker-inspector[data-state="editing"] {
+  border-color: rgba(75,46,31,.32);
+  background: #fff8fb;
+  box-shadow: 0 9px 22px rgba(75,46,31,.08);
+}
+.sticker-inspector img { width: 66px; height: 62px; display: block; object-fit: contain; }
+.sticker-inspector-copy { min-width: 0; }
+.sticker-inspector strong {
+  display: block;
+  overflow: hidden;
+  color: var(--proof-ink);
+  font: 700 .82rem/1.25 var(--font-display);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.sticker-inspector p { margin: 5px 0 0; color: var(--proof-muted); font-size: .68rem; font-weight: 600; line-height: 1.4; }
 .sticker-btn:focus-visible, .tpl-btn:focus-visible { position: relative; z-index: 3; }
 .reveal-panel {
   min-height: 100%;
@@ -511,6 +613,7 @@ body {
   .proof-buddy[data-state="camera"] { width: clamp(60px, 12vw, 84px); left: 8px; }
   .review-photo-wrap { min-height: 0; }
   #templateList { grid-auto-columns: clamp(164px, 40%, 260px); }
+  #stickerTray { grid-auto-columns: clamp(100px, 28%, 188px); }
 }
 
 @media (max-width: 540px) {
@@ -554,8 +657,17 @@ body {
   #templateList { grid-auto-columns: clamp(132px, 46%, 154px); }
   .tpl-thumb { height: 104px; }
   #templateList.mode-strip .tpl-thumb { height: 134px; }
-  #stickerTray { grid-template-columns: repeat(4,minmax(52px,1fr)); }
-  .sticker-btn { min-width: 52px; }
+  #stickerTray { grid-auto-columns: clamp(92px, 31%, 106px); }
+  .sticker-bench-head { align-items: center; }
+  .sticker-bench .editor-actions { gap: 6px; }
+  .sticker-bench .mini-btn { padding-inline: 9px; font-size: .68rem; }
+  .sticker-inspector { min-height: 80px; grid-template-columns: 58px minmax(0,1fr); }
+  .sticker-inspector img { width: 58px; height: 56px; }
+  .sticker-bench[data-state="editing"] { display: flex; flex-direction: column; }
+  .sticker-bench[data-state="editing"] .sticker-bench-head { order: 0; }
+  .sticker-bench[data-state="editing"] .sticker-inspector { order: 1; }
+  .sticker-bench[data-state="editing"] .sticker-rail-label { order: 2; }
+  .sticker-bench[data-state="editing"] #stickerTray { order: 3; }
   .privacy-dialog {
     width: 100%; max-width: none; margin: auto 0 0; border-radius: 20px 20px 0 0;
     padding-bottom: env(safe-area-inset-bottom);
@@ -593,7 +705,12 @@ body {
   .proof-buddy { width: 68px; }
   #templateList { max-height: none; grid-auto-columns: clamp(132px, 45%, 150px); }
   #templateList.mode-strip .tpl-thumb { height: 118px; }
-  #stickerTray { max-height: 150px; }
+  #stickerTray { grid-auto-columns: clamp(88px, 34%, 104px); max-height: none; }
+  .proof-note { padding-block: 9px 11px; }
+  .sticker-bench { margin-top: 12px; }
+  .sticker-rail-label { margin-top: 9px; }
+  .sticker-inspector { min-height: 66px; margin-top: 8px; padding-block: 8px; }
+  .sticker-inspector p { display: none; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -603,4 +720,5 @@ body {
   .progress-wrap.rail-approved .progress-list::after { animation: none; transform: scaleX(1); }
   .proof-buddy { transition: none; }
   .reveal-panel img { transition: none; }
+  .sticker-btn, .sticker-inspector { transition: none; }
 }

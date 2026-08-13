@@ -16,8 +16,13 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.17.0 Capture Bay and Contact Sheet Inspection release', () => {
-  assert.equal(packageJson.version, '0.17.0');
+test('release metadata records the v0.18.0 Proof Sticker Bench release', () => {
+  assert.equal(packageJson.version, '0.18.0');
+  assert.match(changelog, /## \[0\.18\.0\] - 2026-08-14/);
+  assert.match(changelog, /Proof Sticker Bench/);
+  assert.match(changelog, /sticker rail/i);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=19/);
+  assert.match(indexHtml, /src\/app\.js\?v=18/);
   assert.match(changelog, /## \[0\.17\.0\] - 2026-08-14/);
   assert.match(changelog, /Capture Bay/);
   assert.match(changelog, /Contact Sheet Inspection/);
@@ -37,4 +42,12 @@ test('review proof image has a valid initial source before JavaScript hydration'
     indexHtml,
     /<img id="reviewPhoto" src="assets\/brand\/logo-polara\.png" alt="Active proof under review" \/>/,
   );
+});
+
+test('shell loads the verified Inter endpoint without the broken combined variable-font response', () => {
+  assert.match(
+    indexHtml,
+    /https:\/\/fonts\.googleapis\.com\/css\?family=Inter:500,600,700,800&amp;display=swap/,
+  );
+  assert.doesNotMatch(indexHtml, /family=Inter:wght@500;600;700;800&amp;family=Nunito/);
 });
