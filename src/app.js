@@ -178,50 +178,57 @@ function updateActions() {
 }
 
 async function goToStep(nextStep, message) {
-  if (!STEPS.some((step) => step.id === nextStep)) return;
-  saveScrollState();
-  if (state.step === 'camera' && nextStep !== 'camera') {
-    cameraRequestId += 1;
-    cancelCountdown();
-    state.shooting = false;
-    stopCamera();
-  }
-  if (state.step === 'reveal' && nextStep !== 'reveal') {
-    revealRequestId += 1;
-    invalidatePreparedExport();
-  }
-  state.step = nextStep;
-  refs.panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== nextStep; });
-  refs.startView.hidden = nextStep !== 'start';
-  refs.cameraView.hidden = nextStep !== 'camera';
-  refs.reviewView.hidden = nextStep !== 'review';
-  refs.canvasView.hidden = !['frame', 'decorate', 'reveal'].includes(nextStep);
-  refs.revealBuddy.hidden = true;
-  refs.canvasView.classList.remove('revealing');
-
-  renderProgress();
-  if (nextStep === 'start') syncStartControls();
-  if (nextStep === 'camera') renderCameraPanel();
-  if (nextStep === 'review') renderReview();
-  if (nextStep === 'frame') {
-    ensureCurrentFrame();
-    await renderTemplateList();
-    renderPhotoTabs();
-    syncPhotoControls();
-    await renderCanvas();
-  }
-  if (nextStep === 'decorate') {
-    refs.caption.value = state.caption;
-    renderStickerTray();
-    await renderCanvas();
-  }
-  if (nextStep === 'reveal') await startReveal();
-
-  if (message) status(message);
-  syncPoca();
+  if (state.busy || !STEPS.some((step) => step.id === nextStep)) return;
+  state.busy = true;
   updateActions();
-  if (nextStep === 'start') window.scrollTo({ top: 0, behavior: 'auto' });
-  restoreScrollState();
+  try {
+    saveScrollState();
+    if (state.step === 'camera' && nextStep !== 'camera') {
+      cameraRequestId += 1;
+      cancelCountdown();
+      state.shooting = false;
+      stopCamera();
+    }
+    if (state.step === 'reveal' && nextStep !== 'reveal') {
+      revealRequestId += 1;
+      invalidatePreparedExport();
+    }
+    state.step = nextStep;
+    refs.panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== nextStep; });
+    refs.startView.hidden = nextStep !== 'start';
+    refs.cameraView.hidden = nextStep !== 'camera';
+    refs.reviewView.hidden = nextStep !== 'review';
+    refs.canvasView.hidden = !['frame', 'decorate', 'reveal'].includes(nextStep);
+    refs.revealBuddy.hidden = true;
+    refs.canvasView.classList.remove('revealing');
+    updateActions();
+
+    renderProgress();
+    if (nextStep === 'start') syncStartControls();
+    if (nextStep === 'camera') renderCameraPanel();
+    if (nextStep === 'review') renderReview();
+    if (nextStep === 'frame') {
+      ensureCurrentFrame();
+      await renderTemplateList();
+      renderPhotoTabs();
+      syncPhotoControls();
+      await renderCanvas();
+    }
+    if (nextStep === 'decorate') {
+      refs.caption.value = state.caption;
+      renderStickerTray();
+      await renderCanvas();
+    }
+    if (nextStep === 'reveal') await startReveal();
+
+    if (message) status(message);
+    syncPoca();
+    if (nextStep === 'start') window.scrollTo({ top: 0, behavior: 'auto' });
+    restoreScrollState();
+  } finally {
+    state.busy = false;
+    updateActions();
+  }
 }
 
 function syncStartControls() {

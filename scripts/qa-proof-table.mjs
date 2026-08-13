@@ -244,12 +244,43 @@ async function runSingleExport() {
   return exported;
 }
 
+async function runRapidTransitionRegression() {
+  const context = await browser.newContext({
+    ...playwright.devices['iPhone 13'],
+    permissions: ['camera'],
+    reducedMotion: 'reduce',
+  });
+  const page = await startPage(context);
+  await page.locator('#primaryBtn').tap();
+  await captureProof(page);
+  if (await page.locator('[data-panel="camera"]').isVisible()) await captureProof(page);
+  if (await page.locator('[data-panel="camera"]').isVisible()) await captureProof(page);
+  await waitForPanel(page, 'review');
+
+  await page.locator('#primaryBtn').evaluate((button) => {
+    button.click();
+    button.click();
+  });
+  await page.waitForFunction(() => document.querySelector('.ph-canvas')?.dataset.displayScale, null, { timeout: 30_000 });
+
+  assert.equal(await page.locator('[data-panel="frame"]').isVisible(), true, 'rapid tap must not skip Frames');
+  assert.equal(await page.locator('[data-panel="decorate"]').isVisible(), false, 'Decorate must wait for an intentional tap after Frames is ready');
+  assert.equal(await page.locator('#primaryBtn').isEnabled(), true, 'primary action must re-enable after Frames finishes rendering');
+
+  await page.locator('#primaryBtn').tap();
+  await waitForPanel(page, 'decorate');
+  assert.ok(await page.locator('.ph-canvas').getAttribute('data-display-scale'), 'Decorate canvas must retain fitted preview geometry');
+  await context.close();
+  report.rapidTransition = { status: 'rapid double tap stayed on Frames until render completed' };
+}
+
 try {
   report.exports.strip = await runFlow({ name: '390x844', viewport: { width: 390, height: 844 }, screenshots: true, retake: true, exportStrip: true });
   await runFlow({ name: '1440x900', viewport: { width: 1440, height: 900 }, screenshots: true });
   await runFlow({ name: '768x1024', viewport: { width: 768, height: 1024 } });
   await runFlow({ name: '900x510', viewport: { width: 900, height: 510 } });
   report.exports.single = await runSingleExport();
+  await runRapidTransitionRegression();
 
   const deniedContext = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });
   await deniedContext.addInitScript(() => {

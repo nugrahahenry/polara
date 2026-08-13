@@ -5,6 +5,19 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.13.2] - 2026-08-13
+
+### Fixed
+- Cegah rapid double-tap melompati tahap Frames atau menjalankan dua render kanvas bersamaan dengan mengunci seluruh action selama transisi async berlangsung.
+- Pastikan action tahap baru baru aktif kembali setelah frame, sticker tray, dan geometri preview selesai dirender.
+
+### Validation
+- Regression baru direkam RED pada pesan `rapid tap must not skip Frames`, lalu GREEN setelah transition lock diterapkan.
+- QA Proof Table tetap lulus pada 24 kombinasi tahap/viewport tanpa overflow, target pendek, atau runtime error; export tetap tepat Single 1080×1350 dan Strip 720×1800.
+
+### Validation pending
+- Emulasi mobile membuktikan descriptor touch dan drag sticker pertama saat render-ready, tetapi matriks native Share/cancel dan sticker bawah belum cukup stabil sebagai bukti acceptance. Dogfooding Android Chrome dan iPhone Safari fisik tetap wajib.
+
 ## [0.13.1] - 2026-08-13
 
 ### Fixed
