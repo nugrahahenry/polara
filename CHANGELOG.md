@@ -5,6 +5,26 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.14.1] - 2026-08-13
+
+### Fixed
+- Selaraskan metadata versi paket dengan lini rilis v0.14 setelah Maker Footer terintegrasi.
+
+### Validation
+- Tambahkan regression test agar versi paket dan riwayat changelog tidak tertinggal dari rilis aktif.
+
+## [0.14.0] - 2026-08-13
+
+### Added
+- Tambahkan Maker Footer premium berisi identitas Henry Nugraha, jaminan privasi lokal, serta tautan WhatsApp, Instagram `@hnry.dev`, dan GitHub.
+
+### Fixed
+- Pertahankan footer tetap dapat dijangkau pada short landscape tanpa mengganggu workspace dan action dock.
+
+### Validation
+- Regression footer memverifikasi identitas, keamanan tautan eksternal, target sentuh 44×44 px, dan layout short landscape.
+- QA Proof Table tetap lulus pada seluruh kombinasi tahap dan viewport; geometri export Single 1080×1350 serta Strip 720×1800 tidak berubah.
+
 ## [0.13.2] - 2026-08-13
 
 ### Fixed
