@@ -55,7 +55,7 @@ function initialState() {
     cameraStatus: 'idle', cameraError: null, shooting: false,
     photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null,
     frameId: null, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
-    revealReady: false, busy: false, scroll: { frame: 0, decorate: 0, panels: {} },
+    revealReady: false, busy: false, scroll: { frameX: 0, decorate: 0, panels: {} },
   };
 }
 
@@ -99,14 +99,14 @@ function meaningfulSession() {
 
 function saveScrollState() {
   state.scroll.panels[state.step] = refs.controlScroll.scrollTop;
-  if (state.step === 'frame') state.scroll.frame = refs.templateList.scrollTop;
+  if (state.step === 'frame') state.scroll.frameX = refs.templateList.scrollLeft;
   if (state.step === 'decorate') state.scroll.decorate = refs.stickerTray.scrollTop;
 }
 
 function restoreScrollState() {
   requestAnimationFrame(() => {
     refs.controlScroll.scrollTop = state.scroll.panels[state.step] || 0;
-    if (state.step === 'frame') refs.templateList.scrollTop = state.scroll.frame || 0;
+    if (state.step === 'frame') refs.templateList.scrollLeft = state.scroll.frameX || 0;
     if (state.step === 'decorate') refs.stickerTray.scrollTop = state.scroll.decorate || 0;
   });
 }
@@ -620,6 +620,7 @@ async function renderCanvas() {
   ensureCurrentFrame();
   const template = getTemplate(state.frameId);
   if (!template) return;
+  refs.canvasView.dataset.proofMode = template.mode;
   syncCaptionAvailability(template);
   const token = ++renderToken;
   try {

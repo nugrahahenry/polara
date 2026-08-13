@@ -12,9 +12,10 @@ const changelog = await fs.readFile(
 );
 
 
-test('release metadata records the v0.14 line and current patch', () => {
-  assert.equal(packageJson.version, '0.14.1');
+test('release metadata records the v0.15 proof inspection deck and prior line', () => {
+  assert.equal(packageJson.version, '0.15.0');
+  assert.match(changelog, /## \[0\.15\.0\] - 2026-08-13/);
+  assert.match(changelog, /Proof Inspection Deck/);
   assert.match(changelog, /## \[0\.14\.1\] - 2026-08-13/);
   assert.match(changelog, /## \[0\.14\.0\] - 2026-08-13/);
-  assert.match(changelog, /Maker Footer/);
 });

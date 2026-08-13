@@ -5,6 +5,22 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.15.0] - 2026-08-13
+
+### Added
+- Tambahkan Proof Inspection Deck UI-only di belakang preview: material mat hangat, registration marks, dan komposisi yang mengikuti mode Single/Strip tanpa masuk export canvas.
+- Tambahkan regression test untuk kontrak inspection deck, horizontal frame rail, mode presentasional stage, dan persistensi posisi rail.
+
+### Changed
+- Ubah frame picker 2x2 dengan nested vertical scroll menjadi rail horizontal responsif yang memperlihatkan sekitar 2-2,5 kartu, mendukung touch, scroll snap ringan, serta keyboard Home/End.
+- Perlebar panel kontrol desktop secara terukur dan pertahankan satu vertical scroll container pada mobile, tablet, dan short landscape.
+- Ambil screenshot QA Frames sebelum simulasi tombol End agar bukti visual selalu merepresentasikan posisi rail normal.
+
+### Validation
+- Flow produksi lulus pada 390x844, 768x1024, 1440x900, dan 900x510 tanpa overflow horizontal, target pendek, atau runtime error.
+- Posisi rail dan frame aktif bertahan setelah Frames -> Decorate -> Frames; camera denied recovery, fake-device capture, retake per-slot, dan rapid transition regression tetap lulus.
+- Export tetap tepat Single 1080x1350 dan Strip 720x1800.
+
 ## [0.14.1] - 2026-08-13
 
 ### Fixed

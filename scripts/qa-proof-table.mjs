@@ -191,15 +191,53 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   await waitForPanel(page, 'frame');
   await page.locator('#templateList .tpl-btn').first().waitFor({ state: 'visible' });
   assert.equal(await page.locator('#photoSlotTabs .slot-tab').count(), 3);
-  await page.locator('#photoSlotTabs .slot-tab').nth(1).click();
-  assert.equal(await page.locator('#photoSlotTabs .slot-tab').nth(1).getAttribute('aria-selected'), 'true');
   assert.match(await page.locator('#templateList .tpl-thumb-image').first().getAttribute('src'), /frames\/composites\//);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-holding-photo-frame\.png$/);
+  assert.equal(await page.locator('#canvasView').getAttribute('data-proof-mode'), 'strip');
+  const frameRail = await page.locator('#templateList').evaluate((rail) => {
+    const style = getComputedStyle(rail);
+    return {
+      clientWidth: rail.clientWidth,
+      scrollWidth: rail.scrollWidth,
+      overflowX: style.overflowX,
+      overflowY: style.overflowY,
+      visibleCards: rail.clientWidth / rail.querySelector('.tpl-btn').getBoundingClientRect().width,
+    };
+  });
+  assert.ok(frameRail.scrollWidth > frameRail.clientWidth, `${name}: frame rail must overflow horizontally`);
+  assert.equal(frameRail.overflowX, 'auto');
+  assert.equal(frameRail.overflowY, 'hidden');
+  assert.ok(frameRail.visibleCards >= 2 && frameRail.visibleCards < 3, `${name}: frame rail should reveal about 2-2.5 cards`);
+  await shot('04', 'frames');
+
+  await page.locator('#photoSlotTabs .slot-tab').nth(1).click();
+  assert.equal(await page.locator('#photoSlotTabs .slot-tab').nth(1).getAttribute('aria-selected'), 'true');
+
   await page.locator('#templateList .tpl-btn').first().focus();
   await page.keyboard.press('End');
   assert.equal(await page.locator('#templateList .tpl-btn').last().evaluate((button) => document.activeElement === button), true);
-  await shot('04', 'frames');
+  await page.keyboard.press('Home');
+  assert.equal(await page.locator('#templateList .tpl-btn').first().evaluate((button) => document.activeElement === button), true);
 
+  const selectedFrameId = await page.locator('#templateList .tpl-btn[aria-selected="true"]').getAttribute('data-template-id');
+  const persistedRailX = await page.locator('#templateList').evaluate((rail) => {
+    rail.scrollLeft = rail.scrollWidth;
+    return rail.scrollLeft;
+  });
+  assert.ok(persistedRailX > 0, `${name}: frame rail must accept horizontal scrolling`);
+
+  await page.locator('#primaryBtn').click();
+  await waitForPanel(page, 'decorate');
+  await page.locator('#backBtn').click();
+  await waitForPanel(page, 'frame');
+  await page.waitForFunction((expected) => {
+    const rail = document.querySelector('#templateList');
+    return rail && Math.abs(rail.scrollLeft - expected) <= 2;
+  }, persistedRailX);
+  assert.equal(
+    await page.locator('#templateList .tpl-btn[aria-selected="true"]').getAttribute('data-template-id'),
+    selectedFrameId,
+  );
   await page.locator('#primaryBtn').click();
   await waitForPanel(page, 'decorate');
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-decorate-guide\.png$/);
@@ -220,7 +258,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
 
   let exported = null;
   if (exportStrip) exported = await downloadPng(page, 'polara-strip-proof-table.png');
-  report.viewports[name] = { viewport, stages: stageAudit, retakePreservedOtherSlots: retake, labels };
+  report.viewports[name] = { viewport, stages: stageAudit, frameRail, retakePreservedOtherSlots: retake, labels };
   await context.close();
   return exported;
 }
@@ -311,7 +349,7 @@ try {
   assert.deepEqual(report.runtimeErrors, []);
   report.accessibility = {
     privacyDialog: 'native modal, Escape closes, trigger focus restored',
-    keyboardTrays: 'Home/End passed for frame and sticker trays',
+    keyboardTrays: 'Home/End passed for frame and sticker trays; horizontal frame rail state restored after Back',
     touchTargets: 'all visible buttons and links at least 44×44 in audited stages',
     reducedMotion: 'all flows passed with prefers-reduced-motion: reduce',
     progress: 'six English labels, aria-current, status labels, and six Proof Stamps at ready',
