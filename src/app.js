@@ -25,7 +25,7 @@ const $ = (id) => document.getElementById(id);
 const refs = {
   workspace: $('appWorkspace'), progress: $('progressWrap'), progressList: $('progressList'),
   startView: $('startView'), cameraView: $('cameraView'), reviewView: $('reviewView'), canvasView: $('canvasView'),
-  controlScroll: $('controlScroll'), panels: [...document.querySelectorAll('[data-panel]')],
+  controlSheet: $('controlSheet'), controlScroll: $('controlScroll'), panels: [...document.querySelectorAll('[data-panel]')],
   primary: $('primaryBtn'), secondary: $('secondaryBtn'), tertiary: $('tertiaryBtn'), back: $('backBtn'),
   status: $('status'), countdownLive: $('countdownLive'),
   modeChoose: $('modeChoose'), timerChoose: $('timerChoose'),
@@ -55,7 +55,7 @@ function initialState() {
     cameraStatus: 'idle', cameraError: null, shooting: false,
     photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null,
     frameId: null, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
-    revealReady: false, busy: false, scroll: { frameX: 0, decorate: 0, panels: {} },
+    revealReady: false, busy: false, scroll: { frameX: 0, decorate: 0 },
   };
 }
 
@@ -83,9 +83,13 @@ function syncPoca({ processing = false } = {}) {
   refs.proofBuddyImage.alt = asset.alt;
   refs.proofBuddyCaption.textContent = asset.alt;
   if (state.step === 'reveal') {
-    refs.revealPanelPoca.src = asset.src;
-    refs.revealPanelPoca.alt = asset.alt;
+    const loadingAsset = getPocaForState({ step: 'reveal', processing: true, revealReady: false });
+    refs.controlSheet.dataset.revealState = state.revealReady ? 'ready' : 'processing';
+    refs.revealPanelPoca.src = loadingAsset.src;
+    refs.revealPanelPoca.alt = loadingAsset.alt;
     refs.revealTitle.textContent = state.revealReady ? 'Proof approved.' : 'Developing your print…';
+  } else {
+    delete refs.controlSheet.dataset.revealState;
   }
 }
 
@@ -98,17 +102,24 @@ function meaningfulSession() {
 }
 
 function saveScrollState() {
-  state.scroll.panels[state.step] = refs.controlScroll.scrollTop;
   if (state.step === 'frame') state.scroll.frameX = refs.templateList.scrollLeft;
   if (state.step === 'decorate') state.scroll.decorate = refs.stickerTray.scrollTop;
 }
 
-function restoreScrollState() {
-  requestAnimationFrame(() => {
-    refs.controlScroll.scrollTop = state.scroll.panels[state.step] || 0;
-    if (state.step === 'frame') refs.templateList.scrollLeft = state.scroll.frameX || 0;
-    if (state.step === 'decorate') refs.stickerTray.scrollTop = state.scroll.decorate || 0;
-  });
+function isStackedChapterViewport() {
+  const shortLandscape = window.matchMedia('(max-height: 560px) and (orientation: landscape)').matches;
+  return window.innerWidth <= 900 && !shortLandscape;
+}
+
+async function restoreChapterView({ focusTitle = true } = {}) {
+  await new Promise((resolve) => requestAnimationFrame(resolve));
+  refs.controlScroll.scrollTop = 0;
+  if (state.step === 'frame') refs.templateList.scrollLeft = state.scroll.frameX || 0;
+  if (state.step === 'decorate') refs.stickerTray.scrollTop = state.scroll.decorate || 0;
+  if (isStackedChapterViewport()) window.scrollTo({ top: 0, behavior: 'auto' });
+  if (!focusTitle) return;
+  const activePanel = refs.panels.find((panel) => panel.dataset.panel === state.step);
+  activePanel?.querySelector('.panel-title')?.focus({ preventScroll: true });
 }
 
 function renderProgress() {
@@ -177,7 +188,7 @@ function updateActions() {
   }
 }
 
-async function goToStep(nextStep, message) {
+async function goToStep(nextStep, message, { focusTitle = true } = {}) {
   if (state.busy || !STEPS.some((step) => step.id === nextStep)) return;
   state.busy = true;
   updateActions();
@@ -194,6 +205,7 @@ async function goToStep(nextStep, message) {
       invalidatePreparedExport();
     }
     state.step = nextStep;
+    refs.controlSheet.dataset.step = nextStep;
     refs.panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== nextStep; });
     refs.startView.hidden = nextStep !== 'start';
     refs.cameraView.hidden = nextStep !== 'camera';
@@ -219,12 +231,11 @@ async function goToStep(nextStep, message) {
       renderStickerTray();
       await renderCanvas();
     }
-    if (nextStep === 'reveal') await startReveal();
+    if (nextStep === 'reveal') await startReveal({ focusTitle });
 
     if (message) status(message);
     syncPoca();
-    if (nextStep === 'start') window.scrollTo({ top: 0, behavior: 'auto' });
-    restoreScrollState();
+    if (nextStep !== 'reveal') await restoreChapterView({ focusTitle });
   } finally {
     state.busy = false;
     updateActions();
@@ -875,7 +886,7 @@ function supportsPreparedFileShare(prepared) {
   catch { return false; }
 }
 
-async function startReveal() {
+async function startReveal({ focusTitle = true } = {}) {
   const requestId = ++revealRequestId;
   invalidatePreparedExport();
   state.selectedSticker = null;
@@ -883,6 +894,7 @@ async function startReveal() {
   syncPoca({ processing: true });
   renderProgress();
   updateActions();
+  await restoreChapterView({ focusTitle });
   await renderCanvas();
   renderRevealProofStack();
   if (requestId !== revealRequestId || state.step !== 'reveal') return;
@@ -1130,4 +1142,4 @@ document.querySelectorAll('.mascot-runtime').forEach((image) => {
 });
 
 preloadMascots();
-goToStep('start', 'Choose a format and timer, then open the camera when ready.');
+goToStep('start', 'Choose a format and timer, then open the camera when ready.', { focusTitle: false });

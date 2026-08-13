@@ -289,7 +289,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=16" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=17" />
 </head>
 <body>
   <!--
@@ -378,7 +378,7 @@
     <aside class="control-sheet" id="controlSheet" aria-label="Polara controls">
       <div class="control-scroll" id="controlScroll">
         <section class="control-panel" data-panel="start">
-          <h2 class="panel-title">Set up your session</h2>
+          <h2 class="panel-title" tabindex="-1">Set up your session</h2>
           <p class="panel-copy">Strip 3 is the Polara default. Single stays available for one larger proof.</p>
           <span class="section-label">Print format</span>
           <div class="segmented" id="modeChoose" role="group" aria-label="Print format">
@@ -395,21 +395,21 @@
         </section>
 
         <section class="control-panel" data-panel="camera" hidden>
-          <h2 class="panel-title" id="cameraPanelTitle">First proof</h2>
+          <h2 class="panel-title" id="cameraPanelTitle" tabindex="-1">First proof</h2>
           <p class="panel-copy" id="cameraPanelCopy">Polara keeps the full capture. Framing stays reversible.</p>
           <div class="slot-list" id="cameraSlots" aria-label="Photo proofs"></div>
           <p class="privacy-note" id="cameraStateNote">Press Take photo when everyone is ready.</p>
         </section>
 
         <section class="control-panel" data-panel="review" hidden>
-          <h2 class="panel-title">Review your proofs</h2>
+          <h2 class="panel-title" tabindex="-1">Review your proofs</h2>
           <p class="panel-copy">A retake replaces only the active proof after the new capture succeeds. Every other proof stays put.</p>
           <span class="section-label">Active proof</span>
           <div class="slot-list proof-selector" id="reviewSlots" aria-label="Choose active proof"></div>
         </section>
 
         <section class="control-panel" data-panel="frame" hidden>
-          <h2 class="panel-title">Choose a frame</h2>
+          <h2 class="panel-title" tabindex="-1">Choose a frame</h2>
           <p class="panel-copy">Composite images preview the whole look. Your export still uses the production PNG overlay and original proof geometry.</p>
           <div id="templateList" role="listbox" aria-label="Frame tray"></div>
           <div class="photo-adjust">
@@ -428,7 +428,7 @@
         </section>
 
         <section class="control-panel" data-panel="decorate" hidden>
-          <h2 class="panel-title">Decorate the proof</h2>
+          <h2 class="panel-title" tabindex="-1">Decorate the proof</h2>
           <p class="panel-copy">Add a sticker, then drag, rotate, resize, or use the keyboard directly on the proof.</p>
           <div id="captionField">
             <label class="field-label" for="captionInput">Caption / name / place</label>
@@ -445,7 +445,7 @@
 
         <section class="control-panel reveal-panel" data-panel="reveal" hidden>
           <img class="mascot-runtime" id="revealPanelPoca" src="assets/mascot/poca-sleepy-loading.png" alt="Poca waits while the print develops." loading="lazy" />
-          <h2 class="panel-title" id="revealTitle">Developing your print…</h2>
+          <h2 class="panel-title" id="revealTitle" tabindex="-1">Developing your print…</h2>
           <p class="panel-copy">When the proof is approved, share it or save the exact-size PNG.</p>
           <p class="privacy-note">The result remains in this local session if sharing is cancelled or export needs another try.</p>
         </section>
@@ -519,6 +519,6 @@
       <p class="footer-meta">© 2026 Polara · Digital photobooth</p>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=15"></script>
+  <script type="module" src="src/app.js?v=16"></script>
 </body>
 </html>

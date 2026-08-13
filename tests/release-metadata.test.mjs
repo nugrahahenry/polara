@@ -12,8 +12,11 @@ const changelog = await fs.readFile(
 );
 
 
-test('release metadata records the v0.15.1 portfolio link patch and prior line', () => {
-  assert.equal(packageJson.version, '0.15.1');
+test('release metadata records the v0.16.0 chapter continuity and Reveal theatre release', () => {
+  assert.equal(packageJson.version, '0.16.0');
+  assert.match(changelog, /## \[0\.16\.0\] - 2026-08-14/);
+  assert.match(changelog, /chapter continuity/i);
+  assert.match(changelog, /Reveal theatre/i);
   assert.match(changelog, /## \[0\.15\.1\] - 2026-08-13/);
   assert.match(changelog, /hnry\.dev/);
   assert.match(changelog, /## \[0\.15\.0\] - 2026-08-13/);

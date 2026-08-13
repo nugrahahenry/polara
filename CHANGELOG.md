@@ -5,6 +5,24 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.16.0] - 2026-08-14
+
+### Added
+- Tambahkan chapter continuity pada seluruh perpindahan tahap: panel tujuan kembali ke awal, judul aktif menerima fokus programatis tanpa scroll tambahan, dan layout mobile bertumpuk kembali ke anchor halaman yang stabil.
+- Tambahkan kontrak state eksplisit untuk Reveal theatre agar processing dan ready dapat ditata serta diuji tanpa bergantung pada flex wrapping atau timing visual.
+
+### Changed
+- Pertahankan posisi horizontal frame rail dan scroll tray sticker saat kembali ke tahap sebelumnya, tetapi jangan mewariskan scroll vertikal panel lama ke chapter baru.
+- Ringkas Reveal ready menjadi satu Poca Proof Approved pada stage; Poca Sleepy Loading tetap khusus panel processing.
+- Susun action Reveal sebagai grid dua tingkat yang eksplisit: Back, Photo only, dan Save PNG sebagai utilitas, lalu Share sebagai aksi utama selebar panel.
+
+### Validation
+- Regression browser chapter continuity direkam RED pada fokus judul Frames dan pada posisi panel Reveal selama processing, lalu GREEN pada 390x844, 768x1024, 1440x900, serta 900x510.
+- Reveal theatre terverifikasi memiliki tepat satu Poca Approved yang terlihat, state `processing`/`ready`, grid action stabil, target minimum 44×44 px, dan runtime error kosong.
+- Camera denied recovery, fake-device capture, retake per-slot, frame rail persistence, rapid transition lock, serta reduced motion tetap lulus.
+- Verifikasi final lulus: Node 27/27, Python 3/3, overlay 6/6, dan detector Impeccable 0 temuan.
+- Export tetap tepat Single 1080x1350 (492110 byte) dan Strip 720x1800 (385754 byte); Poca dan UI Reveal tidak masuk canvas.
+
 ## [0.15.1] - 2026-08-13
 
 ### Fixed

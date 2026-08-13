@@ -118,6 +118,79 @@ async function auditCurrentPage(page) {
   });
 }
 
+function usesStackedChapter(viewport) {
+  return viewport.width <= 900 && !(viewport.height <= 560 && viewport.width > viewport.height);
+}
+
+async function offsetChapterView(page, viewport) {
+  await page.evaluate((stacked) => {
+    const controlScroll = document.querySelector('#controlScroll');
+    if (controlScroll) controlScroll.scrollTop = controlScroll.scrollHeight;
+    if (stacked) window.scrollTo(0, document.documentElement.scrollHeight);
+  }, usesStackedChapter(viewport));
+}
+
+async function auditChapterContinuity(page, step, viewport) {
+  await page.evaluate(() => new Promise((resolve) => {
+    requestAnimationFrame(() => requestAnimationFrame(resolve));
+  }));
+  const result = await page.evaluate((activeStep) => {
+    const panel = document.querySelector(`[data-panel="${activeStep}"]`);
+    const title = panel?.querySelector('.panel-title');
+    const titleStyle = title ? getComputedStyle(title) : null;
+    return {
+      controlScrollTop: document.querySelector('#controlScroll')?.scrollTop ?? -1,
+      activeTitleFocused: document.activeElement === title,
+      activeTitleOutlineStyle: titleStyle?.outlineStyle || '',
+      windowScrollY: window.scrollY,
+    };
+  }, step);
+  assert.equal(result.controlScrollTop, 0, `${step}: chapter panel must start at top`);
+  assert.equal(result.activeTitleFocused, true, `${step}: chapter title must receive focus`);
+  assert.equal(result.activeTitleOutlineStyle, 'none', `${step}: static chapter title must not look interactive`);
+  if (usesStackedChapter(viewport)) {
+    assert.ok(result.windowScrollY <= 1, `${step}: stacked chapter must restore page anchor`);
+  }
+  return result;
+}
+
+async function auditRevealTheatre(page) {
+  return page.evaluate(() => {
+    const isVisible = (element) => {
+      if (!element) return false;
+      const rect = element.getBoundingClientRect();
+      if (rect.width <= 0 || rect.height <= 0) return false;
+      if (typeof element.checkVisibility === 'function') {
+        return element.checkVisibility({ checkOpacity: true, checkVisibilityCSS: true });
+      }
+      const style = getComputedStyle(element);
+      return !element.hidden && style.display !== 'none' && style.visibility !== 'hidden' && Number(style.opacity) > 0;
+    };
+    const visibleApproved = [...document.querySelectorAll('img[src$="poca-proof-approved.png"]')]
+      .filter(isVisible);
+    const actionRow = document.querySelector('.action-row');
+    const actionDock = document.querySelector('.action-dock');
+    const controlScroll = document.querySelector('#controlScroll');
+    const primary = document.querySelector('#primaryBtn');
+    const privacyNote = document.querySelector('[data-panel="reveal"] .privacy-note');
+    const utilities = ['#backBtn', '#tertiaryBtn', '#secondaryBtn']
+      .map((selector) => document.querySelector(selector))
+      .filter(isVisible);
+    const utilityBottom = Math.max(...utilities.map((button) => button.getBoundingClientRect().bottom));
+    return {
+      revealState: document.querySelector('#controlSheet')?.dataset.revealState || '',
+      visibleApprovedCount: visibleApproved.length,
+      panelPocaVisible: isVisible(document.querySelector('#revealPanelPoca')),
+      panelPocaSrc: document.querySelector('#revealPanelPoca')?.getAttribute('src') || '',
+      actionDisplay: getComputedStyle(actionRow).display,
+      primaryGridColumn: getComputedStyle(primary).gridColumn,
+      primaryBelowUtilities: primary.getBoundingClientRect().top >= utilityBottom,
+      contentActionGap: actionRow.getBoundingClientRect().top - privacyNote.getBoundingClientRect().bottom,
+      dockOverlapsContent: actionDock.getBoundingClientRect().top < controlScroll.getBoundingClientRect().bottom - 1,
+    };
+  });
+}
+
 async function downloadPng(page, name) {
   const downloadEvent = page.waitForEvent('download', { timeout: 30_000 });
   await page.locator('#secondaryBtn').click();
@@ -146,6 +219,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   const context = await browser.newContext({ viewport, permissions: ['camera'], reducedMotion: 'reduce', acceptDownloads: true });
   const page = await startPage(context);
   const stageAudit = {};
+  const chapterContinuity = {};
   const shot = async (number, stage) => {
     stageAudit[stage] = await auditCurrentPage(page);
     if (screenshots && writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${name}-${number}-${stage}.png`) });
@@ -187,8 +261,10 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   }
   await shot('03', 'review');
 
-  await page.locator('#primaryBtn').click();
+  await offsetChapterView(page, viewport);
+  await page.locator('#primaryBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'frame');
+  chapterContinuity.frame = await auditChapterContinuity(page, 'frame', viewport);
   await page.locator('#templateList .tpl-btn').first().waitFor({ state: 'visible' });
   assert.equal(await page.locator('#photoSlotTabs .slot-tab').count(), 3);
   assert.match(await page.locator('#templateList .tpl-thumb-image').first().getAttribute('src'), /frames\/composites\//);
@@ -226,10 +302,14 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   });
   assert.ok(persistedRailX > 0, `${name}: frame rail must accept horizontal scrolling`);
 
-  await page.locator('#primaryBtn').click();
+  await offsetChapterView(page, viewport);
+  await page.locator('#primaryBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'decorate');
-  await page.locator('#backBtn').click();
+  chapterContinuity.decorate = await auditChapterContinuity(page, 'decorate', viewport);
+  await offsetChapterView(page, viewport);
+  await page.locator('#backBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'frame');
+  chapterContinuity.frameReturn = await auditChapterContinuity(page, 'frame', viewport);
   await page.waitForFunction((expected) => {
     const rail = document.querySelector('#templateList');
     return rail && Math.abs(rail.scrollLeft - expected) <= 2;
@@ -238,27 +318,44 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
     await page.locator('#templateList .tpl-btn[aria-selected="true"]').getAttribute('data-template-id'),
     selectedFrameId,
   );
-  await page.locator('#primaryBtn').click();
+  await offsetChapterView(page, viewport);
+  await page.locator('#primaryBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'decorate');
+  chapterContinuity.decorateReturn = await auditChapterContinuity(page, 'decorate', viewport);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-decorate-guide\.png$/);
+  await shot('05', 'decorate');
   await page.locator('#stickerTray .sticker-btn').first().focus();
   await page.keyboard.press('End');
   assert.equal(await page.locator('#stickerTray .sticker-btn').last().evaluate((button) => document.activeElement === button), true);
-  await shot('05', 'decorate');
   await page.locator('#stickerTray .sticker-btn').first().click();
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-peeking\.png$/);
 
-  await page.locator('#primaryBtn').click();
+  await offsetChapterView(page, viewport);
+  await page.locator('#primaryBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'reveal');
+  chapterContinuity.reveal = await auditChapterContinuity(page, 'reveal', viewport);
+  assert.equal(await page.locator('#controlSheet').getAttribute('data-reveal-state'), 'processing');
   assert.match(await page.locator('#revealPanelPoca').getAttribute('src'), /poca-sleepy-loading\.png$/);
   await page.waitForFunction(() => document.querySelector('#revealTitle')?.textContent === 'Proof approved.', null, { timeout: 40_000 });
-  assert.match(await page.locator('#revealPanelPoca').getAttribute('src'), /poca-proof-approved\.png$/);
+  const revealTheatre = await auditRevealTheatre(page);
+  assert.equal(revealTheatre.revealState, 'ready');
+  assert.equal(revealTheatre.visibleApprovedCount, 1);
+  assert.equal(revealTheatre.panelPocaVisible, false);
+  assert.match(revealTheatre.panelPocaSrc, /poca-sleepy-loading\.png$/);
+  assert.equal(revealTheatre.actionDisplay, 'grid');
+  assert.notEqual(revealTheatre.primaryGridColumn, 'auto');
+  assert.equal(revealTheatre.primaryBelowUtilities, true);
+  assert.ok(revealTheatre.contentActionGap >= 24, 'Reveal content must keep breathing room above actions');
+  assert.equal(revealTheatre.dockOverlapsContent, false, 'Reveal action dock must not wash over panel content');
   assert.equal(await page.locator('#progressList .step-proof-stamp').count(), 6);
   await shot('06', 'reveal');
 
   let exported = null;
   if (exportStrip) exported = await downloadPng(page, 'polara-strip-proof-table.png');
-  report.viewports[name] = { viewport, stages: stageAudit, frameRail, retakePreservedOtherSlots: retake, labels };
+  report.viewports[name] = {
+    viewport, stages: stageAudit, frameRail, chapterContinuity, revealTheatre,
+    retakePreservedOtherSlots: retake, labels,
+  };
   await context.close();
   return exported;
 }
