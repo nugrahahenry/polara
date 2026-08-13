@@ -306,7 +306,7 @@ body {
 }
 
 @media (max-height: 560px) and (orientation: landscape) {
-  .progress-wrap, .status-bar, .app-footer { display: none !important; }
+  .progress-wrap, .status-bar { display: none !important; }
   .app-header { position: fixed; z-index: 30; top: 8px; right: 8px; display: block; min-height: 0; padding: 0; border: 0; background: transparent; }
   .app-header .brand, .app-header .header-action { display: none; }
   .app-header .header-tools { display: block; }
