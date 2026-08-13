@@ -19,7 +19,10 @@ function escapeRegExp(value) {
 
 test('footer Polara exposes the maker identity and privacy truth', () => {
   assert.match(html, /class="maker-seal"/);
-  assert.match(html, /class="maker-link"[^>]*>Henry Nugraha<\/a>/);
+  assert.match(
+    html,
+    /class="maker-link"[^>]*href="https:\/\/hnry\.dev"[^>]*>Henry Nugraha<\/a>/,
+  );
   assert.match(html, /Your photos stay on your device — no upload, no account\./);
   assert.match(html, /© 2026 Polara · Digital photobooth/);
 });

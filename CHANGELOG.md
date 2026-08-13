@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.15.1] - 2026-08-13
+
+### Fixed
+- Arahkan nama maker `Henry Nugraha` pada footer ke portofolio canonical `https://hnry.dev`, sementara tombol GitHub tetap menuju profil GitHub.
+
+### Validation
+- Live audit v0.15.0 membuktikan shell, kamera, tiga capture, Review, frame rail, state Back, sticker tray, Reveal, serta Save PNG Strip berjalan tanpa runtime error pada desktop dan mobile 390x844.
+- Regression footer mengunci target portofolio agar tidak kembali memakai GitHub sebagai fallback.
+
 ## [0.15.0] - 2026-08-13
 
 ### Added
