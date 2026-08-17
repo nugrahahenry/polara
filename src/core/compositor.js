@@ -133,6 +133,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
   ensureStickerStyles();
   layer.innerHTML = '';
   layer.style.pointerEvents = 'none';
+  const interactive = options.interactive !== false;
 
   const canvasWidth = canvasEl.offsetWidth || 1080;
   const canvasHeight = canvasEl.offsetHeight || 1350;
@@ -142,12 +143,15 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
   stickers.forEach((item) => {
     const size = canvasWidth * item.scale;
     const wrap = document.createElement('div');
-    wrap.className = `placed-sticker${item.uid === options.selectedId ? ' selected' : ''}`;
+    const selected = interactive && item.uid === options.selectedId;
+    wrap.className = `placed-sticker${selected ? ' selected' : ''}`;
     wrap.dataset.stickerId = item.uid;
-    wrap.tabIndex = 0;
-    wrap.setAttribute('role', 'option');
-    wrap.setAttribute('aria-label', `${item.name}. Gunakan tombol panah untuk geser, plus/minus untuk ukuran, kurung siku untuk memutar, Delete untuk hapus.`);
-    wrap.setAttribute('aria-selected', String(item.uid === options.selectedId));
+    wrap.tabIndex = interactive ? 0 : -1;
+    wrap.setAttribute('role', interactive ? 'option' : 'img');
+    wrap.setAttribute('aria-label', interactive
+      ? `${item.name}. Gunakan tombol panah untuk geser, plus/minus untuk ukuran, kurung siku untuk memutar, Delete untuk hapus.`
+      : `${item.name} sticker on proof.`);
+    if (interactive) wrap.setAttribute('aria-selected', String(selected));
     Object.assign(wrap.style, {
       position: 'absolute',
       width: `${size}px`,
@@ -157,8 +161,8 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
       transform: `rotate(${item.rotation}deg)`,
       transformOrigin: 'center',
       touchAction: 'none',
-      cursor: 'grab',
-      pointerEvents: 'auto',
+      cursor: interactive ? 'grab' : 'default',
+      pointerEvents: interactive ? 'auto' : 'none',
     });
 
     const image = document.createElement('img');
@@ -181,7 +185,9 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
       button.className = 'sticker-handle';
       button.setAttribute('aria-label', label);
       button.setAttribute('data-export-hide', '1');
-      button.tabIndex = item.uid === options.selectedId ? 0 : -1;
+      button.hidden = !interactive;
+      button.setAttribute('aria-hidden', String(!interactive));
+      button.tabIndex = selected ? 0 : -1;
       button.style.cssText = handleBase + style;
       button.textContent = glyph;
       wrap.appendChild(button);
@@ -193,6 +199,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
     const resizeButton = makeHandle(`bottom:${-handleSize / 2}px;right:${-handleSize / 2}px;background:#ffe26f;color:#4b2e1f;cursor:nwse-resize;`, 'Ubah ukuran sticker', '⤢');
 
     const select = () => {
+      if (!interactive) return;
       options.onSelect?.(item.uid);
       setStickerSelection(canvasEl, item.uid);
     };

@@ -801,11 +801,13 @@ function snapshotStickers() {
 
 function renderEditorStickers() {
   if (!phCanvas) return;
+  const interactive = state.step === 'decorate';
   if (state.selectedSticker && !state.stickers.some((item) => item.uid === state.selectedSticker)) {
     state.selectedSticker = null;
   }
   renderStickerLayer(phCanvas, state.stickers, {
-    selectedId: state.selectedSticker,
+    selectedId: interactive ? state.selectedSticker : null,
+    interactive,
     onSelect: (uid) => {
       state.selectedSticker = uid;
       setStickerSelection(phCanvas, uid);

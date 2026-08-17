@@ -250,6 +250,8 @@ async function auditRevealTheatre(page) {
     const utilities = ['#backBtn', '#tertiaryBtn', '#secondaryBtn']
       .map((selector) => document.querySelector(selector))
       .filter(isVisible);
+    const stickers = [...document.querySelectorAll('.placed-sticker')];
+    const stickerHandles = [...document.querySelectorAll('.sticker-handle')];
     const utilityBottom = Math.max(...utilities.map((button) => button.getBoundingClientRect().bottom));
     return {
       revealState: document.querySelector('#controlSheet')?.dataset.revealState || '',
@@ -261,6 +263,9 @@ async function auditRevealTheatre(page) {
       primaryBelowUtilities: primary.getBoundingClientRect().top >= utilityBottom,
       contentActionGap: actionRow.getBoundingClientRect().top - privacyNote.getBoundingClientRect().bottom,
       dockOverlapsContent: actionDock.getBoundingClientRect().top < controlScroll.getBoundingClientRect().bottom - 1,
+      interactiveStickerCount: stickers.filter((sticker) => getComputedStyle(sticker).pointerEvents !== 'none').length,
+      focusableStickerCount: stickers.filter((sticker) => sticker.tabIndex >= 0).length,
+      exposedStickerHandleCount: stickerHandles.filter((handle) => !handle.hidden && handle.getAttribute('aria-hidden') !== 'true').length,
     };
   });
 }
@@ -520,6 +525,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(revealTheatre.primaryBelowUtilities, true);
   assert.ok(revealTheatre.contentActionGap >= 24, 'Reveal content must keep breathing room above actions');
   assert.equal(revealTheatre.dockOverlapsContent, false, 'Reveal action dock must not wash over panel content');
+  assert.equal(revealTheatre.interactiveStickerCount, 0, 'Reveal stickers must be presentation-only');
+  assert.equal(revealTheatre.focusableStickerCount, 0, 'Reveal stickers must leave the keyboard tab order');
+  assert.equal(revealTheatre.exposedStickerHandleCount, 0, 'Reveal sticker handles must leave the accessibility tree');
   assert.equal(await page.locator('#progressList .step-proof-stamp').count(), 6);
   await shot('06', 'reveal');
 

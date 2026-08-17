@@ -5,6 +5,17 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.18.1] - 2026-08-17
+
+### Fixed
+- Jadikan sticker di luar tahap Decorate sebagai presentational-only: tidak dapat di-drag, tidak masuk keyboard tab order, dan tidak membawa kontrol editor ke Reveal.
+- Sembunyikan handle hapus/putar/resize dari accessibility tree ketika proof sedang ditampilkan sebagai hasil final.
+
+### Validation
+- Live smoke v0.18.0 mereproduksi sticker Reveal yang masih interaktif meski handle transparan; regression browser baru gagal tepat pada kontrak presentation-only sebelum perbaikan.
+- Setelah perbaikan, Reveal memiliki 0 sticker interaktif, 0 sticker focusable, dan 0 handle editor terekspos pada 390x844, 768x1024, 1440x900, serta 900x510.
+- QA 24 kombinasi tahap/viewport lulus dengan runtime error 0; exact export final tetap Single 1080x1350 (490631 byte) dan Strip 720x1800 (391497 byte).
+
 ## [0.18.0] - 2026-08-14
 
 ### Added
