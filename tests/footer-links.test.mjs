@@ -28,6 +28,18 @@ test('footer Polara exposes the maker identity and privacy truth', () => {
 });
 
 
+test('desktop shell keeps Proof Table context and a horizontal footer foundation', () => {
+  assert.match(html, /class="stage-docket"/);
+  assert.match(html, /id="stageDocketStep"/);
+  assert.match(html, /id="stageDocketFormat"/);
+  assert.match(html, /class="footer-end"/);
+  assert.match(
+    proofTableCss,
+    /@media \(min-width: 1100px\)[\s\S]*?\.footer-inner\s*\{[^}]*grid-template-columns:/,
+  );
+});
+
+
 test('social links are accessible, safe, and keep 44px targets', () => {
   for (const [label, href] of socialLinks) {
     const anchorPattern = new RegExp(
@@ -47,7 +59,7 @@ test('social links are accessible, safe, and keep 44px targets', () => {
 
 
 test('short landscape keeps the maker footer reachable after the workspace', () => {
-  assert.match(html, /styles\/proof-table\.css\?v=19/);
+  assert.match(html, /styles\/proof-table\.css\?v=20/);
   assert.doesNotMatch(
     proofTableCss,
     /\.progress-wrap,\s*\.status-bar,\s*\.app-footer\s*\{\s*display:\s*none\s*!important;/,

@@ -35,6 +35,7 @@ const CAMERA_STATE_LABELS = {
 
 const refs = {
   workspace: $('appWorkspace'), progress: $('progressWrap'), progressList: $('progressList'),
+  stageShell: $('stageShell'), stageDocketStep: $('stageDocketStep'), stageDocketFormat: $('stageDocketFormat'),
   startView: $('startView'), cameraView: $('cameraView'), reviewView: $('reviewView'), canvasView: $('canvasView'),
   controlSheet: $('controlSheet'), controlScroll: $('controlScroll'), panels: [...document.querySelectorAll('[data-panel]')],
   primary: $('primaryBtn'), secondary: $('secondaryBtn'), tertiary: $('tertiaryBtn'), back: $('backBtn'),
@@ -111,6 +112,15 @@ function syncPoca({ processing = false } = {}) {
 
 function setActiveProof(index) {
   state = selectActiveProof(state, index);
+}
+
+function syncStageDocket() {
+  const stepIndex = Math.max(0, STEPS.findIndex((step) => step.id === state.step));
+  refs.stageShell.dataset.step = state.step;
+  refs.stageDocketStep.textContent = `${String(stepIndex + 1).padStart(2, '0')} / ${STEPS[stepIndex].label}`;
+  refs.stageDocketFormat.textContent = state.mode === 3
+    ? 'Strip 3 · 720 × 1800 px'
+    : 'Single · 1080 × 1350 px';
 }
 
 function meaningfulSession() {
@@ -221,6 +231,7 @@ async function goToStep(nextStep, message, { focusTitle = true } = {}) {
       invalidatePreparedExport();
     }
     state.step = nextStep;
+    syncStageDocket();
     refs.controlSheet.dataset.step = nextStep;
     refs.panels.forEach((panel) => { panel.hidden = panel.dataset.panel !== nextStep; });
     refs.startView.hidden = nextStep !== 'start';
@@ -280,6 +291,7 @@ refs.modeChoose.addEventListener('click', (event) => {
   state.selectedSlot = 0;
   state.frameId = null;
   syncStartControls();
+  syncStageDocket();
   status(state.mode === 3 ? 'Strip 3 selected. Get three poses ready.' : 'Single selected. One large proof, one main moment.');
 });
 

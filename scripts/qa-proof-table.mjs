@@ -228,6 +228,29 @@ async function auditStageCompanion(page, targetSelector) {
   }, targetSelector);
 }
 
+async function auditDesktopFoundation(page) {
+  return page.evaluate(() => {
+    const footer = document.querySelector('.app-footer');
+    const footerInner = document.querySelector('.footer-inner');
+    const docket = document.querySelector('.stage-docket');
+    const maker = document.querySelector('.maker-seal')?.getBoundingClientRect();
+    const privacy = document.querySelector('.footer-privacy')?.getBoundingClientRect();
+    const end = document.querySelector('.footer-end')?.getBoundingClientRect();
+    const footerBounds = footer?.getBoundingClientRect();
+    const verticalSpread = maker && privacy && end
+      ? Math.max(maker.bottom, privacy.bottom, end.bottom) - Math.min(maker.top, privacy.top, end.top)
+      : 0;
+    return {
+      docketDisplay: docket ? getComputedStyle(docket).display : 'missing',
+      docketStep: document.querySelector('#stageDocketStep')?.textContent.trim() || '',
+      docketFormat: document.querySelector('#stageDocketFormat')?.textContent.trim() || '',
+      footerHeight: footerBounds?.height || 0,
+      footerInnerDisplay: footerInner ? getComputedStyle(footerInner).display : 'missing',
+      footerVerticalSpread: verticalSpread,
+    };
+  });
+}
+
 async function auditRevealTheatre(page) {
   return page.evaluate(() => {
     const isVisible = (element) => {
@@ -307,6 +330,17 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   const labels = await page.locator('#progressList .progress-label').allTextContents();
   assert.deepEqual(labels, ['Start', 'Camera', 'Review', 'Frames', 'Decorate', 'Reveal']);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-excited-jump\.png$/);
+  const desktopFoundation = await auditDesktopFoundation(page);
+  if (viewport.width >= 1180) {
+    assert.equal(desktopFoundation.docketDisplay, 'flex');
+    assert.equal(desktopFoundation.docketStep, '01 / Start');
+    assert.equal(desktopFoundation.docketFormat, 'Strip 3 · 720 × 1800 px');
+  }
+  if (viewport.width >= 1100) {
+    assert.equal(desktopFoundation.footerInnerDisplay, 'grid');
+    assert.ok(desktopFoundation.footerHeight <= 120, `${name}: desktop footer must stay compact`);
+    assert.ok(desktopFoundation.footerVerticalSpread <= 72, `${name}: desktop footer groups must read as one foundation row`);
+  }
   await shot('01', 'start');
 
   await page.locator('#privacyBtn').click();
@@ -380,6 +414,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.match(await page.locator('#templateList .tpl-thumb-image').first().getAttribute('src'), /frames\/composites\//);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-holding-photo-frame\.png$/);
   assert.equal(await page.locator('#canvasView').getAttribute('data-proof-mode'), 'strip');
+  if (viewport.width >= 1180) {
+    assert.equal(await page.locator('#stageDocketStep').textContent(), '04 / Frames');
+  }
   const frameRail = await page.locator('#templateList').evaluate((rail) => {
     const style = getComputedStyle(rail);
     return {
@@ -543,7 +580,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
         companionOverlapsTarget: reviewCompanion.companionOverlapsTarget,
       },
     },
-    retakePreservedOtherSlots: retake, labels,
+    retakePreservedOtherSlots: retake, labels, desktopFoundation,
   };
   await context.close();
   return exported;

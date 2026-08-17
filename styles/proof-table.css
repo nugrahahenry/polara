@@ -135,6 +135,36 @@ body {
     linear-gradient(var(--proof-hairline), var(--proof-hairline)) 100% 100%/18px 1px no-repeat,
     linear-gradient(var(--proof-hairline), var(--proof-hairline)) 100% 100%/1px 18px no-repeat;
 }
+.stage-docket,
+.stage-footline {
+  display: none;
+  position: absolute;
+  z-index: 4;
+  left: 34px;
+  right: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 24px;
+  pointer-events: none;
+  color: var(--proof-muted);
+  font: 800 .67rem/1.2 var(--font-ui);
+  letter-spacing: .07em;
+  text-transform: uppercase;
+}
+.stage-docket { top: 28px; }
+.stage-footline { bottom: 28px; }
+.stage-docket strong { color: var(--proof-ink); font-weight: 800; }
+.stage-docket::after,
+.stage-footline::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: var(--proof-hairline);
+}
+.stage-docket::after { top: calc(100% + 8px); }
+.stage-footline::before { bottom: calc(100% + 8px); }
 .control-sheet { max-height: calc(100dvh - 156px); border-radius: 20px; }
 .control-scroll { padding: 26px 24px 138px; }
 .control-panel { animation: panel-proof-in 260ms var(--ease-proof) both; }
@@ -580,8 +610,38 @@ body {
 .btn-secondary { background: var(--proof-blue); }
 :focus-visible { outline: 3px solid #176a9e; outline-offset: 3px; }
 .status-bar { color: var(--proof-muted); }
-.app-footer { border-top: 1px solid var(--proof-hairline); }
+.app-footer {
+  border-top: 1px solid var(--proof-hairline);
+  background: var(--proof-paper);
+}
 .app-footer a { display: inline-flex; min-height: 44px; align-items: center; }
+.footer-end { display: grid; justify-items: center; gap: 9px; }
+
+@media (min-width: 1180px) {
+  .stage-docket,
+  .stage-footline { display: flex; }
+}
+
+@media (min-width: 1100px) {
+  .app-footer { margin-top: 0; padding: 18px clamp(22px, 3vw, 44px); text-align: left; }
+  .footer-inner {
+    width: min(1420px, 100%);
+    display: grid;
+    grid-template-columns: minmax(270px, auto) minmax(290px, 1fr) auto;
+    align-items: center;
+    justify-items: stretch;
+    gap: clamp(22px, 4vw, 64px);
+  }
+  .maker-seal { justify-self: start; }
+  .footer-privacy { justify-self: center; max-width: 430px; margin: 0; text-align: center; }
+  .footer-end {
+    grid-template-columns: auto minmax(150px, auto);
+    align-items: center;
+    justify-items: end;
+    gap: 18px;
+  }
+  .footer-meta { text-align: right; }
+}
 
 .privacy-dialog { width: min(660px, calc(100% - 30px)); border: 0; border-radius: 18px; box-shadow: 0 28px 90px rgba(75,46,31,.25); }
 .privacy-dialog::backdrop { background: rgba(61,42,33,.42); backdrop-filter: blur(5px); }

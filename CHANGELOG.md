@@ -5,6 +5,20 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.18.2] - 2026-08-18
+
+### Changed
+- Tambahkan stage docket dan format footline UI-only pada desktop agar ruang proof terasa seperti meja kerja yang disengaja tanpa mengembalikan synthetic scene selector prototype.
+- Ubah maker footer desktop menjadi footer foundation horizontal: identitas maker, jaminan privasi lokal, kanal sosial, dan metadata kini membentuk satu bar yang ringkas.
+- Pertahankan struktur bertumpuk pada tablet/mobile serta seluruh target sentuh 44×44 px.
+
+### Validation
+- Regression footer direkam RED sebelum stage context dan layout horizontal tersedia, lalu kembali GREEN setelah implementasi.
+- Flow produksi tetap memakai enam tahap, Strip 3 default, Single, timer 3/5/10, retake per-slot, dan export geometry yang sama pada 390×844, 768×1024, 1440×900, serta 900×510.
+- Pada 1440×900, stage docket tampil dengan step/format yang sinkron; footer foundation setinggi 101 px, vertical spread 64 px, dan overflow horizontal 0.
+- Verifikasi final lulus: Node 34/34, Python 3/3, overlay 6/6, runtime error 0, serta detector Impeccable 0 temuan.
+- Export final tetap tepat Single 1080×1350 (492110 byte) dan Strip 720×1800 (389897 byte).
+
 ## [0.18.1] - 2026-08-17
 
 ### Fixed
