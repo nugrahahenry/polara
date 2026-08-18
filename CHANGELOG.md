@@ -5,6 +5,20 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.19.1] - 2026-08-18
+
+### Fixed
+- Hapus RGB foto sumber yang masih dapat dipulihkan dari piksel ber-alpha 0 pada overlay Polara Daily, Midnight Club, dan dua overlay Vintage Film Lo-Fi.
+- Bersihkan RGB tersembunyi pada sebelas sticker produksi dan tambahkan regression guard agar overlay maupun sticker baru ditolak ketika area transparannya masih menyimpan data warna.
+
+### Changed
+- Kurangi ukuran empat overlay baru sekitar 43–73% tanpa mengubah visible pixel, alpha, dimensi, crop, mask, atau geometry preview/export.
+- Tambahkan sanitizer PNG RGBA deterministik untuk seluruh overlay dan sticker runtime, lalu perbarui checksum, byte size, asset version, serta generated registry canonical.
+
+### Validation
+- Regression hidden-RGB direkam RED pada 6/10 overlay dan 11/13 sticker sebelum sanitasi, lalu kembali GREEN pada seluruh aset sesudahnya.
+- Ketujuh belas PNG yang berubah dibandingkan per piksel dengan Git HEAD: alpha identik, seluruh RGB pada visible pixel identik, dan perubahan hanya terjadi pada RGB di bawah alpha 0.
+
 ## [0.19.0] - 2026-08-18
 
 ### Added

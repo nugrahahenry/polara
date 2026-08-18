@@ -115,7 +115,7 @@ export const frameOverlayTemplates = [
         "height": 960
       }
     ],
-    "assetVersion": "frame-overlay-v1",
+    "assetVersion": "frame-overlay-v3",
     "slotBackground": "#1c191b",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -164,7 +164,7 @@ export const frameOverlayTemplates = [
         "height": 384
       }
     ],
-    "assetVersion": "frame-overlay-v1",
+    "assetVersion": "frame-overlay-v3",
     "slotBackground": "#1c191b",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -314,7 +314,7 @@ export const frameOverlayTemplates = [
       ]
     ],
     "mascotSrc": "assets/mascot/poca-press-reporter.png",
-    "assetVersion": "frame-overlay-v2",
+    "assetVersion": "frame-overlay-v3",
     "slotBackground": "#f5e3c4",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -367,7 +367,7 @@ export const frameOverlayTemplates = [
       }
     ],
     "mascotSrc": "assets/mascot/poca-press-reporter.png",
-    "assetVersion": "frame-overlay-v2",
+    "assetVersion": "frame-overlay-v3",
     "slotBackground": "#f5e3c4",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -431,7 +431,7 @@ export const frameOverlayTemplates = [
       ]
     ],
     "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
-    "assetVersion": "frame-overlay-v2",
+    "assetVersion": "frame-overlay-v3",
     "slotBackground": "#07091e",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -484,7 +484,7 @@ export const frameOverlayTemplates = [
       }
     ],
     "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
-    "assetVersion": "frame-overlay-v2",
+    "assetVersion": "frame-overlay-v3",
     "slotBackground": "#07091e",
     "supportsDynamicText": false,
     "metadataZones": {

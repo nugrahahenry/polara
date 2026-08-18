@@ -16,8 +16,11 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.19.0 five-family frame integration', () => {
-  assert.equal(packageJson.version, '0.19.0');
+test('release metadata records the v0.19.1 transparent asset hygiene patch', () => {
+  assert.equal(packageJson.version, '0.19.1');
+  assert.match(changelog, /## \[0\.19\.1\] - 2026-08-18/);
+  assert.match(changelog, /alpha 0/i);
+  assert.match(changelog, /visible pixel/i);
   assert.match(changelog, /## \[0\.19\.0\] - 2026-08-18/);
   assert.match(changelog, /Polara Daily/);
   assert.match(changelog, /Midnight Club/);
