@@ -20,7 +20,7 @@
     },
     "frames": {
       "type": "array",
-      "minItems": 6,
+      "minItems": 10,
       "items": {
         "$ref": "#/$defs/frame"
       }
@@ -52,8 +52,22 @@
         "height": {
           "type": "integer",
           "minimum": 1
+        },
+        "radius": {
+          "type": "integer",
+          "minimum": 0
         }
       }
+    },
+    "point": {
+      "type": "array",
+      "prefixItems": [
+        { "type": "integer", "minimum": 0 },
+        { "type": "integer", "minimum": 0 }
+      ],
+      "items": false,
+      "minItems": 2,
+      "maxItems": 2
     },
     "zone": {
       "oneOf": [
@@ -78,8 +92,6 @@
         "thumbnailSrc",
         "canvasWidth",
         "canvasHeight",
-        "photoWindows",
-        "masterSrc",
         "sha256",
         "byteSize",
         "colorMode",
@@ -95,14 +107,16 @@
       "properties": {
         "id": {
           "type": "string",
-          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*\\.(?:single|strip)$"
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*(?:\\.|-)(?:single|strip)$"
         },
         "family": {
           "type": "string",
           "enum": [
             "poca-purikura",
             "vintage-film-lofi",
-            "seoul-snap-y2k"
+            "seoul-snap-y2k",
+            "polara-daily",
+            "polara-midnight-club"
           ]
         },
         "name": {
@@ -114,7 +128,9 @@
           "enum": [
             "purikura",
             "vintage-film",
-            "y2k-korean"
+            "y2k-korean",
+            "newspaper",
+            "night-studio"
           ]
         },
         "mode": {
@@ -157,9 +173,22 @@
             "$ref": "#/$defs/window"
           }
         },
+        "maskType": {
+          "type": "string",
+          "enum": ["rectangles", "rounded-rectangles", "polygon"]
+        },
+        "photoPolygon": {
+          "type": "array",
+          "minItems": 3,
+          "items": { "$ref": "#/$defs/point" }
+        },
         "masterSrc": {
           "type": "string",
           "pattern": "^assets/_originals/frames/[a-z0-9-]+-master\\.png$"
+        },
+        "mascotSrc": {
+          "type": "string",
+          "pattern": "^assets/mascot/[a-z0-9-]+\\.png$"
         },
         "sha256": {
           "type": "string",
@@ -215,7 +244,17 @@
             "type": "string"
           }
         }
-      }
+      },
+      "allOf": [
+        {
+          "if": {
+            "required": ["maskType"],
+            "properties": { "maskType": { "const": "polygon" } }
+          },
+          "then": { "required": ["photoPolygon"] },
+          "else": { "required": ["photoWindows"] }
+        }
+      ]
     }
   }
 }

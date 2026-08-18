@@ -5,6 +5,25 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.19.0] - 2026-08-18
+
+### Added
+- Tambahkan keluarga **Polara Daily** dan **Midnight Club**, masing-masing dalam variant Single 1080×1350 dan Strip 720×1800.
+- Tambahkan geometry registry `polygon` untuk Single serta `rounded-rectangles` dengan radius per-slot untuk Strip.
+- Tambahkan empat overlay, empat thumbnail picker, Poca Press Reporter, dan Poca Midnight Photographer sebagai runtime asset terverifikasi.
+
+### Changed
+- Batasi picker produksi menjadi tepat lima keluarga dan sepuluh variant Hero; implementasi picker lama tetap tersedia sebagai rollback source selama acceptance checkpoint.
+- Turunkan polygon menjadi bounding photo slot dengan `clip-path` deterministik, sehingga Preview, Decorate, Reveal, Save, dan Share memakai geometry DOM yang sama.
+- Izinkan thumbnail runtime final untuk keluarga baru tanpa memasukkan true composite, review board, source photo, master mascot, `_originals`, atau arsip ZIP ke bundle produksi.
+- Perluas schema, generator registry, serta verifier aset dari enam menjadi sepuluh overlay tanpa mengubah flow, default Strip 3, retake per-slot, atau pemrosesan lokal.
+
+### Validation
+- Regression direkam RED untuk jumlah variant, lima keluarga, polygon, rounded-rectangles, runtime-only asset, dan metadata rilis sebelum implementasi kembali GREEN.
+- Verifikasi final lulus: Node 37/37, Python 10/10, overlay 10/10, detector Impeccable 0 temuan, dan runtime browser error 0.
+- QA alur lengkap lulus pada 390×844, 768×1024, 1440×900, serta short landscape 900×510; rail terakhir reachable, overflow horizontal 0, target sentuh minimum 44×44 px, reduced motion, camera denied recovery, dan retake preservation tetap lulus.
+- Seluruh sepuluh variant dirender di preview dan diekspor: lima Single tepat 1080×1350 serta lima Strip tepat 720×1800, dengan mask dan overlay aktif yang sama.
+
 ## [0.18.2] - 2026-08-18
 
 ### Changed

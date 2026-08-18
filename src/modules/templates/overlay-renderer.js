@@ -10,6 +10,30 @@ function metadataZone(className, zone) {
   return `<div class="${className}" style="position:absolute;left:${zone.x}px;top:${zone.y}px;width:${zone.width}px;height:${zone.height}px;display:grid;place-items:center;overflow:hidden;z-index:25;pointer-events:none;"></div>`;
 }
 
+function formatPercent(value) {
+  if (value === 0 || value === 100) return `${value}%`;
+  return `${value.toFixed(4).replace(/0+$/, '').replace(/\.$/, '')}%`;
+}
+
+function polygonClipPath(template, window) {
+  if (template.maskType !== 'polygon') return '';
+  if (!Array.isArray(template.photoPolygon) || template.photoPolygon.length < 3) {
+    throw new Error(`Template ${template.id} kehilangan photo polygon.`);
+  }
+  const points = template.photoPolygon.map(([x, y]) => {
+    const localX = ((x - window.x) / window.width) * 100;
+    const localY = ((y - window.y) / window.height) * 100;
+    return `${formatPercent(localX)} ${formatPercent(localY)}`;
+  });
+  return `clip-path:polygon(${points.join(',')});`;
+}
+
+function slotMaskStyle(template, window) {
+  if (template.maskType === 'polygon') return polygonClipPath(template, window);
+  if (template.maskType === 'rounded-rectangles') return `border-radius:${window.radius}px;`;
+  return '';
+}
+
 export function buildOverlayTemplateHtml(template) {
   if (template.renderMode !== 'png-overlay') {
     throw new Error(`Template ${template.id} bukan png-overlay.`);
@@ -21,7 +45,7 @@ export function buildOverlayTemplateHtml(template) {
   }
 
   const slots = template.photoWindows.map((window, index) => `
-    <div class="ph-slot" data-slot="${index + 1}" style="position:absolute;left:${window.x}px;top:${window.y}px;width:${window.width}px;height:${window.height}px;overflow:hidden;background:${escapeHtml(template.slotBackground)};z-index:10;"></div>
+    <div class="ph-slot" data-slot="${index + 1}" data-mask-type="${escapeHtml(template.maskType || 'rectangles')}" style="position:absolute;left:${window.x}px;top:${window.y}px;width:${window.width}px;height:${window.height}px;${slotMaskStyle(template, window)}overflow:hidden;background:${escapeHtml(template.slotBackground)};z-index:10;"></div>
   `).join('');
   const zones = template.supportsDynamicText ? template.metadataZones : {};
   const overlayUrl = `${template.overlaySrc}?v=${encodeURIComponent(template.assetVersion)}`;

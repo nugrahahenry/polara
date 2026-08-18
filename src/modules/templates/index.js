@@ -123,11 +123,14 @@ export const heroHtmlRollbackTemplates = [
   pocaPurikuraStrip, vintageFilmLofi, seoulSnapY2kStrip,
 ];
 
-export const templates = [
-  ...frameOverlayTemplates,
+// Implementasi picker lama tetap tersedia sebagai rollback source sampai
+// checkpoint lima keluarga ini lolos acceptance, tetapi tidak masuk UI runtime.
+export const legacyPickerRollbackTemplates = [
   kosmik, polaraDaily, liveFrameCinemagraph,
   cyberY2kNeon, auraGradientDreamy, darkRomanticEditorial, cottagecoreBotanical, tradingCardId,
 ];
+
+export const templates = [...frameOverlayTemplates];
 export const getTemplate = (id) => templates.find(t => t.id === id) || templates[0];
 
 // Balikin markup .ph-canvas (+ style) siap-pakai, baik dari `html` inline maupun `file` lazy-load.

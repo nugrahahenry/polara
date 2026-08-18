@@ -6,6 +6,8 @@ import { buildOverlayTemplateHtml, waitForOverlayImage } from '../src/modules/te
 
 
 const pocaSingle = frameOverlayTemplates.find((template) => template.id === 'poca-purikura.single');
+const dailySingle = frameOverlayTemplates.find((template) => template.id === 'polara-daily-single');
+const midnightStrip = frameOverlayTemplates.find((template) => template.id === 'polara-midnight-club-strip');
 
 
 test('renderer PNG membuat canvas, slot, overlay, dan sticker layer pada z-order canonical', () => {
@@ -44,6 +46,23 @@ test('renderer PNG meng-escape nilai yang masuk ke markup', () => {
   assert.doesNotMatch(html, /frame<script>/);
   assert.doesNotMatch(html, /onmouseover="alert\(1\)"/);
   assert.match(html, /frame&lt;script&gt;/);
+});
+
+
+test('renderer polygon memakai bounding slot dan clip-path dari geometry registry yang sama', () => {
+  const html = buildOverlayTemplateHtml(dailySingle);
+
+  assert.match(html, /data-mask-type="polygon"/);
+  assert.match(html, /left:52px[\s\S]*top:301px[\s\S]*width:729px[\s\S]*height:745px/);
+  assert.match(html, /clip-path:polygon\(3\.8409% 0%,95\.3361% 0%,100% 3\.6242%,100% 100%,0% 100%,0% 3\.6242%\)/);
+});
+
+
+test('renderer rounded rectangles menjaga radius masing-masing photo window', () => {
+  const html = buildOverlayTemplateHtml(midnightStrip);
+
+  assert.match(html, /data-mask-type="rounded-rectangles"/);
+  assert.equal((html.match(/border-radius:14px/g) || []).length, 3);
 });
 
 

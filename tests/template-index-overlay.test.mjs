@@ -4,20 +4,23 @@ import assert from 'node:assert/strict';
 import {
   templates,
   heroHtmlRollbackTemplates,
+  legacyPickerRollbackTemplates,
   resolveTemplateHtml,
   templateDims,
 } from '../src/modules/templates/index.js';
 
 
-test('enam Hero runtime memakai overlay sementara source HTML tetap tersedia untuk rollback', () => {
+test('picker runtime berisi tepat lima keluarga dan sepuluh Hero sementara source lama tetap tersedia untuk rollback', () => {
   const heroes = templates.filter((template) => template.pickerBadge === 'Hero');
 
-  assert.equal(templates.length, 14);
-  assert.equal(heroes.length, 6);
+  assert.equal(templates.length, 10);
+  assert.equal(heroes.length, 10);
+  assert.equal(new Set(heroes.map((template) => template.familyId)).size, 5);
   assert.ok(heroes.every((template) => template.renderMode === 'png-overlay'));
   assert.ok(heroes.every((template) => template.status === 'runtime-overlay'));
   assert.equal(heroHtmlRollbackTemplates.length, 6);
   assert.ok(heroHtmlRollbackTemplates.every((template) => template.status === 'temporary-code-frame'));
+  assert.equal(legacyPickerRollbackTemplates.length, 8);
 });
 
 

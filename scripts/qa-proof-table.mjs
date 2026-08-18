@@ -1,5 +1,6 @@
 #!/usr/bin/env node
 import assert from 'node:assert/strict';
+import { createHash } from 'node:crypto';
 import fs from 'node:fs/promises';
 import http from 'node:http';
 import path from 'node:path';
@@ -60,6 +61,7 @@ const report = {
   viewports: {},
   camera: {},
   exports: {},
+  variants: {},
   accessibility: {},
   runtimeErrors: [],
 };
@@ -300,7 +302,12 @@ async function downloadPng(page, name) {
   const filename = path.join(exportRoot, name);
   await download.saveAs(filename);
   const buffer = await fs.readFile(filename);
-  return { filename, ...pngDimensions(buffer), bytes: buffer.byteLength };
+  return {
+    filename,
+    ...pngDimensions(buffer),
+    bytes: buffer.byteLength,
+    sha256: createHash('sha256').update(buffer).digest('hex'),
+  };
 }
 
 async function startPage(context) {
@@ -431,6 +438,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(frameRail.overflowX, 'auto');
   assert.equal(frameRail.overflowY, 'hidden');
   assert.ok(frameRail.visibleCards >= 2 && frameRail.visibleCards < 3, `${name}: frame rail should reveal about 2-2.5 cards`);
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 5, `${name}: each mode must expose five frame families`);
   await shot('04', 'frames');
 
   await page.locator('#photoSlotTabs .slot-tab').nth(1).click();
@@ -439,6 +447,15 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   await page.locator('#templateList .tpl-btn').first().focus();
   await page.keyboard.press('End');
   assert.equal(await page.locator('#templateList .tpl-btn').last().evaluate((button) => document.activeElement === button), true);
+  const lastFrameReachability = await page.locator('#templateList').evaluate((rail) => {
+    const railRect = rail.getBoundingClientRect();
+    const lastRect = rail.querySelector('.tpl-btn:last-child').getBoundingClientRect();
+    return {
+      left: lastRect.left >= railRect.left - 1,
+      right: lastRect.right <= railRect.right + 1,
+    };
+  });
+  assert.deepEqual(lastFrameReachability, { left: true, right: true }, `${name}: End must reveal the final frame card`);
   await page.keyboard.press('Home');
   assert.equal(await page.locator('#templateList .tpl-btn').first().evaluate((button) => document.activeElement === button), true);
 
@@ -605,6 +622,91 @@ async function runSingleExport() {
   return exported;
 }
 
+const VARIANTS = [
+  { id: 'poca-purikura.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
+  { id: 'vintage-film-lofi.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
+  { id: 'seoul-snap-y2k.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
+  { id: 'polara-daily-single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
+  { id: 'polara-midnight-club-single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
+  { id: 'poca-purikura.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
+  { id: 'vintage-film-lofi.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
+  { id: 'seoul-snap-y2k.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
+  { id: 'polara-daily-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
+  { id: 'polara-midnight-club-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
+];
+
+async function reachFrames(page, mode) {
+  await page.locator(`[data-mode="${mode}"]`).click();
+  await page.locator('#primaryBtn').click();
+  await waitForCameraReady(page);
+  for (let slot = 0; slot < mode; slot += 1) {
+    await captureProof(page);
+  }
+  await waitForPanel(page, 'review');
+  await page.locator('#primaryBtn').click();
+  await waitForPanel(page, 'frame');
+}
+
+async function runVariantExportMatrix() {
+  for (const mode of [1, 3]) {
+    const context = await browser.newContext({
+      viewport: { width: 768, height: 1024 },
+      permissions: ['camera'],
+      reducedMotion: 'reduce',
+      acceptDownloads: true,
+    });
+    const page = await startPage(context);
+    await reachFrames(page, mode);
+
+    const variants = VARIANTS.filter((variant) => variant.mode === mode);
+    assert.equal(await page.locator('#templateList .tpl-btn').count(), variants.length);
+    for (let index = 0; index < variants.length; index += 1) {
+      const variant = variants[index];
+      const button = page.locator(`#templateList .tpl-btn[data-template-id="${variant.id}"]`);
+      await button.click();
+      await page.waitForFunction((id) => {
+        const canvas = document.querySelector('.ph-canvas');
+        const overlay = canvas?.querySelector('.ph-frame-overlay');
+        return canvas?.dataset.frameId === id && overlay?.complete && overlay?.naturalWidth > 0;
+      }, variant.id, { timeout: 30_000 });
+
+      const preview = await page.locator('.ph-canvas').evaluate((canvas) => ({
+        frameId: canvas.dataset.frameId,
+        width: canvas.offsetWidth,
+        height: canvas.offsetHeight,
+        slots: [...canvas.querySelectorAll('.ph-slot')].map((slot) => ({
+          maskType: slot.dataset.maskType,
+          clipPath: getComputedStyle(slot).clipPath,
+          borderRadius: getComputedStyle(slot).borderRadius,
+        })),
+        overlay: canvas.querySelector('.ph-frame-overlay')?.getAttribute('src') || '',
+      }));
+      assert.equal(preview.frameId, variant.id);
+      assert.deepEqual({ width: preview.width, height: preview.height }, { width: variant.width, height: variant.height });
+      assert.equal(preview.slots.length, mode);
+      assert.ok(preview.slots.every((slot) => slot.maskType === variant.maskType));
+      if (variant.maskType === 'polygon') assert.match(preview.slots[0].clipPath, /^polygon\(/);
+      if (variant.maskType === 'rounded-rectangles') assert.ok(preview.slots.every((slot) => slot.borderRadius === '14px'));
+
+      await page.locator('#primaryBtn').click();
+      await waitForPanel(page, 'decorate');
+      await page.locator('#primaryBtn').click();
+      await page.waitForFunction(() => document.querySelector('#revealTitle')?.textContent === 'Proof approved.', null, { timeout: 40_000 });
+      const exported = await downloadPng(page, `${variant.id}.png`);
+      assert.deepEqual({ width: exported.width, height: exported.height }, { width: variant.width, height: variant.height });
+      report.variants[variant.id] = { preview, export: exported };
+
+      if (index < variants.length - 1) {
+        await page.locator('#backBtn').click();
+        await waitForPanel(page, 'decorate');
+        await page.locator('#backBtn').click();
+        await waitForPanel(page, 'frame');
+      }
+    }
+    await context.close();
+  }
+}
+
 async function runRapidTransitionRegression() {
   const context = await browser.newContext({
     ...playwright.devices['iPhone 13'],
@@ -638,9 +740,10 @@ async function runRapidTransitionRegression() {
 try {
   report.exports.strip = await runFlow({ name: '390x844', viewport: { width: 390, height: 844 }, screenshots: true, retake: true, exportStrip: true });
   await runFlow({ name: '1440x900', viewport: { width: 1440, height: 900 }, screenshots: true });
-  await runFlow({ name: '768x1024', viewport: { width: 768, height: 1024 } });
-  await runFlow({ name: '900x510', viewport: { width: 900, height: 510 } });
+  await runFlow({ name: '768x1024', viewport: { width: 768, height: 1024 }, screenshots: true });
+  await runFlow({ name: '900x510', viewport: { width: 900, height: 510 }, screenshots: true });
   report.exports.single = await runSingleExport();
+  await runVariantExportMatrix();
   await runRapidTransitionRegression();
 
   const deniedContext = await browser.newContext({ viewport: { width: 390, height: 844 }, reducedMotion: 'reduce' });

@@ -9,16 +9,34 @@ import { mascots } from '../src/modules/stickers/index.js';
 const PNG_SIGNATURE = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 
 
-test('setiap Hero memakai composite picker tetapi overlay export tetap terpisah', async () => {
-  assert.equal(frameOverlayTemplates.length, 6);
+test('setiap Hero memakai picker runtime tetapi overlay export tetap terpisah', async () => {
+  assert.equal(frameOverlayTemplates.length, 10);
 
   for (const frame of frameOverlayTemplates) {
-    assert.match(frame.pickerThumbnailSrc, /^assets\/frames\/composites\/[a-z0-9-]+-thumbnail\.png$/);
+    assert.match(frame.pickerThumbnailSrc, /^assets\/frames\/(?:composites|thumbnails)\/[a-z0-9-]+-thumbnail\.png$/);
     assert.match(frame.overlaySrc, /^assets\/frames\/[a-z0-9-]+-overlay\.png$/);
     assert.notEqual(frame.pickerThumbnailSrc, frame.overlaySrc);
 
     const thumbnail = await fs.readFile(new URL(`../${frame.pickerThumbnailSrc}`, import.meta.url));
     assert.deepEqual(thumbnail.subarray(0, 8), PNG_SIGNATURE, frame.id);
+  }
+});
+
+
+test('empat Hero baru hanya merujuk overlay, thumbnail, dan Poca runtime produksi', async () => {
+  const added = frameOverlayTemplates.filter((frame) => (
+    ['polara-daily', 'polara-midnight-club'].includes(frame.familyId)
+  ));
+  assert.equal(added.length, 4);
+
+  for (const frame of added) {
+    assert.equal(frame.pickerThumbnailSrc, frame.thumbnailSrc);
+    assert.doesNotMatch(JSON.stringify(frame), /(?:true-composite|review|_originals|\.zip)/i);
+    assert.match(frame.mascotSrc, /^assets\/mascot\/[a-z0-9-]+\.png$/);
+    for (const src of [frame.overlaySrc, frame.thumbnailSrc, frame.mascotSrc]) {
+      const png = await fs.readFile(new URL(`../${src}`, import.meta.url));
+      assert.deepEqual(png.subarray(0, 8), PNG_SIGNATURE, `${frame.id}: ${src}`);
+    }
   }
 });
 

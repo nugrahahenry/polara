@@ -22,11 +22,30 @@ function validateWindow(window, label, canvasWidth, canvasHeight) {
   }
 }
 
+function validatePolygon(points, label, canvasWidth, canvasHeight) {
+  if (!Array.isArray(points) || points.length < 3) fail(`${label} harus punya minimal tiga titik.`);
+  points.forEach((point, index) => {
+    if (!Array.isArray(point) || point.length !== 2) fail(`${label}[${index}] harus berupa [x, y].`);
+    const [x, y] = point;
+    assertInteger(x, `${label}[${index}][0]`);
+    assertInteger(y, `${label}[${index}][1]`);
+    if (x > canvasWidth || y > canvasHeight) fail(`${label}[${index}] keluar dari canvas.`);
+  });
+}
+
+function polygonBounds(points) {
+  const xs = points.map(([x]) => x);
+  const ys = points.map(([, y]) => y);
+  const x = Math.min(...xs);
+  const y = Math.min(...ys);
+  return { x, y, width: Math.max(...xs) - x, height: Math.max(...ys) - y };
+}
+
 function validateFrame(frame, ids) {
   const required = [
     'id', 'family', 'name', 'category', 'mode', 'renderMode',
     'overlaySrc', 'thumbnailSrc', 'canvasWidth', 'canvasHeight',
-    'photoWindows', 'assetVersion', 'slotBackground',
+    'assetVersion', 'slotBackground',
     'supportsDynamicText', 'metadataZones'
   ];
   for (const key of required) {
@@ -35,18 +54,27 @@ function validateFrame(frame, ids) {
   if (ids.has(frame.id)) fail(`ID duplikat: ${frame.id}.`);
   ids.add(frame.id);
   if (frame.renderMode !== 'png-overlay') fail(`${frame.id}.renderMode harus png-overlay.`);
-  if (frame.pickerThumbnailSrc && !/^assets\/frames\/composites\/[a-z0-9-]+-thumbnail\.png$/.test(frame.pickerThumbnailSrc)) {
-    fail(`${frame.id}.pickerThumbnailSrc harus menunjuk composite picker PNG.`);
+  if (frame.pickerThumbnailSrc && !/^assets\/frames\/(?:composites|thumbnails)\/[a-z0-9-]+-thumbnail\.png$/.test(frame.pickerThumbnailSrc)) {
+    fail(`${frame.id}.pickerThumbnailSrc harus menunjuk picker PNG produksi.`);
   }
+  if (frame.mascotSrc && !/^assets\/mascot\/[a-z0-9-]+\.png$/.test(frame.mascotSrc)) fail(`${frame.id}.mascotSrc invalid.`);
   if (!['single', 'strip'].includes(frame.mode)) fail(`${frame.id}.mode invalid.`);
   const expectedSlots = frame.mode === 'strip' ? 3 : 1;
-  if (frame.photoWindows.length !== expectedSlots) {
-    fail(`${frame.id} harus punya ${expectedSlots} photo window.`);
-  }
   assertInteger(frame.canvasWidth, `${frame.id}.canvasWidth`);
   assertInteger(frame.canvasHeight, `${frame.id}.canvasHeight`);
-  frame.photoWindows.forEach((window, index) => {
+  const maskType = frame.maskType || 'rectangles';
+  if (!['rectangles', 'rounded-rectangles', 'polygon'].includes(maskType)) fail(`${frame.id}.maskType invalid.`);
+  if (maskType === 'polygon') {
+    if (expectedSlots !== 1) fail(`${frame.id} polygon hanya didukung untuk Single.`);
+    validatePolygon(frame.photoPolygon, `${frame.id}.photoPolygon`, frame.canvasWidth, frame.canvasHeight);
+  } else if (!Array.isArray(frame.photoWindows) || frame.photoWindows.length !== expectedSlots) {
+    fail(`${frame.id} harus punya ${expectedSlots} photo window.`);
+  }
+  (frame.photoWindows || []).forEach((window, index) => {
     validateWindow(window, `${frame.id}.photoWindows[${index}]`, frame.canvasWidth, frame.canvasHeight);
+    if (maskType === 'rounded-rectangles' && (!Number.isInteger(window.radius) || window.radius < 0)) {
+      fail(`${frame.id}.photoWindows[${index}].radius harus integer non-negatif.`);
+    }
   });
   if (!/^#[a-fA-F0-9]{6}$/.test(frame.slotBackground)) {
     fail(`${frame.id}.slotBackground harus hex 6 digit.`);
@@ -56,7 +84,7 @@ function validateFrame(frame, ids) {
 const raw = await fs.readFile(inputPath, 'utf8');
 const manifest = JSON.parse(raw);
 if (!Array.isArray(manifest.frames)) fail('Manifest harus memiliki array frames.');
-if (manifest.frames.length !== 6) fail(`Manifest produksi harus berisi tepat 6 frame Hero; ditemukan ${manifest.frames.length}.`);
+if (manifest.frames.length !== 10) fail(`Manifest produksi harus berisi tepat 10 frame Hero; ditemukan ${manifest.frames.length}.`);
 
 const ids = new Set();
 manifest.frames.forEach((frame) => validateFrame(frame, ids));
@@ -71,7 +99,11 @@ const runtimeFields = manifest.frames.map((frame) => ({
     ? 'brand-hero'
     : frame.family === 'vintage-film-lofi'
       ? 'nostalgia'
-      : 'statement',
+      : frame.family === 'polara-daily'
+        ? 'editorial'
+        : frame.family === 'polara-midnight-club'
+          ? 'night-studio'
+          : 'statement',
   premium: false,
   status: 'runtime-overlay',
   pickerBadge: 'Hero',
@@ -81,7 +113,10 @@ const runtimeFields = manifest.frames.map((frame) => ({
   thumbnailSrc: frame.thumbnailSrc,
   pickerThumbnailSrc: frame.pickerThumbnailSrc || frame.thumbnailSrc,
   canvas: { width: frame.canvasWidth, height: frame.canvasHeight },
-  photoWindows: frame.photoWindows,
+  maskType: frame.maskType || 'rectangles',
+  photoWindows: frame.maskType === 'polygon' ? [polygonBounds(frame.photoPolygon)] : frame.photoWindows,
+  ...(frame.photoPolygon ? { photoPolygon: frame.photoPolygon } : {}),
+  ...(frame.mascotSrc ? { mascotSrc: frame.mascotSrc } : {}),
   assetVersion: frame.assetVersion,
   slotBackground: frame.slotBackground,
   supportsDynamicText: frame.supportsDynamicText,

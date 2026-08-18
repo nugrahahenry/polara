@@ -41,12 +41,37 @@ const EXPECTED = {
       { x: 76, y: 1066, width: 568, height: 388 },
     ],
   },
+  'polara-daily-single': {
+    mode: 'single', canvas: { width: 1080, height: 1350 }, maskType: 'polygon',
+    polygon: [[80, 301], [747, 301], [781, 328], [781, 1046], [52, 1046], [52, 328]],
+  },
+  'polara-daily-strip': {
+    mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
+    windows: [
+      { x: 35, y: 241, width: 483, height: 428, radius: 14 },
+      { x: 35, y: 681, width: 483, height: 387, radius: 14 },
+      { x: 35, y: 1079, width: 483, height: 364, radius: 14 },
+    ],
+  },
+  'polara-midnight-club-single': {
+    mode: 'single', canvas: { width: 1080, height: 1350 }, maskType: 'polygon',
+    polygon: [[158, 231], [918, 231], [969, 282], [969, 1153], [110, 1153], [110, 282]],
+  },
+  'polara-midnight-club-strip': {
+    mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
+    windows: [
+      { x: 40, y: 204, width: 640, height: 414, radius: 14 },
+      { x: 40, y: 632, width: 640, height: 426, radius: 14 },
+      { x: 40, y: 1074, width: 640, height: 412, radius: 14 },
+    ],
+  },
 };
 
 
-test('registry generated memuat tepat enam Hero PNG dengan geometry canonical', () => {
-  assert.equal(frameOverlayTemplates.length, 6);
-  assert.equal(new Set(frameOverlayTemplates.map((template) => template.id)).size, 6);
+test('registry generated memuat tepat sepuluh Hero PNG dari lima keluarga dengan geometry canonical', () => {
+  assert.equal(frameOverlayTemplates.length, 10);
+  assert.equal(new Set(frameOverlayTemplates.map((template) => template.familyId)).size, 5);
+  assert.equal(new Set(frameOverlayTemplates.map((template) => template.id)).size, 10);
   assert.deepEqual(new Set(frameOverlayTemplates.map((template) => template.id)), new Set(Object.keys(EXPECTED)));
 
   frameOverlayTemplates.forEach((template) => {
@@ -54,19 +79,28 @@ test('registry generated memuat tepat enam Hero PNG dengan geometry canonical', 
     assert.equal(template.renderMode, 'png-overlay', template.id);
     assert.equal(template.mode, expected.mode, template.id);
     assert.deepEqual(template.canvas, expected.canvas, template.id);
-    assert.deepEqual(template.photoWindows, expected.windows, template.id);
+    if (expected.maskType) assert.equal(template.maskType, expected.maskType, template.id);
+    if (expected.polygon) assert.deepEqual(template.photoPolygon, expected.polygon, template.id);
+    if (expected.windows) assert.deepEqual(template.photoWindows, expected.windows, template.id);
     assert.equal(template.photoWindows.length, template.mode === 'strip' ? 3 : 1, template.id);
   });
 });
 
 
-test('registry generated memisahkan overlay export, thumbnail fallback, dan composite picker', () => {
+test('registry generated memisahkan overlay export dari picker thumbnail runtime', () => {
   frameOverlayTemplates.forEach((template) => {
     assert.match(template.overlaySrc, /^assets\/frames\/[a-z0-9-]+-overlay\.png$/);
     assert.match(template.thumbnailSrc, /^assets\/frames\/thumbnails\/[a-z0-9-]+-thumbnail\.png$/);
-    assert.match(template.pickerThumbnailSrc, /^assets\/frames\/composites\/[a-z0-9-]+-thumbnail\.png$/);
+    assert.match(template.pickerThumbnailSrc, /^assets\/frames\/(?:composites|thumbnails)\/[a-z0-9-]+-thumbnail\.png$/);
     assert.notEqual(template.pickerThumbnailSrc, template.overlaySrc);
-    assert.equal(template.assetVersion, 'frame-overlay-v1');
+    assert.match(template.assetVersion, /^frame-overlay-v\d+$/);
     assert.equal(template.status, 'runtime-overlay');
+  });
+
+  frameOverlayTemplates.filter((template) => (
+    ['polara-daily', 'polara-midnight-club'].includes(template.familyId)
+  )).forEach((template) => {
+    assert.equal(template.pickerThumbnailSrc, template.thumbnailSrc, template.id);
+    assert.doesNotMatch(template.pickerThumbnailSrc, /composites/);
   });
 });

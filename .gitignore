@@ -50,3 +50,8 @@ Polara-PNG-First-Frame-Architecture-*.zip
 
 # Prototype Proof Table final; hasil audit/ekstrak canonical berada di docs/ yang ignored
 Polara-Print-Room-Proof-Table-*.zip
+
+# Final frame-family handoff packs; runtime files are integrated explicitly.
+Polara-New-Frames-*.zip
+Polara-Daily-*.zip
+Polara-Midnight-*.zip

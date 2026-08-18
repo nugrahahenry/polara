@@ -16,13 +16,18 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.18.2 desktop Proof Table density pass', () => {
-  assert.equal(packageJson.version, '0.18.2');
+test('release metadata records the v0.19.0 five-family frame integration', () => {
+  assert.equal(packageJson.version, '0.19.0');
+  assert.match(changelog, /## \[0\.19\.0\] - 2026-08-18/);
+  assert.match(changelog, /Polara Daily/);
+  assert.match(changelog, /Midnight Club/);
+  assert.match(changelog, /polygon/i);
+  assert.match(changelog, /rounded-rectangles/i);
+  assert.match(indexHtml, /src\/app\.js\?v=21/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=20/);
   assert.match(changelog, /## \[0\.18\.2\] - 2026-08-18/);
   assert.match(changelog, /stage docket/i);
   assert.match(changelog, /footer foundation/i);
-  assert.match(indexHtml, /src\/app\.js\?v=20/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=20/);
   assert.match(changelog, /## \[0\.18\.1\] - 2026-08-17/);
   assert.match(changelog, /presentation-only/i);
   assert.match(changelog, /accessibility tree/i);

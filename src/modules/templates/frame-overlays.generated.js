@@ -20,6 +20,7 @@ export const frameOverlayTemplates = [
       "width": 1080,
       "height": 1350
     },
+    "maskType": "rectangles",
     "photoWindows": [
       {
         "x": 124,
@@ -56,6 +57,7 @@ export const frameOverlayTemplates = [
       "width": 720,
       "height": 1800
     },
+    "maskType": "rectangles",
     "photoWindows": [
       {
         "x": 76,
@@ -104,6 +106,7 @@ export const frameOverlayTemplates = [
       "width": 1080,
       "height": 1350
     },
+    "maskType": "rectangles",
     "photoWindows": [
       {
         "x": 96,
@@ -140,6 +143,7 @@ export const frameOverlayTemplates = [
       "width": 720,
       "height": 1800
     },
+    "maskType": "rectangles",
     "photoWindows": [
       {
         "x": 159,
@@ -188,6 +192,7 @@ export const frameOverlayTemplates = [
       "width": 1080,
       "height": 1350
     },
+    "maskType": "rectangles",
     "photoWindows": [
       {
         "x": 279,
@@ -224,6 +229,7 @@ export const frameOverlayTemplates = [
       "width": 720,
       "height": 1800
     },
+    "maskType": "rectangles",
     "photoWindows": [
       {
         "x": 76,
@@ -246,6 +252,240 @@ export const frameOverlayTemplates = [
     ],
     "assetVersion": "frame-overlay-v1",
     "slotBackground": "#fff7ef",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "polara-daily-single",
+    "familyId": "polara-daily",
+    "name": "Polara Daily",
+    "category": "newspaper",
+    "mode": "single",
+    "tone": "editorial",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "1 foto",
+    "renderMode": "png-overlay",
+    "overlaySrc": "assets/frames/polara-daily-single-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/polara-daily-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/thumbnails/polara-daily-single-thumbnail.png",
+    "canvas": {
+      "width": 1080,
+      "height": 1350
+    },
+    "maskType": "polygon",
+    "photoWindows": [
+      {
+        "x": 52,
+        "y": 301,
+        "width": 729,
+        "height": 745
+      }
+    ],
+    "photoPolygon": [
+      [
+        80,
+        301
+      ],
+      [
+        747,
+        301
+      ],
+      [
+        781,
+        328
+      ],
+      [
+        781,
+        1046
+      ],
+      [
+        52,
+        1046
+      ],
+      [
+        52,
+        328
+      ]
+    ],
+    "mascotSrc": "assets/mascot/poca-press-reporter.png",
+    "assetVersion": "frame-overlay-v2",
+    "slotBackground": "#f5e3c4",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "polara-daily-strip",
+    "familyId": "polara-daily",
+    "name": "Polara Daily",
+    "category": "newspaper",
+    "mode": "strip",
+    "tone": "editorial",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "3 foto",
+    "renderMode": "png-overlay",
+    "overlaySrc": "assets/frames/polara-daily-strip-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/polara-daily-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/thumbnails/polara-daily-strip-thumbnail.png",
+    "canvas": {
+      "width": 720,
+      "height": 1800
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 35,
+        "y": 241,
+        "width": 483,
+        "height": 428,
+        "radius": 14
+      },
+      {
+        "x": 35,
+        "y": 681,
+        "width": 483,
+        "height": 387,
+        "radius": 14
+      },
+      {
+        "x": 35,
+        "y": 1079,
+        "width": 483,
+        "height": 364,
+        "radius": 14
+      }
+    ],
+    "mascotSrc": "assets/mascot/poca-press-reporter.png",
+    "assetVersion": "frame-overlay-v2",
+    "slotBackground": "#f5e3c4",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "polara-midnight-club-single",
+    "familyId": "polara-midnight-club",
+    "name": "Midnight Club",
+    "category": "night-studio",
+    "mode": "single",
+    "tone": "night-studio",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "1 foto",
+    "renderMode": "png-overlay",
+    "overlaySrc": "assets/frames/polara-midnight-club-single-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-single-thumbnail.png",
+    "canvas": {
+      "width": 1080,
+      "height": 1350
+    },
+    "maskType": "polygon",
+    "photoWindows": [
+      {
+        "x": 110,
+        "y": 231,
+        "width": 859,
+        "height": 922
+      }
+    ],
+    "photoPolygon": [
+      [
+        158,
+        231
+      ],
+      [
+        918,
+        231
+      ],
+      [
+        969,
+        282
+      ],
+      [
+        969,
+        1153
+      ],
+      [
+        110,
+        1153
+      ],
+      [
+        110,
+        282
+      ]
+    ],
+    "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
+    "assetVersion": "frame-overlay-v2",
+    "slotBackground": "#07091e",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "polara-midnight-club-strip",
+    "familyId": "polara-midnight-club",
+    "name": "Midnight Club",
+    "category": "night-studio",
+    "mode": "strip",
+    "tone": "night-studio",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "3 foto",
+    "renderMode": "png-overlay",
+    "overlaySrc": "assets/frames/polara-midnight-club-strip-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-strip-thumbnail.png",
+    "canvas": {
+      "width": 720,
+      "height": 1800
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 40,
+        "y": 204,
+        "width": 640,
+        "height": 414,
+        "radius": 14
+      },
+      {
+        "x": 40,
+        "y": 632,
+        "width": 640,
+        "height": 426,
+        "radius": 14
+      },
+      {
+        "x": 40,
+        "y": 1074,
+        "width": 640,
+        "height": 412,
+        "radius": 14
+      }
+    ],
+    "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
+    "assetVersion": "frame-overlay-v2",
+    "slotBackground": "#07091e",
     "supportsDynamicText": false,
     "metadataZones": {
       "caption": null,
