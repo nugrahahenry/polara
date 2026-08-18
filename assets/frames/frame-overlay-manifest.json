@@ -23,11 +23,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-single-overlay-master.png",
-      "sha256": "6e461789d6363a23676c86b8167a3494ae3d089a6ccf1d2053cad298afffea75",
-      "byteSize": 383044,
+      "sha256": "d8a0fab2eec1a03e93719e6bae34f8831a50a47a2978e600a3db60aa1dd833d1",
+      "byteSize": 726052,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v1",
+      "assetVersion": "frame-overlay-v4",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -39,10 +39,9 @@
       "decorativeElements": [
         "Polara wordmark",
         "Poca ribbon",
-        "Poca peeking",
-        "Poca wave",
         "heart/paw/star/sparkle",
-        "pink gingham"
+        "pink gingham",
+        "character-free footer"
       ]
     },
     {
@@ -78,11 +77,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-strip-overlay-master.png",
-      "sha256": "850052f0d2ecd7c44fdf0ca26d36ec39ffd9b18a8122d55742a52ae1c49dc7e5",
-      "byteSize": 283456,
+      "sha256": "7f003aa567b74034ce848d9c2dd558b0b388412e883bade32cef8f584c87e005",
+      "byteSize": 608867,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v1",
+      "assetVersion": "frame-overlay-v4",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -94,9 +93,9 @@
       "decorativeElements": [
         "compact Polara wordmark",
         "Poca ribbon",
-        "two Poca footer accents",
         "heart/paw/star/sparkle",
-        "pink gingham"
+        "pink gingham",
+        "character-free footer"
       ]
     },
     {
@@ -314,16 +313,16 @@
       "mascotSrc": "assets/mascot/poca-press-reporter.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "01982eebfc853d082a6989444739ffc39ce26dcfe1f0694326259cff64e292e4",
-      "byteSize": 1108461,
+      "sha256": "f07fe9d04bfe84b6d705ececea7ebd5032fc07be58c9c3be63cf10c65fea9214",
+      "byteSize": 1358241,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v3",
+      "assetVersion": "frame-overlay-v4",
       "slotBackground": "#f5e3c4",
       "supportsDynamicText": false,
       "metadataZones": { "caption": null, "date": null, "brand": null },
       "metadataAreaNote": "Copy editorial sudah menjadi bagian dari overlay final.",
-      "decorativeElements": ["warm newsprint", "coral section labels", "editorial grid", "Poca Press Reporter"]
+      "decorativeElements": ["warm newsprint", "coral section labels", "editorial grid", "character-free photo report"]
     },
     {
       "id": "polara-daily-strip",
@@ -343,16 +342,16 @@
       "mascotSrc": "assets/mascot/poca-press-reporter.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "40903c5ef2028fb129d75bfb1769c8b8f09b7fc4cb6a908354626c00123d343b",
-      "byteSize": 834082,
+      "sha256": "a38b64aa833d3e710311e8addafd2583fb687b2fa8c4199761228d5344881e7d",
+      "byteSize": 997612,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v3",
+      "assetVersion": "frame-overlay-v4",
       "slotBackground": "#f5e3c4",
       "supportsDynamicText": false,
       "metadataZones": { "caption": null, "date": null, "brand": null },
       "metadataAreaNote": "Copy editorial sudah menjadi bagian dari overlay final.",
-      "decorativeElements": ["warm newsprint", "three editorial windows", "archive footer", "Poca Press Reporter"]
+      "decorativeElements": ["warm newsprint", "three editorial windows", "archive footer", "character-free photo report"]
     },
     {
       "id": "polara-midnight-club-single",
@@ -375,16 +374,16 @@
       "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "2d23b79f66228d94f5c598d3fa1d9d852fdf21df5cf6858278f7367a47388939",
-      "byteSize": 804990,
+      "sha256": "6324d257e4a45374cb4d025de1fd40bdffd73b2d4d527e38824712efa05c0047",
+      "byteSize": 836007,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v3",
+      "assetVersion": "frame-overlay-v4",
       "slotBackground": "#07091e",
       "supportsDynamicText": false,
       "metadataZones": { "caption": null, "date": null, "brand": null },
       "metadataAreaNote": "Night Studio chrome dan copy sudah menjadi bagian dari overlay final.",
-      "decorativeElements": ["night studio chrome", "electric blue accents", "keepsake footer", "Poca Midnight Photographer"]
+      "decorativeElements": ["night studio chrome", "electric blue accents", "keepsake footer", "character-free proof stage"]
     },
     {
       "id": "polara-midnight-club-strip",
@@ -404,16 +403,16 @@
       "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "56ba913da36dd79c8648d95643aef519c15b279e75e339034b040e7bb9ede6ff",
-      "byteSize": 458208,
+      "sha256": "0d679d427cad7003620274103544110f0c2fa9f87253ef8f534e9c94f82cdd32",
+      "byteSize": 569261,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v3",
+      "assetVersion": "frame-overlay-v4",
       "slotBackground": "#07091e",
       "supportsDynamicText": false,
       "metadataZones": { "caption": null, "date": null, "brand": null },
       "metadataAreaNote": "Night Studio chrome dan copy sudah menjadi bagian dari overlay final.",
-      "decorativeElements": ["night studio chrome", "three rounded windows", "electric blue accents", "Poca Midnight Photographer"]
+      "decorativeElements": ["night studio chrome", "three rounded windows", "electric blue accents", "character-free technical footer"]
     }
   ]
 }

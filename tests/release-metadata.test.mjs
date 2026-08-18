@@ -16,8 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.19.1 transparent asset hygiene patch', () => {
-  assert.equal(packageJson.version, '0.19.1');
+test('release metadata records the v0.20.0 character-free frame and exclusive sticker checkpoint', () => {
+  assert.equal(packageJson.version, '0.20.0');
+  assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
+  assert.match(changelog, /sticker Poca eksklusif/i);
+  assert.match(changelog, /character-free/i);
+  assert.match(changelog, /preview picker/i);
   assert.match(changelog, /## \[0\.19\.1\] - 2026-08-18/);
   assert.match(changelog, /alpha 0/i);
   assert.match(changelog, /visible pixel/i);
@@ -26,8 +30,8 @@ test('release metadata records the v0.19.1 transparent asset hygiene patch', () 
   assert.match(changelog, /Midnight Club/);
   assert.match(changelog, /polygon/i);
   assert.match(changelog, /rounded-rectangles/i);
-  assert.match(indexHtml, /src\/app\.js\?v=21/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=20/);
+  assert.match(indexHtml, /src\/app\.js\?v=22/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=21/);
   assert.match(changelog, /## \[0\.18\.2\] - 2026-08-18/);
   assert.match(changelog, /stage docket/i);
   assert.match(changelog, /footer foundation/i);

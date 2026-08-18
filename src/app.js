@@ -8,14 +8,14 @@ import {
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
 import { patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
-import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=13';
+import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=14';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
   findAvailableTemplate, getTemplatePreviewConfig, selectFramePreservingEditorState,
   isRequestedFrameStillSelected,
   templateSupportsDynamicText,
 } from './modules/templates/template-ui.js?v=13';
-import { stickers, createStickerInstance, preloadMascots } from './modules/stickers/index.js';
+import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=2';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView } from './ui/decorate-workshop.js?v=1';
 
@@ -54,7 +54,7 @@ const refs = {
   zoom: $('zoomInput'), panX: $('panXInput'), panY: $('panYInput'),
   zoomOutput: $('zoomOutput'), panXOutput: $('panXOutput'), panYOutput: $('panYOutput'), resetPhoto: $('resetPhotoBtn'),
   caption: $('captionInput'), captionField: $('captionField'), captionNote: $('captionAvailabilityNote'),
-  stickerBench: $('stickerBench'), stickerBenchStatus: $('stickerBenchStatus'), stickerTray: $('stickerTray'),
+  stickerBench: $('stickerBench'), stickerBenchStatus: $('stickerBenchStatus'), stickerTray: $('stickerTray'), stickerRailMeta: $('stickerRailMeta'),
   stickerInspector: $('stickerInspector'), stickerInspectorImage: $('stickerInspectorImage'),
   stickerInspectorName: $('stickerInspectorName'), stickerInspectorHint: $('stickerInspectorHint'),
   undoSticker: $('undoStickerBtn'), resetSticker: $('resetStickerBtn'),
@@ -577,6 +577,7 @@ async function renderTemplateList() {
     button.className = `tpl-btn${template.id === state.frameId ? ' active' : ''}${template.status === 'experimental-static' ? ' experimental' : ''}${unavailable ? ' unavailable' : ''}`;
     button.disabled = unavailable;
     button.dataset.templateId = template.id;
+    button.dataset.mode = template.mode;
     button.setAttribute('role', 'option');
     button.setAttribute('aria-selected', String(template.id === state.frameId));
     const thumb = document.createElement('span');
@@ -598,6 +599,10 @@ async function renderTemplateList() {
       badge.textContent = template.pickerBadge;
       thumb.appendChild(badge);
     }
+    const formatBadge = document.createElement('span');
+    formatBadge.className = 'tpl-format-badge';
+    formatBadge.textContent = template.mode === 'strip' ? 'Strip 3' : 'Single';
+    thumb.appendChild(formatBadge);
     button.append(thumb, meta);
     button.addEventListener('click', async () => {
       if (unavailableFrameIds.has(template.id)) return;
@@ -860,12 +865,22 @@ function renderStickerBench() {
 
 function renderStickerTray() {
   refs.stickerTray.innerHTML = '';
-  stickers.forEach((asset) => {
+  const template = getTemplate(state.frameId);
+  const stickerPack = getStickerPack(template?.familyId);
+  if (refs.stickerRailMeta) refs.stickerRailMeta.textContent = `${template?.name || 'Frame'} exclusive + universal`;
+  refs.stickerTray.setAttribute('aria-label', `Add a sticker for ${template?.name || 'the selected frame'}`);
+  stickerPack.forEach((asset) => {
     const button = document.createElement('button');
     button.type = 'button';
-    button.className = 'sticker-btn';
+    button.className = `sticker-btn${asset.exclusiveFamilyId ? ' exclusive' : ''}`;
     button.setAttribute('role', 'option');
-    button.setAttribute('aria-label', `Add sticker ${asset.name}`);
+    button.setAttribute('aria-label', `Add ${asset.exclusiveFamilyId ? 'exclusive ' : ''}sticker ${asset.name}`);
+    if (asset.pickerBadge) {
+      const badge = document.createElement('span');
+      badge.className = 'sticker-badge';
+      badge.textContent = asset.pickerBadge;
+      button.appendChild(badge);
+    }
     const image = document.createElement('img');
     image.src = asset.src;
     image.alt = '';

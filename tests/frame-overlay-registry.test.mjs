@@ -95,6 +95,7 @@ test('registry generated memisahkan overlay export dari picker thumbnail runtime
     assert.notEqual(template.pickerThumbnailSrc, template.overlaySrc);
     assert.match(template.assetVersion, /^frame-overlay-v\d+$/);
     assert.equal(template.status, 'runtime-overlay');
+    assert.match(template.pickerDetail, /^(Single|Strip 3) · \d+ × \d+$/);
   });
 
   frameOverlayTemplates.filter((template) => (

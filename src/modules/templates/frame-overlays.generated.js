@@ -11,7 +11,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "1 foto",
+    "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/poca-purikura-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-single-thumbnail.png",
@@ -29,7 +29,7 @@ export const frameOverlayTemplates = [
         "height": 840
       }
     ],
-    "assetVersion": "frame-overlay-v1",
+    "assetVersion": "frame-overlay-v4",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -48,7 +48,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "3 foto",
+    "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/poca-purikura-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-strip-thumbnail.png",
@@ -78,7 +78,7 @@ export const frameOverlayTemplates = [
         "height": 388
       }
     ],
-    "assetVersion": "frame-overlay-v1",
+    "assetVersion": "frame-overlay-v4",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -97,7 +97,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "1 foto",
+    "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/vintage-film-lofi-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-single-thumbnail.png",
@@ -134,7 +134,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "3 foto",
+    "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/vintage-film-lofi-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-strip-thumbnail.png",
@@ -183,7 +183,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "1 foto",
+    "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/seoul-snap-y2k-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-single-thumbnail.png",
@@ -220,7 +220,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "3 foto",
+    "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/seoul-snap-y2k-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-strip-thumbnail.png",
@@ -269,7 +269,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "1 foto",
+    "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/polara-daily-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-daily-single-thumbnail.png",
@@ -314,7 +314,7 @@ export const frameOverlayTemplates = [
       ]
     ],
     "mascotSrc": "assets/mascot/poca-press-reporter.png",
-    "assetVersion": "frame-overlay-v3",
+    "assetVersion": "frame-overlay-v4",
     "slotBackground": "#f5e3c4",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -333,7 +333,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "3 foto",
+    "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/polara-daily-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-daily-strip-thumbnail.png",
@@ -367,7 +367,7 @@ export const frameOverlayTemplates = [
       }
     ],
     "mascotSrc": "assets/mascot/poca-press-reporter.png",
-    "assetVersion": "frame-overlay-v3",
+    "assetVersion": "frame-overlay-v4",
     "slotBackground": "#f5e3c4",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -386,7 +386,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "1 foto",
+    "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/polara-midnight-club-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-single-thumbnail.png",
@@ -431,7 +431,7 @@ export const frameOverlayTemplates = [
       ]
     ],
     "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
-    "assetVersion": "frame-overlay-v3",
+    "assetVersion": "frame-overlay-v4",
     "slotBackground": "#07091e",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -450,7 +450,7 @@ export const frameOverlayTemplates = [
     "premium": false,
     "status": "runtime-overlay",
     "pickerBadge": "Hero",
-    "pickerDetail": "3 foto",
+    "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
     "overlaySrc": "assets/frames/polara-midnight-club-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-strip-thumbnail.png",
@@ -484,7 +484,7 @@ export const frameOverlayTemplates = [
       }
     ],
     "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
-    "assetVersion": "frame-overlay-v3",
+    "assetVersion": "frame-overlay-v4",
     "slotBackground": "#07091e",
     "supportsDynamicText": false,
     "metadataZones": {

@@ -445,8 +445,35 @@ body {
   background: #fff8fb;
   box-shadow: 0 0 0 3px rgba(255,143,189,.34), 0 10px 22px rgba(75,46,31,.11);
 }
-.tpl-thumb { height: 132px; border: 0; border-radius: 8px; background: #eee5dd; }
-#templateList.mode-strip .tpl-thumb { height: 168px; }
+.tpl-thumb {
+  height: 144px;
+  padding: 7px;
+  border: 0;
+  border-radius: 8px;
+  background: #eee5dd;
+  box-shadow: inset 0 0 0 1px rgba(75,46,31,.08);
+  isolation: isolate;
+}
+#templateList.mode-strip .tpl-thumb { height: 184px; }
+.tpl-thumb-image {
+  border-radius: 5px;
+  filter: saturate(.94) contrast(1.02) drop-shadow(0 5px 5px rgba(75,46,31,.15));
+}
+.tpl-format-badge {
+  position: absolute;
+  right: 12px;
+  bottom: 12px;
+  z-index: 2;
+  padding: 4px 7px;
+  border-radius: 6px;
+  background: rgba(43,30,25,.88);
+  color: #fffaf5;
+  font-size: .56rem;
+  font-weight: 800;
+  letter-spacing: .03em;
+  line-height: 1;
+  text-transform: uppercase;
+}
 .tpl-badge { border: 0; border-radius: 7px; box-shadow: 0 3px 10px rgba(75,46,31,.12); }
 .tpl-name { font-size: .8rem; }
 .photo-adjust { border-top: 1px solid var(--proof-hairline); }
@@ -512,6 +539,7 @@ body {
   scrollbar-color: rgba(75,46,31,.28) transparent;
 }
 .sticker-btn {
+  position: relative;
   min-width: 0;
   min-height: 106px;
   padding: 8px 7px 7px;
@@ -521,6 +549,28 @@ body {
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
 .sticker-btn img { height: 68px; }
+.sticker-btn.exclusive {
+  border-color: rgba(204,79,130,.42);
+  background: #fff4f8;
+  box-shadow: inset 0 0 0 1px rgba(255,143,189,.16);
+}
+.sticker-btn.exclusive:hover { border-color: var(--proof-pink); background: #fff8fb; }
+.sticker-badge {
+  position: absolute;
+  z-index: 2;
+  top: 6px;
+  left: 6px;
+  max-width: calc(100% - 12px);
+  padding: 3px 6px;
+  border-radius: 6px;
+  background: var(--proof-blue);
+  color: #fff;
+  font-size: .52rem;
+  font-weight: 800;
+  letter-spacing: .03em;
+  line-height: 1;
+  text-transform: uppercase;
+}
 .sticker-btn:hover {
   border-color: rgba(75,46,31,.38);
   background: var(--proof-paper);
@@ -715,8 +765,8 @@ body {
   .slot-card, .slot-card img, .slot-empty { min-height: 78px; height: 78px; }
   .slot-state { right: 4px; bottom: 4px; padding: 3px 5px; font-size: .55rem; }
   #templateList { grid-auto-columns: clamp(132px, 46%, 154px); }
-  .tpl-thumb { height: 104px; }
-  #templateList.mode-strip .tpl-thumb { height: 134px; }
+  .tpl-thumb { height: 112px; }
+  #templateList.mode-strip .tpl-thumb { height: 146px; }
   #stickerTray { grid-auto-columns: clamp(92px, 31%, 106px); }
   .sticker-bench-head { align-items: center; }
   .sticker-bench .editor-actions { gap: 6px; }
@@ -764,7 +814,7 @@ body {
   .start-copy p { max-width: 48ch; font-size: .72rem; }
   .proof-buddy { width: 68px; }
   #templateList { max-height: none; grid-auto-columns: clamp(132px, 45%, 150px); }
-  #templateList.mode-strip .tpl-thumb { height: 118px; }
+  #templateList.mode-strip .tpl-thumb { height: 132px; }
   #stickerTray { grid-auto-columns: clamp(88px, 34%, 104px); max-height: none; }
   .proof-note { padding-block: 9px 11px; }
   .sticker-bench { margin-top: 12px; }

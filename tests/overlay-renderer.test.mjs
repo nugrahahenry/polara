@@ -18,7 +18,7 @@ test('renderer PNG membuat canvas, slot, overlay, dan sticker layer pada z-order
   assert.match(html, /width:1080px/);
   assert.match(html, /height:1350px/);
   assert.match(html, /class="ph-slot"[\s\S]*data-slot="1"[\s\S]*left:124px[\s\S]*top:270px[\s\S]*width:832px[\s\S]*height:840px[\s\S]*z-index:10/);
-  assert.match(html, /class="ph-frame-overlay"[\s\S]*poca-purikura-single-overlay\.png\?v=frame-overlay-v1[\s\S]*aria-hidden="true"[\s\S]*z-index:20/);
+  assert.match(html, /class="ph-frame-overlay"[\s\S]*poca-purikura-single-overlay\.png\?v=frame-overlay-v4[\s\S]*aria-hidden="true"[\s\S]*z-index:20/);
   assert.match(html, /class="ph-sticker-layer"[\s\S]*z-index:30/);
   assert.doesNotMatch(html, /class="ph-caption"/);
 });

@@ -5,6 +5,23 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.20.0] - 2026-08-19
+
+### Added
+- Tambahkan satu sticker Poca eksklusif untuk masing-masing keluarga Poca Purikura, Vintage Film Lo-Fi, Seoul Snap Y2K, Polara Daily, dan Midnight Club.
+- Tampilkan sticker eksklusif sebagai pilihan pertama dengan badge dan nama aksesibel, diikuti tiga belas sticker universal yang tetap tersedia.
+
+### Changed
+- Bersihkan Poca yang sebelumnya menyatu ke enam overlay Poca Purikura, Polara Daily, dan Midnight Club; Poca sekarang opsional dan hanya masuk hasil ketika pengguna menambahkannya sebagai sticker.
+- Perbarui preview picker character-free, label format Single/Strip 3, ukuran export, proof mat, dan proporsi kartu agar perbedaan frame lebih mudah dinilai di mobile maupun desktop.
+- Pertahankan sticker yang sudah ditempatkan ketika frame berganti, tetapi katalog selalu menampilkan exclusive milik keluarga frame aktif.
+
+### Validation
+- Regression sticker pack direkam RED sebelum registry exclusive tersedia, lalu GREEN untuk lima keluarga, fallback universal, dan delapan belas PNG sticker runtime.
+- Verifikasi final lulus: Node 42/42, Python 10/10, overlay 10/10, hidden-RGB 0, detector Impeccable 0 temuan, dan runtime browser error 0.
+- QA alur lengkap lulus pada 390×844, 768×1024, 1440×900, serta short landscape 900×510; frame dan sticker rail tetap horizontal, item terakhir terjangkau, target sentuh minimum 44×44 px, keyboard, safe area, dan reduced motion tetap terjaga.
+- Seluruh sepuluh variant dirender dan diekspor dengan geometry preview/export yang sama: Single tepat 1080×1350 dan Strip tepat 720×1800.
+
 ## [0.19.1] - 2026-08-18
 
 ### Fixed

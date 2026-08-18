@@ -500,6 +500,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.ok(emptyDecorateWorkshop.undoOpacity <= .55, `${name}: unavailable sticker history actions must read as disabled`);
   assert.equal(emptyDecorateWorkshop.inspectorOverlapsProof, false);
   await shot('05', 'decorate');
+  assert.equal(await page.locator('#stickerTray .sticker-btn').count(), 14);
+  assert.equal(await page.locator('#stickerTray .sticker-btn').first().getAttribute('class'), 'sticker-btn exclusive');
+  assert.equal(await page.locator('#stickerTray .sticker-badge').first().textContent(), 'Exclusive');
   await page.locator('#stickerTray .sticker-btn').first().focus();
   await page.keyboard.press('End');
   assert.equal(await page.locator('#stickerTray .sticker-btn').last().evaluate((button) => document.activeElement === button), true);
@@ -517,8 +520,8 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(await page.locator('.placed-sticker').count(), 2);
   let activeDecorateWorkshop = await auditDecorateWorkshop(page);
   assert.equal(activeDecorateWorkshop.state, 'editing');
-  assert.equal(activeDecorateWorkshop.status, 'Sticker bench · Editing POSE!');
-  assert.equal(activeDecorateWorkshop.inspectorName, 'POSE! · 2 of 2');
+  assert.equal(activeDecorateWorkshop.status, 'Sticker bench · Editing Poca Purikura');
+  assert.equal(activeDecorateWorkshop.inspectorName, 'Poca Purikura · 2 of 2');
   assert.match(activeDecorateWorkshop.inspectorHint, /Arrow keys nudge/);
   assert.equal(activeDecorateWorkshop.inspectorBeforeRail, viewport.width <= 540);
   assert.equal(activeDecorateWorkshop.inspectorOverlapsProof, false);
@@ -526,7 +529,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
 
   await page.locator('.placed-sticker').first().evaluate((element) => element.focus({ preventScroll: true }));
   activeDecorateWorkshop = await auditDecorateWorkshop(page);
-  assert.equal(activeDecorateWorkshop.inspectorName, 'POSE! · 1 of 2');
+  assert.equal(activeDecorateWorkshop.inspectorName, 'Poca Purikura · 1 of 2');
   if (screenshots && writeScreenshots) {
     await page.screenshot({ path: path.join(screenshotRoot, `${name}-05b-decorate-active.png`) });
   }

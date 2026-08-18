@@ -107,7 +107,7 @@ const runtimeFields = manifest.frames.map((frame) => ({
   premium: false,
   status: 'runtime-overlay',
   pickerBadge: 'Hero',
-  pickerDetail: frame.mode === 'strip' ? '3 foto' : '1 foto',
+  pickerDetail: frame.mode === 'strip' ? 'Strip 3 · 720 × 1800' : 'Single · 1080 × 1350',
   renderMode: frame.renderMode,
   overlaySrc: frame.overlaySrc,
   thumbnailSrc: frame.thumbnailSrc,

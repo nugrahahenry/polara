@@ -18,7 +18,7 @@ export const mascots = [
   { id: 'poca-face', type: 'mascot', name: 'Poca face', src: MASCOT + 'poca-face.png', usage: 'tray', loading: 'lazy', exportPolicy: 'ui-only' },
 ];
 
-export const stickers = [
+export const universalStickers = [
   {
     id: 'text-pose', type: 'sticker', name: 'POSE!', src: STICKER + 'text-pose.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .72, scale: .22, rotation: -6 }, minScale: .08, maxScale: .38,
@@ -74,7 +74,40 @@ export const stickers = [
   },
 ];
 
-export const getStickerPack = () => stickers;
+export const exclusiveStickers = [
+  {
+    id: 'poca-purikura-exclusive', type: 'sticker', name: 'Poca Purikura',
+    src: STICKER + 'poca-purikura-exclusive.png', exclusiveFamilyId: 'poca-purikura', pickerBadge: 'Exclusive',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: -4 }, minScale: .1, maxScale: .42,
+  },
+  {
+    id: 'poca-vintage-film-exclusive', type: 'sticker', name: 'Poca Film Buddy',
+    src: STICKER + 'poca-vintage-film-exclusive.png', exclusiveFamilyId: 'vintage-film-lofi', pickerBadge: 'Exclusive',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: 3 }, minScale: .1, maxScale: .42,
+  },
+  {
+    id: 'poca-seoul-y2k-exclusive', type: 'sticker', name: 'Poca Seoul Snap',
+    src: STICKER + 'poca-seoul-y2k-exclusive.png', exclusiveFamilyId: 'seoul-snap-y2k', pickerBadge: 'Exclusive',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: -3 }, minScale: .1, maxScale: .42,
+  },
+  {
+    id: 'poca-daily-reporter-exclusive', type: 'sticker', name: 'Poca Daily Reporter',
+    src: STICKER + 'poca-daily-reporter-exclusive.png', exclusiveFamilyId: 'polara-daily', pickerBadge: 'Exclusive',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: 3 }, minScale: .1, maxScale: .42,
+  },
+  {
+    id: 'poca-midnight-photographer-exclusive', type: 'sticker', name: 'Poca Midnight Photographer',
+    src: STICKER + 'poca-midnight-photographer-exclusive.png', exclusiveFamilyId: 'polara-midnight-club', pickerBadge: 'Exclusive',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: -3 }, minScale: .1, maxScale: .42,
+  },
+];
+
+export const stickers = [...universalStickers, ...exclusiveStickers];
+
+export const getStickerPack = (familyId) => {
+  const exclusive = exclusiveStickers.find((asset) => asset.exclusiveFamilyId === familyId);
+  return exclusive ? [exclusive, ...universalStickers] : [...universalStickers];
+};
 export const getMascot = (id) => mascots.find((asset) => asset.id === id) || null;
 
 export function createStickerInstance(asset) {
