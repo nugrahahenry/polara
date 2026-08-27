@@ -40,7 +40,7 @@ test('runtime stickers do not retain RGB inside fully transparent pixels', async
   const stickerFiles = (await fs.readdir(stickerDirectory))
     .filter((file) => path.extname(file).toLowerCase() === '.png')
     .sort();
-  assert.equal(stickerFiles.length, 20);
+  assert.equal(stickerFiles.length, 26);
 
   const contaminatedStickers = [];
   for (const file of stickerFiles) {

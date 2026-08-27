@@ -602,14 +602,24 @@ input, textarea { caret-color: var(--pink-deep); }
 .sticker-btn {
   position: relative;
   min-width: 0;
-  min-height: 106px;
+  min-height: 124px;
   padding: 8px 7px 7px;
   border-radius: 12px;
   background: #fffaf5;
   scroll-snap-align: start;
   transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, box-shadow 160ms ease;
 }
-.sticker-btn img { height: 68px; }
+.sticker-btn img { height: 66px; }
+.sticker-kind {
+  width: 100%;
+  color: var(--proof-muted);
+  font-size: .52rem;
+  font-weight: 800;
+  letter-spacing: .035em;
+  line-height: 1.15;
+  text-align: center;
+  text-transform: uppercase;
+}
 .sticker-btn.exclusive {
   border-color: rgba(204,79,130,.42);
   background: #fff4f8;

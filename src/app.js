@@ -21,7 +21,7 @@ import {
   getGuest, getGuestAssets, poseGuideForSlot, retryWithoutGuestOnFailure,
 } from './modules/guests/index.js?v=3';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
-import { getStickerBenchView } from './ui/decorate-workshop.js?v=1';
+import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 
 const POLARA_URL = 'polara.vercel.app';
 const BRAND_LINE = `Polara · ${POLARA_URL}`;
@@ -991,7 +991,7 @@ function renderStickerBench() {
       ? `${view.count} sticker${view.count === 1 ? '' : 's'} on this proof`
       : 'Pick a sticker from the rail');
   refs.stickerInspectorHint.textContent = view.active
-    ? 'Drag to move · handles resize and rotate · Arrow keys nudge · Delete removes'
+    ? `${view.active.categoryLabel} · Drag to move · handles resize and rotate · Arrow keys nudge · Delete removes`
     : 'Each sticker is added locally and stays editable on the proof.';
 }
 
@@ -1023,6 +1023,10 @@ function renderStickerTray() {
     label.className = 'sticker-label';
     label.textContent = asset.name;
     button.appendChild(label);
+    const kind = document.createElement('span');
+    kind.className = 'sticker-kind';
+    kind.textContent = getStickerCategoryLabel(asset.category);
+    button.appendChild(kind);
     button.addEventListener('click', () => {
       snapshotStickers();
       const item = createStickerInstance(asset);

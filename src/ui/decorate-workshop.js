@@ -1,3 +1,18 @@
+const CATEGORY_LABELS = Object.freeze({
+  word: 'Word sticker',
+  charm: 'Polara charm',
+  prop: 'Photo prop',
+  accent: 'Color accent',
+  material: 'Proof material',
+  exclusive: 'Frame exclusive',
+});
+
+
+export function getStickerCategoryLabel(category) {
+  return CATEGORY_LABELS[category] || 'Sticker';
+}
+
+
 export function getStickerBenchView(stickers = [], selectedId = null) {
   const activeIndex = stickers.findIndex((item) => item.uid === selectedId);
   const activeSticker = activeIndex >= 0 ? stickers[activeIndex] : null;
@@ -25,6 +40,7 @@ export function getStickerBenchView(stickers = [], selectedId = null) {
       uid: activeSticker.uid,
       name: activeSticker.name,
       src: activeSticker.src,
+      categoryLabel: getStickerCategoryLabel(activeSticker.category),
       instanceLabel: siblings.length > 1
         ? `${activeSticker.name} · ${ordinal} of ${siblings.length}`
         : activeSticker.name,

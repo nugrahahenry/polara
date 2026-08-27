@@ -64,6 +64,8 @@ async function verify() {
     await inspectPng(frame.pickerThumbnailSrc, thumb, policy.frames.maximumThumbnailBytes);
   }
 
+  requireQuality(stickers.length === policy.stickers.runtimeCount, 'Sticker runtime count drifted.');
+  requireQuality(stickers.length - exclusiveStickers.length === policy.stickers.universalCount, 'Universal sticker count drifted.');
   for (const sticker of stickers) {
     const bytes = await fs.readFile(resolveAsset(sticker.src));
     const decoded = decodeRgbaPng(bytes);

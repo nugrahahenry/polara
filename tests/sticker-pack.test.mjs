@@ -20,7 +20,7 @@ const FAMILIES = [
 
 
 test('setiap keluarga memiliki tepat satu Poca exclusive tanpa menggandakan katalog universal', () => {
-  assert.equal(stickers.length, 20);
+  assert.equal(stickers.length, 26);
   assert.equal(exclusiveStickers.length, 7);
   assert.deepEqual(
     new Set(exclusiveStickers.map((asset) => asset.exclusiveFamilyId)),
@@ -29,7 +29,7 @@ test('setiap keluarga memiliki tepat satu Poca exclusive tanpa menggandakan kata
 
   FAMILIES.forEach((familyId) => {
     const pack = getStickerPack(familyId);
-    assert.equal(pack.length, 14, familyId);
+    assert.equal(pack.length, 20, familyId);
     assert.equal(pack[0].exclusiveFamilyId, familyId, familyId);
     assert.equal(pack[0].pickerBadge, 'Exclusive', familyId);
     assert.ok(pack.slice(1).every((asset) => !asset.exclusiveFamilyId), familyId);
@@ -39,7 +39,7 @@ test('setiap keluarga memiliki tepat satu Poca exclusive tanpa menggandakan kata
 
 test('keluarga tak dikenal hanya menerima katalog universal', () => {
   const pack = getStickerPack('unknown-family');
-  assert.equal(pack.length, 13);
+  assert.equal(pack.length, 19);
   assert.ok(pack.every((asset) => !asset.exclusiveFamilyId));
 });
 

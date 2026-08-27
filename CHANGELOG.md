@@ -5,6 +5,21 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.27.0] - 2026-08-27
+
+### Added
+- Enam sticker universal original dengan fungsi berbeda: Good Day Ribbon, Day Dream Cloud, Keep This Ticket, Proof Keeper Tape, Confetti Pop, dan Best Day.
+- Metadata kategori `word`, `charm`, `prop`, `accent`, `material`, dan `exclusive` untuk seluruh library, ditampilkan sebagai secondary label pada rail dan inspector Hias.
+- Generator deterministik `polara-sticker-workshop-v2` serta regression contract untuk jumlah aset, kategori, transparansi, dan tray tanpa nested scroll.
+
+### Changed
+- Remaster Balon Kata menjadi **Say Hi!** serta Photo Buddy menjadi badge **Photo Buddy Club** dengan copy yang tetap terbaca pada ukuran picker.
+- Perluas setiap family pack dari 14 menjadi 20 pilihan tanpa mengubah posisi Poca Exclusive sebagai opsi pertama atau memindahkannya ke overlay frame.
+
+### Validation
+- Focused Sticker Workshop regression direkam RED sebelum implementasi; audit raster delapan aset baru/remaster dan pemeriksaan bintang vektor lulus sebelum quality gate penuh.
+- Generator lulus idempotensi 8/8; Asset Quality gate lulus untuk 14 frame/26 sticker/11 mascot/3 guest, hidden RGB nol, source syntax, dan Node 62/62.
+
 ## [0.26.0] - 2026-08-27
 
 ### Added

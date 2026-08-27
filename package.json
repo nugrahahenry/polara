@@ -1,6 +1,6 @@
 {
   "name": "polara",
-  "version": "0.26.0",
+  "version": "0.27.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -14,6 +14,7 @@
     "assets:previews:check": "python scripts/generate-picker-previews.py --check",
     "frames:remaster": "python scripts/remaster-frame-overlays.py",
     "frames:expand": "python scripts/generate-new-frame-families.py",
+    "stickers:generate": "python scripts/generate-sticker-workshop.py",
     "assets:verify": "node scripts/verify-production-assets.mjs",
     "frames:verify": "python scripts/verify-frame-overlays.py ."
   }

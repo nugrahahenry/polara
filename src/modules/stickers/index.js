@@ -20,93 +20,117 @@ export const mascots = [
 
 export const universalStickers = [
   {
-    id: 'text-pose', type: 'sticker', name: 'POSE!', src: STICKER + 'text-pose.png',
+    id: 'text-pose', type: 'sticker', category: 'word', name: 'POSE!', src: STICKER + 'text-pose.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .72, scale: .22, rotation: -6 }, minScale: .08, maxScale: .38,
   },
   {
-    id: 'sparkle-blue', type: 'sticker', name: 'Sparkle Biru', src: STICKER + 'sparkle-blue.png',
+    id: 'sparkle-blue', type: 'sticker', category: 'accent', name: 'Sparkle Biru', src: STICKER + 'sparkle-blue.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .17, y: .18, scale: .14, rotation: -8 }, minScale: .08, maxScale: .38,
   },
   {
-    id: 'heart-pink', type: 'sticker', name: 'Hati Pink', src: STICKER + 'heart-pink.png',
+    id: 'heart-pink', type: 'sticker', category: 'charm', name: 'Hati Pink', src: STICKER + 'heart-pink.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .83, y: .18, scale: .14, rotation: 9 }, minScale: .08, maxScale: .38,
   },
   {
-    id: 'paw-purple', type: 'sticker', name: 'Paw Ungu', src: STICKER + 'paw-purple.png',
+    id: 'paw-purple', type: 'sticker', category: 'charm', name: 'Paw Ungu', src: STICKER + 'paw-purple.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .18, y: .8, scale: .14, rotation: -8 }, minScale: .08, maxScale: .38,
   },
   {
-    id: 'paw-pink', type: 'sticker', name: 'Paw Pink', src: STICKER + 'paw-pink.png',
+    id: 'paw-pink', type: 'sticker', category: 'charm', name: 'Paw Pink', src: STICKER + 'paw-pink.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .82, y: .8, scale: .14, rotation: 8 }, minScale: .08, maxScale: .38,
   },
   {
-    id: 'sparkle-yellow', type: 'sticker', name: 'Sparkle Kuning', src: STICKER + 'sparkle-yellow.png',
+    id: 'sparkle-yellow', type: 'sticker', category: 'accent', name: 'Sparkle Kuning', src: STICKER + 'sparkle-yellow.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .82, y: .18, scale: .14, rotation: 8 }, minScale: .08, maxScale: .38,
   },
   {
-    id: 'camera-doodle', type: 'sticker', name: 'Kamera', src: STICKER + 'camera-doodle.png',
+    id: 'camera-doodle', type: 'sticker', category: 'prop', name: 'Kamera', src: STICKER + 'camera-doodle.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .18, y: .5, scale: .17, rotation: -5 }, minScale: .08, maxScale: .4,
   },
   {
-    id: 'star-charm', type: 'sticker', name: 'Bintang Poca', src: STICKER + 'star-charm.png',
+    id: 'star-charm', type: 'sticker', category: 'charm', name: 'Bintang Poca', src: STICKER + 'star-charm.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .82, y: .5, scale: .15, rotation: 7 }, minScale: .08, maxScale: .4,
   },
   {
-    id: 'speech-bubble', type: 'sticker', name: 'Balon Kata', src: STICKER + 'speech-bubble.png',
+    id: 'speech-bubble', type: 'sticker', category: 'word', name: 'Say Hi!', src: STICKER + 'speech-bubble.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .82, scale: .2, rotation: -3 }, minScale: .1, maxScale: .42,
   },
   {
-    id: 'photo-buddy-badge', type: 'sticker', name: 'Photo Buddy', src: STICKER + 'photo-buddy-badge.png',
+    id: 'photo-buddy-badge', type: 'sticker', category: 'word', name: 'Photo Buddy Club', src: STICKER + 'photo-buddy-badge.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .18, scale: .18, rotation: 3 }, minScale: .1, maxScale: .42,
   },
   // Aset lama tetap dipertahankan setelah audit karena masih konsisten sebagai word sticker.
   {
-    id: 'sticker-cute', type: 'sticker', name: 'Cute!', src: STICKER + 'sticker-cute.png',
+    id: 'sticker-cute', type: 'sticker', category: 'word', name: 'Cute!', src: STICKER + 'sticker-cute.png',
     exportPolicy: 'preview-and-export', legacy: true, defaultTransform: { x: .5, y: .32, scale: .2, rotation: -4 }, minScale: .08, maxScale: .4,
   },
   {
-    id: 'sticker-snap', type: 'sticker', name: 'Snap!', src: STICKER + 'sticker-snap.png',
+    id: 'sticker-snap', type: 'sticker', category: 'word', name: 'Snap!', src: STICKER + 'sticker-snap.png',
     exportPolicy: 'preview-and-export', legacy: true, defaultTransform: { x: .76, y: .78, scale: .2, rotation: 6 }, minScale: .08, maxScale: .4,
   },
   {
-    id: 'sticker-purrfect', type: 'sticker', name: 'Purr-fect!', src: STICKER + 'sticker-purrfect.png',
+    id: 'sticker-purrfect', type: 'sticker', category: 'word', name: 'Purr-fect!', src: STICKER + 'sticker-purrfect.png',
     exportPolicy: 'preview-and-export', legacy: true, defaultTransform: { x: .5, y: .84, scale: .22, rotation: -3 }, minScale: .08, maxScale: .42,
+  },
+  {
+    id: 'mini-ribbon', type: 'sticker', category: 'prop', name: 'Good Day Ribbon', src: STICKER + 'mini-ribbon.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .2, scale: .18, rotation: -5 }, minScale: .09, maxScale: .4,
+  },
+  {
+    id: 'cloud-note', type: 'sticker', category: 'charm', name: 'Day Dream Cloud', src: STICKER + 'cloud-note.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .2, scale: .17, rotation: 5 }, minScale: .08, maxScale: .4,
+  },
+  {
+    id: 'ticket-stub', type: 'sticker', category: 'prop', name: 'Keep This Ticket', src: STICKER + 'ticket-stub.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .8, scale: .2, rotation: -4 }, minScale: .1, maxScale: .42,
+  },
+  {
+    id: 'proof-tape', type: 'sticker', category: 'material', name: 'Proof Keeper Tape', src: STICKER + 'proof-tape.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .16, scale: .23, rotation: -6 }, minScale: .1, maxScale: .46,
+  },
+  {
+    id: 'confetti-pop', type: 'sticker', category: 'accent', name: 'Confetti Pop', src: STICKER + 'confetti-pop.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .8, y: .72, scale: .16, rotation: 6 }, minScale: .08, maxScale: .4,
+  },
+  {
+    id: 'best-day', type: 'sticker', category: 'word', name: 'Best Day!', src: STICKER + 'best-day.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .82, scale: .2, rotation: 3 }, minScale: .1, maxScale: .42,
   },
 ];
 
 export const exclusiveStickers = [
   {
-    id: 'poca-purikura-exclusive', type: 'sticker', name: 'Poca Purikura',
+    id: 'poca-purikura-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Purikura',
     src: STICKER + 'poca-purikura-exclusive.png', exclusiveFamilyId: 'poca-purikura', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: -4 }, minScale: .1, maxScale: .42,
   },
   {
-    id: 'poca-vintage-film-exclusive', type: 'sticker', name: 'Poca Film Buddy',
+    id: 'poca-vintage-film-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Film Buddy',
     src: STICKER + 'poca-vintage-film-exclusive.png', exclusiveFamilyId: 'vintage-film-lofi', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: 3 }, minScale: .1, maxScale: .42,
   },
   {
-    id: 'poca-seoul-y2k-exclusive', type: 'sticker', name: 'Poca Seoul Snap',
+    id: 'poca-seoul-y2k-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Seoul Snap',
     src: STICKER + 'poca-seoul-y2k-exclusive.png', exclusiveFamilyId: 'seoul-snap-y2k', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: -3 }, minScale: .1, maxScale: .42,
   },
   {
-    id: 'poca-daily-reporter-exclusive', type: 'sticker', name: 'Poca Daily Reporter',
+    id: 'poca-daily-reporter-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Daily Reporter',
     src: STICKER + 'poca-daily-reporter-exclusive.png', exclusiveFamilyId: 'polara-daily', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: 3 }, minScale: .1, maxScale: .42,
   },
   {
-    id: 'poca-midnight-photographer-exclusive', type: 'sticker', name: 'Poca Midnight Photographer',
+    id: 'poca-midnight-photographer-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Midnight Photographer',
     src: STICKER + 'poca-midnight-photographer-exclusive.png', exclusiveFamilyId: 'polara-midnight-club', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: -3 }, minScale: .1, maxScale: .42,
   },
   {
-    id: 'poca-cloud-picnic-exclusive', type: 'sticker', name: 'Poca Cloud Picnic',
+    id: 'poca-cloud-picnic-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Cloud Picnic',
     src: STICKER + 'poca-cloud-picnic-exclusive.png', exclusiveFamilyId: 'cloud-picnic', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .76, y: .78, scale: .21, rotation: -4 }, minScale: .1, maxScale: .42,
   },
   {
-    id: 'poca-lucky-ticket-exclusive', type: 'sticker', name: 'Poca Lucky Ticket',
+    id: 'poca-lucky-ticket-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Lucky Ticket',
     src: STICKER + 'poca-lucky-ticket-exclusive.png', exclusiveFamilyId: 'lucky-ticket', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .76, scale: .21, rotation: 4 }, minScale: .1, maxScale: .42,
   },
@@ -127,6 +151,7 @@ export function createStickerInstance(asset) {
     uid,
     assetId: asset.id,
     name: asset.name,
+    category: asset.category || 'accent',
     src: asset.src,
     x: transform.x,
     y: transform.y,

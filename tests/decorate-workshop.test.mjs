@@ -8,6 +8,7 @@ const poseOne = {
   uid: 'pose-1',
   assetId: 'text-pose',
   name: 'POSE!',
+  category: 'word',
   src: 'assets/stickers/text-pose.png',
 };
 const poseTwo = { ...poseOne, uid: 'pose-2' };
@@ -53,6 +54,7 @@ test('active repeated sticker receives an ordinal derived from current instances
     uid: 'pose-2',
     name: 'POSE!',
     src: 'assets/stickers/text-pose.png',
+    categoryLabel: 'Word sticker',
     instanceLabel: 'POSE! · 2 of 2',
   });
 });

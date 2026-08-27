@@ -16,8 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.26.0 frame family expansion checkpoint', () => {
-  assert.equal(packageJson.version, '0.26.0');
+test('release metadata records the v0.27.0 Sticker Workshop expansion checkpoint', () => {
+  assert.equal(packageJson.version, '0.27.0');
+  assert.match(changelog, /## \[0\.27\.0\] - 2026-08-27/);
+  assert.match(changelog, /Sticker Workshop/i);
+  assert.match(changelog, /Proof Keeper Tape/i);
+  assert.match(changelog, /Photo Buddy Club/i);
   assert.match(changelog, /## \[0\.26\.0\] - 2026-08-27/);
   assert.match(changelog, /Cloud Picnic/i);
   assert.match(changelog, /Lucky Ticket/i);
@@ -39,8 +43,8 @@ test('release metadata records the v0.26.0 frame family expansion checkpoint', (
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=26/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=24/);
+  assert.match(indexHtml, /src\/app\.js\?v=27/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=27/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);
