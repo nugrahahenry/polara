@@ -763,6 +763,8 @@ input, textarea { caret-color: var(--pink-deep); }
   font-size: clamp(2rem, 3.2vw, 2.75rem);
   letter-spacing: -.03em;
 }
+.control-sheet[data-reveal-state="ready"] .reveal-panel .panel-copy,
+.control-sheet[data-reveal-state="ready"] .reveal-panel .privacy-note { display: none; }
 
 .control-sheet[data-step="reveal"] .action-row {
   display: grid;

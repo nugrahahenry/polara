@@ -574,6 +574,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   };
 
   await offsetChapterView(page, viewport);
+  await page.locator('#primaryBtn:not(:disabled)').waitFor({ state: 'visible', timeout: 30_000 });
   await page.locator('#primaryBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'reveal');
   chapterContinuity.reveal = await auditChapterContinuity(page, 'reveal', viewport);
@@ -645,15 +646,15 @@ const VARIANTS = [
   { id: 'seoul-snap-y2k.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
   { id: 'polara-daily-single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
   { id: 'polara-midnight-club-single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
-  { id: 'cloud-picnic.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles' },
+  { id: 'cloud-picnic.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles', radii: ['34px'] },
   { id: 'lucky-ticket.single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
   { id: 'poca-purikura.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'vintage-film-lofi.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'seoul-snap-y2k.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
-  { id: 'polara-daily-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
-  { id: 'polara-midnight-club-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
-  { id: 'cloud-picnic.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
-  { id: 'lucky-ticket.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
+  { id: 'polara-daily-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['14px', '14px', '14px'] },
+  { id: 'polara-midnight-club-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['14px', '14px', '14px'] },
+  { id: 'cloud-picnic.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['24px', '24px', '24px'] },
+  { id: 'lucky-ticket.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['20px', '20px', '20px'] },
 ];
 
 async function reachFrames(page, mode) {
@@ -707,7 +708,9 @@ async function runVariantExportMatrix() {
       assert.equal(preview.slots.length, mode);
       assert.ok(preview.slots.every((slot) => slot.maskType === variant.maskType));
       if (variant.maskType === 'polygon') assert.match(preview.slots[0].clipPath, /^polygon\(/);
-      if (variant.maskType === 'rounded-rectangles') assert.ok(preview.slots.every((slot) => slot.borderRadius === '14px'));
+      if (variant.maskType === 'rounded-rectangles') {
+        assert.deepEqual(preview.slots.map((slot) => slot.borderRadius), variant.radii);
+      }
 
       await page.locator('#primaryBtn').click();
       await waitForPanel(page, 'decorate');

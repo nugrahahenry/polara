@@ -5,6 +5,17 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.28.1] - 2026-08-27
+
+### Fixed
+- Ringkas copy Reveal ready yang redundan pada seluruh viewport agar Approval Dossier menjaga ruang aman di atas action dock, sementara processing explanation tetap tersedia.
+- Buat harness menunggu operation lock Decorate selesai sebelum masuk Reveal dan validasi radius rounded-rectangle exact per keluarga (Daily/Midnight 14 px, Cloud Picnic 34/24 px, Lucky Ticket 20 px).
+
+### Validation
+- QA produksi lulus pada 390×844, 768×1024, 1440×900, dan 900×510 untuk semua enam tahap tanpa horizontal overflow, target pendek, action terpotong, overlap companion, atau runtime error.
+- Seluruh 14 variant lulus preview/export geometry; exact output lulus Single 1080×1350 dan Strip 720×1800.
+- Camera denied recovery, fake-device capture, retake satu slot, tray Home/End, scroll restoration, dialog focus return, reduced motion, Reveal presentation-only, rapid transition lock, serta enam Proof Stamp lulus.
+
 ## [0.28.0] - 2026-08-27
 
 ### Added
