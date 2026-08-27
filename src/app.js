@@ -22,6 +22,7 @@ import {
 } from './modules/guests/index.js?v=3';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
+import { getRevealDossier } from './ui/reveal-dossier.js?v=1';
 
 const POLARA_URL = 'polara.vercel.app';
 const BRAND_LINE = `Polara · ${POLARA_URL}`;
@@ -69,6 +70,8 @@ const refs = {
   privacy: $('privacyBtn'), privacyDialog: $('privacyDialog'), closePrivacy: $('closePrivacyBtn'),
   proofBuddy: $('proofBuddy'), proofBuddyImage: $('proofBuddyImage'), proofBuddyCaption: $('proofBuddyCaption'),
   cameraPoca: $('cameraPoca'), revealPanelPoca: $('revealPanelPoca'), revealTitle: $('revealTitle'), revealProofStack: $('revealProofStack'),
+  revealDossierFormat: $('revealDossierFormat'), revealDossierFrame: $('revealDossierFrame'),
+  revealDossierDecorations: $('revealDossierDecorations'), revealDossierPrivacy: $('revealDossierPrivacy'),
 };
 
 const STEPS = PROOF_STEPS;
@@ -1125,6 +1128,18 @@ function supportsPreparedFileShare(prepared) {
   catch { return false; }
 }
 
+function renderRevealDossier() {
+  const dossier = getRevealDossier({
+    mode: state.mode,
+    frameName: getTemplate(state.frameId)?.name,
+    stickerCount: state.stickers.length,
+  });
+  refs.revealDossierFormat.textContent = dossier.format;
+  refs.revealDossierFrame.textContent = dossier.frame;
+  refs.revealDossierDecorations.textContent = dossier.decorations;
+  refs.revealDossierPrivacy.textContent = dossier.privacy;
+}
+
 async function startReveal({ focusTitle = true } = {}) {
   const requestId = ++revealRequestId;
   invalidatePreparedExport();
@@ -1136,6 +1151,7 @@ async function startReveal({ focusTitle = true } = {}) {
   await restoreChapterView({ focusTitle });
   await renderCanvas();
   renderRevealProofStack();
+  renderRevealDossier();
   if (requestId !== revealRequestId || state.step !== 'reveal') return;
   refs.canvasView.classList.remove('revealing');
   void refs.canvasView.offsetWidth;

@@ -272,6 +272,8 @@ async function auditRevealTheatre(page) {
     const controlScroll = document.querySelector('#controlScroll');
     const primary = document.querySelector('#primaryBtn');
     const privacyNote = document.querySelector('[data-panel="reveal"] .privacy-note');
+    const dossier = document.querySelector('.reveal-dossier');
+    const contentTail = isVisible(privacyNote) ? privacyNote : dossier;
     const utilities = ['#backBtn', '#tertiaryBtn', '#secondaryBtn']
       .map((selector) => document.querySelector(selector))
       .filter(isVisible);
@@ -286,7 +288,12 @@ async function auditRevealTheatre(page) {
       actionDisplay: getComputedStyle(actionRow).display,
       primaryGridColumn: getComputedStyle(primary).gridColumn,
       primaryBelowUtilities: primary.getBoundingClientRect().top >= utilityBottom,
-      contentActionGap: actionRow.getBoundingClientRect().top - privacyNote.getBoundingClientRect().bottom,
+      dossierVisible: isVisible(dossier),
+      dossierFormat: document.querySelector('#revealDossierFormat')?.textContent || '',
+      dossierFrame: document.querySelector('#revealDossierFrame')?.textContent || '',
+      dossierDecorations: document.querySelector('#revealDossierDecorations')?.textContent || '',
+      dossierPrivacy: document.querySelector('#revealDossierPrivacy')?.textContent || '',
+      contentActionGap: actionRow.getBoundingClientRect().top - contentTail.getBoundingClientRect().bottom,
       dockOverlapsContent: actionDock.getBoundingClientRect().top < controlScroll.getBoundingClientRect().bottom - 1,
       interactiveStickerCount: stickers.filter((sticker) => getComputedStyle(sticker).pointerEvents !== 'none').length,
       focusableStickerCount: stickers.filter((sticker) => sticker.tabIndex >= 0).length,
@@ -572,12 +579,18 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   chapterContinuity.reveal = await auditChapterContinuity(page, 'reveal', viewport);
   assert.equal(await page.locator('#controlSheet').getAttribute('data-reveal-state'), 'processing');
   assert.match(await page.locator('#revealPanelPoca').getAttribute('src'), /poca-sleepy-loading\.png$/);
+  assert.equal(await page.locator('.reveal-dossier').isVisible(), false);
   await page.waitForFunction(() => document.querySelector('#revealTitle')?.textContent === 'Proof approved.', null, { timeout: 40_000 });
   const revealTheatre = await auditRevealTheatre(page);
   assert.equal(revealTheatre.revealState, 'ready');
   assert.equal(revealTheatre.visibleApprovedCount, 1);
   assert.equal(revealTheatre.panelPocaVisible, false);
   assert.match(revealTheatre.panelPocaSrc, /poca-sleepy-loading\.png$/);
+  assert.equal(revealTheatre.dossierVisible, true);
+  assert.equal(revealTheatre.dossierFormat, 'Strip 3 · 720×1800');
+  assert.ok(revealTheatre.dossierFrame.length > 0);
+  assert.equal(revealTheatre.dossierDecorations, '1 sticker');
+  assert.equal(revealTheatre.dossierPrivacy, 'Local-only session');
   assert.equal(revealTheatre.actionDisplay, 'grid');
   assert.notEqual(revealTheatre.primaryGridColumn, 'auto');
   assert.equal(revealTheatre.primaryBelowUtilities, true);

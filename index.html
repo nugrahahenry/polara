@@ -291,7 +291,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=27" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=28" />
 </head>
 <body>
   <!--
@@ -339,6 +339,7 @@
           </div>
           <div class="hero-stack" aria-hidden="true">
             <div class="hero-strip"><div class="hero-photo"></div><div class="hero-photo"></div><div class="hero-photo"></div></div>
+            <!-- impeccable-disable-next-line broken-image: opt-in Pose Mate assigns the verified guest source before unhiding this image -->
             <img class="start-guest-preview" id="startGuestPreview" alt="" hidden />
           </div>
         </div>
@@ -354,7 +355,8 @@
             <div id="cameraWrap" data-camera-state="idle">
               <video id="video" autoplay playsinline muted></video>
               <div class="pose-user-guide" id="poseUserGuide" aria-hidden="true" hidden></div>
-              <img class="pose-guest-preview" id="poseGuestPreview" alt="" hidden />
+            <!-- impeccable-disable-next-line broken-image: camera composition assigns the verified pose source before unhiding this image -->
+            <img class="pose-guest-preview" id="poseGuestPreview" alt="" hidden />
               <div class="camera-guide" aria-hidden="true"></div>
               <div class="shot-badge" id="shotBadge" hidden></div>
               <div id="cameraOverlay">
@@ -387,6 +389,7 @@
             <div class="review-photo-region" id="reviewPhotoRegion">
               <img id="reviewPhoto" src="assets/brand/logo-polara.png" alt="Active proof under review" />
             </div>
+            <!-- impeccable-disable-next-line broken-image: Review assigns the verified pose source before unhiding this image -->
             <img class="review-guest" id="reviewGuest" alt="" hidden />
           </div>
           <p class="review-caption" id="reviewCaption">
@@ -520,7 +523,16 @@
           <img class="mascot-runtime" id="revealPanelPoca" src="assets/mascot/poca-sleepy-loading.png" alt="Poca waits while the print develops." loading="lazy" />
           <h2 class="panel-title" id="revealTitle" tabindex="-1">Developing your print…</h2>
           <p class="panel-copy">When the proof is approved, share it or save the exact-size PNG.</p>
-          <p class="privacy-note">The result remains in this local session if sharing is cancelled or export needs another try.</p>
+          <section class="reveal-dossier" aria-label="Approved proof details">
+            <div class="reveal-approval-seal" aria-hidden="true"><span>Proof</span><strong>Approved</strong></div>
+            <dl class="reveal-facts">
+              <div><dt>Format</dt><dd id="revealDossierFormat">Strip 3 · 720×1800</dd></div>
+              <div><dt>Frame</dt><dd id="revealDossierFrame">Polara frame</dd></div>
+              <div><dt>Decorations</dt><dd id="revealDossierDecorations">No stickers</dd></div>
+              <div><dt>Privacy</dt><dd id="revealDossierPrivacy">Local-only session</dd></div>
+            </dl>
+          </section>
+          <p class="privacy-note">The approved proof remains in this local session if sharing is cancelled or export needs another try.</p>
         </section>
       </div>
 
@@ -593,6 +605,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=27"></script>
+  <script type="module" src="src/app.js?v=28"></script>
 </body>
 </html>

@@ -5,6 +5,20 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.28.0] - 2026-08-27
+
+### Added
+- Reveal **Approval Dossier** sebagai UI-only receipt yang merangkum format exact, frame aktif, jumlah sticker, dan local-only truth dari state sesi nyata.
+- Pure dossier contract serta regression guard agar detail Reveal tidak pernah menjadi bagian export canvas dan tetap konsisten untuk Single maupun Strip.
+
+### Changed
+- Ubah Reveal ready dari panel success yang kosong menjadi hasil studio terarah dengan Proof Approved seal, fact grid, paper perforation detail, serta layout ringkas untuk mobile dan short landscape.
+- Dossier hanya masuk setelah processing Sleepy Loading selesai; reduced motion menghapus entrance motion tanpa menyembunyikan informasi atau aksi.
+
+### Validation
+- Reveal dossier regression direkam RED sebelum implementasi; contract Single/Strip, local-only copy, UI/export boundary, dan reduced-motion surface kemudian lulus.
+- Node 64/64, Asset Quality 14 frame/26 sticker/11 mascot/3 guest, source syntax, dan diff check lulus. Impeccable detector berjalan sekali setelah UI selesai; tiga warning regex-degraded adalah gambar Pose Mate hidden yang diberi source tervalidasi sebelum ditampilkan, bukan broken runtime images.
+
 ## [0.27.0] - 2026-08-27
 
 ### Added
