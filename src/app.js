@@ -102,6 +102,49 @@ let guestAssetFailureHandling = false;
 const guestSelectionGate = createLatestSelectionGate();
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
+function wait(milliseconds) {
+  return new Promise((resolve) => window.setTimeout(resolve, milliseconds));
+}
+
+function setAppInert(inert) {
+  document.querySelectorAll('.skip-link, .app-header, .progress-wrap, .workspace, .status-bar, .app-footer')
+    .forEach((surface) => { surface.inert = inert; });
+}
+
+function startBootScreen() {
+  const screen = $('bootScreen');
+  if (!screen) {
+    document.documentElement.classList.remove('boot-pending');
+    return null;
+  }
+  setAppInert(true);
+  screen.hidden = false;
+  requestAnimationFrame(() => screen.classList.add('is-active'));
+  return {
+    screen,
+    startedAt: performance.now(),
+    reduced: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
+  };
+}
+
+async function finishBootScreen(bootState) {
+  if (!bootState) return;
+  const minimum = bootState.reduced ? 80 : 760;
+  const remaining = Math.max(0, minimum - (performance.now() - bootState.startedAt));
+  if (remaining) await wait(remaining);
+  bootState.screen.classList.add('is-opening');
+  document.documentElement.classList.add('app-entering');
+  await wait(bootState.reduced ? 40 : 680);
+  bootState.screen.hidden = true;
+  bootState.screen.setAttribute('aria-hidden', 'true');
+  window.clearTimeout(window.__polaraBootFallback);
+  document.documentElement.classList.remove('boot-pending');
+  setAppInert(false);
+  window.setTimeout(() => document.documentElement.classList.remove('app-entering'), 720);
+}
+
+const bootState = startBootScreen();
+
 function status(message) {
   refs.status.textContent = message;
 }
@@ -395,7 +438,7 @@ refs.modeChoose.addEventListener('click', (event) => {
   state.frameId = null;
   syncStartControls();
   syncStageDocket();
-  status(state.mode === 3 ? 'Strip 3 selected. Get three poses ready.' : 'Single selected. One large proof, one main moment.');
+  status(state.mode === 3 ? 'Strip 3 selected. Get three poses ready.' : 'Single selected. Get one main pose ready.');
 });
 
 refs.timerChoose.addEventListener('click', (event) => {
@@ -939,7 +982,7 @@ refs.resetPhoto.addEventListener('click', () => {
   state.photos[state.selectedSlot] = resetPhotoTransform(photo);
   setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot], { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
   syncPhotoControls();
-  status(`Proof ${state.selectedSlot + 1} reset to Full photo.`);
+  status(`Proof ${state.selectedSlot + 1} now shows the full photo.`);
 });
 
 function snapshotStickers() {
@@ -1159,7 +1202,7 @@ async function startReveal({ focusTitle = true } = {}) {
   status('Poca is developing your print…');
   await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 20 : 980));
   if (requestId !== revealRequestId || state.step !== 'reveal') return;
-  status('The proof is visible. Polara is preparing the file for reliable mobile sharing…');
+  status('The proof is visible while Polara prepares the file for mobile sharing.');
   try {
     await prepareFramedExport();
   } catch (error) {
@@ -1233,7 +1276,7 @@ async function shareResult() {
           status('Sharing was cancelled. The proof remains ready to try again.');
           return;
         }
-        status('Native sharing did not open. Polara is preparing a download fallback…');
+        status('Native sharing did not open. Polara is preparing a download instead.');
       }
     }
 
@@ -1278,7 +1321,7 @@ refs.secondary.addEventListener('click', async () => {
     }
     if (!switched) state.facing = previousFacing;
     if (!switched && state.cameraStatus !== 'denied' && state.step === 'camera' && !state.demo) {
-      status('The requested camera is unavailable. Polara is restoring the previous camera…');
+      status('The requested camera is unavailable. Polara is restoring the previous camera.');
       const restored = await requestCamera({ switching: true });
       if (restored) status('The previous camera was restored. Photos and session are safe.');
     }
@@ -1446,4 +1489,8 @@ document.querySelectorAll('.mascot-runtime').forEach((image) => {
 });
 
 preloadMascots();
-goToStep('start', 'Choose a format and timer, then open the camera when ready.', { focusTitle: false });
+try {
+  await goToStep('start', 'Choose a format and timer, then open the camera when ready.', { focusTitle: false });
+} finally {
+  await finishBootScreen(bootState);
+}

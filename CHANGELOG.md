@@ -5,6 +5,24 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.29.0] - 2026-08-28
+
+### Added
+- Tambahkan **Poca Print Room Opening** sebagai pembuka singkat dan fail safe yang memakai aset Poca produksi sebelum meja foto siap digunakan.
+- Tambahkan regression contract untuk urutan pembuka, focus protection, reduced motion, footer responsif, serta larangan em dash dan en dash pada copy aplikasi publik.
+
+### Changed
+- Humanize copy pada Start, Camera, Frames, Reveal, dialog sesi, status export, dan privasi tanpa mengubah product truth atau flow enam tahap.
+- Susun ulang footer sebagai proof ticket ringkas dengan tautan canonical `hnry.dev`, WhatsApp, Instagram, dan GitHub pada desktop, tablet, mobile, serta short landscape.
+- Hubungkan bukaan kertas pembuka ke satu transisi meja proof, dengan jalur instan untuk reduced motion dan safe area pada perangkat berponi.
+
+### Validation
+- Node 69/69, Python 10/10, overlay 14/14, Asset Quality 14 frame/26 sticker/11 mascot/3 guest, dan source syntax lulus.
+- QA produksi final lulus pada 390×844, 768×1024, 1440×900, serta 900×510 untuk enam tahap dengan overflow 0, target pendek 0, primary action terlihat, dan runtime error 0.
+- Opening audit membuktikan proof berada penuh di viewport, workspace serta skip link inert selama boot, fail safe tetap aktif sampai inisialisasi selesai, dan interaksi pulih setelah shutter terbuka.
+- Seluruh 14 variant lulus preview/export parity; output tepat Single 1080×1350 dan Strip 720×1800. Camera denied recovery, fake-device capture, retake satu slot, keyboard rail, reduced motion, dialog focus return, serta rapid transition lock lulus.
+- Finish review menutup fail-safe boot, fokus skip link, dan evidence footer sempit dengan disposition **SHIP**. Detector Impeccable berjalan sekali dan mengembalikan 0 finding dalam mode regex-degraded karena parser HTML/CSS tidak tersedia.
+
 ## [0.28.1] - 2026-08-27
 
 ### Fixed

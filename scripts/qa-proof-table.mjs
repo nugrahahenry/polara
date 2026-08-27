@@ -62,6 +62,7 @@ const report = {
   camera: {},
   exports: {},
   variants: {},
+  opening: {},
   accessibility: {},
   runtimeErrors: [],
 };
@@ -327,8 +328,50 @@ async function startPage(context) {
   });
   page.on('pageerror', (error) => report.runtimeErrors.push(`page: ${error.message}`));
   await page.goto(baseUrl, { waitUntil: 'load', timeout: 30_000 });
+  await page.locator('#bootScreen').waitFor({ state: 'hidden', timeout: 5_000 });
   await page.locator('#primaryBtn').waitFor({ state: 'visible' });
   return page;
+}
+
+async function runOpeningAudit({ name, viewport }) {
+  const context = await browser.newContext({ viewport, reducedMotion: 'no-preference' });
+  const page = await context.newPage();
+  page.on('console', (message) => {
+    if (message.type() === 'error') report.runtimeErrors.push(`console: ${message.text()}`);
+  });
+  page.on('pageerror', (error) => report.runtimeErrors.push(`page: ${error.message}`));
+  await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+  const boot = page.locator('#bootScreen');
+  await boot.waitFor({ state: 'visible', timeout: 3_000 });
+  await page.waitForFunction(() => {
+    const poca = document.querySelector('.boot-poca');
+    const wordmark = document.querySelector('.boot-wordmark');
+    return poca?.complete && poca.naturalWidth > 0 && wordmark?.complete && wordmark.naturalWidth > 0;
+  }, null, { timeout: 3_000 });
+  const audit = await boot.evaluate((screen) => {
+    const bounds = screen.getBoundingClientRect();
+    const proof = screen.querySelector('.boot-proof')?.getBoundingClientRect();
+    return {
+      visible: getComputedStyle(screen).display !== 'none',
+      fillsViewport: Math.abs(bounds.width - window.innerWidth) < 1 && Math.abs(bounds.height - window.innerHeight) < 1,
+      proofInsideViewport: Boolean(proof && proof.top >= 0 && proof.left >= 0 && proof.bottom <= window.innerHeight && proof.right <= window.innerWidth),
+      appInert: Boolean(document.querySelector('#appWorkspace')?.inert),
+      skipLinkInert: Boolean(document.querySelector('.skip-link')?.inert),
+      label: screen.getAttribute('aria-label') || '',
+    };
+  });
+  assert.equal(audit.visible, true);
+  assert.equal(audit.fillsViewport, true);
+  assert.equal(audit.proofInsideViewport, true);
+  assert.equal(audit.appInert, true);
+  assert.equal(audit.skipLinkInert, true);
+  assert.match(audit.label, /Poca is opening the Polara print room/);
+  if (writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${name}-00-opening.png`) });
+  await boot.waitFor({ state: 'hidden', timeout: 5_000 });
+  assert.equal(await page.locator('#appWorkspace').evaluate((workspace) => workspace.inert), false);
+  assert.equal(await page.locator('.skip-link').evaluate((link) => link.inert), false);
+  report.opening[name] = audit;
+  await context.close();
 }
 
 async function runFlow({ name, viewport, screenshots = false, retake = false, exportStrip = false }) {
@@ -617,6 +660,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
     },
     retakePreservedOtherSlots: retake, labels, desktopFoundation,
   };
+  if (screenshots && writeScreenshots) {
+    await page.locator('.app-footer').screenshot({ path: path.join(screenshotRoot, `${name}-07-footer.png`) });
+  }
   await context.close();
   return exported;
 }
@@ -762,6 +808,8 @@ async function runRapidTransitionRegression() {
 }
 
 try {
+  await runOpeningAudit({ name: '390x844', viewport: { width: 390, height: 844 } });
+  await runOpeningAudit({ name: '1440x900', viewport: { width: 1440, height: 900 } });
   report.exports.strip = await runFlow({ name: '390x844', viewport: { width: 390, height: 844 }, screenshots: true, retake: true, exportStrip: true });
   await runFlow({ name: '1440x900', viewport: { width: 1440, height: 900 }, screenshots: true });
   await runFlow({ name: '768x1024', viewport: { width: 768, height: 1024 }, screenshots: true });

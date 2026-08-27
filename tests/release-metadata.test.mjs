@@ -16,8 +16,11 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.28.1 integrated acceptance checkpoint', () => {
-  assert.equal(packageJson.version, '0.28.1');
+test('release metadata records the v0.29.0 print room opening checkpoint', () => {
+  assert.equal(packageJson.version, '0.29.0');
+  assert.match(changelog, /## \[0\.29\.0\] - 2026-08-28/);
+  assert.match(changelog, /Poca Print Room Opening/i);
+  assert.match(changelog, /proof ticket/i);
   assert.match(changelog, /## \[0\.28\.1\] - 2026-08-27/);
   assert.match(changelog, /14 variant/i);
   assert.match(changelog, /## \[0\.28\.0\] - 2026-08-27/);
@@ -48,8 +51,8 @@ test('release metadata records the v0.28.1 integrated acceptance checkpoint', ()
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=28/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=281/);
+  assert.match(indexHtml, /src\/app\.js\?v=29/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=290/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);
