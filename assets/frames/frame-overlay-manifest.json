@@ -24,11 +24,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-single-overlay-master.png",
-      "sha256": "d8a0fab2eec1a03e93719e6bae34f8831a50a47a2978e600a3db60aa1dd833d1",
-      "byteSize": 726052,
+      "sha256": "7fe963b8df5b2bfcf7d98fe0420e558707eea38bb4f9d79b6db7423ca61188ae",
+      "byteSize": 726268,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v4",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -43,6 +43,12 @@
         "heart/paw/star/sparkle",
         "pink gingham",
         "character-free footer"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#ec5e9e",
+        "#8fd3ff",
+        "#ffe26f"
       ]
     },
     {
@@ -79,11 +85,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-strip-overlay-master.png",
-      "sha256": "7f003aa567b74034ce848d9c2dd558b0b388412e883bade32cef8f584c87e005",
-      "byteSize": 608867,
+      "sha256": "2560f9be8a5c3ced0d8ac6c9ffbe157f924ae2584191067836342d56f96627a0",
+      "byteSize": 608732,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v4",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -98,6 +104,12 @@
         "heart/paw/star/sparkle",
         "pink gingham",
         "character-free footer"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#ec5e9e",
+        "#8fd3ff",
+        "#ffe26f"
       ]
     },
     {
@@ -122,11 +134,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/vintage-film-lofi-single-overlay-master.png",
-      "sha256": "00edeb8796e06827e3992ea903b562c3123f37a2cfc6452f4c787d716ce7a3a3",
-      "byteSize": 243169,
+      "sha256": "59fdad1873c3a05e8cf56515565cb6ff0af60e03b078c7c06a00906e4cc358d9",
+      "byteSize": 242980,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v3",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#1c191b",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -141,6 +153,12 @@
         "warm film burn",
         "cream technical labels",
         "35MM/ISO marks"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#e3b67a",
+        "#342824",
+        "#f7eee5"
       ]
     },
     {
@@ -177,11 +195,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/vintage-film-lofi-strip-overlay-master.png",
-      "sha256": "f343f2702b567843ad160cf355cfe47c4e21439f4234b11f0f9a7f4fb3426bf5",
-      "byteSize": 282887,
+      "sha256": "2f9d12c8198f505b99b2cca3b9e7e15f0cd79916678f5eaef25df1ac4e710abe",
+      "byteSize": 283637,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v3",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#1c191b",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -196,6 +214,12 @@
         "subtle grain",
         "warm film burn",
         "F01/F02/F03 marks"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#e3b67a",
+        "#342824",
+        "#f7eee5"
       ]
     },
     {
@@ -220,11 +244,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/seoul-snap-y2k-single-overlay-master.png",
-      "sha256": "ef6774aed0f0376622a8c313402362be5dc597341e22398439b18c36997f7dfb",
-      "byteSize": 898882,
+      "sha256": "26a0a18ff7048b516711f447709d9ca30b5b8ab22ff6be21de373a0c8bd0649a",
+      "byteSize": 896153,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v1",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -240,6 +264,12 @@
         "zoom rail",
         "digi-cam console",
         "focus brackets outside window"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#ff8fbd",
+        "#8fd3ff",
+        "#cab8ff"
       ]
     },
     {
@@ -276,11 +306,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/seoul-snap-y2k-strip-overlay-master.png",
-      "sha256": "ee29b59dfac2b0eff741193cf045b578147975916fb8f492d6c35c224219707a",
-      "byteSize": 534628,
+      "sha256": "85b5ab24ed7ac1ccf788d2b0d54e0113a5b7f634765b5d77efa7936956c54978",
+      "byteSize": 530665,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v1",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -296,6 +326,12 @@
         "status rails",
         "Y2K console",
         "focus brackets outside windows"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#ff8fbd",
+        "#8fd3ff",
+        "#cab8ff"
       ]
     },
     {
@@ -308,28 +344,61 @@
       "characterPolicy": "character-free",
       "maskType": "polygon",
       "photoPolygon": [
-        [80, 301],
-        [747, 301],
-        [781, 328],
-        [781, 1046],
-        [52, 1046],
-        [52, 328]
+        [
+          80,
+          301
+        ],
+        [
+          747,
+          301
+        ],
+        [
+          781,
+          328
+        ],
+        [
+          781,
+          1046
+        ],
+        [
+          52,
+          1046
+        ],
+        [
+          52,
+          328
+        ]
       ],
       "overlaySrc": "assets/frames/polara-daily-single-overlay.png",
       "thumbnailSrc": "assets/frames/thumbnails/polara-daily-single-thumbnail.png",
       "pickerThumbnailSrc": "assets/frames/composites/polara-daily-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "f07fe9d04bfe84b6d705ececea7ebd5032fc07be58c9c3be63cf10c65fea9214",
-      "byteSize": 1358241,
+      "sha256": "e90838abe1af69037e15e270f54ea7e5dd374e8d360199bf74ab221706d966b0",
+      "byteSize": 1359029,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v4",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#f5e3c4",
       "supportsDynamicText": false,
-      "metadataZones": { "caption": null, "date": null, "brand": null },
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
       "metadataAreaNote": "Copy editorial sudah menjadi bagian dari overlay final.",
-      "decorativeElements": ["warm newsprint", "coral section labels", "editorial grid", "character-free photo report"]
+      "decorativeElements": [
+        "warm newsprint",
+        "coral section labels",
+        "editorial grid",
+        "character-free photo report"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#df6d57",
+        "#40312a",
+        "#f5e3c4"
+      ]
     },
     {
       "id": "polara-daily-strip",
@@ -341,25 +410,58 @@
       "characterPolicy": "character-free",
       "maskType": "rounded-rectangles",
       "photoWindows": [
-        { "x": 35, "y": 241, "width": 483, "height": 428, "radius": 14 },
-        { "x": 35, "y": 681, "width": 483, "height": 387, "radius": 14 },
-        { "x": 35, "y": 1079, "width": 483, "height": 364, "radius": 14 }
+        {
+          "x": 35,
+          "y": 241,
+          "width": 483,
+          "height": 428,
+          "radius": 14
+        },
+        {
+          "x": 35,
+          "y": 681,
+          "width": 483,
+          "height": 387,
+          "radius": 14
+        },
+        {
+          "x": 35,
+          "y": 1079,
+          "width": 483,
+          "height": 364,
+          "radius": 14
+        }
       ],
       "overlaySrc": "assets/frames/polara-daily-strip-overlay.png",
       "thumbnailSrc": "assets/frames/thumbnails/polara-daily-strip-thumbnail.png",
       "pickerThumbnailSrc": "assets/frames/composites/polara-daily-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "a38b64aa833d3e710311e8addafd2583fb687b2fa8c4199761228d5344881e7d",
-      "byteSize": 997612,
+      "sha256": "aa9ce8638e2b894677a38d20e8bd2d4cd605c55b4309175d4188b6b7a0c455c1",
+      "byteSize": 997678,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v4",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#f5e3c4",
       "supportsDynamicText": false,
-      "metadataZones": { "caption": null, "date": null, "brand": null },
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
       "metadataAreaNote": "Copy editorial sudah menjadi bagian dari overlay final.",
-      "decorativeElements": ["warm newsprint", "three editorial windows", "archive footer", "character-free photo report"]
+      "decorativeElements": [
+        "warm newsprint",
+        "three editorial windows",
+        "archive footer",
+        "character-free photo report"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#df6d57",
+        "#40312a",
+        "#f5e3c4"
+      ]
     },
     {
       "id": "polara-midnight-club-single",
@@ -371,28 +473,61 @@
       "characterPolicy": "character-free",
       "maskType": "polygon",
       "photoPolygon": [
-        [158, 231],
-        [918, 231],
-        [969, 282],
-        [969, 1153],
-        [110, 1153],
-        [110, 282]
+        [
+          158,
+          231
+        ],
+        [
+          918,
+          231
+        ],
+        [
+          969,
+          282
+        ],
+        [
+          969,
+          1153
+        ],
+        [
+          110,
+          1153
+        ],
+        [
+          110,
+          282
+        ]
       ],
       "overlaySrc": "assets/frames/polara-midnight-club-single-overlay.png",
       "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-single-thumbnail.png",
       "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "6324d257e4a45374cb4d025de1fd40bdffd73b2d4d527e38824712efa05c0047",
-      "byteSize": 836007,
+      "sha256": "2a1be232e30a95e5de64dc44f7c28812569b3e1729ae98aa46d50aeb7783346e",
+      "byteSize": 835752,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v4",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#07091e",
       "supportsDynamicText": false,
-      "metadataZones": { "caption": null, "date": null, "brand": null },
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
       "metadataAreaNote": "Night Studio chrome dan copy sudah menjadi bagian dari overlay final.",
-      "decorativeElements": ["night studio chrome", "electric blue accents", "keepsake footer", "character-free proof stage"]
+      "decorativeElements": [
+        "night studio chrome",
+        "electric blue accents",
+        "keepsake footer",
+        "character-free proof stage"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#5f8cff",
+        "#ff8fbd",
+        "#d8e8ff"
+      ]
     },
     {
       "id": "polara-midnight-club-strip",
@@ -404,25 +539,58 @@
       "characterPolicy": "character-free",
       "maskType": "rounded-rectangles",
       "photoWindows": [
-        { "x": 40, "y": 204, "width": 640, "height": 414, "radius": 14 },
-        { "x": 40, "y": 632, "width": 640, "height": 426, "radius": 14 },
-        { "x": 40, "y": 1074, "width": 640, "height": 412, "radius": 14 }
+        {
+          "x": 40,
+          "y": 204,
+          "width": 640,
+          "height": 414,
+          "radius": 14
+        },
+        {
+          "x": 40,
+          "y": 632,
+          "width": 640,
+          "height": 426,
+          "radius": 14
+        },
+        {
+          "x": 40,
+          "y": 1074,
+          "width": 640,
+          "height": 412,
+          "radius": 14
+        }
       ],
       "overlaySrc": "assets/frames/polara-midnight-club-strip-overlay.png",
       "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-strip-thumbnail.png",
       "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "0d679d427cad7003620274103544110f0c2fa9f87253ef8f534e9c94f82cdd32",
-      "byteSize": 569261,
+      "sha256": "0b23763c01b0f4eceaff44ea8d8dd472deeec94a249119828bba51cdc25e9393",
+      "byteSize": 568821,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v4",
+      "assetVersion": "frame-overlay-v5",
       "slotBackground": "#07091e",
       "supportsDynamicText": false,
-      "metadataZones": { "caption": null, "date": null, "brand": null },
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
       "metadataAreaNote": "Night Studio chrome dan copy sudah menjadi bagian dari overlay final.",
-      "decorativeElements": ["night studio chrome", "three rounded windows", "electric blue accents", "character-free technical footer"]
+      "decorativeElements": [
+        "night studio chrome",
+        "three rounded windows",
+        "electric blue accents",
+        "character-free technical footer"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#5f8cff",
+        "#ff8fbd",
+        "#d8e8ff"
+      ]
     }
   ]
 }

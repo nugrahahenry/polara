@@ -16,8 +16,10 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.24.0 Unified Proof Desk checkpoint', () => {
-  assert.equal(packageJson.version, '0.24.0');
+test('release metadata records the v0.25.0 frame remaster checkpoint', () => {
+  assert.equal(packageJson.version, '0.25.0');
+  assert.match(changelog, /## \[0\.25\.0\] - 2026-08-27/);
+  assert.match(changelog, /proof-edge-v1/i);
   assert.match(changelog, /## \[0\.24\.0\] - 2026-08-27/);
   assert.match(changelog, /Unified Proof Desk/i);
   assert.match(changelog, /## \[0\.23\.0\] - 2026-08-27/);

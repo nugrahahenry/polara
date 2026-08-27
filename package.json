@@ -1,6 +1,6 @@
 {
   "name": "polara",
-  "version": "0.24.0",
+  "version": "0.25.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -12,6 +12,7 @@
     "assets:sanitize": "node scripts/sanitize-transparent-png.mjs",
     "assets:previews": "python scripts/generate-picker-previews.py",
     "assets:previews:check": "python scripts/generate-picker-previews.py --check",
+    "frames:remaster": "python scripts/remaster-frame-overlays.py",
     "assets:verify": "node scripts/verify-production-assets.mjs",
     "frames:verify": "python scripts/verify-frame-overlays.py ."
   }

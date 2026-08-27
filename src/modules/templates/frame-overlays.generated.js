@@ -30,7 +30,7 @@ export const frameOverlayTemplates = [
         "height": 840
       }
     ],
-    "assetVersion": "frame-overlay-v4",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -80,7 +80,7 @@ export const frameOverlayTemplates = [
         "height": 388
       }
     ],
-    "assetVersion": "frame-overlay-v4",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -118,7 +118,7 @@ export const frameOverlayTemplates = [
         "height": 960
       }
     ],
-    "assetVersion": "frame-overlay-v3",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#1c191b",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -168,7 +168,7 @@ export const frameOverlayTemplates = [
         "height": 384
       }
     ],
-    "assetVersion": "frame-overlay-v3",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#1c191b",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -206,7 +206,7 @@ export const frameOverlayTemplates = [
         "height": 774
       }
     ],
-    "assetVersion": "frame-overlay-v1",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -256,7 +256,7 @@ export const frameOverlayTemplates = [
         "height": 388
       }
     ],
-    "assetVersion": "frame-overlay-v1",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -320,7 +320,7 @@ export const frameOverlayTemplates = [
         328
       ]
     ],
-    "assetVersion": "frame-overlay-v4",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#f5e3c4",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -373,7 +373,7 @@ export const frameOverlayTemplates = [
         "radius": 14
       }
     ],
-    "assetVersion": "frame-overlay-v4",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#f5e3c4",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -437,7 +437,7 @@ export const frameOverlayTemplates = [
         282
       ]
     ],
-    "assetVersion": "frame-overlay-v4",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#07091e",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -490,7 +490,7 @@ export const frameOverlayTemplates = [
         "radius": 14
       }
     ],
-    "assetVersion": "frame-overlay-v4",
+    "assetVersion": "frame-overlay-v5",
     "slotBackground": "#07091e",
     "supportsDynamicText": false,
     "metadataZones": {

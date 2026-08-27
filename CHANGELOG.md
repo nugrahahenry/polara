@@ -5,6 +5,19 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.25.0] - 2026-08-27
+
+### Added
+- Deterministic `polara-proof-edge-v1` remaster pipeline untuk seluruh lima keluarga dan sepuluh variant produksi.
+- Shared registration corners serta family-coded proof swatches yang berada di luar photo windows dan tetap character-free.
+- Regression contract untuk asset version, quality profile, palette, family count, dan generated registry.
+
+### Changed
+- Seluruh overlay, fallback frame-only, dan composite picker diregenerasi dari geometry canonical dengan profile `frame-overlay-v5`.
+
+### Validation
+- Remaster idempotent 10/10; preview check 20/20, overlay verifier 10/10, Asset Quality gate, hidden RGB, byte budget, registry parity, dan Node 57/57 lulus.
+
 ## [0.24.0] - 2026-08-27
 
 ### Added
