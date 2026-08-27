@@ -65,13 +65,37 @@ const EXPECTED = {
       { x: 40, y: 1074, width: 640, height: 412, radius: 14 },
     ],
   },
+  'cloud-picnic.single': {
+    mode: 'single', canvas: { width: 1080, height: 1350 }, maskType: 'rounded-rectangles',
+    windows: [{ x: 90, y: 190, width: 900, height: 960, radius: 34 }],
+  },
+  'cloud-picnic.strip': {
+    mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
+    windows: [
+      { x: 68, y: 170, width: 584, height: 420, radius: 24 },
+      { x: 68, y: 625, width: 584, height: 420, radius: 24 },
+      { x: 68, y: 1080, width: 584, height: 420, radius: 24 },
+    ],
+  },
+  'lucky-ticket.single': {
+    mode: 'single', canvas: { width: 1080, height: 1350 }, maskType: 'polygon',
+    polygon: [[154, 188], [926, 188], [966, 228], [966, 1082], [926, 1122], [154, 1122], [114, 1082], [114, 228]],
+  },
+  'lucky-ticket.strip': {
+    mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
+    windows: [
+      { x: 74, y: 172, width: 572, height: 422, radius: 20 },
+      { x: 74, y: 628, width: 572, height: 422, radius: 20 },
+      { x: 74, y: 1084, width: 572, height: 422, radius: 20 },
+    ],
+  },
 };
 
 
-test('registry generated memuat tepat sepuluh Hero PNG dari lima keluarga dengan geometry canonical', () => {
-  assert.equal(frameOverlayTemplates.length, 10);
-  assert.equal(new Set(frameOverlayTemplates.map((template) => template.familyId)).size, 5);
-  assert.equal(new Set(frameOverlayTemplates.map((template) => template.id)).size, 10);
+test('registry generated memuat tepat empat belas Hero PNG dari tujuh keluarga dengan geometry canonical', () => {
+  assert.equal(frameOverlayTemplates.length, 14);
+  assert.equal(new Set(frameOverlayTemplates.map((template) => template.familyId)).size, 7);
+  assert.equal(new Set(frameOverlayTemplates.map((template) => template.id)).size, 14);
   assert.deepEqual(new Set(frameOverlayTemplates.map((template) => template.id)), new Set(Object.keys(EXPECTED)));
 
   frameOverlayTemplates.forEach((template) => {
@@ -101,5 +125,5 @@ test('registry generated memisahkan overlay export dari picker thumbnail runtime
     assert.match(template.pickerDetail, /^(Single|Strip 3) · \d+ × \d+$/);
   });
 
-  assert.equal(new Set(frameOverlayTemplates.map((template) => template.pickerThumbnailSrc)).size, 10);
+  assert.equal(new Set(frameOverlayTemplates.map((template) => template.pickerThumbnailSrc)).size, 14);
 });

@@ -10,12 +10,12 @@ import {
 } from '../src/modules/templates/index.js';
 
 
-test('picker runtime berisi tepat lima keluarga dan sepuluh Hero sementara source lama tetap tersedia untuk rollback', () => {
+test('picker runtime berisi tepat tujuh keluarga dan empat belas Hero sementara source lama tetap tersedia untuk rollback', () => {
   const heroes = templates.filter((template) => template.pickerBadge === 'Hero');
 
-  assert.equal(templates.length, 10);
-  assert.equal(heroes.length, 10);
-  assert.equal(new Set(heroes.map((template) => template.familyId)).size, 5);
+  assert.equal(templates.length, 14);
+  assert.equal(heroes.length, 14);
+  assert.equal(new Set(heroes.map((template) => template.familyId)).size, 7);
   assert.ok(heroes.every((template) => template.renderMode === 'png-overlay'));
   assert.ok(heroes.every((template) => template.status === 'runtime-overlay'));
   assert.equal(heroHtmlRollbackTemplates.length, 6);

@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import fs from 'node:fs/promises';
 import path from 'node:path';
+import { createHash } from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 import { decodeRgbaPng, countTransparentRgb } from './lib/png-rgba.mjs';
@@ -48,7 +49,8 @@ async function verify() {
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
   const guestManifest = await readJson('assets/guests/guest-manifest.json');
   requireQuality(policy.schemaVersion === 1 && policy.profile === 'polara-asset-quality-v1', 'Unknown asset-quality policy.');
-  requireQuality(manifest.frames.length === 10 && frameOverlayTemplates.length === 10, 'Frame registry must contain 10 variants.');
+  requireQuality(manifest.frames.length === policy.frames.variantCount && frameOverlayTemplates.length === policy.frames.variantCount, 'Frame registry variant count drifted.');
+  requireQuality(new Set(frameOverlayTemplates.map((frame) => frame.familyId)).size === policy.frames.familyCount, 'Frame registry family count drifted.');
 
   for (const frame of frameOverlayTemplates) {
     const canvas = frame.mode === 'strip' ? policy.frames.stripCanvas : policy.frames.singleCanvas;
@@ -72,6 +74,13 @@ async function verify() {
   }
   requireQuality(exclusiveStickers.length === policy.stickers.exclusiveFamilyCount, 'Exclusive family count drifted.');
   requireQuality(new Set(exclusiveStickers.map((item) => item.exclusiveFamilyId)).size === policy.stickers.exclusiveFamilyCount, 'Exclusive families must be unique.');
+  const provenance = await readJson(policy.stickers.generatedExclusiveProvenance);
+  requireQuality(provenance.assets.length === 2, 'Generated exclusive provenance must contain two assets.');
+  for (const asset of provenance.assets) {
+    requireQuality(asset.kind === 'original-fictional' && asset.publicFigure === false && asset.collaborationClaim === false, `${asset.runtimeSrc} provenance is unsafe.`);
+    const bytes = await fs.readFile(resolveAsset(asset.runtimeSrc));
+    requireQuality(createHash('sha256').update(bytes).digest('hex') === asset.sha256, `${asset.runtimeSrc} provenance hash drifted.`);
+  }
 
   for (const mascot of mascots) {
     requireQuality(!policy.mascots.forbiddenRuntimeIds.includes(mascot.id), `${mascot.id} is forbidden at runtime.`);

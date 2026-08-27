@@ -14,12 +14,14 @@ const FAMILIES = [
   'seoul-snap-y2k',
   'polara-daily',
   'polara-midnight-club',
+  'cloud-picnic',
+  'lucky-ticket',
 ];
 
 
 test('setiap keluarga memiliki tepat satu Poca exclusive tanpa menggandakan katalog universal', () => {
-  assert.equal(stickers.length, 18);
-  assert.equal(exclusiveStickers.length, 5);
+  assert.equal(stickers.length, 20);
+  assert.equal(exclusiveStickers.length, 7);
   assert.deepEqual(
     new Set(exclusiveStickers.map((asset) => asset.exclusiveFamilyId)),
     new Set(FAMILIES),

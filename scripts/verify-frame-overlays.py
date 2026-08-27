@@ -73,6 +73,30 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
             {"x": 40, "y": 1074, "width": 640, "height": 412, "radius": 14},
         ],
     ),
+    "cloud-picnic.single": (
+        (1080, 1350),
+        [{"x": 90, "y": 190, "width": 900, "height": 960, "radius": 34}],
+    ),
+    "cloud-picnic.strip": (
+        (720, 1800),
+        [
+            {"x": 68, "y": 170, "width": 584, "height": 420, "radius": 24},
+            {"x": 68, "y": 625, "width": 584, "height": 420, "radius": 24},
+            {"x": 68, "y": 1080, "width": 584, "height": 420, "radius": 24},
+        ],
+    ),
+    "lucky-ticket.single": (
+        (1080, 1350),
+        [{"x": 114, "y": 188, "width": 852, "height": 934}],
+    ),
+    "lucky-ticket.strip": (
+        (720, 1800),
+        [
+            {"x": 74, "y": 172, "width": 572, "height": 422, "radius": 20},
+            {"x": 74, "y": 628, "width": 572, "height": 422, "radius": 20},
+            {"x": 74, "y": 1084, "width": 572, "height": 422, "radius": 20},
+        ],
+    ),
 }
 
 EXPECTED_POLYGONS: dict[str, list[list[int]]] = {
@@ -81,6 +105,9 @@ EXPECTED_POLYGONS: dict[str, list[list[int]]] = {
     ],
     "polara-midnight-club-single": [
         [158, 231], [918, 231], [969, 282], [969, 1153], [110, 1153], [110, 282]
+    ],
+    "lucky-ticket.single": [
+        [154, 188], [926, 188], [966, 228], [966, 1082], [926, 1122], [154, 1122], [114, 1082], [114, 228]
     ],
 }
 
@@ -154,6 +181,18 @@ EXPECTED_CONTRACTS: dict[str, dict[str, Any]] = {
         "mode": "strip",
         "maskType": "rounded-rectangles",
         "masterRequired": False,
+    },
+    "cloud-picnic.single": {
+        "family": "cloud-picnic", "mode": "single", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "cloud-picnic.strip": {
+        "family": "cloud-picnic", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "lucky-ticket.single": {
+        "family": "lucky-ticket", "mode": "single", "maskType": "polygon", "masterRequired": False,
+    },
+    "lucky-ticket.strip": {
+        "family": "lucky-ticket", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
     },
 }
 
@@ -459,19 +498,19 @@ def verify(root: Path) -> None:
     manifest = load_manifest(manifest_path)
     frames = manifest["frames"]
     require(
-        len(frames) == 10,
-        f"Manifest harus berisi tepat 10 frame; ditemukan {len(frames)}.",
+        len(frames) == 14,
+        f"Manifest harus berisi tepat 14 frame; ditemukan {len(frames)}.",
     )
     ids = [frame.get("id") for frame in frames]
     require(len(set(ids)) == len(ids), "Manifest memiliki ID duplikat.")
     require(
         set(ids) == set(EXPECTED_GEOMETRY),
-        "Manifest tidak memuat tepat sepuluh ID Hero canonical.",
+        "Manifest tidak memuat tepat empat belas ID Hero canonical.",
     )
 
     hashes = [verify_frame(root, frame) for frame in frames]
-    require(len(set(hashes)) == 10, "Runtime overlay memiliki hash duplikat.")
-    print("10/10 overlay passed")
+    require(len(set(hashes)) == 14, "Runtime overlay memiliki hash duplikat.")
+    print("14/14 overlay passed")
 
 
 def main() -> int:

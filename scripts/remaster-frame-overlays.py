@@ -19,6 +19,8 @@ PALETTES = {
     "seoul-snap-y2k": ("#ff8fbd", "#8fd3ff", "#cab8ff"),
     "polara-daily": ("#df6d57", "#40312a", "#f5e3c4"),
     "polara-midnight-club": ("#5f8cff", "#ff8fbd", "#d8e8ff"),
+    "cloud-picnic": ("#8fd3ff", "#ff8fbd", "#ffe26f"),
+    "lucky-ticket": ("#ff8fbd", "#8fd3ff", "#ffe26f"),
 }
 
 
@@ -68,8 +70,8 @@ def save_png(image: Image.Image, path: Path, source_info: dict[str, object]) -> 
 
 def main() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    if len(manifest.get("frames", [])) != 10:
-        raise RuntimeError("v0.25 remaster expects exactly ten existing runtime variants.")
+    if len(manifest.get("frames", [])) != 14:
+        raise RuntimeError("The current Polara library expects exactly fourteen runtime variants.")
 
     for frame in manifest["frames"]:
         palette = PALETTES[frame["family"]]

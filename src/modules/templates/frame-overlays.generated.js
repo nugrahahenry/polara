@@ -498,5 +498,222 @@ export const frameOverlayTemplates = [
       "date": null,
       "brand": null
     }
+  },
+  {
+    "id": "cloud-picnic.single",
+    "familyId": "cloud-picnic",
+    "name": "Cloud Picnic",
+    "category": "weekend-pastel",
+    "mode": "single",
+    "tone": "weekend-airy",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Single · 1080 × 1350",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/cloud-picnic-single-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/cloud-picnic-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-single-thumbnail.png",
+    "canvas": {
+      "width": 1080,
+      "height": 1350
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 90,
+        "y": 190,
+        "width": 900,
+        "height": 960,
+        "radius": 34
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#eaf7ff",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "cloud-picnic.strip",
+    "familyId": "cloud-picnic",
+    "name": "Cloud Picnic",
+    "category": "weekend-pastel",
+    "mode": "strip",
+    "tone": "weekend-airy",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Strip 3 · 720 × 1800",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/cloud-picnic-strip-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/cloud-picnic-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-strip-thumbnail.png",
+    "canvas": {
+      "width": 720,
+      "height": 1800
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 68,
+        "y": 170,
+        "width": 584,
+        "height": 420,
+        "radius": 24
+      },
+      {
+        "x": 68,
+        "y": 625,
+        "width": 584,
+        "height": 420,
+        "radius": 24
+      },
+      {
+        "x": 68,
+        "y": 1080,
+        "width": 584,
+        "height": 420,
+        "radius": 24
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#eaf7ff",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "lucky-ticket.single",
+    "familyId": "lucky-ticket",
+    "name": "Lucky Ticket",
+    "category": "ticket-club",
+    "mode": "single",
+    "tone": "club-ticket",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Single · 1080 × 1350",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/lucky-ticket-single-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/lucky-ticket-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-single-thumbnail.png",
+    "canvas": {
+      "width": 1080,
+      "height": 1350
+    },
+    "maskType": "polygon",
+    "photoWindows": [
+      {
+        "x": 114,
+        "y": 188,
+        "width": 852,
+        "height": 934
+      }
+    ],
+    "photoPolygon": [
+      [
+        154,
+        188
+      ],
+      [
+        926,
+        188
+      ],
+      [
+        966,
+        228
+      ],
+      [
+        966,
+        1082
+      ],
+      [
+        926,
+        1122
+      ],
+      [
+        154,
+        1122
+      ],
+      [
+        114,
+        1082
+      ],
+      [
+        114,
+        228
+      ]
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#202f66",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "lucky-ticket.strip",
+    "familyId": "lucky-ticket",
+    "name": "Lucky Ticket",
+    "category": "ticket-club",
+    "mode": "strip",
+    "tone": "club-ticket",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Strip 3 · 720 × 1800",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/lucky-ticket-strip-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/lucky-ticket-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-strip-thumbnail.png",
+    "canvas": {
+      "width": 720,
+      "height": 1800
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 74,
+        "y": 172,
+        "width": 572,
+        "height": 422,
+        "radius": 20
+      },
+      {
+        "x": 74,
+        "y": 628,
+        "width": 572,
+        "height": 422,
+        "radius": 20
+      },
+      {
+        "x": 74,
+        "y": 1084,
+        "width": 572,
+        "height": 422,
+        "radius": 20
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#202f66",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
   }
 ];

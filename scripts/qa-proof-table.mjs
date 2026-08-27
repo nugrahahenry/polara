@@ -438,7 +438,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(frameRail.overflowX, 'auto');
   assert.equal(frameRail.overflowY, 'hidden');
   assert.ok(frameRail.visibleCards >= 2 && frameRail.visibleCards < 3, `${name}: frame rail should reveal about 2-2.5 cards`);
-  assert.equal(await page.locator('#templateList .tpl-btn').count(), 5, `${name}: each mode must expose five frame families`);
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 7, `${name}: each mode must expose seven frame families`);
   await shot('04', 'frames');
 
   await page.locator('#photoSlotTabs .slot-tab').nth(1).click();
@@ -632,11 +632,15 @@ const VARIANTS = [
   { id: 'seoul-snap-y2k.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
   { id: 'polara-daily-single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
   { id: 'polara-midnight-club-single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
+  { id: 'cloud-picnic.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles' },
+  { id: 'lucky-ticket.single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
   { id: 'poca-purikura.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'vintage-film-lofi.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'seoul-snap-y2k.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'polara-daily-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
   { id: 'polara-midnight-club-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
+  { id: 'cloud-picnic.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
+  { id: 'lucky-ticket.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles' },
 ];
 
 async function reachFrames(page, mode) {

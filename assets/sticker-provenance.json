@@ -1,0 +1,25 @@
+{
+  "schemaVersion": 1,
+  "assets": [
+    {
+      "runtimeSrc": "assets/stickers/poca-cloud-picnic-exclusive.png",
+      "sha256": "a9c4337f7c6ca5d1132b2935c81c20e49347668351529550a4a181d00f997a78",
+      "kind": "original-fictional",
+      "sourceMode": "built-in-imagegen-plus-local-chroma-extraction",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "background": "transparent",
+      "hiddenRgbPolicy": "zero-at-alpha-0"
+    },
+    {
+      "runtimeSrc": "assets/stickers/poca-lucky-ticket-exclusive.png",
+      "sha256": "c85134e6996b13ee0cd98630b40f2c62f4bc5fbee74501b981fb73822919aa4d",
+      "kind": "original-fictional",
+      "sourceMode": "built-in-imagegen-plus-local-chroma-extraction",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "background": "transparent",
+      "hiddenRgbPolicy": "zero-at-alpha-0"
+    }
+  ]
+}

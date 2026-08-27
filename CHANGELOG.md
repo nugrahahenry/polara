@@ -5,6 +5,20 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.26.0] - 2026-08-27
+
+### Added
+- Dua keluarga original baru: **Cloud Picnic** dan **Lucky Ticket**, masing-masing memiliki Single 1080×1350 serta Strip 720×1800.
+- Dua Poca Exclusive original-fictional: Cloud Picnic dan Lucky Ticket, dengan alpha lokal, hidden RGB nol, dan provenance tanpa figur publik maupun klaim kolaborasi.
+- Deterministic generator serta regression contract untuk kelengkapan keluarga, geometry, registry, exclusive sticker, dan rights metadata.
+
+### Changed
+- Perluas frame rail produksi dari lima keluarga/sepuluh variant menjadi tujuh keluarga/empat belas variant tanpa mengubah default Strip 3 atau flow canonical.
+
+### Validation
+- Pipeline aset lulus idempotensi 9/9; preview 28/28, overlay verifier 14/14, Asset Quality gate untuk 14 frame/20 sticker/11 mascot/3 guest, transparent hidden RGB, provenance, geometry polygon/rounded-rectangle, dan Node 59/59 lulus.
+- Audit raster menghapus fringe chroma pada kedua Poca Exclusive sampai nol piksel tepi hijau mencurigakan, tanpa mengubah kiss-cut outline atau warna subjek.
+
 ## [0.25.0] - 2026-08-27
 
 ### Added

@@ -591,6 +591,255 @@
         "#ff8fbd",
         "#d8e8ff"
       ]
+    },
+    {
+      "id": "cloud-picnic.single",
+      "family": "cloud-picnic",
+      "name": "Cloud Picnic",
+      "category": "weekend-pastel",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 90,
+          "y": 190,
+          "width": 900,
+          "height": 960,
+          "radius": 34
+        }
+      ],
+      "overlaySrc": "assets/frames/cloud-picnic-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/cloud-picnic-single-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "sha256": "a89fcb3472abf15a25b2ad001508a191ee7301845b8844867236232dffc7937f",
+      "byteSize": 27493,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#8fd3ff",
+        "#ff8fbd",
+        "#ffe26f"
+      ],
+      "slotBackground": "#eaf7ff",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "sky gingham",
+        "paper clouds",
+        "daisy marks",
+        "weekend proof label"
+      ]
+    },
+    {
+      "id": "cloud-picnic.strip",
+      "family": "cloud-picnic",
+      "name": "Cloud Picnic",
+      "category": "weekend-pastel",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 68,
+          "y": 170,
+          "width": 584,
+          "height": 420,
+          "radius": 24
+        },
+        {
+          "x": 68,
+          "y": 625,
+          "width": 584,
+          "height": 420,
+          "radius": 24
+        },
+        {
+          "x": 68,
+          "y": 1080,
+          "width": 584,
+          "height": 420,
+          "radius": 24
+        }
+      ],
+      "overlaySrc": "assets/frames/cloud-picnic-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/cloud-picnic-strip-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "sha256": "55af113d606344a61ce664df3305cfb2e558f1b59115bd72df069b342d4e4a2d",
+      "byteSize": 24384,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#8fd3ff",
+        "#ff8fbd",
+        "#ffe26f"
+      ],
+      "slotBackground": "#eaf7ff",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "sky gingham",
+        "paper clouds",
+        "daisy marks",
+        "weekend proof label"
+      ]
+    },
+    {
+      "id": "lucky-ticket.single",
+      "family": "lucky-ticket",
+      "name": "Lucky Ticket",
+      "category": "ticket-club",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "polygon",
+      "photoPolygon": [
+        [
+          154,
+          188
+        ],
+        [
+          926,
+          188
+        ],
+        [
+          966,
+          228
+        ],
+        [
+          966,
+          1082
+        ],
+        [
+          926,
+          1122
+        ],
+        [
+          154,
+          1122
+        ],
+        [
+          114,
+          1082
+        ],
+        [
+          114,
+          228
+        ]
+      ],
+      "overlaySrc": "assets/frames/lucky-ticket-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/lucky-ticket-single-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "sha256": "2c43dbea29eea5552a79d325975007e6670e675213af4074c59994ff5537b164",
+      "byteSize": 24876,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#ff8fbd",
+        "#8fd3ff",
+        "#ffe26f"
+      ],
+      "slotBackground": "#202f66",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "ticket perforations",
+        "cobalt stock",
+        "admit marks",
+        "three-color proof signature"
+      ]
+    },
+    {
+      "id": "lucky-ticket.strip",
+      "family": "lucky-ticket",
+      "name": "Lucky Ticket",
+      "category": "ticket-club",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 74,
+          "y": 172,
+          "width": 572,
+          "height": 422,
+          "radius": 20
+        },
+        {
+          "x": 74,
+          "y": 628,
+          "width": 572,
+          "height": 422,
+          "radius": 20
+        },
+        {
+          "x": 74,
+          "y": 1084,
+          "width": 572,
+          "height": 422,
+          "radius": 20
+        }
+      ],
+      "overlaySrc": "assets/frames/lucky-ticket-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/lucky-ticket-strip-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "sha256": "53c5c3976e8d207bda32a38e57ecb0c225434e098c65756a8c04fd7cdd8a2c2f",
+      "byteSize": 25053,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#ff8fbd",
+        "#8fd3ff",
+        "#ffe26f"
+      ],
+      "slotBackground": "#202f66",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "ticket perforations",
+        "cobalt stock",
+        "admit marks",
+        "three-color proof signature"
+      ]
     }
   ]
 }

@@ -100,6 +100,16 @@ export const exclusiveStickers = [
     src: STICKER + 'poca-midnight-photographer-exclusive.png', exclusiveFamilyId: 'polara-midnight-club', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .78, scale: .2, rotation: -3 }, minScale: .1, maxScale: .42,
   },
+  {
+    id: 'poca-cloud-picnic-exclusive', type: 'sticker', name: 'Poca Cloud Picnic',
+    src: STICKER + 'poca-cloud-picnic-exclusive.png', exclusiveFamilyId: 'cloud-picnic', pickerBadge: 'Exclusive',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .76, y: .78, scale: .21, rotation: -4 }, minScale: .1, maxScale: .42,
+  },
+  {
+    id: 'poca-lucky-ticket-exclusive', type: 'sticker', name: 'Poca Lucky Ticket',
+    src: STICKER + 'poca-lucky-ticket-exclusive.png', exclusiveFamilyId: 'lucky-ticket', pickerBadge: 'Exclusive',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .76, scale: .21, rotation: 4 }, minScale: .1, maxScale: .42,
+  },
 ];
 
 export const stickers = [...universalStickers, ...exclusiveStickers];

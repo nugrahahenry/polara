@@ -85,7 +85,7 @@ function validateFrame(frame, ids) {
 const raw = await fs.readFile(inputPath, 'utf8');
 const manifest = JSON.parse(raw);
 if (!Array.isArray(manifest.frames)) fail('Manifest harus memiliki array frames.');
-if (manifest.frames.length !== 10) fail(`Manifest produksi harus berisi tepat 10 frame Hero; ditemukan ${manifest.frames.length}.`);
+if (manifest.frames.length !== 14) fail(`Manifest produksi harus berisi tepat 14 frame Hero; ditemukan ${manifest.frames.length}.`);
 
 const ids = new Set();
 manifest.frames.forEach((frame) => validateFrame(frame, ids));
@@ -102,9 +102,13 @@ const runtimeFields = manifest.frames.map((frame) => ({
       ? 'nostalgia'
       : frame.family === 'polara-daily'
         ? 'editorial'
-        : frame.family === 'polara-midnight-club'
-          ? 'night-studio'
-          : 'statement',
+      : frame.family === 'polara-midnight-club'
+        ? 'night-studio'
+        : frame.family === 'cloud-picnic'
+          ? 'weekend-airy'
+          : frame.family === 'lucky-ticket'
+            ? 'club-ticket'
+            : 'statement',
   premium: false,
   status: 'runtime-overlay',
   pickerBadge: 'Hero',
