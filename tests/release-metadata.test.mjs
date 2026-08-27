@@ -16,8 +16,10 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.23.0 asset quality checkpoint', () => {
-  assert.equal(packageJson.version, '0.23.0');
+test('release metadata records the v0.24.0 Unified Proof Desk checkpoint', () => {
+  assert.equal(packageJson.version, '0.24.0');
+  assert.match(changelog, /## \[0\.24\.0\] - 2026-08-27/);
+  assert.match(changelog, /Unified Proof Desk/i);
   assert.match(changelog, /## \[0\.23\.0\] - 2026-08-27/);
   assert.match(changelog, /Asset Quality System/i);
   assert.match(changelog, /character-free/i);
@@ -33,7 +35,7 @@ test('release metadata records the v0.23.0 asset quality checkpoint', () => {
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
   assert.match(indexHtml, /src\/app\.js\?v=25/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=23/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=24/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);

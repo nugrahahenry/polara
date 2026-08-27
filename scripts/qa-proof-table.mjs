@@ -550,6 +550,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   });
   await page.locator('#backBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'frame');
+  await page.locator('#primaryBtn:not(:disabled)').waitFor();
   await page.locator('#primaryBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'decorate');
   await page.waitForFunction((expected) => {

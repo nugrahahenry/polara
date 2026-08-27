@@ -16,6 +16,13 @@ body {
     #f7eee5;
 }
 
+::selection { color: var(--proof-ink); background: var(--proof-blue); }
+html { scrollbar-color: rgba(75,46,31,.32) transparent; scrollbar-width: thin; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-track { background: transparent; }
+*::-webkit-scrollbar-thumb { border: 3px solid transparent; border-radius: 999px; background: rgba(75,46,31,.28); background-clip: padding-box; }
+input, textarea { caret-color: var(--pink-deep); }
+
 .app-header {
   min-height: 64px;
   padding: 10px clamp(16px, 3vw, 42px);
@@ -105,6 +112,46 @@ body {
   margin: 0 auto 16px;
   grid-template-columns: minmax(0, 1.4fr) minmax(380px, .72fr);
   gap: clamp(14px, 1.5vw, 22px);
+}
+
+/* v0.24.0 — the shell reads as one physical proof desk, not two unrelated cards. */
+@media (min-width: 1100px) {
+  body {
+    background:
+      radial-gradient(circle at 7% 4%, rgba(255,226,111,.3), transparent 24rem),
+      radial-gradient(circle at 95% 9%, rgba(143,211,255,.23), transparent 28rem),
+      linear-gradient(90deg, rgba(255,255,255,.24), transparent 26%, transparent 74%, rgba(255,255,255,.2)),
+      var(--proof-desk);
+  }
+  .workspace {
+    grid-template-columns: minmax(0, 1.58fr) minmax(410px, .72fr);
+    padding: 10px;
+    gap: 10px;
+    border: 1px solid rgba(75,46,31,.13);
+    border-radius: 26px;
+    background: rgba(255,253,249,.3);
+    box-shadow: 0 30px 80px rgba(75,46,31,.08);
+  }
+  .stage-shell { border-radius: 16px 10px 10px 16px; }
+  .control-sheet { border-radius: 10px 16px 16px 10px; }
+  .control-sheet::before {
+    content: 'POLARA / PROOF CONTROLS';
+    flex: 0 0 auto;
+    display: flex;
+    align-items: center;
+    min-height: 29px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--proof-hairline);
+    color: var(--proof-muted);
+    background: #f8f1ea;
+    font: 800 .59rem/1 var(--font-ui);
+    letter-spacing: .11em;
+  }
+  .control-scroll { padding-top: 22px; }
+  .stage-shell::before { inset: 10px; }
+  .stage-shell::after { inset: 20px; }
+  .stage-docket { top: 24px; }
+  .stage-footline { bottom: 24px; }
 }
 .stage-shell, .control-sheet {
   border: 1px solid var(--proof-hairline);
@@ -204,6 +251,20 @@ body {
   right: clamp(8px, 1.5vw, 18px);
   bottom: clamp(34px, 4vw, 54px);
 }
+.hero-stack::before,
+.hero-stack::after {
+  content: '';
+  position: absolute;
+  z-index: 3;
+  width: 64px;
+  height: 18px;
+  border: 1px solid rgba(75,46,31,.08);
+  background: rgba(255,226,111,.68);
+  box-shadow: 0 5px 12px rgba(75,46,31,.08);
+  pointer-events: none;
+}
+.hero-stack::before { left: 2%; top: 2%; transform: rotate(-11deg); }
+.hero-stack::after { right: 0; bottom: 8%; transform: rotate(8deg); }
 .proof-buddy[data-state="reveal"] { opacity: 0; }
 
 .choice-btn, .mini-btn, .slot-tab, .slot-card, .tpl-btn, .sticker-btn {
@@ -664,6 +725,15 @@ body {
   border-top: 1px solid var(--proof-hairline);
   background: var(--proof-paper);
 }
+.app-footer::before {
+  content: 'POLARA PRINT ROOM · LOCAL-FIRST SINCE 2026';
+  position: absolute;
+  left: clamp(18px, 3vw, 44px);
+  top: 10px;
+  color: rgba(75,46,31,.48);
+  font: 800 .54rem/1 var(--font-ui);
+  letter-spacing: .12em;
+}
 .app-footer a { display: inline-flex; min-height: 44px; align-items: center; }
 .footer-end { display: grid; justify-items: center; gap: 9px; }
 
@@ -799,7 +869,7 @@ body {
 }
 
 @media (min-width: 1100px) {
-  .app-footer { margin-top: 0; padding: 18px clamp(22px, 3vw, 44px); text-align: left; }
+  .app-footer { margin-top: 0; padding: 26px clamp(22px, 3vw, 44px) 18px; text-align: left; }
   .footer-inner {
     width: min(1420px, 100%);
     display: grid;
@@ -808,7 +878,7 @@ body {
     justify-items: stretch;
     gap: clamp(22px, 4vw, 64px);
   }
-  .maker-seal { justify-self: start; }
+  .maker-seal { justify-self: start; border-width: 1px; border-radius: 12px; box-shadow: var(--proof-shadow-low); }
   .footer-privacy { justify-self: center; max-width: 430px; margin: 0; text-align: center; }
   .footer-end {
     grid-template-columns: auto minmax(150px, auto);
@@ -842,8 +912,8 @@ body {
   .start-visual { grid-template-columns: 1fr minmax(130px,.45fr); padding: 28px; }
   .start-copy h1 { font-size: clamp(2.7rem, 10vw, 5rem); }
   .proof-buddy { width: clamp(76px, 15vw, 112px); }
-  .camera-stage { height: calc(100% - clamp(20px, 4vw, 36px)); }
-  .capture-bay, .review-stage { height: 100%; }
+  .camera-stage { height: calc(100% - clamp(20px, 4vw, 36px)); min-height: 0; overflow: hidden; }
+  .capture-bay, .review-stage { height: 100%; min-height: 0; max-height: 100%; }
   .camera-stage { --capture-sidecar: clamp(70px, 15vw, 112px); }
   .capture-bay { width: min(calc(100% - var(--capture-sidecar)), 500px); justify-self: end; }
   .proof-buddy[data-state="camera"] { width: clamp(60px, 12vw, 84px); left: 8px; }

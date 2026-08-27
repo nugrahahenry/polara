@@ -38,6 +38,11 @@
   --proof-mat-edge: rgba(75, 46, 31, 0.22);
   --proof-registration: rgba(75, 46, 31, 0.30);
   --proof-mat-shadow: 0 24px 54px rgba(75, 46, 31, 0.14), 0 5px 14px rgba(75, 46, 31, 0.08);
+  --proof-desk: #f2e6da;
+  --proof-desk-deep: #ead9ca;
+  --proof-paper-raised: #fffefa;
+  --proof-focus: #176a9e;
+  --proof-shadow-low: 0 10px 28px rgba(75, 46, 31, 0.09), 0 2px 7px rgba(75, 46, 31, 0.05);
 
   /* ── bentuk ── */
   --radius:      22px;

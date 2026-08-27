@@ -5,6 +5,19 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.24.0] - 2026-08-27
+
+### Added
+- Komposisi **Unified Proof Desk** yang menyatukan stage dan control sheet pada desktop tanpa mengubah flow canonical.
+- Browser surfaces terarah untuk selection, caret, focus, scrollbar, dan label produksi ringkas pada control sheet.
+- Regression coverage untuk visual foundation serta tujuan footer canonical `hnry.dev`.
+
+### Changed
+- Rapikan density desktop, registration marks, material Start, dan hierarchy footer sambil mempertahankan mobile stacking, safe area, serta target 44×44 px.
+
+### Validation
+- Focused Node regression dan pemeriksaan metadata versi wajib lulus sebelum checkpoint v0.24.0 di-commit.
+
 ## [0.23.0] - 2026-08-27
 
 ### Added
