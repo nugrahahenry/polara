@@ -20,8 +20,9 @@ const listPng = async (relativeDirectory) => {
 
 test('asset quality policy locks production budgets and fictional picker provenance', async () => {
   const policy = await readJson('assets/asset-quality-policy.json');
-  assert.equal(policy.schemaVersion, 1);
-  assert.equal(policy.profile, 'polara-asset-quality-v1');
+  assert.equal(policy.schemaVersion, 2);
+  assert.equal(policy.profile, 'polara-asset-quality-v2');
+  assert.equal(policy.frames.familyProfileVersion, 'frame-family-v2');
   assert.equal(policy.frames.requireCharacterFreeOverlay, true);
   assert.equal(policy.frames.requirePickerComposite, true);
   assert.equal(policy.pickerFixture.kind, 'fictional-synthetic');

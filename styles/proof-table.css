@@ -485,6 +485,79 @@ input, textarea { caret-color: var(--pink-deep); }
 @keyframes proof-stack-in { from { opacity: 0; filter: blur(5px); } to { opacity: .55; filter: none; } }
 .reveal-buddy { position: absolute; z-index: 6; display: block; right: 3%; bottom: 2%; width: clamp(100px, 15vw, 170px); }
 
+.frame-edition-dossier {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 8px 12px;
+  margin: 0 0 12px;
+  padding: 11px 12px;
+  border: 1px solid var(--proof-hairline);
+  border-radius: 14px;
+  background: var(--proof-paper-raised);
+}
+.frame-edition-copy { min-width: 0; }
+.frame-edition-copy h3 {
+  margin: 0;
+  color: var(--proof-ink);
+  font-size: 1rem;
+  line-height: 1.15;
+}
+.frame-edition-copy p {
+  max-width: 44ch;
+  margin: 4px 0 0;
+  color: var(--proof-muted);
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.frame-edition-palette {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+}
+.frame-edition-palette span {
+  width: 15px;
+  height: 22px;
+  border: 1px solid rgba(43,30,25,.16);
+  border-radius: 5px;
+  background: var(--frame-swatch);
+}
+.frame-edition-facts {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: minmax(0, .8fr) minmax(0, 1.2fr);
+  gap: 6px;
+  margin: 0;
+  padding-top: 7px;
+  border-top: 1px solid var(--proof-hairline);
+}
+.frame-edition-facts > div { min-width: 0; }
+.frame-edition-facts dt {
+  color: var(--proof-muted);
+  font-size: .56rem;
+  font-weight: 800;
+  letter-spacing: .055em;
+  text-transform: uppercase;
+}
+.frame-edition-facts dd {
+  margin: 3px 0 0;
+  color: var(--proof-ink);
+  font-size: .68rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+.frame-edition-exclusive-fact dd {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+.frame-edition-exclusive-fact img {
+  flex: 0 0 auto;
+  width: 25px;
+  height: 25px;
+  object-fit: contain;
+}
+
 #templateList {
   grid-template-columns: none;
   grid-auto-flow: column;
@@ -537,6 +610,15 @@ input, textarea { caret-color: var(--pink-deep); }
 }
 .tpl-badge { border: 0; border-radius: 7px; box-shadow: 0 3px 10px rgba(75,46,31,.12); }
 .tpl-name { font-size: .8rem; }
+.tpl-family-material {
+  display: block;
+  margin-top: 3px;
+  color: var(--proof-muted);
+  font-size: .58rem;
+  font-weight: 800;
+  letter-spacing: .035em;
+  text-transform: uppercase;
+}
 .photo-adjust { border-top: 1px solid var(--proof-hairline); }
 .slot-tab.active { background: var(--proof-blue); }
 .caption-availability-note { border: 0; background: #fff7dc; }
@@ -626,6 +708,18 @@ input, textarea { caret-color: var(--pink-deep); }
   box-shadow: inset 0 0 0 1px rgba(255,143,189,.16);
 }
 .sticker-btn.exclusive:hover { border-color: var(--proof-pink); background: #fff8fb; }
+.sticker-btn.exclusive { min-height: 142px; }
+.sticker-family-match {
+  width: 100%;
+  overflow: hidden;
+  color: #9a2f65;
+  font-size: .5rem;
+  font-weight: 800;
+  line-height: 1.15;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
 .sticker-badge {
   position: absolute;
   z-index: 2;
@@ -1017,6 +1111,21 @@ input, textarea { caret-color: var(--pink-deep); }
   .control-scroll { padding: 20px 16px 130px; }
   .panel-title { font-size: 1.55rem; }
   .panel-copy { margin-bottom: 16px; font-size: .86rem; }
+  [data-panel="frame"] .panel-copy { margin-bottom: 10px; }
+  .frame-edition-dossier { gap: 6px 9px; margin-bottom: 9px; padding: 9px 10px; }
+  .frame-edition-copy h3 { font-size: .9rem; }
+  .frame-edition-copy p {
+    display: -webkit-box;
+    overflow: hidden;
+    font-size: .64rem;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+  }
+  .frame-edition-palette span { width: 12px; height: 18px; }
+  .frame-edition-facts { gap: 5px; padding-top: 5px; }
+  .frame-edition-facts dt { font-size: .5rem; }
+  .frame-edition-facts dd { font-size: .61rem; }
+  .frame-edition-exclusive-fact img { width: 21px; height: 21px; }
   .start-visual { min-height: 100%; grid-template-columns: 1fr .48fr; gap: 8px; padding: 18px; }
   .start-copy h1 { font-size: clamp(2.25rem, 13vw, 3.6rem); }
   .start-copy p { margin-top: 12px; font-size: .8rem; line-height: 1.45; }

@@ -17,6 +17,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/poca-purikura-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-single-thumbnail.png",
+    "familyProfile": {
+      "id": "poca-purikura",
+      "story": "Glossy pink energy for playful poses and expressive close-ups.",
+      "material": "Glossy pop",
+      "palette": [
+        "#ec5e9e",
+        "#8fd3ff",
+        "#ffe26f"
+      ],
+      "exclusiveStickerId": "poca-purikura-exclusive"
+    },
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -55,6 +66,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/poca-purikura-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "poca-purikura",
+      "story": "Glossy pink energy for playful poses and expressive close-ups.",
+      "material": "Glossy pop",
+      "palette": [
+        "#ec5e9e",
+        "#8fd3ff",
+        "#ffe26f"
+      ],
+      "exclusiveStickerId": "poca-purikura-exclusive"
+    },
     "canvas": {
       "width": 720,
       "height": 1800
@@ -105,6 +127,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/vintage-film-lofi-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/vintage-film-lofi-single-thumbnail.png",
+    "familyProfile": {
+      "id": "vintage-film-lofi",
+      "story": "Warm contact-sheet character for memories that should feel found.",
+      "material": "Matte film",
+      "palette": [
+        "#4f3024",
+        "#c87a55",
+        "#f1d5a8"
+      ],
+      "exclusiveStickerId": "poca-vintage-film-exclusive"
+    },
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -143,6 +176,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/vintage-film-lofi-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/vintage-film-lofi-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "vintage-film-lofi",
+      "story": "Warm contact-sheet character for memories that should feel found.",
+      "material": "Matte film",
+      "palette": [
+        "#4f3024",
+        "#c87a55",
+        "#f1d5a8"
+      ],
+      "exclusiveStickerId": "poca-vintage-film-exclusive"
+    },
     "canvas": {
       "width": 720,
       "height": 1800
@@ -193,6 +237,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/seoul-snap-y2k-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/seoul-snap-y2k-single-thumbnail.png",
+    "familyProfile": {
+      "id": "seoul-snap-y2k",
+      "story": "Clean Y2K studio details with a crisp, confident photo edge.",
+      "material": "Digital chrome",
+      "palette": [
+        "#6ec7ff",
+        "#ff8fbd",
+        "#cab8ff"
+      ],
+      "exclusiveStickerId": "poca-seoul-y2k-exclusive"
+    },
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -231,6 +286,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/seoul-snap-y2k-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/seoul-snap-y2k-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "seoul-snap-y2k",
+      "story": "Clean Y2K studio details with a crisp, confident photo edge.",
+      "material": "Digital chrome",
+      "palette": [
+        "#6ec7ff",
+        "#ff8fbd",
+        "#cab8ff"
+      ],
+      "exclusiveStickerId": "poca-seoul-y2k-exclusive"
+    },
     "canvas": {
       "width": 720,
       "height": 1800
@@ -281,6 +347,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/polara-daily-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-daily-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/polara-daily-single-thumbnail.png",
+    "familyProfile": {
+      "id": "polara-daily",
+      "story": "An editorial front page that makes an everyday moment headline-worthy.",
+      "material": "Warm newsprint",
+      "palette": [
+        "#1d1713",
+        "#b94d36",
+        "#ead6b8"
+      ],
+      "exclusiveStickerId": "poca-daily-reporter-exclusive"
+    },
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -345,6 +422,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/polara-daily-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-daily-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/polara-daily-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "polara-daily",
+      "story": "An editorial front page that makes an everyday moment headline-worthy.",
+      "material": "Warm newsprint",
+      "palette": [
+        "#1d1713",
+        "#b94d36",
+        "#ead6b8"
+      ],
+      "exclusiveStickerId": "poca-daily-reporter-exclusive"
+    },
     "canvas": {
       "width": 720,
       "height": 1800
@@ -398,6 +486,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/polara-midnight-club-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-single-thumbnail.png",
+    "familyProfile": {
+      "id": "polara-midnight-club",
+      "story": "Deep night-studio ink for polished portraits with quiet drama.",
+      "material": "Midnight ink",
+      "palette": [
+        "#071428",
+        "#d5af63",
+        "#2e62a1"
+      ],
+      "exclusiveStickerId": "poca-midnight-photographer-exclusive"
+    },
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -462,6 +561,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/polara-midnight-club-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "polara-midnight-club",
+      "story": "Deep night-studio ink for polished portraits with quiet drama.",
+      "material": "Midnight ink",
+      "palette": [
+        "#071428",
+        "#d5af63",
+        "#2e62a1"
+      ],
+      "exclusiveStickerId": "poca-midnight-photographer-exclusive"
+    },
     "canvas": {
       "width": 720,
       "height": 1800
@@ -515,6 +625,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/cloud-picnic-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/cloud-picnic-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-single-thumbnail.png",
+    "familyProfile": {
+      "id": "cloud-picnic",
+      "story": "Airy weekend color for lighthearted groups and sunny keepsakes.",
+      "material": "Soft pastel",
+      "palette": [
+        "#8fd3ff",
+        "#ffc4dc",
+        "#fff1a8"
+      ],
+      "exclusiveStickerId": "poca-cloud-picnic-exclusive"
+    },
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -554,6 +675,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/cloud-picnic-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/cloud-picnic-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "cloud-picnic",
+      "story": "Airy weekend color for lighthearted groups and sunny keepsakes.",
+      "material": "Soft pastel",
+      "palette": [
+        "#8fd3ff",
+        "#ffc4dc",
+        "#fff1a8"
+      ],
+      "exclusiveStickerId": "poca-cloud-picnic-exclusive"
+    },
     "canvas": {
       "width": 720,
       "height": 1800
@@ -607,6 +739,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/lucky-ticket-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/lucky-ticket-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-single-thumbnail.png",
+    "familyProfile": {
+      "id": "lucky-ticket",
+      "story": "A collectible ticket frame that turns the session into an event.",
+      "material": "Ticket stock",
+      "palette": [
+        "#17458f",
+        "#f3c64e",
+        "#f8efe0"
+      ],
+      "exclusiveStickerId": "poca-lucky-ticket-exclusive"
+    },
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -679,6 +822,17 @@ export const frameOverlayTemplates = [
     "overlaySrc": "assets/frames/lucky-ticket-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/lucky-ticket-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "lucky-ticket",
+      "story": "A collectible ticket frame that turns the session into an event.",
+      "material": "Ticket stock",
+      "palette": [
+        "#17458f",
+        "#f3c64e",
+        "#f8efe0"
+      ],
+      "exclusiveStickerId": "poca-lucky-ticket-exclusive"
+    },
     "canvas": {
       "width": 720,
       "height": 1800

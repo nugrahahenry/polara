@@ -298,7 +298,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=290" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=300" />
 </head>
 <body>
   <!--
@@ -491,7 +491,21 @@
 
         <section class="control-panel" data-panel="frame" hidden>
           <h2 class="panel-title" tabindex="-1">Choose a frame</h2>
-          <p class="panel-copy">The picker shows a finished example. Preview and export still use the same crop and production frame.</p>
+          <p class="panel-copy">Compare each finished example, then choose the edition that fits your photos.</p>
+          <section class="frame-edition-dossier" id="frameEditionDossier" aria-labelledby="frameEditionName" aria-live="polite">
+            <div class="frame-edition-copy">
+              <h3 id="frameEditionName">Selected frame</h3>
+              <p id="frameEditionStory">A photo-first Polara edition.</p>
+            </div>
+            <div class="frame-edition-palette" id="frameEditionPalette" aria-hidden="true"></div>
+            <dl class="frame-edition-facts">
+              <div><dt>Material</dt><dd id="frameEditionMaterial">Proof paper</dd></div>
+              <div class="frame-edition-exclusive-fact">
+                <dt>Poca match</dt>
+                <dd><img id="frameEditionExclusiveImage" src="assets/brand/logo-polara.png" alt="" loading="lazy" /><span id="frameEditionExclusive">Available in Decorate</span></dd>
+              </div>
+            </dl>
+          </section>
           <div id="templateList" role="listbox" aria-label="Frame tray"></div>
           <div class="photo-adjust">
             <div class="tray-head"><h3>Adjust proof</h3><button type="button" class="mini-btn" id="resetPhotoBtn">Reset proof</button></div>
@@ -632,6 +646,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=29"></script>
+  <script type="module" src="src/app.js?v=30"></script>
 </body>
 </html>

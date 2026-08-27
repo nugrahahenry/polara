@@ -5,6 +5,25 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.30.0] - 2026-08-28
+
+### Added
+- Tambahkan **Asset Quality System v2** dengan profil canonical `frame-family-v2` untuk tujuh keluarga dan empat belas variant produksi.
+- Tambahkan **Selected Edition Dossier** pada tahap Frame untuk menampilkan cerita, material, palette, serta Poca Exclusive yang cocok dengan frame aktif.
+- Tambahkan regression contract untuk kelengkapan profil keluarga, parity Single/Strip, pasangan exclusive sticker, dan batas UI-only dossier.
+
+### Changed
+- Ringkas kartu picker dengan menghapus badge Hero yang berulang, mempertahankan label format, dan menambahkan material tiap keluarga sebagai informasi pembanding.
+- Perjelas Sticker Bench dengan nama Poca Exclusive aktif, jumlah sticker universal, serta label pasangan frame tanpa auto-add atau mengubah sticker yang sudah ditempatkan.
+- Naikkan asset quality policy ke `polara-asset-quality-v2` dan selaraskan schema manifest dengan tujuh keluarga, geometry produksi, composite picker, quality profile, serta edge palette.
+
+### Validation
+- Node 73/73, Python 10/10, overlay 14/14, preview derivative 28/28, Asset Quality 14 frame/26 sticker/11 mascot/3 guest, source syntax, dan JSON parse lulus.
+- QA produksi lulus pada 390×844, 768×1024, 1440×900, serta 900×510 untuk enam tahap dengan overflow 0, target pendek 0, primary action terlihat, dan runtime error 0.
+- Selected Edition Dossier tetap berada di dalam control sheet pada empat viewport; frame rail menampilkan sekitar 2,05 sampai 2,58 kartu, mendukung Home/End, dan memulihkan scroll horizontal setelah Back.
+- Seluruh 14 variant lulus preview/export parity. Output tepat Single 1080×1350 dan Strip 720×1800; camera denied recovery, fake-device capture, retake satu slot, Poca choreography, reduced motion, focus return, serta rapid transition lock lulus.
+- Review screenshot mobile dan desktop menghasilkan satu fix wave untuk kepadatan dossier dan timing evidence overlay. Konfirmasi akhir lulus; detector Impeccable berjalan sekali dan mengembalikan daftar kosong dalam mode regex-degraded.
+
 ## [0.29.0] - 2026-08-28
 
 ### Added

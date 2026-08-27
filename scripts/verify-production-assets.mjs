@@ -48,9 +48,18 @@ async function verify() {
   const policy = await readJson('assets/asset-quality-policy.json');
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
   const guestManifest = await readJson('assets/guests/guest-manifest.json');
-  requireQuality(policy.schemaVersion === 1 && policy.profile === 'polara-asset-quality-v1', 'Unknown asset-quality policy.');
+  requireQuality(policy.schemaVersion === 2 && policy.profile === 'polara-asset-quality-v2', 'Unknown asset-quality policy.');
+  requireQuality(manifest.familyProfileVersion === policy.frames.familyProfileVersion, 'Frame family profile version drifted.');
+  requireQuality(manifest.families.length === policy.frames.familyCount, 'Frame family profile count drifted.');
   requireQuality(manifest.frames.length === policy.frames.variantCount && frameOverlayTemplates.length === policy.frames.variantCount, 'Frame registry variant count drifted.');
   requireQuality(new Set(frameOverlayTemplates.map((frame) => frame.familyId)).size === policy.frames.familyCount, 'Frame registry family count drifted.');
+
+  const familyProfiles = new Map(manifest.families.map((family) => [family.id, family]));
+  for (const [familyId, family] of familyProfiles) {
+    requireQuality(policy.frames.familyProfileFields.every((field) => family[field] != null), `${familyId} family profile is incomplete.`);
+    requireQuality(family.palette.length === 3 && family.palette.every((color) => /^#[a-fA-F0-9]{6}$/.test(color)), `${familyId} family palette is invalid.`);
+    requireQuality(exclusiveStickers.some((sticker) => sticker.id === family.exclusiveStickerId && sticker.exclusiveFamilyId === familyId), `${familyId} exclusive sticker is not paired.`);
+  }
 
   for (const frame of frameOverlayTemplates) {
     const canvas = frame.mode === 'strip' ? policy.frames.stripCanvas : policy.frames.singleCanvas;
@@ -59,6 +68,7 @@ async function verify() {
     requireQuality(!frame.mascotSrc, `${frame.id} couples a mascot to a frame.`);
     requireQuality(/^assets\/frames\/composites\//.test(frame.pickerThumbnailSrc), `${frame.id} picker is not a composite.`);
     requireQuality(frame.pickerThumbnailSrc !== frame.thumbnailSrc, `${frame.id} picker and fallback are coupled.`);
+    requireQuality(JSON.stringify(frame.familyProfile) === JSON.stringify(familyProfiles.get(frame.familyId)), `${frame.id} family profile drifted.`);
     await inspectPng(frame.overlaySrc, canvas, policy.frames.maximumOverlayBytes, { requireTransparent: true });
     await inspectPng(frame.thumbnailSrc, thumb, policy.frames.maximumThumbnailBytes, { requireTransparent: true });
     await inspectPng(frame.pickerThumbnailSrc, thumb, policy.frames.maximumThumbnailBytes);

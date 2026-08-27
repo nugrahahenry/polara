@@ -86,9 +86,41 @@ const raw = await fs.readFile(inputPath, 'utf8');
 const manifest = JSON.parse(raw);
 if (!Array.isArray(manifest.frames)) fail('Manifest harus memiliki array frames.');
 if (manifest.frames.length !== 14) fail(`Manifest produksi harus berisi tepat 14 frame Hero; ditemukan ${manifest.frames.length}.`);
+if (manifest.familyProfileVersion !== 'frame-family-v2') fail('Manifest harus memakai frame-family-v2.');
+if (!Array.isArray(manifest.families) || manifest.families.length !== 7) {
+  fail('Manifest harus memiliki tepat tujuh family profile.');
+}
+
+const familyProfiles = new Map();
+for (const family of manifest.families) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(family.id || '')) fail('Family profile memiliki id invalid.');
+  if (familyProfiles.has(family.id)) fail(`Family profile duplikat: ${family.id}.`);
+  if (typeof family.story !== 'string' || family.story.length < 24 || family.story.length > 120) {
+    fail(`${family.id}.story harus 24-120 karakter.`);
+  }
+  if (typeof family.material !== 'string' || family.material.length < 3 || family.material.length > 32) {
+    fail(`${family.id}.material harus 3-32 karakter.`);
+  }
+  if (!Array.isArray(family.palette) || family.palette.length !== 3 || !family.palette.every((color) => /^#[a-fA-F0-9]{6}$/.test(color))) {
+    fail(`${family.id}.palette harus berisi tiga warna hex.`);
+  }
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*-exclusive$/.test(family.exclusiveStickerId || '')) {
+    fail(`${family.id}.exclusiveStickerId invalid.`);
+  }
+  familyProfiles.set(family.id, family);
+}
 
 const ids = new Set();
 manifest.frames.forEach((frame) => validateFrame(frame, ids));
+for (const frame of manifest.frames) {
+  if (!familyProfiles.has(frame.family)) fail(`${frame.id} tidak memiliki family profile.`);
+}
+for (const familyId of familyProfiles.keys()) {
+  const variants = manifest.frames.filter((frame) => frame.family === familyId);
+  if (variants.length !== 2 || new Set(variants.map((frame) => frame.mode)).size !== 2) {
+    fail(`${familyId} harus memiliki variant Single dan Strip.`);
+  }
+}
 
 const runtimeFields = manifest.frames.map((frame) => ({
   id: frame.id,
@@ -118,6 +150,7 @@ const runtimeFields = manifest.frames.map((frame) => ({
   overlaySrc: frame.overlaySrc,
   thumbnailSrc: frame.thumbnailSrc,
   pickerThumbnailSrc: frame.pickerThumbnailSrc,
+  familyProfile: familyProfiles.get(frame.family),
   canvas: { width: frame.canvasWidth, height: frame.canvasHeight },
   maskType: frame.maskType || 'rectangles',
   photoWindows: frame.maskType === 'polygon' ? [polygonBounds(frame.photoPolygon)] : frame.photoWindows,

@@ -1,6 +1,58 @@
 {
   "version": "frame-overlay-v1",
   "generatedAt": "2026-08-18",
+  "familyProfileVersion": "frame-family-v2",
+  "families": [
+    {
+      "id": "poca-purikura",
+      "story": "Glossy pink energy for playful poses and expressive close-ups.",
+      "material": "Glossy pop",
+      "palette": ["#ec5e9e", "#8fd3ff", "#ffe26f"],
+      "exclusiveStickerId": "poca-purikura-exclusive"
+    },
+    {
+      "id": "vintage-film-lofi",
+      "story": "Warm contact-sheet character for memories that should feel found.",
+      "material": "Matte film",
+      "palette": ["#4f3024", "#c87a55", "#f1d5a8"],
+      "exclusiveStickerId": "poca-vintage-film-exclusive"
+    },
+    {
+      "id": "seoul-snap-y2k",
+      "story": "Clean Y2K studio details with a crisp, confident photo edge.",
+      "material": "Digital chrome",
+      "palette": ["#6ec7ff", "#ff8fbd", "#cab8ff"],
+      "exclusiveStickerId": "poca-seoul-y2k-exclusive"
+    },
+    {
+      "id": "polara-daily",
+      "story": "An editorial front page that makes an everyday moment headline-worthy.",
+      "material": "Warm newsprint",
+      "palette": ["#1d1713", "#b94d36", "#ead6b8"],
+      "exclusiveStickerId": "poca-daily-reporter-exclusive"
+    },
+    {
+      "id": "polara-midnight-club",
+      "story": "Deep night-studio ink for polished portraits with quiet drama.",
+      "material": "Midnight ink",
+      "palette": ["#071428", "#d5af63", "#2e62a1"],
+      "exclusiveStickerId": "poca-midnight-photographer-exclusive"
+    },
+    {
+      "id": "cloud-picnic",
+      "story": "Airy weekend color for lighthearted groups and sunny keepsakes.",
+      "material": "Soft pastel",
+      "palette": ["#8fd3ff", "#ffc4dc", "#fff1a8"],
+      "exclusiveStickerId": "poca-cloud-picnic-exclusive"
+    },
+    {
+      "id": "lucky-ticket",
+      "story": "A collectible ticket frame that turns the session into an event.",
+      "material": "Ticket stock",
+      "palette": ["#17458f", "#f3c64e", "#f8efe0"],
+      "exclusiveStickerId": "poca-lucky-ticket-exclusive"
+    }
+  ],
   "frames": [
     {
       "id": "poca-purikura.single",

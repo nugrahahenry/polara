@@ -1,11 +1,13 @@
 {
-  "schemaVersion": 1,
-  "profile": "polara-asset-quality-v1",
+  "schemaVersion": 2,
+  "profile": "polara-asset-quality-v2",
   "frames": {
     "requireCharacterFreeOverlay": true,
     "requirePickerComposite": true,
     "familyCount": 7,
     "variantCount": 14,
+    "familyProfileVersion": "frame-family-v2",
+    "familyProfileFields": ["story", "material", "palette", "exclusiveStickerId"],
     "singleCanvas": [1080, 1350],
     "stripCanvas": [720, 1800],
     "singleThumbnail": [360, 450],

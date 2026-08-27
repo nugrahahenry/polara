@@ -58,6 +58,10 @@ const refs = {
   reviewPhoto: $('reviewPhoto'), reviewPhotoRegion: $('reviewPhotoRegion'), reviewGuest: $('reviewGuest'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
   reviewProofTag: $('reviewProofTag'), reviewProofLabel: $('reviewProofLabel'), reviewSourceMeta: $('reviewSourceMeta'), reviewSlots: $('reviewSlots'),
   stage: $('canvasScale'), revealBuddy: $('revealBuddy'), templateList: $('templateList'),
+  frameEditionDossier: $('frameEditionDossier'), frameEditionName: $('frameEditionName'),
+  frameEditionStory: $('frameEditionStory'), frameEditionMaterial: $('frameEditionMaterial'),
+  frameEditionPalette: $('frameEditionPalette'), frameEditionExclusive: $('frameEditionExclusive'),
+  frameEditionExclusiveImage: $('frameEditionExclusiveImage'),
   photoSlotTabs: $('photoSlotTabs'), fitContain: $('fitContainBtn'), fitCover: $('fitCoverBtn'),
   zoom: $('zoomInput'), panX: $('panXInput'), panY: $('panYInput'),
   zoomOutput: $('zoomOutput'), panXOutput: $('panXOutput'), panYOutput: $('panYOutput'), resetPhoto: $('resetPhotoBtn'),
@@ -767,9 +771,10 @@ async function renderTemplateList() {
     const detail = document.createElement('span');
     detail.className = 'tpl-detail';
     detail.textContent = unavailable ? 'Unavailable' : (template.pickerDetail || (template.mode === 'strip' ? '3 photos' : '1 photo'));
-    button.setAttribute('aria-label', [template.name, template.pickerBadge, detail.textContent].filter(Boolean).join(', '));
+    const familyProfile = template.familyProfile;
+    button.setAttribute('aria-label', [template.name, familyProfile?.material, detail.textContent].filter(Boolean).join(', '));
     meta.append(name, detail);
-    if (template.pickerBadge) {
+    if (template.pickerBadge && template.status === 'experimental-static') {
       const badge = document.createElement('span');
       badge.className = 'tpl-badge';
       badge.textContent = template.pickerBadge;
@@ -779,12 +784,19 @@ async function renderTemplateList() {
     formatBadge.className = 'tpl-format-badge';
     formatBadge.textContent = template.mode === 'strip' ? 'Strip 3' : 'Single';
     thumb.appendChild(formatBadge);
+    if (familyProfile?.material) {
+      const material = document.createElement('span');
+      material.className = 'tpl-family-material';
+      material.textContent = familyProfile.material;
+      meta.appendChild(material);
+    }
     button.append(thumb, meta);
     button.addEventListener('click', async () => {
       if (unavailableFrameIds.has(template.id)) return;
       saveScrollState();
       selectFramePreservingEditorState(state, template.id);
       updateTemplateSelection();
+      renderFrameEditionDossier();
       await renderCanvas();
       if (!isRequestedFrameStillSelected(template.id, state.frameId)) return;
       status(template.status === 'experimental-static'
@@ -795,6 +807,28 @@ async function renderTemplateList() {
     buildTemplateThumb(template, thumb);
   });
   wireCollectionKeyboard(refs.templateList, '.tpl-btn');
+  renderFrameEditionDossier();
+}
+
+function renderFrameEditionDossier() {
+  const template = getTemplate(state.frameId);
+  const familyProfile = template?.familyProfile;
+  if (!template || !familyProfile || !refs.frameEditionDossier) return;
+
+  const exclusive = getStickerPack(template.familyId)
+    .find((asset) => asset.id === familyProfile.exclusiveStickerId);
+  refs.frameEditionName.textContent = template.name;
+  refs.frameEditionStory.textContent = familyProfile.story;
+  refs.frameEditionMaterial.textContent = familyProfile.material;
+  refs.frameEditionExclusive.textContent = exclusive ? `${exclusive.name} in Decorate` : 'Available in Decorate';
+  refs.frameEditionExclusiveImage.hidden = !exclusive;
+  if (exclusive) refs.frameEditionExclusiveImage.src = exclusive.src;
+  refs.frameEditionPalette.replaceChildren(...familyProfile.palette.map((color) => {
+    const swatch = document.createElement('span');
+    swatch.style.setProperty('--frame-swatch', color);
+    return swatch;
+  }));
+  refs.frameEditionDossier.dataset.family = template.familyId;
 }
 
 function updateTemplateSelection() {
@@ -903,6 +937,7 @@ async function renderCanvas() {
       if (fallback) {
         selectFramePreservingEditorState(state, fallback.id);
         updateTemplateSelection();
+        renderFrameEditionDossier();
         status(`${template.name} failed to load. Polara switched to ${fallback.name}; photos and decorations remain safe.`);
         await renderCanvas();
         return;
@@ -1045,7 +1080,10 @@ function renderStickerTray() {
   refs.stickerTray.innerHTML = '';
   const template = getTemplate(state.frameId);
   const stickerPack = getStickerPack(template?.familyId);
-  if (refs.stickerRailMeta) refs.stickerRailMeta.textContent = `${template?.name || 'Frame'} exclusive + universal`;
+  const exclusive = stickerPack.find((asset) => asset.exclusiveFamilyId === template?.familyId);
+  if (refs.stickerRailMeta) refs.stickerRailMeta.textContent = exclusive
+    ? `${exclusive.name} + 19 universal`
+    : '19 universal stickers';
   refs.stickerTray.setAttribute('aria-label', `Add a sticker for ${template?.name || 'the selected frame'}`);
   stickerPack.forEach((asset) => {
     const button = document.createElement('button');
@@ -1073,6 +1111,13 @@ function renderStickerTray() {
     kind.className = 'sticker-kind';
     kind.textContent = getStickerCategoryLabel(asset.category);
     button.appendChild(kind);
+    if (asset.exclusiveFamilyId) {
+      const match = document.createElement('span');
+      match.className = 'sticker-family-match';
+      match.textContent = 'Made for this frame';
+      match.setAttribute('aria-label', `Poca match for ${template?.name || 'this frame'}`);
+      button.appendChild(match);
+    }
     button.addEventListener('click', () => {
       snapshotStickers();
       const item = createStickerInstance(asset);

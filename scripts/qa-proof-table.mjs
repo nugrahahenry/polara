@@ -333,6 +333,26 @@ async function startPage(context) {
   return page;
 }
 
+async function auditFrameEdition(page) {
+  return page.evaluate(() => {
+    const dossier = document.querySelector('#frameEditionDossier');
+    const control = document.querySelector('#controlScroll');
+    const bounds = dossier?.getBoundingClientRect();
+    const controlBounds = control?.getBoundingClientRect();
+    return {
+      exists: Boolean(dossier),
+      family: dossier?.dataset.family || '',
+      name: document.querySelector('#frameEditionName')?.textContent.trim() || '',
+      story: document.querySelector('#frameEditionStory')?.textContent.trim() || '',
+      material: document.querySelector('#frameEditionMaterial')?.textContent.trim() || '',
+      paletteCount: document.querySelectorAll('#frameEditionPalette span').length,
+      exclusive: document.querySelector('#frameEditionExclusive')?.textContent.trim() || '',
+      exclusiveImage: document.querySelector('#frameEditionExclusiveImage')?.getAttribute('src') || '',
+      insideControlWidth: Boolean(bounds && controlBounds && bounds.left >= controlBounds.left && bounds.right <= controlBounds.right),
+    };
+  });
+}
+
 async function runOpeningAudit({ name, viewport }) {
   const context = await browser.newContext({ viewport, reducedMotion: 'no-preference' });
   const page = await context.newPage();
@@ -467,6 +487,13 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   await waitForPanel(page, 'frame');
   chapterContinuity.frame = await auditChapterContinuity(page, 'frame', viewport);
   await page.locator('#templateList .tpl-btn').first().waitFor({ state: 'visible' });
+  await page.locator('#primaryBtn:not(:disabled)').waitFor({ state: 'visible', timeout: 30_000 });
+  await page.waitForFunction(() => {
+    const canvas = document.querySelector('#canvasScale .ph-canvas');
+    const overlay = canvas?.querySelector('.ph-frame-overlay');
+    return Boolean(canvas && (!overlay || (overlay.complete && overlay.naturalWidth > 0)));
+  }, null, { timeout: 30_000 });
+  await page.waitForTimeout(180);
   assert.equal(await page.locator('#photoSlotTabs .slot-tab').count(), 3);
   assert.match(await page.locator('#templateList .tpl-thumb-image').first().getAttribute('src'), /frames\/composites\//);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-holding-photo-frame\.png$/);
@@ -489,6 +516,16 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(frameRail.overflowY, 'hidden');
   assert.ok(frameRail.visibleCards >= 2 && frameRail.visibleCards < 3, `${name}: frame rail should reveal about 2-2.5 cards`);
   assert.equal(await page.locator('#templateList .tpl-btn').count(), 7, `${name}: each mode must expose seven frame families`);
+  const frameEdition = await auditFrameEdition(page);
+  assert.equal(frameEdition.exists, true);
+  assert.equal(frameEdition.family, 'poca-purikura');
+  assert.equal(frameEdition.name, 'Poca Purikura');
+  assert.ok(frameEdition.story.length >= 24);
+  assert.ok(frameEdition.material.length >= 3);
+  assert.equal(frameEdition.paletteCount, 3);
+  assert.match(frameEdition.exclusive, /Poca Purikura.*Decorate/);
+  assert.match(frameEdition.exclusiveImage, /poca-purikura-exclusive\.png$/);
+  assert.equal(frameEdition.insideControlWidth, true, `${name}: selected edition dossier must stay inside the control sheet`);
   await shot('04', 'frames');
 
   await page.locator('#photoSlotTabs .slot-tab').nth(1).click();
@@ -553,6 +590,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(await page.locator('#stickerTray .sticker-btn').count(), 20);
   assert.equal(await page.locator('#stickerTray .sticker-btn').first().getAttribute('class'), 'sticker-btn exclusive');
   assert.equal(await page.locator('#stickerTray .sticker-badge').first().textContent(), 'Exclusive');
+  assert.match(await page.locator('#stickerRailMeta').textContent(), /Poca Purikura.*19 universal/);
+  assert.equal(await page.locator('#stickerTray .sticker-family-match').first().textContent(), 'Made for this frame');
+  assert.equal(await page.locator('#stickerTray .sticker-family-match').first().getAttribute('aria-label'), 'Poca match for Poca Purikura');
   await page.locator('#stickerTray .sticker-btn').first().focus();
   await page.keyboard.press('End');
   assert.equal(await page.locator('#stickerTray .sticker-btn').last().evaluate((button) => document.activeElement === button), true);
@@ -649,7 +689,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   let exported = null;
   if (exportStrip) exported = await downloadPng(page, 'polara-strip-proof-table.png');
   report.viewports[name] = {
-    viewport, stages: stageAudit, frameRail, decorateWorkshop, chapterContinuity, revealTheatre,
+    viewport, stages: stageAudit, frameRail, frameEdition, decorateWorkshop, chapterContinuity, revealTheatre,
     captureReview: {
       camera: initialCameraDocket,
       review: reviewInspection,

@@ -6,6 +6,8 @@
   "required": [
     "version",
     "generatedAt",
+    "familyProfileVersion",
+    "families",
     "frames"
   ],
   "additionalProperties": false,
@@ -18,6 +20,17 @@
       "type": "string",
       "format": "date"
     },
+    "familyProfileVersion": {
+      "const": "frame-family-v2"
+    },
+    "families": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "items": {
+        "$ref": "#/$defs/family"
+      }
+    },
     "frames": {
       "type": "array",
       "minItems": 10,
@@ -27,6 +40,40 @@
     }
   },
   "$defs": {
+    "family": {
+      "type": "object",
+      "required": ["id", "story", "material", "palette", "exclusiveStickerId"],
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+        },
+        "story": {
+          "type": "string",
+          "minLength": 24,
+          "maxLength": 120
+        },
+        "material": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 32
+        },
+        "palette": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "pattern": "^#[a-fA-F0-9]{6}$"
+          }
+        },
+        "exclusiveStickerId": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*-exclusive$"
+        }
+      }
+    },
     "window": {
       "type": "object",
       "required": [
@@ -88,8 +135,10 @@
         "category",
         "mode",
         "renderMode",
+        "characterPolicy",
         "overlaySrc",
         "thumbnailSrc",
+        "pickerThumbnailSrc",
         "canvasWidth",
         "canvasHeight",
         "sha256",
@@ -101,7 +150,9 @@
         "supportsDynamicText",
         "metadataZones",
         "metadataAreaNote",
-        "decorativeElements"
+        "decorativeElements",
+        "qualityProfile",
+        "edgePalette"
       ],
       "additionalProperties": false,
       "properties": {
@@ -116,7 +167,9 @@
             "vintage-film-lofi",
             "seoul-snap-y2k",
             "polara-daily",
-            "polara-midnight-club"
+            "polara-midnight-club",
+            "cloud-picnic",
+            "lucky-ticket"
           ]
         },
         "name": {
@@ -130,7 +183,9 @@
             "vintage-film",
             "y2k-korean",
             "newspaper",
-            "night-studio"
+            "night-studio",
+            "weekend-pastel",
+            "ticket-club"
           ]
         },
         "mode": {
@@ -143,6 +198,9 @@
         "renderMode": {
           "const": "png-overlay"
         },
+        "characterPolicy": {
+          "const": "character-free"
+        },
         "overlaySrc": {
           "type": "string",
           "pattern": "^assets/frames/[a-z0-9-]+-overlay\\.png$"
@@ -150,6 +208,10 @@
         "thumbnailSrc": {
           "type": "string",
           "pattern": "^assets/frames/thumbnails/[a-z0-9-]+-thumbnail\\.png$"
+        },
+        "pickerThumbnailSrc": {
+          "type": "string",
+          "pattern": "^assets/frames/composites/[a-z0-9-]+-thumbnail\\.png$"
         },
         "canvasWidth": {
           "type": "integer",
@@ -242,6 +304,18 @@
           "type": "array",
           "items": {
             "type": "string"
+          }
+        },
+        "qualityProfile": {
+          "const": "polara-proof-edge-v1"
+        },
+        "edgePalette": {
+          "type": "array",
+          "minItems": 3,
+          "maxItems": 3,
+          "items": {
+            "type": "string",
+            "pattern": "^#[a-fA-F0-9]{6}$"
           }
         }
       },
