@@ -5,6 +5,24 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.21.0] - 2026-08-27
+
+### Added
+- Tambahkan **Pose Mate** sebagai pengalaman opt-in pada Start dengan guest PM-01 “Mina” yang fiktif-sintetis; Regular Booth tetap menjadi default.
+- Tambahkan Matched Gesture, Side by Side, posisi guest kiri/kanan, pose cue per slot, manifest provenance, dan regression guard khusus Pose Mate.
+
+### Changed
+- Gunakan satu normalized guest composition untuk Review, Frame, Hias, Reveal, Save, Share, dan Photo only; capture kamera sumber tetap utuh dan tidak diberi guest.
+- Render guest sebagai photo-layer di bawah PNG frame overlay, bukan sticker; aset baru dimuat setelah opt-in dan kegagalan guest mengembalikan sesi ke Regular Booth tanpa menghapus foto.
+- Pastikan intent pengalaman terakhir selalu menang ketika preload masih berjalan, dan coba ulang Photo only tepat sekali tanpa guest jika hanya aset Pose Mate yang gagal.
+- Perbarui privacy copy agar local processing Pose Mate dinyatakan eksplisit tanpa menambah akun, backend, cloud, AI runtime, atau fitur pembayaran.
+
+### Validation
+- Regression Pose Mate direkam RED 4/5 sebelum implementasi, lalu GREEN 7/7; suite Node 49/49, Python 10/10, overlay registry 10/10, syntax, whitespace, dan asset provenance dijalankan pada checkpoint.
+- Alur Regular/Pose Mate, Matched/Side by Side, guest kiri/kanan, retake satu slot, Frame/Hias/Reveal, dan fallback demo diuji pada 390×844, 768×1024, 1440×900, serta 900×510.
+- Preview, framed export, dan Photo only tetap exact: Strip 720×1800 dengan tiga guest layer dan Single 1080×1350 dengan satu guest layer; fresh browser review menghasilkan 0 error/warning.
+- PM-01 memiliki prompt embedded dan manifest `fictional-synthetic`, `publicFigure:false`, serta `collaborationClaim:false`; scan menemukan 1 raster dan 0 provenance prompt hilang.
+
 ## [0.20.0] - 2026-08-19
 
 ### Added

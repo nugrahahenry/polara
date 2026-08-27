@@ -59,7 +59,7 @@ test('social links are accessible, safe, and keep 44px targets', () => {
 
 
 test('short landscape keeps the maker footer reachable after the workspace', () => {
-  assert.match(html, /styles\/proof-table\.css\?v=21/);
+  assert.match(html, /styles\/proof-table\.css\?v=23/);
   assert.doesNotMatch(
     proofTableCss,
     /\.progress-wrap,\s*\.status-bar,\s*\.app-footer\s*\{\s*display:\s*none\s*!important;/,

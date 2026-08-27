@@ -291,7 +291,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=21" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=23" />
 </head>
 <body>
   <!--
@@ -300,7 +300,7 @@
     STORY: Choose a session, capture locally, review each proof, frame it, decorate it, then reveal an approved exact-size print.
     FIRST VIEWPORT: The proof stage dominates left/above; the scrollable control sheet sits right/below; the current action stays docked and reachable.
     FORM: Proof Desk, the locked v2.1 first choice; seed key proof-table-v2-1.
-    FINISH: unreviewed and undocumented is unfinished; this build ends with the finish review, the verdict, and DESIGN.md
+    FINISH: unreviewed and undocumented is unfinished; this build ends with visual review, fictional-asset provenance, the verdict, and DESIGN.md
   -->
   <a class="skip-link" href="#controlSheet">Skip to controls</a>
   <header class="app-header">
@@ -339,6 +339,7 @@
           </div>
           <div class="hero-stack" aria-hidden="true">
             <div class="hero-strip"><div class="hero-photo"></div><div class="hero-photo"></div><div class="hero-photo"></div></div>
+            <img class="start-guest-preview" id="startGuestPreview" alt="" hidden />
           </div>
         </div>
       </section>
@@ -352,6 +353,8 @@
             </div>
             <div id="cameraWrap" data-camera-state="idle">
               <video id="video" autoplay playsinline muted></video>
+              <div class="pose-user-guide" id="poseUserGuide" aria-hidden="true" hidden></div>
+              <img class="pose-guest-preview" id="poseGuestPreview" alt="" hidden />
               <div class="camera-guide" aria-hidden="true"></div>
               <div class="shot-badge" id="shotBadge" hidden></div>
               <div id="cameraOverlay">
@@ -381,7 +384,10 @@
           <!-- impeccable-disable-next-line broken-image: src is assigned before Review opens -->
           <div class="review-photo-wrap" data-active-proof="1">
             <span class="review-proof-tag" id="reviewProofTag">Proof 1 of 3</span>
-            <img id="reviewPhoto" src="assets/brand/logo-polara.png" alt="Active proof under review" />
+            <div class="review-photo-region" id="reviewPhotoRegion">
+              <img id="reviewPhoto" src="assets/brand/logo-polara.png" alt="Active proof under review" />
+            </div>
+            <img class="review-guest" id="reviewGuest" alt="" hidden />
           </div>
           <p class="review-caption" id="reviewCaption">
             <strong id="reviewProofLabel">Proof 1 of 3</strong>
@@ -407,6 +413,11 @@
         <section class="control-panel" data-panel="start">
           <h2 class="panel-title" tabindex="-1">Set up your session</h2>
           <p class="panel-copy">Strip 3 is the Polara default. Single stays available for one larger proof.</p>
+          <span class="section-label">Booth experience</span>
+          <div class="segmented experience-choose" id="experienceChoose" role="group" aria-label="Booth experience">
+            <button type="button" data-experience="regular" aria-pressed="true" class="choice-btn active">Regular Booth<small>Your classic Polara session</small></button>
+            <button type="button" data-experience="pose-mate" aria-pressed="false" class="choice-btn">Pose Mate<small>Pose with fictional guest Mina</small></button>
+          </div>
           <span class="section-label">Print format</span>
           <div class="segmented" id="modeChoose" role="group" aria-label="Print format">
             <button type="button" class="choice-btn" data-mode="1" aria-pressed="false">Single<small>1 photo · 4:5</small></button>
@@ -425,6 +436,22 @@
           <h2 class="panel-title" id="cameraPanelTitle" tabindex="-1">First proof</h2>
           <p class="panel-copy" id="cameraPanelCopy">Polara keeps the full capture. Framing stays reversible.</p>
           <div class="slot-list" id="cameraSlots" aria-label="Photo proofs"></div>
+          <section class="pose-mate-controls" id="poseMateControls" aria-labelledby="poseMateTitle" hidden>
+            <div class="pose-mate-head">
+              <div>
+                <span class="pose-mate-kicker">Pose Mate · PM-01</span>
+                <h3 id="poseMateTitle">Match Mina's gesture</h3>
+              </div>
+              <strong class="pose-cue" id="poseGuideText">Natural</strong>
+            </div>
+            <span class="section-label">Composition</span>
+            <div class="segmented" id="guestLayoutChoose" role="group" aria-label="Pose Mate composition">
+              <button type="button" class="choice-btn active" data-guest-layout="matched" aria-pressed="true">Matched gesture</button>
+              <button type="button" class="choice-btn" data-guest-layout="side-by-side" aria-pressed="false">Side by side</button>
+            </div>
+            <button type="button" class="mini-btn guest-side-toggle" id="guestSideBtn">Move Mina to the left</button>
+            <p class="pose-mate-note">Mina is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.</p>
+          </section>
           <p class="privacy-note" id="cameraStateNote">Press Take photo when everyone is ready.</p>
         </section>
 
@@ -527,7 +554,7 @@
       <img class="mascot-runtime" src="assets/mascot/poca-privacy-guardian.png" alt="Poca guards your private photos." />
       <div>
         <h2 id="privacyTitle">Your photos stay here.</h2>
-        <p id="privacyDescription">Camera frames, retakes, decoration, preview, and export are processed locally in this browser. Polara does not add an account, upload, cloud storage, or hidden copy.</p>
+        <p id="privacyDescription">Camera frames, retakes, Pose Mate composition, decoration, preview, and export are processed locally in this browser. Polara does not add an account, upload, cloud storage, or hidden copy.</p>
         <ul>
           <li>Camera permission is requested only when you enter Camera.</li>
           <li>Closing or starting over clears the current in-memory session.</li>
@@ -566,6 +593,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=22"></script>
+  <script type="module" src="src/app.js?v=23"></script>
 </body>
 </html>

@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "guests": [
+    {
+      "id": "polara-pm-01",
+      "name": "Mina",
+      "runtimeSrc": "assets/guests/polara-pm-01-half-heart.png",
+      "pose": "half-heart",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "rightsScope": "Original Polara prototype and production runtime",
+      "provenance": "AI-generated fictional character; generation prompt embedded in the PNG metadata",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "98a8159a99e02a8e460e030fcd6776c4795fe8da25d0b3117e3524dcf09d8393"
+    }
+  ]
+}

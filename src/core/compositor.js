@@ -8,7 +8,7 @@ export function renderTemplate(containerEl, html) {
   return containerEl.querySelector('.ph-canvas');
 }
 
-export function setPhotoSlot(canvasEl, slotNum, photo) {
+export function setPhotoSlot(canvasEl, slotNum, photo, { guestComposition = null, onGuestAssetError } = {}) {
   const slot = canvasEl.querySelector(`.ph-slot[data-slot="${slotNum}"]`)
     || canvasEl.querySelectorAll('.ph-slot')[slotNum - 1];
   if (!slot || !photo) return;
@@ -16,22 +16,64 @@ export function setPhotoSlot(canvasEl, slotNum, photo) {
   const slotPosition = slot.ownerDocument.defaultView?.getComputedStyle(slot).position;
   if (!slotPosition || slotPosition === 'static') slot.style.position = 'relative';
   slot.style.overflow = 'hidden';
-  slot.querySelectorAll(':scope > .ph-photo').forEach((item) => item.remove());
+  slot.querySelectorAll(':scope > .ph-photo, :scope > .ph-photo-region, :scope > .ph-guest')
+    .forEach((item) => item.remove());
   const image = document.createElement('img');
   image.className = 'ph-photo';
   image.src = photo.src;
   image.alt = '';
   image.draggable = false;
   image.dataset.slot = String(slotNum);
-  const apply = () => applyPhotoGeometry(slot, image, photo);
+  const photoRegion = guestComposition ? document.createElement('div') : slot;
+  if (guestComposition) {
+    const region = guestComposition.userRegion;
+    photoRegion.className = 'ph-photo-region';
+    Object.assign(photoRegion.style, {
+      position: 'absolute',
+      left: `${region.x * 100}%`,
+      top: `${region.y * 100}%`,
+      width: `${region.width * 100}%`,
+      height: `${region.height * 100}%`,
+      overflow: 'hidden',
+      zIndex: '1',
+    });
+    photoRegion.appendChild(image);
+    slot.appendChild(photoRegion);
+  }
+  const apply = () => applyPhotoGeometry(photoRegion, image, photo);
   image.addEventListener('load', apply, { once: true });
-  slot.appendChild(image);
+  if (!guestComposition) slot.appendChild(image);
   if (image.complete) requestAnimationFrame(apply);
+
+  if (guestComposition) {
+    const guest = document.createElement('img');
+    const region = guestComposition.guestRegion;
+    guest.className = 'ph-guest';
+    guest.src = guestComposition.asset.src;
+    guest.alt = '';
+    guest.draggable = false;
+    Object.assign(guest.style, {
+      position: 'absolute',
+      left: `${region.x * 100}%`,
+      top: `${region.y * 100}%`,
+      width: `${region.width * 100}%`,
+      height: `${region.height * 100}%`,
+      display: 'block',
+      maxWidth: 'none',
+      objectFit: 'contain',
+      objectPosition: 'center bottom',
+      transform: guestComposition.flipGuest ? 'scaleX(-1)' : 'none',
+      pointerEvents: 'none',
+      zIndex: '2',
+    });
+    guest.addEventListener('error', () => onGuestAssetError?.(guestComposition.asset), { once: true });
+    slot.appendChild(guest);
+  }
 }
 
-export function refreshPhotoSlots(canvasEl, photos) {
+export function refreshPhotoSlots(canvasEl, photos, options = {}) {
   photos.forEach((photo, index) => {
-    if (photo) setPhotoSlot(canvasEl, index + 1, photo);
+    if (photo) setPhotoSlot(canvasEl, index + 1, photo, options);
   });
 }
 
@@ -324,7 +366,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
   }
 }
 
-export async function exportRawPng(photos, mode) {
+export async function exportRawPng(photos, mode, { guestComposition = null } = {}) {
   const width = mode === 3 ? 720 : 1080;
   const height = mode === 3 ? 1800 : 1350;
   const canvas = document.createElement('canvas');
@@ -335,7 +377,15 @@ export async function exportRawPng(photos, mode) {
   ctx.fillRect(0, 0, width, height);
   const slotHeight = height / photos.length;
   const images = await Promise.all(photos.map((photo) => loadImage(photo.src)));
-  images.forEach((image, index) => drawPhotoGeometry(ctx, image, photos[index], 0, index * slotHeight, width, slotHeight));
+  const guestImage = guestComposition ? await loadImage(guestComposition.asset.src, 'Pose Mate guest') : null;
+  images.forEach((image, index) => {
+    const slotY = index * slotHeight;
+    if (guestComposition && guestImage) {
+      drawGuestComposition(ctx, image, photos[index], guestImage, guestComposition, 0, slotY, width, slotHeight);
+      return;
+    }
+    drawPhotoGeometry(ctx, image, photos[index], 0, slotY, width, slotHeight);
+  });
 
   ctx.fillStyle = 'rgba(75,46,31,.72)';
   ctx.font = `700 ${Math.round(width * .026)}px Nunito, sans-serif`;
@@ -344,11 +394,49 @@ export async function exportRawPng(photos, mode) {
   return canvas.toDataURL('image/png');
 }
 
-function loadImage(src) {
+function drawGuestComposition(ctx, photoImage, photo, guestImage, composition, x, y, width, height) {
+  const user = composition.userRegion;
+  const guest = composition.guestRegion;
+  drawPhotoGeometry(
+    ctx,
+    photoImage,
+    photo,
+    x + user.x * width,
+    y + user.y * height,
+    user.width * width,
+    user.height * height,
+  );
+
+  const regionX = x + guest.x * width;
+  const regionY = y + guest.y * height;
+  const regionWidth = guest.width * width;
+  const regionHeight = guest.height * height;
+  const scale = Math.min(regionWidth / guestImage.naturalWidth, regionHeight / guestImage.naturalHeight);
+  const drawWidth = guestImage.naturalWidth * scale;
+  const drawHeight = guestImage.naturalHeight * scale;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(regionX, regionY, regionWidth, regionHeight);
+  ctx.clip();
+  if (composition.flipGuest) {
+    ctx.translate(regionX + regionWidth, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(guestImage, (regionWidth - drawWidth) / 2, regionY + regionHeight - drawHeight, drawWidth, drawHeight);
+  } else {
+    ctx.drawImage(guestImage, regionX + (regionWidth - drawWidth) / 2, regionY + regionHeight - drawHeight, drawWidth, drawHeight);
+  }
+  ctx.restore();
+}
+
+function loadImage(src, label = 'photo') {
   return new Promise((resolve, reject) => {
     const image = new Image();
     image.onload = () => resolve(image);
-    image.onerror = () => reject(new Error('One of the photos could not be read.'));
+    image.onerror = () => {
+      const error = new Error(`The ${label} asset could not be read.`);
+      error.code = label === 'Pose Mate guest' ? 'GUEST_ASSET_ERROR' : 'IMAGE_ASSET_ERROR';
+      reject(error);
+    };
     image.src = src;
   });
 }

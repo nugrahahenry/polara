@@ -7,7 +7,7 @@ import {
   renderTemplate, setPhotoSlot, refreshPhotoSlots, setMeta, exportPng, exportRawPng,
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
-import { patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
+import { applyPhotoGeometry, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
 import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=14';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
@@ -16,6 +16,10 @@ import {
   templateSupportsDynamicText,
 } from './modules/templates/template-ui.js?v=13';
 import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=2';
+import {
+  DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
+  getGuest, poseGuideForSlot, retryWithoutGuestOnFailure,
+} from './modules/guests/index.js?v=2';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView } from './ui/decorate-workshop.js?v=1';
 
@@ -40,14 +44,17 @@ const refs = {
   controlSheet: $('controlSheet'), controlScroll: $('controlScroll'), panels: [...document.querySelectorAll('[data-panel]')],
   primary: $('primaryBtn'), secondary: $('secondaryBtn'), tertiary: $('tertiaryBtn'), back: $('backBtn'),
   status: $('status'), countdownLive: $('countdownLive'),
-  modeChoose: $('modeChoose'), timerChoose: $('timerChoose'),
+  experienceChoose: $('experienceChoose'), modeChoose: $('modeChoose'), timerChoose: $('timerChoose'),
+  startGuestPreview: $('startGuestPreview'), poseMateControls: $('poseMateControls'),
+  guestLayoutChoose: $('guestLayoutChoose'), guestSide: $('guestSideBtn'), poseGuideText: $('poseGuideText'),
   video: $('video'), cameraWrap: $('cameraWrap'), cameraOverlay: $('cameraOverlay'),
+  poseUserGuide: $('poseUserGuide'), poseGuestPreview: $('poseGuestPreview'),
   cameraMessage: $('cameraMessage'), cameraOverlayTitle: $('cameraOverlayTitle'), cameraOverlayActions: $('cameraOverlayActions'),
   cameraBayCounter: $('cameraBayCounter'), cameraBayStatus: $('cameraBayStatus'),
   retryCamera: $('retryCameraBtn'), demoMode: $('demoModeBtn'), countdown: $('countdown'), flash: $('flashLayer'),
   shotBadge: $('shotBadge'), cameraSlots: $('cameraSlots'), cameraPanelTitle: $('cameraPanelTitle'),
   cameraPanelCopy: $('cameraPanelCopy'), cameraStateNote: $('cameraStateNote'),
-  reviewPhoto: $('reviewPhoto'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
+  reviewPhoto: $('reviewPhoto'), reviewPhotoRegion: $('reviewPhotoRegion'), reviewGuest: $('reviewGuest'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
   reviewProofTag: $('reviewProofTag'), reviewProofLabel: $('reviewProofLabel'), reviewSourceMeta: $('reviewSourceMeta'), reviewSlots: $('reviewSlots'),
   stage: $('canvasScale'), revealBuddy: $('revealBuddy'), templateList: $('templateList'),
   photoSlotTabs: $('photoSlotTabs'), fitContain: $('fitContainBtn'), fitCover: $('fitCoverBtn'),
@@ -69,6 +76,7 @@ const STEPS = PROOF_STEPS;
 function initialState() {
   return {
     step: 'start', mode: 3, timer: 3, facing: 'user', demo: false,
+    experience: 'regular', guestId: null, guestLayout: 'matched', guestSide: 'right',
     cameraStatus: 'idle', cameraError: null, shooting: false,
     photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null,
     frameId: null, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
@@ -87,10 +95,91 @@ let preparedFramedExport = null;
 let thumbFrames = [];
 const unavailableFrameIds = new Set();
 let resizeTimer = null;
+let guestAssetFailureHandling = false;
+const guestSelectionGate = createLatestSelectionGate();
 const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
 
 function status(message) {
   refs.status.textContent = message;
+}
+
+function currentGuestComposition() {
+  return createGuestComposition({
+    experience: state.experience,
+    guestId: state.guestId,
+    layout: state.guestLayout,
+    side: state.guestSide,
+  });
+}
+
+function preloadGuestAsset(asset) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    image.onload = () => resolve(asset);
+    image.onerror = () => reject(new Error('Pose Mate guest asset is unavailable.'));
+    image.src = asset.src;
+  });
+}
+
+function applyGuestVariables(element, composition) {
+  if (!element) return;
+  const set = (name, value) => element.style.setProperty(name, `${value * 100}%`);
+  set('--pose-user-x', composition.userRegion.x);
+  set('--pose-user-y', composition.userRegion.y);
+  set('--pose-user-width', composition.userRegion.width);
+  set('--pose-user-height', composition.userRegion.height);
+  set('--pose-guest-x', composition.guestRegion.x);
+  set('--pose-guest-y', composition.guestRegion.y);
+  set('--pose-guest-width', composition.guestRegion.width);
+  set('--pose-guest-height', composition.guestRegion.height);
+  element.style.setProperty('--pose-guest-transform', composition.flipGuest ? 'scaleX(-1)' : 'none');
+}
+
+function syncGuestExperienceSurfaces() {
+  const guestComposition = currentGuestComposition();
+  const active = Boolean(guestComposition);
+  refs.stageShell.dataset.experience = active ? POSE_MATE_EXPERIENCE : 'regular';
+  refs.startGuestPreview.hidden = !active;
+  refs.poseMateControls.hidden = !active;
+  refs.poseUserGuide.hidden = !active;
+  refs.poseGuestPreview.hidden = !active;
+  refs.reviewGuest.hidden = !active;
+  refs.cameraWrap.dataset.poseMate = String(active);
+  refs.reviewWrap.dataset.poseMate = String(active);
+  refs.guestLayoutChoose.querySelectorAll('[data-guest-layout]').forEach((button) => {
+    const selected = button.dataset.guestLayout === state.guestLayout;
+    button.classList.toggle('active', selected);
+    button.setAttribute('aria-pressed', String(selected));
+  });
+  if (!active) {
+    ['position', 'display', 'max-width', 'width', 'height', 'left', 'top', 'transform', 'object-fit', 'pointer-events']
+      .forEach((property) => refs.reviewPhoto.style.removeProperty(property));
+    return;
+  }
+  [refs.cameraWrap, refs.reviewWrap].forEach((element) => applyGuestVariables(element, guestComposition));
+  refs.startGuestPreview.src = guestComposition.asset.src;
+  refs.poseGuestPreview.src = guestComposition.asset.src;
+  refs.reviewGuest.src = guestComposition.asset.src;
+  refs.reviewGuest.alt = `${guestComposition.asset.name}, a fictional Polara guest.`;
+  refs.poseGuideText.textContent = poseGuideForSlot(state.activeSlot, state.mode);
+  refs.poseUserGuide.dataset.poseCue = poseGuideForSlot(state.activeSlot, state.mode);
+  refs.guestSide.textContent = guestComposition.side === 'right' ? `Move ${guestComposition.asset.name} to the left` : `Move ${guestComposition.asset.name} to the right`;
+}
+
+async function handleGuestAssetError() {
+  if (guestAssetFailureHandling || state.experience !== POSE_MATE_EXPERIENCE) return;
+  guestAssetFailureHandling = true;
+  try {
+    guestSelectionGate.cancel();
+    state.experience = 'regular';
+    state.guestId = null;
+    syncStartControls();
+    invalidatePreparedExport();
+    status('Pose Mate asset could not load. Polara returned to Regular Booth without changing your photos.');
+    if (phCanvas && ['frame', 'decorate', 'reveal'].includes(state.step)) await renderCanvas();
+  } finally {
+    guestAssetFailureHandling = false;
+  }
 }
 
 function syncPoca({ processing = false } = {}) {
@@ -194,7 +283,7 @@ function updateActions() {
   setButton(refs.tertiary, { hidden: true });
 
   if (state.step === 'start') {
-    setButton(refs.primary, { label: 'Open camera', tone: 'primary' });
+    setButton(refs.primary, { label: state.experience === POSE_MATE_EXPERIENCE ? 'Open Pose Mate' : 'Open camera', tone: 'primary' });
   } else if (state.step === 'camera') {
     const ready = state.cameraStatus === 'ready' || state.cameraStatus === 'demo';
     setButton(refs.primary, { label: state.shooting ? 'Taking photo…' : 'Take photo', tone: 'primary', disabled: !ready || state.shooting });
@@ -270,6 +359,11 @@ async function goToStep(nextStep, message, { focusTitle = true } = {}) {
 }
 
 function syncStartControls() {
+  refs.experienceChoose.querySelectorAll('[data-experience]').forEach((button) => {
+    const active = button.dataset.experience === state.experience;
+    button.classList.toggle('active', active);
+    button.setAttribute('aria-pressed', String(active));
+  });
   refs.modeChoose.querySelectorAll('[data-mode]').forEach((button) => {
     const active = Number(button.dataset.mode) === state.mode;
     button.classList.toggle('active', active);
@@ -280,6 +374,8 @@ function syncStartControls() {
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
   });
+  syncGuestExperienceSurfaces();
+  updateActions();
 }
 
 refs.modeChoose.addEventListener('click', (event) => {
@@ -301,6 +397,27 @@ refs.timerChoose.addEventListener('click', (event) => {
   state.timer = Number(button.dataset.timer);
   syncStartControls();
   status(`Timer ${state.timer} seconds selected.`);
+});
+
+refs.guestLayoutChoose.addEventListener('click', (event) => {
+  const button = event.target.closest('[data-guest-layout]');
+  if (!button) return;
+  state.guestLayout = button.dataset.guestLayout;
+  refs.guestLayoutChoose.querySelectorAll('[data-guest-layout]').forEach((item) => {
+    const active = item.dataset.guestLayout === state.guestLayout;
+    item.classList.toggle('active', active);
+    item.setAttribute('aria-pressed', String(active));
+  });
+  invalidatePreparedExport();
+  syncGuestExperienceSurfaces();
+  status(state.guestLayout === 'matched' ? 'Matched gesture composition selected.' : 'Side-by-side composition selected.');
+});
+
+refs.guestSide.addEventListener('click', () => {
+  state.guestSide = state.guestSide === 'right' ? 'left' : 'right';
+  invalidatePreparedExport();
+  syncGuestExperienceSurfaces();
+  status(`Mina moved to the ${state.guestSide}.`);
 });
 
 async function beginCamera({ retake = false } = {}) {
@@ -434,13 +551,16 @@ function renderCameraPanel() {
   refs.cameraPanelTitle.textContent = state.retakeSlot != null ? `Retake slot ${slot}` : state.mode === 3 ? `Pose for proof ${slot}` : 'One main pose';
   refs.cameraPanelCopy.textContent = state.retakeSlot != null
     ? 'The previous proof stays in place until the replacement capture succeeds.'
-    : 'Polara keeps the full capture. Adjust fit, zoom, and pan after choosing a frame.';
+    : state.experience === POSE_MATE_EXPERIENCE
+      ? `Match the ${poseGuideForSlot(state.activeSlot, state.mode).toLowerCase()} cue. Polara keeps your full capture untouched.`
+      : 'Polara keeps the full capture. Adjust fit, zoom, and pan after choosing a frame.';
   renderSlotCards(refs.cameraSlots, (index) => {
     state.activeSlot = index;
     state.retakeSlot = state.photos[index] ? index : null;
     renderCameraPanel();
     status(state.photos[index] ? `Proof ${index + 1} selected for retake; the previous proof is still safe.` : `Proof ${index + 1} is ready.`);
   });
+  syncGuestExperienceSurfaces();
   showCameraState();
 }
 
@@ -536,6 +656,12 @@ function renderReview() {
   refs.reviewProofTag.textContent = proofLabel;
   refs.reviewProofLabel.textContent = proofLabel;
   refs.reviewSourceMeta.textContent = `Original ${photo?.naturalWidth || 0}×${photo?.naturalHeight || 0} · kept locally`;
+  syncGuestExperienceSurfaces();
+  if (photo && currentGuestComposition()) {
+    const apply = () => applyPhotoGeometry(refs.reviewPhotoRegion, refs.reviewPhoto, photo);
+    refs.reviewPhoto.addEventListener('load', apply, { once: true });
+    requestAnimationFrame(apply);
+  }
   renderSlotCards(refs.reviewSlots, (index) => {
     setActiveProof(index);
     renderReview();
@@ -704,14 +830,15 @@ async function renderCanvas() {
     phCanvas = renderTemplate(refs.stage, html);
     await waitForOverlayImage(phCanvas);
     if (token !== renderToken) return;
-    refreshPhotoSlots(phCanvas, state.photos);
+    const guestComposition = currentGuestComposition();
+    refreshPhotoSlots(phCanvas, state.photos, { guestComposition, onGuestAssetError: handleGuestAssetError });
     setMeta(phCanvas, {
       caption: state.caption || 'Polara memory',
       date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
       brand: BRAND_LINE,
     });
     fitStage(templateDims(template));
-    refreshPhotoSlots(phCanvas, state.photos);
+    refreshPhotoSlots(phCanvas, state.photos, { guestComposition, onGuestAssetError: handleGuestAssetError });
     renderEditorStickers();
   } catch (error) {
     if (template.renderMode === 'png-overlay') {
@@ -789,7 +916,10 @@ function updateSelectedPhoto(patch) {
   const photo = state.photos[state.selectedSlot];
   if (!photo) return;
   state.photos[state.selectedSlot] = patchPhotoTransform(photo, patch);
-  if (phCanvas) setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot]);
+  if (phCanvas) {
+    const guestComposition = currentGuestComposition();
+    setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot], { guestComposition, onGuestAssetError: handleGuestAssetError });
+  }
   syncPhotoControls();
 }
 
@@ -802,7 +932,8 @@ refs.resetPhoto.addEventListener('click', () => {
   const photo = state.photos[state.selectedSlot];
   if (!photo) return;
   state.photos[state.selectedSlot] = resetPhotoTransform(photo);
-  setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot]);
+  const guestComposition = currentGuestComposition();
+  setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot], { guestComposition, onGuestAssetError: handleGuestAssetError });
   syncPhotoControls();
   status(`Proof ${state.selectedSlot + 1} reset to Full photo.`);
 });
@@ -1046,7 +1177,13 @@ async function downloadFramed() {
 async function downloadRaw() {
   await withBusy('Preparing the photo without a frame…', async () => {
     try {
-      const url = await exportRawPng(state.photos, state.mode);
+      const guestComposition = currentGuestComposition();
+      const url = await retryWithoutGuestOnFailure({
+        guestComposition,
+        create: (composition) => exportRawPng(state.photos, state.mode, { guestComposition: composition }),
+        isGuestError: (error) => error?.code === 'GUEST_ASSET_ERROR',
+        onGuestFailure: handleGuestAssetError,
+      });
       await assertExportDimensions(url, state.mode === 3 ? 720 : 1080, state.mode === 3 ? 1800 : 1350);
       const blob = await dataUrlToBlob(url);
       await download(blob, `polara-photo-only-${Date.now()}.png`);
@@ -1190,6 +1327,7 @@ refs.privacyDialog.addEventListener('click', (event) => {
 async function resetSession() {
   cameraRequestId += 1;
   revealRequestId += 1;
+  guestSelectionGate.cancel();
   cancelCountdown();
   invalidatePreparedExport();
   stopCamera();
@@ -1223,13 +1361,46 @@ function wireCollectionKeyboard(container, selector, { activateOnMove = false } 
   });
 }
 
+refs.experienceChoose.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-experience]');
+  if (!button) return;
+  const requestedExperience = button.dataset.experience;
+  const requestId = guestSelectionGate.begin();
+  if (requestedExperience === state.experience) return;
+  if (requestedExperience === POSE_MATE_EXPERIENCE) {
+    const guest = getGuest(DEFAULT_GUEST_ID);
+    button.setAttribute('aria-busy', 'true');
+    try {
+      await preloadGuestAsset(guest);
+      if (!guestSelectionGate.isCurrent(requestId)) return;
+      state.experience = POSE_MATE_EXPERIENCE;
+      state.guestId = guest.id;
+      status('Pose Mate selected. Mina will join every preview and exact-size export.');
+    } catch {
+      if (!guestSelectionGate.isCurrent(requestId)) return;
+      state.experience = 'regular';
+      state.guestId = null;
+      status('Pose Mate is unavailable right now. Regular Booth remains ready.');
+    } finally {
+      button.removeAttribute('aria-busy');
+    }
+  } else {
+    state.experience = 'regular';
+    state.guestId = null;
+    status('Regular Booth selected. Your photos stay character-free.');
+  }
+  invalidatePreparedExport();
+  syncStartControls();
+});
+
 function handleResize() {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     thumbFrames.forEach(({ frame, w, h, mode, focus }) => scaleThumb(frame, w, h, mode, focus));
     if (phCanvas && ['frame', 'decorate', 'reveal'].includes(state.step)) {
       fitStage(templateDims(getTemplate(state.frameId)));
-      refreshPhotoSlots(phCanvas, state.photos);
+      const guestComposition = currentGuestComposition();
+      refreshPhotoSlots(phCanvas, state.photos, { guestComposition, onGuestAssetError: handleGuestAssetError });
       renderEditorStickers();
     }
   }, 120);
@@ -1247,6 +1418,9 @@ window.addEventListener('pagehide', () => {
 });
 document.querySelectorAll('.mascot-runtime').forEach((image) => {
   image.addEventListener('error', () => { image.hidden = true; });
+});
+[refs.startGuestPreview, refs.poseGuestPreview, refs.reviewGuest].forEach((image) => {
+  image.addEventListener('error', handleGuestAssetError);
 });
 
 preloadMascots();
