@@ -1,6 +1,40 @@
 {
-  "schemaVersion": 1,
+  "schemaVersion": 2,
   "guests": [
+    {
+      "id": "polara-pm-01-neutral",
+      "guestId": "polara-pm-01",
+      "name": "Mina",
+      "runtimeSrc": "assets/guests/polara-pm-01-neutral.png",
+      "pose": "neutral",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "rightsScope": "Original Polara production runtime",
+      "provenance": "Identity-preserve generation from PM-01, then local chroma-key extraction",
+      "generationPromptEmbedded": true,
+      "identityReferenceSha256": "98a8159a99e02a8e460e030fcd6776c4795fe8da25d0b3117e3524dcf09d8393",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "370701e44fedbada56557e5eec9921b2d85a34c575a3a2fbc7c7b2c00d69b1e5"
+    },
+    {
+      "id": "polara-pm-01-peace",
+      "guestId": "polara-pm-01",
+      "name": "Mina",
+      "runtimeSrc": "assets/guests/polara-pm-01-peace.png",
+      "pose": "peace",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "rightsScope": "Original Polara production runtime",
+      "provenance": "Identity-preserve generation from PM-01, then local chroma-key extraction",
+      "generationPromptEmbedded": true,
+      "identityReferenceSha256": "98a8159a99e02a8e460e030fcd6776c4795fe8da25d0b3117e3524dcf09d8393",
+      "width": 1254,
+      "height": 1254,
+      "sha256": "b784a536c81009ba766e20deff693fd2b8bfcf951aeeeca9e3f433e7d6529fb4"
+    },
     {
       "id": "polara-pm-01",
       "name": "Mina",

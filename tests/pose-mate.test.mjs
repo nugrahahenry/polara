@@ -39,6 +39,31 @@ test('PM-01 is a fictional synthetic runtime asset with no collaboration claim',
 });
 
 
+test('PM-01 pose pack maps Single and every Strip proof to a verified runtime asset', async () => {
+  const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
+  const guestModule = await import('../src/modules/guests/index.js');
+  const assets = guestModule.getGuestAssets('polara-pm-01');
+
+  assert.deepEqual(assets.map((asset) => asset.pose), ['neutral', 'peace', 'half-heart']);
+  assert.equal(guestModule.poseForSlot(0, 1).pose, 'half-heart');
+  assert.equal(guestModule.poseForSlot(0, 3).pose, 'neutral');
+  assert.equal(guestModule.poseForSlot(1, 3).pose, 'peace');
+  assert.equal(guestModule.poseForSlot(2, 3).pose, 'half-heart');
+
+  for (const asset of assets) {
+    const manifestAsset = manifest.guests.find((item) => item.id === asset.id);
+    assert.ok(manifestAsset, `Missing manifest entry for ${asset.id}`);
+    assert.equal(manifestAsset.guestId || manifestAsset.id, 'polara-pm-01');
+    assert.equal(manifestAsset.runtimeSrc, asset.src);
+    assert.equal(manifestAsset.pose, asset.pose);
+    assert.equal(manifestAsset.publicFigure, false);
+    assert.equal(manifestAsset.collaborationClaim, false);
+    const digest = createHash('sha256').update(await readBytes(asset.src)).digest('hex');
+    assert.equal(digest, manifestAsset.sha256);
+  }
+});
+
+
 test('Regular intent wins when an older Pose Mate preload resolves late', async () => {
   const guestModule = await import('../src/modules/guests/index.js');
   const gate = guestModule.createLatestSelectionGate();
@@ -85,19 +110,21 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   const guestModule = await import('../src/modules/guests/index.js');
   const regular = guestModule.createGuestComposition({ experience: 'regular' });
   const matched = guestModule.createGuestComposition({
-    experience: 'pose-mate', guestId: 'polara-pm-01', layout: 'matched', side: 'right',
+    experience: 'pose-mate', guestId: 'polara-pm-01', layout: 'matched', side: 'right', mode: 3, slotIndex: 0,
   });
   const sideBySide = guestModule.createGuestComposition({
-    experience: 'pose-mate', guestId: 'polara-pm-01', layout: 'side-by-side', side: 'left',
+    experience: 'pose-mate', guestId: 'polara-pm-01', layout: 'side-by-side', side: 'left', mode: 3, slotIndex: 1,
   });
 
   assert.equal(regular, null);
-  assert.equal(matched.asset.id, 'polara-pm-01');
+  assert.equal(matched.asset.id, 'polara-pm-01-neutral');
+  assert.equal(matched.asset.pose, 'neutral');
   assert.equal(matched.layout, 'matched');
   assert.equal(matched.side, 'right');
   assert.deepEqual(matched.userRegion, { x: 0, y: 0, width: 0.68, height: 1 });
   assert.deepEqual(matched.guestRegion, { x: 0.54, y: 0, width: 0.46, height: 1 });
   assert.equal(sideBySide.flipGuest, true);
+  assert.equal(sideBySide.asset.pose, 'peace');
   assert.equal(guestModule.poseGuideForSlot(2, 3), 'Half-heart');
   assert.equal(guestModule.createGuestComposition({
     experience: 'pose-mate', guestId: 'unknown-guest',
@@ -116,11 +143,13 @@ test('camera, review, preview, and raw export all receive the same guest composi
   assert.doesNotMatch(html, /id="startGuestPreview"[^>]+src=/);
   assert.doesNotMatch(html, /id="poseGuestPreview"[^>]+src=/);
   assert.doesNotMatch(html, /id="reviewGuest"[^>]+src=/);
-  assert.match(app, /currentGuestComposition\(\)/);
-  assert.match(app, /refreshPhotoSlots\([^;]+guestComposition/s);
-  assert.match(app, /exportRawPng\([^;]+guestComposition/s);
+  assert.match(app, /currentGuestComposition\([^)]*slotIndex/);
+  assert.match(app, /guestCompositionForSlot/);
+  assert.match(app, /refreshPhotoSlots\([^;]+guestCompositionForSlot/s);
+  assert.match(app, /exportRawPng\([^;]+guestCompositionForSlot/s);
   assert.match(compositor, /className\s*=\s*'ph-guest'/);
   assert.match(compositor, /drawGuestComposition/);
+  assert.match(compositor, /resolveGuestComposition/);
 });
 
 

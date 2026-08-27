@@ -5,6 +5,22 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.22.0] - 2026-08-27
+
+### Added
+- Tambahkan pose PM-01 **Neutral** dan **Peace** sebagai PNG RGBA 1254×1254 yang mempertahankan identitas, outfit, crop, serta pencahayaan guest fiktif existing.
+- Tambahkan resolver pose deterministik: Single memakai Half-heart, sedangkan Strip 3 memakai Natural, Peace, dan Half-heart secara per-slot.
+
+### Changed
+- Preload seluruh pose hanya setelah opt-in Pose Mate, lalu gunakan composition per-slot yang sama pada Camera, Review, Frame, Hias, Reveal, framed export, dan Photo only.
+- Perluas manifest provenance guest dengan parent `guestId`, pose, checksum, identity reference, dan status prompt embedded tanpa menambah figur publik atau klaim kolaborasi.
+
+### Validation
+- Regression pose pack direkam RED untuk mapping Single/Strip, manifest/hash, DOM preview, raw export, dan metadata sebelum implementasi.
+- Neutral dan Peace lolos gate RGBA 1254×1254, alpha corner transparan, hidden RGB nol pada alpha 0, prompt embedded, dan ukuran runtime di bawah 1,2 MB.
+- Suite final lulus: Node 51/51, Python 10/10, overlay 10/10, provenance 3/3, console 0, serta QA 390×844, 768×1024, 1440×900, dan 900×510 tanpa overflow horizontal material.
+- Browser membuktikan Camera dan Review beralih Natural → Peace → Half-heart, Frame/Reveal memuat tiga aset per-slot, dan exact export tetap Strip 720×1800 serta Single 1080×1350.
+
 ## [0.21.0] - 2026-08-27
 
 ### Added

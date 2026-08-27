@@ -8,10 +8,19 @@ export function renderTemplate(containerEl, html) {
   return containerEl.querySelector('.ph-canvas');
 }
 
-export function setPhotoSlot(canvasEl, slotNum, photo, { guestComposition = null, onGuestAssetError } = {}) {
+export function resolveGuestComposition(options = {}, slotIndex = 0) {
+  if (typeof options.guestCompositionForSlot === 'function') {
+    return options.guestCompositionForSlot(slotIndex) || null;
+  }
+  return options.guestComposition || null;
+}
+
+export function setPhotoSlot(canvasEl, slotNum, photo, options = {}) {
   const slot = canvasEl.querySelector(`.ph-slot[data-slot="${slotNum}"]`)
     || canvasEl.querySelectorAll('.ph-slot')[slotNum - 1];
   if (!slot || !photo) return;
+  const guestComposition = resolveGuestComposition(options, slotNum - 1);
+  const { onGuestAssetError } = options;
 
   const slotPosition = slot.ownerDocument.defaultView?.getComputedStyle(slot).position;
   if (!slotPosition || slotPosition === 'static') slot.style.position = 'relative';
@@ -366,7 +375,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
   }
 }
 
-export async function exportRawPng(photos, mode, { guestComposition = null } = {}) {
+export async function exportRawPng(photos, mode, options = {}) {
   const width = mode === 3 ? 720 : 1080;
   const height = mode === 3 ? 1800 : 1350;
   const canvas = document.createElement('canvas');
@@ -377,9 +386,14 @@ export async function exportRawPng(photos, mode, { guestComposition = null } = {
   ctx.fillRect(0, 0, width, height);
   const slotHeight = height / photos.length;
   const images = await Promise.all(photos.map((photo) => loadImage(photo.src)));
-  const guestImage = guestComposition ? await loadImage(guestComposition.asset.src, 'Pose Mate guest') : null;
+  const guestCompositions = photos.map((_, index) => resolveGuestComposition(options, index));
+  const guestImages = await Promise.all(guestCompositions.map((composition) => (
+    composition ? loadImage(composition.asset.src, 'Pose Mate guest') : null
+  )));
   images.forEach((image, index) => {
     const slotY = index * slotHeight;
+    const guestComposition = guestCompositions[index];
+    const guestImage = guestImages[index];
     if (guestComposition && guestImage) {
       drawGuestComposition(ctx, image, photos[index], guestImage, guestComposition, 0, slotY, width, slotHeight);
       return;

@@ -18,8 +18,8 @@ import {
 import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=2';
 import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
-  getGuest, poseGuideForSlot, retryWithoutGuestOnFailure,
-} from './modules/guests/index.js?v=2';
+  getGuest, getGuestAssets, poseGuideForSlot, retryWithoutGuestOnFailure,
+} from './modules/guests/index.js?v=3';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView } from './ui/decorate-workshop.js?v=1';
 
@@ -103,14 +103,18 @@ function status(message) {
   refs.status.textContent = message;
 }
 
-function currentGuestComposition() {
+function currentGuestComposition(slotIndex = state.step === 'review' ? state.selectedSlot : state.activeSlot) {
   return createGuestComposition({
     experience: state.experience,
     guestId: state.guestId,
     layout: state.guestLayout,
     side: state.guestSide,
+    mode: state.mode,
+    slotIndex,
   });
 }
+
+const guestCompositionForSlot = (slotIndex) => currentGuestComposition(slotIndex);
 
 function preloadGuestAsset(asset) {
   return new Promise((resolve, reject) => {
@@ -830,15 +834,14 @@ async function renderCanvas() {
     phCanvas = renderTemplate(refs.stage, html);
     await waitForOverlayImage(phCanvas);
     if (token !== renderToken) return;
-    const guestComposition = currentGuestComposition();
-    refreshPhotoSlots(phCanvas, state.photos, { guestComposition, onGuestAssetError: handleGuestAssetError });
+    refreshPhotoSlots(phCanvas, state.photos, { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
     setMeta(phCanvas, {
       caption: state.caption || 'Polara memory',
       date: new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' }),
       brand: BRAND_LINE,
     });
     fitStage(templateDims(template));
-    refreshPhotoSlots(phCanvas, state.photos, { guestComposition, onGuestAssetError: handleGuestAssetError });
+    refreshPhotoSlots(phCanvas, state.photos, { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
     renderEditorStickers();
   } catch (error) {
     if (template.renderMode === 'png-overlay') {
@@ -917,8 +920,7 @@ function updateSelectedPhoto(patch) {
   if (!photo) return;
   state.photos[state.selectedSlot] = patchPhotoTransform(photo, patch);
   if (phCanvas) {
-    const guestComposition = currentGuestComposition();
-    setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot], { guestComposition, onGuestAssetError: handleGuestAssetError });
+    setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot], { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
   }
   syncPhotoControls();
 }
@@ -932,8 +934,7 @@ refs.resetPhoto.addEventListener('click', () => {
   const photo = state.photos[state.selectedSlot];
   if (!photo) return;
   state.photos[state.selectedSlot] = resetPhotoTransform(photo);
-  const guestComposition = currentGuestComposition();
-  setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot], { guestComposition, onGuestAssetError: handleGuestAssetError });
+  setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot], { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
   syncPhotoControls();
   status(`Proof ${state.selectedSlot + 1} reset to Full photo.`);
 });
@@ -1180,7 +1181,9 @@ async function downloadRaw() {
       const guestComposition = currentGuestComposition();
       const url = await retryWithoutGuestOnFailure({
         guestComposition,
-        create: (composition) => exportRawPng(state.photos, state.mode, { guestComposition: composition }),
+        create: (composition) => exportRawPng(state.photos, state.mode, {
+          guestCompositionForSlot: composition ? guestCompositionForSlot : null,
+        }),
         isGuestError: (error) => error?.code === 'GUEST_ASSET_ERROR',
         onGuestFailure: handleGuestAssetError,
       });
@@ -1371,7 +1374,7 @@ refs.experienceChoose.addEventListener('click', async (event) => {
     const guest = getGuest(DEFAULT_GUEST_ID);
     button.setAttribute('aria-busy', 'true');
     try {
-      await preloadGuestAsset(guest);
+      await Promise.all(getGuestAssets(guest.id).map(preloadGuestAsset));
       if (!guestSelectionGate.isCurrent(requestId)) return;
       state.experience = POSE_MATE_EXPERIENCE;
       state.guestId = guest.id;
@@ -1399,8 +1402,7 @@ function handleResize() {
     thumbFrames.forEach(({ frame, w, h, mode, focus }) => scaleThumb(frame, w, h, mode, focus));
     if (phCanvas && ['frame', 'decorate', 'reveal'].includes(state.step)) {
       fitStage(templateDims(getTemplate(state.frameId)));
-      const guestComposition = currentGuestComposition();
-      refreshPhotoSlots(phCanvas, state.photos, { guestComposition, onGuestAssetError: handleGuestAssetError });
+      refreshPhotoSlots(phCanvas, state.photos, { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
       renderEditorStickers();
     }
   }, 120);

@@ -59,3 +59,32 @@ test('runtime stickers do not retain RGB inside fully transparent pixels', async
     `Sticker menyimpan piksel RGB tersembunyi di bawah alpha 0:\n${contaminatedStickers.join('\n')}`,
   );
 });
+
+test('runtime Pose Mate guests have clean transparent backgrounds', async () => {
+  const guestDirectory = new URL('../assets/guests/', import.meta.url);
+  const guestFiles = (await fs.readdir(guestDirectory))
+    .filter((file) => file.endsWith('.png'))
+    .sort();
+  assert.deepEqual(guestFiles, [
+    'polara-pm-01-half-heart.png',
+    'polara-pm-01-neutral.png',
+    'polara-pm-01-peace.png',
+  ]);
+
+  const contaminatedGuests = [];
+  for (const file of guestFiles) {
+    const png = await fs.readFile(new URL(file, guestDirectory));
+    const decoded = decodeRgbaPng(png);
+    const { transparentPixels, transparentPixelsWithRgb } = countTransparentRgb(decoded.pixels);
+    assert.equal(decoded.width, 1254);
+    assert.equal(decoded.height, 1254);
+    assert.ok(transparentPixels > 1_000_000, `${file} harus mempertahankan background transparan dominan.`);
+    if (transparentPixelsWithRgb > 0) contaminatedGuests.push(`${file}: ${transparentPixelsWithRgb}`);
+  }
+
+  assert.deepEqual(
+    contaminatedGuests,
+    [],
+    `Guest menyimpan RGB tersembunyi di bawah alpha 0:\n${contaminatedGuests.join('\n')}`,
+  );
+});
