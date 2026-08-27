@@ -91,17 +91,15 @@ test('registry generated memisahkan overlay export dari picker thumbnail runtime
   frameOverlayTemplates.forEach((template) => {
     assert.match(template.overlaySrc, /^assets\/frames\/[a-z0-9-]+-overlay\.png$/);
     assert.match(template.thumbnailSrc, /^assets\/frames\/thumbnails\/[a-z0-9-]+-thumbnail\.png$/);
-    assert.match(template.pickerThumbnailSrc, /^assets\/frames\/(?:composites|thumbnails)\/[a-z0-9-]+-thumbnail\.png$/);
+    assert.match(template.pickerThumbnailSrc, /^assets\/frames\/composites\/[a-z0-9-]+-thumbnail\.png$/);
     assert.notEqual(template.pickerThumbnailSrc, template.overlaySrc);
+    assert.notEqual(template.pickerThumbnailSrc, template.thumbnailSrc);
+    assert.equal(template.characterPolicy, 'character-free');
+    assert.equal('mascotSrc' in template, false);
     assert.match(template.assetVersion, /^frame-overlay-v\d+$/);
     assert.equal(template.status, 'runtime-overlay');
     assert.match(template.pickerDetail, /^(Single|Strip 3) · \d+ × \d+$/);
   });
 
-  frameOverlayTemplates.filter((template) => (
-    ['polara-daily', 'polara-midnight-club'].includes(template.familyId)
-  )).forEach((template) => {
-    assert.equal(template.pickerThumbnailSrc, template.thumbnailSrc, template.id);
-    assert.doesNotMatch(template.pickerThumbnailSrc, /composites/);
-  });
+  assert.equal(new Set(frameOverlayTemplates.map((template) => template.pickerThumbnailSrc)).size, 10);
 });

@@ -13,7 +13,7 @@ test('setiap Hero memakai picker runtime tetapi overlay export tetap terpisah', 
   assert.equal(frameOverlayTemplates.length, 10);
 
   for (const frame of frameOverlayTemplates) {
-    assert.match(frame.pickerThumbnailSrc, /^assets\/frames\/(?:composites|thumbnails)\/[a-z0-9-]+-thumbnail\.png$/);
+    assert.match(frame.pickerThumbnailSrc, /^assets\/frames\/composites\/[a-z0-9-]+-thumbnail\.png$/);
     assert.match(frame.overlaySrc, /^assets\/frames\/[a-z0-9-]+-overlay\.png$/);
     assert.notEqual(frame.pickerThumbnailSrc, frame.overlaySrc);
 
@@ -23,17 +23,18 @@ test('setiap Hero memakai picker runtime tetapi overlay export tetap terpisah', 
 });
 
 
-test('empat Hero baru hanya merujuk overlay, thumbnail, dan Poca runtime produksi', async () => {
+test('Daily dan Midnight memisahkan frame, fallback, dan composite tanpa mascot baked-in', async () => {
   const added = frameOverlayTemplates.filter((frame) => (
     ['polara-daily', 'polara-midnight-club'].includes(frame.familyId)
   ));
   assert.equal(added.length, 4);
 
   for (const frame of added) {
-    assert.equal(frame.pickerThumbnailSrc, frame.thumbnailSrc);
+    assert.notEqual(frame.pickerThumbnailSrc, frame.thumbnailSrc);
+    assert.equal(frame.characterPolicy, 'character-free');
+    assert.equal('mascotSrc' in frame, false);
     assert.doesNotMatch(JSON.stringify(frame), /(?:true-composite|review|_originals|\.zip)/i);
-    assert.match(frame.mascotSrc, /^assets\/mascot\/[a-z0-9-]+\.png$/);
-    for (const src of [frame.overlaySrc, frame.thumbnailSrc, frame.mascotSrc]) {
+    for (const src of [frame.overlaySrc, frame.thumbnailSrc, frame.pickerThumbnailSrc]) {
       const png = await fs.readFile(new URL(`../${src}`, import.meta.url));
       assert.deepEqual(png.subarray(0, 8), PNG_SIGNATURE, `${frame.id}: ${src}`);
     }

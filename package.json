@@ -1,15 +1,18 @@
 {
   "name": "polara",
-  "version": "0.22.0",
+  "version": "0.23.0",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node --test",
     "test:python": "python -m unittest tests/test_verify_frame_overlays.py",
-    "test:all": "npm test && npm run test:python && npm run frames:verify",
+    "test:all": "npm test && npm run test:python && npm run frames:verify && npm run assets:verify",
     "qa:proof-table": "node scripts/qa-proof-table.mjs",
     "frames:generate": "node scripts/generate-frame-overlay-registry.mjs assets/frames/frame-overlay-manifest.json src/modules/templates/frame-overlays.generated.js",
     "assets:sanitize": "node scripts/sanitize-transparent-png.mjs",
+    "assets:previews": "python scripts/generate-picker-previews.py",
+    "assets:previews:check": "python scripts/generate-picker-previews.py --check",
+    "assets:verify": "node scripts/verify-production-assets.mjs",
     "frames:verify": "python scripts/verify-frame-overlays.py ."
   }
 }

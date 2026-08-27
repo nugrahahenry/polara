@@ -16,8 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.22.0 PM-01 pose pack checkpoint', () => {
-  assert.equal(packageJson.version, '0.22.0');
+test('release metadata records the v0.23.0 asset quality checkpoint', () => {
+  assert.equal(packageJson.version, '0.23.0');
+  assert.match(changelog, /## \[0\.23\.0\] - 2026-08-27/);
+  assert.match(changelog, /Asset Quality System/i);
+  assert.match(changelog, /character-free/i);
+  assert.match(changelog, /composite picker/i);
   assert.match(changelog, /## \[0\.22\.0\] - 2026-08-27/);
   assert.match(changelog, /Neutral/i);
   assert.match(changelog, /Peace/i);
@@ -28,7 +32,7 @@ test('release metadata records the v0.22.0 PM-01 pose pack checkpoint', () => {
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=24/);
+  assert.match(indexHtml, /src\/app\.js\?v=25/);
   assert.match(indexHtml, /styles\/proof-table\.css\?v=23/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);

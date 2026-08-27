@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "profile": "polara-asset-quality-v1",
+  "frames": {
+    "requireCharacterFreeOverlay": true,
+    "requirePickerComposite": true,
+    "singleCanvas": [1080, 1350],
+    "stripCanvas": [720, 1800],
+    "singleThumbnail": [360, 450],
+    "stripThumbnail": [240, 600],
+    "maximumOverlayBytes": 1500000,
+    "maximumThumbnailBytes": 500000
+  },
+  "stickers": {
+    "allowedDimensions": [[512, 512], [800, 800]],
+    "maximumBytes": 350000,
+    "exclusiveFamilyCount": 5
+  },
+  "mascots": {
+    "allowedDimensions": [[512, 512], [800, 800]],
+    "maximumBytes": 400000,
+    "forbiddenRuntimeIds": ["poca-pointing-down"]
+  },
+  "guests": {
+    "dimensions": [1254, 1254],
+    "maximumBytes": 1200000
+  },
+  "pickerFixture": {
+    "id": "polara-picker-friends-v1",
+    "source": "assets/_originals/fixtures/polara-picker-friends-v1.png",
+    "promptSource": "assets/_originals/fixtures/polara-picker-friends-v1.prompt.txt",
+    "kind": "fictional-synthetic",
+    "publicFigure": false,
+    "collaborationClaim": false,
+    "runtimePolicy": "picker-thumbnail-only"
+  }
+}

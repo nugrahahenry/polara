@@ -13,6 +13,7 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/poca-purikura-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-single-thumbnail.png",
@@ -50,6 +51,7 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/poca-purikura-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-strip-thumbnail.png",
@@ -99,6 +101,7 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/vintage-film-lofi-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/vintage-film-lofi-single-thumbnail.png",
@@ -136,6 +139,7 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/vintage-film-lofi-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/vintage-film-lofi-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/vintage-film-lofi-strip-thumbnail.png",
@@ -185,6 +189,7 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/seoul-snap-y2k-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-single-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/seoul-snap-y2k-single-thumbnail.png",
@@ -222,6 +227,7 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/seoul-snap-y2k-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/seoul-snap-y2k-strip-thumbnail.png",
     "pickerThumbnailSrc": "assets/frames/composites/seoul-snap-y2k-strip-thumbnail.png",
@@ -271,9 +277,10 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/polara-daily-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-daily-single-thumbnail.png",
-    "pickerThumbnailSrc": "assets/frames/thumbnails/polara-daily-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/polara-daily-single-thumbnail.png",
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -313,7 +320,6 @@ export const frameOverlayTemplates = [
         328
       ]
     ],
-    "mascotSrc": "assets/mascot/poca-press-reporter.png",
     "assetVersion": "frame-overlay-v4",
     "slotBackground": "#f5e3c4",
     "supportsDynamicText": false,
@@ -335,9 +341,10 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/polara-daily-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-daily-strip-thumbnail.png",
-    "pickerThumbnailSrc": "assets/frames/thumbnails/polara-daily-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/polara-daily-strip-thumbnail.png",
     "canvas": {
       "width": 720,
       "height": 1800
@@ -366,7 +373,6 @@ export const frameOverlayTemplates = [
         "radius": 14
       }
     ],
-    "mascotSrc": "assets/mascot/poca-press-reporter.png",
     "assetVersion": "frame-overlay-v4",
     "slotBackground": "#f5e3c4",
     "supportsDynamicText": false,
@@ -388,9 +394,10 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Single · 1080 × 1350",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/polara-midnight-club-single-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-single-thumbnail.png",
-    "pickerThumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-single-thumbnail.png",
     "canvas": {
       "width": 1080,
       "height": 1350
@@ -430,7 +437,6 @@ export const frameOverlayTemplates = [
         282
       ]
     ],
-    "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
     "assetVersion": "frame-overlay-v4",
     "slotBackground": "#07091e",
     "supportsDynamicText": false,
@@ -452,9 +458,10 @@ export const frameOverlayTemplates = [
     "pickerBadge": "Hero",
     "pickerDetail": "Strip 3 · 720 × 1800",
     "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
     "overlaySrc": "assets/frames/polara-midnight-club-strip-overlay.png",
     "thumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-strip-thumbnail.png",
-    "pickerThumbnailSrc": "assets/frames/thumbnails/polara-midnight-club-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-strip-thumbnail.png",
     "canvas": {
       "width": 720,
       "height": 1800
@@ -483,7 +490,6 @@ export const frameOverlayTemplates = [
         "radius": 14
       }
     ],
-    "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
     "assetVersion": "frame-overlay-v4",
     "slotBackground": "#07091e",
     "supportsDynamicText": false,

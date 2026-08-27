@@ -44,7 +44,7 @@ function polygonBounds(points) {
 function validateFrame(frame, ids) {
   const required = [
     'id', 'family', 'name', 'category', 'mode', 'renderMode',
-    'overlaySrc', 'thumbnailSrc', 'canvasWidth', 'canvasHeight',
+    'characterPolicy', 'overlaySrc', 'thumbnailSrc', 'pickerThumbnailSrc', 'canvasWidth', 'canvasHeight',
     'assetVersion', 'slotBackground',
     'supportsDynamicText', 'metadataZones'
   ];
@@ -54,10 +54,11 @@ function validateFrame(frame, ids) {
   if (ids.has(frame.id)) fail(`ID duplikat: ${frame.id}.`);
   ids.add(frame.id);
   if (frame.renderMode !== 'png-overlay') fail(`${frame.id}.renderMode harus png-overlay.`);
-  if (frame.pickerThumbnailSrc && !/^assets\/frames\/(?:composites|thumbnails)\/[a-z0-9-]+-thumbnail\.png$/.test(frame.pickerThumbnailSrc)) {
-    fail(`${frame.id}.pickerThumbnailSrc harus menunjuk picker PNG produksi.`);
+  if (frame.characterPolicy !== 'character-free') fail(`${frame.id}.characterPolicy harus character-free.`);
+  if (!/^assets\/frames\/composites\/[a-z0-9-]+-thumbnail\.png$/.test(frame.pickerThumbnailSrc)) {
+    fail(`${frame.id}.pickerThumbnailSrc harus menunjuk composite picker produksi.`);
   }
-  if (frame.mascotSrc && !/^assets\/mascot\/[a-z0-9-]+\.png$/.test(frame.mascotSrc)) fail(`${frame.id}.mascotSrc invalid.`);
+  if (frame.mascotSrc != null) fail(`${frame.id}.mascotSrc dilarang; Poca harus menjadi sticker exclusive atau UI-only.`);
   if (!['single', 'strip'].includes(frame.mode)) fail(`${frame.id}.mode invalid.`);
   const expectedSlots = frame.mode === 'strip' ? 3 : 1;
   assertInteger(frame.canvasWidth, `${frame.id}.canvasWidth`);
@@ -109,14 +110,14 @@ const runtimeFields = manifest.frames.map((frame) => ({
   pickerBadge: 'Hero',
   pickerDetail: frame.mode === 'strip' ? 'Strip 3 · 720 × 1800' : 'Single · 1080 × 1350',
   renderMode: frame.renderMode,
+  characterPolicy: frame.characterPolicy,
   overlaySrc: frame.overlaySrc,
   thumbnailSrc: frame.thumbnailSrc,
-  pickerThumbnailSrc: frame.pickerThumbnailSrc || frame.thumbnailSrc,
+  pickerThumbnailSrc: frame.pickerThumbnailSrc,
   canvas: { width: frame.canvasWidth, height: frame.canvasHeight },
   maskType: frame.maskType || 'rectangles',
   photoWindows: frame.maskType === 'polygon' ? [polygonBounds(frame.photoPolygon)] : frame.photoWindows,
   ...(frame.photoPolygon ? { photoPolygon: frame.photoPolygon } : {}),
-  ...(frame.mascotSrc ? { mascotSrc: frame.mascotSrc } : {}),
   assetVersion: frame.assetVersion,
   slotBackground: frame.slotBackground,
   supportsDynamicText: frame.supportsDynamicText,

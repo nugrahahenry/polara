@@ -5,6 +5,22 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.23.0] - 2026-08-27
+
+### Added
+- Tambahkan **Asset Quality System** lokal untuk memverifikasi path, registry, dimensi, alpha, hidden RGB, budget byte, provenance, orphan PNG, dan hak penggunaan aset produksi.
+- Tambahkan generator deterministik untuk 10 thumbnail frame-only dan 10 composite picker dari geometry canonical serta fixture pasangan teman fiktif-sintetis orisinal.
+
+### Changed
+- Seluruh 10 variant kini memakai composite picker yang konsisten; `thumbnailSrc` kembali menjadi fallback frame-only dan tidak pernah dipakai sebagai hasil export.
+- Kunci seluruh overlay sebagai `character-free`, hapus coupling mascot dari manifest frame, dan pertahankan Poca hanya sebagai exclusive sticker pilihan pengguna atau choreography UI-only.
+- Pindahkan empat PNG mascot orphan/retired—termasuk `poca-pointing-down.png`—keluar dari bundle runtime ke source lokal `_originals`.
+
+### Validation
+- Regression Asset Quality direkam RED 3/3 lalu GREEN 3/3 sebelum integrasi penuh.
+- Quality gate lulus untuk 10 frame, 18 sticker, 11 mascot, dan 3 guest; generator preview idempotent 20/20 serta overlay verifier 10/10.
+- Suite final lulus Node 54/54, Python 10/10, provenance 21/21, exact Single/Strip, empat viewport tanpa overflow, accessibility runtime, console 0, finish review SHIP, dan security review PASS.
+
 ## [0.22.0] - 2026-08-27
 
 ### Added

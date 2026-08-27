@@ -8,7 +8,7 @@ import {
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
 import { applyPhotoGeometry, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
-import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=14';
+import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=15';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
   findAvailableTemplate, getTemplatePreviewConfig, selectFramePreservingEditorState,

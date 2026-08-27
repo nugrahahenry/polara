@@ -126,11 +126,6 @@ EXPECTED_CONTRACTS: dict[str, dict[str, Any]] = {
         "mode": "single",
         "maskType": "polygon",
         "masterRequired": False,
-        "mascotSrc": "assets/mascot/poca-press-reporter.png",
-        "mascotSha256": (
-            "09eae4ba85c941db4bfa020099252bbd"
-            "d0fae6747e3a629e20571bb26408ed97"
-        ),
         "transparency": {
             "minimumTransparent": 0.971,
             "maximumPartial": 0.029,
@@ -142,22 +137,12 @@ EXPECTED_CONTRACTS: dict[str, dict[str, Any]] = {
         "mode": "strip",
         "maskType": "rounded-rectangles",
         "masterRequired": False,
-        "mascotSrc": "assets/mascot/poca-press-reporter.png",
-        "mascotSha256": (
-            "09eae4ba85c941db4bfa020099252bbd"
-            "d0fae6747e3a629e20571bb26408ed97"
-        ),
     },
     "polara-midnight-club-single": {
         "family": "polara-midnight-club",
         "mode": "single",
         "maskType": "polygon",
         "masterRequired": False,
-        "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
-        "mascotSha256": (
-            "54175079291c559c9858533185a91831"
-            "66bc9879a5c9ab308141d8d3834768e7"
-        ),
         "transparency": {
             "minimumTransparent": 0.953,
             "maximumPartial": 0.046,
@@ -169,11 +154,6 @@ EXPECTED_CONTRACTS: dict[str, dict[str, Any]] = {
         "mode": "strip",
         "maskType": "rounded-rectangles",
         "masterRequired": False,
-        "mascotSrc": "assets/mascot/poca-midnight-photographer.png",
-        "mascotSha256": (
-            "54175079291c559c9858533185a91831"
-            "66bc9879a5c9ab308141d8d3834768e7"
-        ),
     },
 }
 
@@ -402,6 +382,14 @@ def verify_frame(root: Path, frame: dict[str, Any]) -> str:
         frame.get("renderMode") == "png-overlay",
         f"renderMode {frame_id} bukan png-overlay.",
     )
+    require(
+        frame.get("characterPolicy") == "character-free",
+        f"characterPolicy {frame_id} harus character-free.",
+    )
+    require(
+        frame.get("mascotSrc") is None,
+        f"mascotSrc {frame_id} dilarang; gunakan sticker exclusive atau mascot UI-only.",
+    )
     require(frame.get("colorMode") == "RGBA", f"colorMode {frame_id} bukan RGBA.")
     require(frame.get("hasAlpha") is True, f"hasAlpha {frame_id} harus true.")
     expected_slots = 3 if contract["mode"] == "strip" else 1
@@ -446,19 +434,12 @@ def verify_frame(root: Path, frame: dict[str, Any]) -> str:
         (240, 600) if contract["mode"] == "strip" else (360, 450)
     )
     verify_png_asset(thumbnail_path, expected_thumbnail, {"RGBA"}, "Thumbnail")
-
-    expected_mascot = contract.get("mascotSrc")
+    picker_path = resolve_asset_path(root, frame.get("pickerThumbnailSrc"))
     require(
-        frame.get("mascotSrc") == expected_mascot,
-        f"mascotSrc {frame_id} berubah dari kontrak.",
+        "/composites/" in frame.get("pickerThumbnailSrc", "").replace("\\", "/"),
+        f"pickerThumbnailSrc {frame_id} harus berada di composites.",
     )
-    if expected_mascot:
-        mascot_path = resolve_asset_path(root, expected_mascot)
-        verify_png_asset(mascot_path, (512, 512), {"RGBA"}, "Mascot")
-        require(
-            sha256(mascot_path) == contract["mascotSha256"],
-            f"SHA-256 mascot {frame_id} tidak cocok evidence pack.",
-        )
+    verify_png_asset(picker_path, expected_thumbnail, {"RGBA"}, "Picker composite")
 
     require(
         overlay_path.stat().st_size == frame.get("byteSize"),
