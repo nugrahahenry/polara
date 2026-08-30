@@ -20,5 +20,5 @@ test('footer remains the canonical hnry.dev identity foundation', () => {
   assert.match(html, /instagram\.com\/hnry\.dev/);
   assert.match(html, /github\.com\/nugrahahenry/);
   assert.match(html, /wa\.me\/6289513595554/);
-  assert.match(css, /POLARA PRINT ROOM · LOCAL-FIRST SINCE 2026/);
+  assert.match(css, /POLARA PRINT ROOM · LOCAL FIRST SINCE 2026/);
 });

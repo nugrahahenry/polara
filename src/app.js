@@ -22,6 +22,7 @@ import {
 } from './modules/guests/index.js?v=3';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
+import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';
 import { getRevealDossier } from './ui/reveal-dossier.js?v=1';
 
 const POLARA_URL = 'polara.vercel.app';
@@ -58,6 +59,7 @@ const refs = {
   reviewPhoto: $('reviewPhoto'), reviewPhotoRegion: $('reviewPhotoRegion'), reviewGuest: $('reviewGuest'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
   reviewProofTag: $('reviewProofTag'), reviewProofLabel: $('reviewProofLabel'), reviewSourceMeta: $('reviewSourceMeta'), reviewSlots: $('reviewSlots'),
   stage: $('canvasScale'), revealBuddy: $('revealBuddy'), templateList: $('templateList'),
+  frameRailShell: $('frameRailShell'), frameRailPosition: $('frameRailPosition'), frameRailProgress: $('frameRailProgress'),
   frameEditionDossier: $('frameEditionDossier'), frameEditionName: $('frameEditionName'),
   frameEditionStory: $('frameEditionStory'), frameEditionMaterial: $('frameEditionMaterial'),
   frameEditionPalette: $('frameEditionPalette'), frameEditionExclusive: $('frameEditionExclusive'),
@@ -67,6 +69,7 @@ const refs = {
   zoomOutput: $('zoomOutput'), panXOutput: $('panXOutput'), panYOutput: $('panYOutput'), resetPhoto: $('resetPhotoBtn'),
   caption: $('captionInput'), captionField: $('captionField'), captionNote: $('captionAvailabilityNote'),
   stickerBench: $('stickerBench'), stickerBenchStatus: $('stickerBenchStatus'), stickerTray: $('stickerTray'), stickerRailMeta: $('stickerRailMeta'),
+  stickerRailShell: $('stickerRailShell'), stickerRailPosition: $('stickerRailPosition'), stickerRailProgress: $('stickerRailProgress'),
   stickerInspector: $('stickerInspector'), stickerInspectorImage: $('stickerInspectorImage'),
   stickerInspectorName: $('stickerInspectorName'), stickerInspectorHint: $('stickerInspectorHint'),
   undoSticker: $('undoStickerBtn'), resetSticker: $('resetStickerBtn'),
@@ -275,6 +278,59 @@ function saveScrollState() {
   if (state.step === 'decorate') state.scroll.decorateX = refs.stickerTray.scrollLeft;
 }
 
+function syncRailWayfinding(rail, shell, position, progress, noun) {
+  if (!rail || !shell || !position || !progress) return;
+  const items = [...rail.querySelectorAll('button')].filter((item) => !item.hidden);
+  const windowState = getRailWindow({
+    scrollLeft: rail.scrollLeft,
+    scrollWidth: rail.scrollWidth,
+    clientWidth: rail.clientWidth,
+    items: items.map((item) => ({
+      start: item.offsetLeft,
+      end: item.offsetLeft + item.offsetWidth,
+    })),
+  });
+  const visiblePosition = windowState.total
+    ? (windowState.first === windowState.last
+      ? `${windowState.first + 1} of ${windowState.total}`
+      : `${windowState.first + 1} to ${windowState.last + 1} of ${windowState.total}`)
+    : '0 of 0';
+  position.textContent = visiblePosition;
+  shell.dataset.atStart = String(windowState.atStart);
+  shell.dataset.atEnd = String(windowState.atEnd);
+  progress.max = Math.max(1, windowState.total);
+  progress.value = Math.max(0, windowState.last + 1);
+  progress.setAttribute('aria-label', `${noun} ${visiblePosition} visible`);
+}
+
+function syncAllRailWayfinding() {
+  syncRailWayfinding(
+    refs.templateList,
+    refs.frameRailShell,
+    refs.frameRailPosition,
+    refs.frameRailProgress,
+    'Frames',
+  );
+  syncRailWayfinding(
+    refs.stickerTray,
+    refs.stickerRailShell,
+    refs.stickerRailPosition,
+    refs.stickerRailProgress,
+    'Stickers',
+  );
+}
+
+function applyFamilyProofTheme(template) {
+  if (!template?.familyProfile) return;
+  const theme = getFamilyProofTheme(template.familyProfile);
+  [refs.stageShell, refs.controlSheet].forEach((surface) => {
+    surface.dataset.frameFamily = template.familyId;
+    surface.style.setProperty('--frame-family-accent', theme.accent);
+    surface.style.setProperty('--frame-family-secondary', theme.secondary);
+    surface.style.setProperty('--frame-family-wash', theme.wash);
+  });
+}
+
 function isStackedChapterViewport() {
   const shortLandscape = window.matchMedia('(max-height: 560px) and (orientation: landscape)').matches;
   return window.innerWidth <= 900 && !shortLandscape;
@@ -285,6 +341,7 @@ async function restoreChapterView({ focusTitle = true } = {}) {
   refs.controlScroll.scrollTop = 0;
   if (state.step === 'frame') refs.templateList.scrollLeft = state.scroll.frameX || 0;
   if (state.step === 'decorate') refs.stickerTray.scrollLeft = state.scroll.decorateX || 0;
+  syncAllRailWayfinding();
   if (isStackedChapterViewport()) window.scrollTo({ top: 0, behavior: 'auto' });
   if (!focusTitle) return;
   const activePanel = refs.panels.find((panel) => panel.dataset.panel === state.step);
@@ -750,7 +807,7 @@ async function renderTemplateList() {
   refs.templateList.classList.toggle('mode-strip', state.mode === 3);
   thumbFrames = [];
   const available = framesForMode({ includeUnavailable: true });
-  available.forEach((template) => {
+  available.forEach((template, index) => {
     const unavailable = unavailableFrameIds.has(template.id);
     const button = document.createElement('button');
     button.type = 'button';
@@ -760,6 +817,8 @@ async function renderTemplateList() {
     button.dataset.mode = template.mode;
     button.setAttribute('role', 'option');
     button.setAttribute('aria-selected', String(template.id === state.frameId));
+    button.setAttribute('aria-posinset', String(index + 1));
+    button.setAttribute('aria-setsize', String(available.length));
     const thumb = document.createElement('span');
     thumb.className = 'tpl-thumb';
     thumb.dataset.mode = template.mode;
@@ -772,6 +831,9 @@ async function renderTemplateList() {
     detail.className = 'tpl-detail';
     detail.textContent = unavailable ? 'Unavailable' : (template.pickerDetail || (template.mode === 'strip' ? '3 photos' : '1 photo'));
     const familyProfile = template.familyProfile;
+    const familyTheme = getFamilyProofTheme(familyProfile);
+    button.style.setProperty('--frame-card-accent', familyTheme.accent);
+    button.style.setProperty('--frame-card-secondary', familyTheme.secondary);
     button.setAttribute('aria-label', [template.name, familyProfile?.material, detail.textContent].filter(Boolean).join(', '));
     meta.append(name, detail);
     if (template.pickerBadge && template.status === 'experimental-static') {
@@ -808,6 +870,7 @@ async function renderTemplateList() {
   });
   wireCollectionKeyboard(refs.templateList, '.tpl-btn');
   renderFrameEditionDossier();
+  requestAnimationFrame(syncAllRailWayfinding);
 }
 
 function renderFrameEditionDossier() {
@@ -829,6 +892,7 @@ function renderFrameEditionDossier() {
     return swatch;
   }));
   refs.frameEditionDossier.dataset.family = template.familyId;
+  applyFamilyProofTheme(template);
 }
 
 function updateTemplateSelection() {
@@ -1074,6 +1138,15 @@ function renderStickerBench() {
   refs.stickerInspectorHint.textContent = view.active
     ? `${view.active.categoryLabel} · Drag to move · handles resize and rotate · Arrow keys nudge · Delete removes`
     : 'Each sticker is added locally and stays editable on the proof.';
+
+  if (view.state === 'editing' && window.innerWidth <= 540) {
+    const scrollBounds = refs.controlScroll.getBoundingClientRect();
+    const inspectorBounds = refs.stickerInspector.getBoundingClientRect();
+    const hiddenDistance = scrollBounds.top + 8 - inspectorBounds.top;
+    if (hiddenDistance > 0) {
+      refs.controlScroll.scrollTop = Math.max(0, refs.controlScroll.scrollTop - hiddenDistance);
+    }
+  }
 }
 
 function renderStickerTray() {
@@ -1085,12 +1158,14 @@ function renderStickerTray() {
     ? `${exclusive.name} + 19 universal`
     : '19 universal stickers';
   refs.stickerTray.setAttribute('aria-label', `Add a sticker for ${template?.name || 'the selected frame'}`);
-  stickerPack.forEach((asset) => {
+  stickerPack.forEach((asset, index) => {
     const button = document.createElement('button');
     button.type = 'button';
     button.className = `sticker-btn${asset.exclusiveFamilyId ? ' exclusive' : ''}`;
     button.setAttribute('role', 'option');
     button.setAttribute('aria-label', `Add ${asset.exclusiveFamilyId ? 'exclusive ' : ''}sticker ${asset.name}`);
+    button.setAttribute('aria-posinset', String(index + 1));
+    button.setAttribute('aria-setsize', String(stickerPack.length));
     if (asset.pickerBadge) {
       const badge = document.createElement('span');
       badge.className = 'sticker-badge';
@@ -1130,6 +1205,7 @@ function renderStickerTray() {
   });
   wireCollectionKeyboard(refs.stickerTray, '.sticker-btn');
   updateStickerActions();
+  requestAnimationFrame(syncAllRailWayfinding);
 }
 
 function updateStickerActions() {
@@ -1508,6 +1584,7 @@ function handleResize() {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
     thumbFrames.forEach(({ frame, w, h, mode, focus }) => scaleThumb(frame, w, h, mode, focus));
+    syncAllRailWayfinding();
     if (phCanvas && ['frame', 'decorate', 'reveal'].includes(state.step)) {
       fitStage(templateDims(getTemplate(state.frameId)));
       refreshPhotoSlots(phCanvas, state.photos, { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
@@ -1516,6 +1593,10 @@ function handleResize() {
   }, 120);
 }
 
+[refs.templateList, refs.stickerTray].forEach((rail) => {
+  rail.addEventListener('scroll', syncAllRailWayfinding, { passive: true });
+  rail.addEventListener('focusin', () => requestAnimationFrame(syncAllRailWayfinding));
+});
 window.addEventListener('resize', handleResize);
 window.visualViewport?.addEventListener('resize', handleResize);
 document.addEventListener('visibilitychange', () => {

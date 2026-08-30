@@ -16,8 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.30.0 asset quality system checkpoint', () => {
-  assert.equal(packageJson.version, '0.30.0');
+test('release metadata records the v0.31.0 asset rail wayfinding checkpoint', () => {
+  assert.equal(packageJson.version, '0.31.0');
+  assert.match(changelog, /## \[0\.31\.0\] - 2026-08-31/);
+  assert.match(changelog, /Asset Rail Wayfinding/i);
+  assert.match(changelog, /Family Proof Tint/i);
+  assert.match(changelog, /nama hingga dua baris/i);
   assert.match(changelog, /## \[0\.30\.0\] - 2026-08-28/);
   assert.match(changelog, /Asset Quality System v2/i);
   assert.match(changelog, /Selected Edition Dossier/i);
@@ -55,8 +59,8 @@ test('release metadata records the v0.30.0 asset quality system checkpoint', () 
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=30/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=300/);
+  assert.match(indexHtml, /src\/app\.js\?v=31/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=310/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);

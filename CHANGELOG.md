@@ -5,6 +5,24 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.31.0] - 2026-08-31
+
+### Added
+- Tambahkan **Asset Rail Wayfinding** pada frame dan Sticker Bench dengan posisi katalog yang terlihat, progress native yang ditata ulang, edge cue, serta metadata `aria-posinset` dan `aria-setsize`.
+- Tambahkan **Family Proof Tint** yang mengambil palette canonical dari manifest untuk registration marks, inspection mat, dossier, dan selection ring pada layer UI-only.
+- Tambahkan helper murni serta regression contract untuk visible rail window, physical scroll edge, fallback palette, UI/export boundary, dan keterbacaan kartu stiker.
+
+### Changed
+- Samakan tinggi kartu stiker, besarkan preview, pertahankan nama hingga dua baris, dan tampilkan hubungan Poca Exclusive tanpa ellipsis satu baris.
+- Konsolidasikan footer proof ticket ke satu blok CSS canonical tanpa mengubah tautan `hnry.dev`, WhatsApp, Instagram, GitHub, privacy truth, atau target interaksi 44×44 px.
+- Pertahankan seluruh 14 PNG overlay karena audit visual tidak menemukan cacat material yang membenarkan redraw; peningkatan difokuskan pada pembacaan dan perbandingan aset di UI.
+
+### Validation
+- Node 77/77, Python 10/10, overlay 14/14, preview derivative 28/28, serta Asset Quality 14 frame/26 sticker/11 mascot/3 guest lulus.
+- QA produksi lulus pada 390×844, 768×1024, 1440×900, dan 900×510 untuk enam tahap dengan overflow 0, target pendek 0, primary action terlihat, dan runtime error 0.
+- Seluruh 14 variant lulus preview/export parity. Output tepat Single 1080×1350 dan Strip 720×1800; camera denied recovery, fake-device capture, retake satu slot, keyboard tray, reduced motion, focus return, dan rapid transition lock lulus.
+- Review screenshot mobile dan desktop menutup overlap active sticker inspector, mengonfirmasi footer proof ticket responsif, serta menghapus animasi lebar yang ditandai detector Impeccable dalam mode regex-degraded.
+
 ## [0.30.0] - 2026-08-28
 
 ### Added

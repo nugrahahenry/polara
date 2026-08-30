@@ -298,7 +298,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=300" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=310" />
 </head>
 <body>
   <!--
@@ -506,7 +506,19 @@
               </div>
             </dl>
           </section>
-          <div id="templateList" role="listbox" aria-label="Frame tray"></div>
+          <div class="asset-rail-status">
+            <div>
+              <strong>Frame editions</strong>
+              <span class="asset-rail-hint" id="frameRailHint">Swipe, scroll, or use Arrow keys.</span>
+            </div>
+            <div class="asset-rail-meter">
+              <span id="frameRailPosition">1 of 7</span>
+              <progress id="frameRailProgress" max="7" value="1" aria-label="Frame rail position"></progress>
+            </div>
+          </div>
+          <div id="frameRailShell" class="asset-rail-shell" data-at-start="true" data-at-end="false">
+            <div id="templateList" role="listbox" aria-label="Frame tray" aria-describedby="frameRailHint"></div>
+          </div>
           <div class="photo-adjust">
             <div class="tray-head"><h3>Adjust proof</h3><button type="button" class="mini-btn" id="resetPhotoBtn">Reset proof</button></div>
             <span class="section-label">Active proof</span>
@@ -542,11 +554,20 @@
                 <button type="button" class="mini-btn" id="resetStickerBtn">Clear stickers</button>
               </div>
             </div>
-            <div class="sticker-rail-label" aria-hidden="true">
-              <span>Pick a sticker</span>
-              <small id="stickerRailMeta">Frame exclusive + universal</small>
+            <div class="sticker-rail-label asset-rail-status">
+              <div>
+                <strong>Pick a sticker</strong>
+                <small id="stickerRailMeta">Frame exclusive + universal</small>
+              </div>
+              <div class="asset-rail-meter">
+                <span id="stickerRailPosition">1 of 20</span>
+                <progress id="stickerRailProgress" max="20" value="1" aria-label="Sticker rail position"></progress>
+              </div>
             </div>
-            <div id="stickerTray" role="listbox" aria-label="Add a sticker"></div>
+            <span class="asset-rail-hint" id="stickerRailHint">Swipe, scroll, or use Arrow keys.</span>
+            <div id="stickerRailShell" class="asset-rail-shell" data-at-start="true" data-at-end="false">
+              <div id="stickerTray" role="listbox" aria-label="Add a sticker" aria-describedby="stickerRailHint"></div>
+            </div>
             <div class="sticker-inspector" id="stickerInspector" data-state="empty">
               <img id="stickerInspectorImage" src="assets/brand/logo-polara.png" alt="" hidden loading="lazy" />
               <div class="sticker-inspector-copy">
@@ -646,6 +667,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=30"></script>
+  <script type="module" src="src/app.js?v=31"></script>
 </body>
 </html>
