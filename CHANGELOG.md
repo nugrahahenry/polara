@@ -5,6 +5,25 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.32.0] - 2026-08-31
+
+### Added
+- Tambahkan **Capture Delight** dengan countdown proof card yang menunjukkan proof aktif, cue pose, angka, dan progress timer tanpa menyembunyikan status aksesibel.
+- Tambahkan shutter proof, capture receipt, recent-slot feed, serta fresh-proof arrival agar hasil capture terasa berpindah secara nyata dari Camera ke Review.
+- Tambahkan helper copy murni, empat regression contract, dan bukti QA khusus untuk countdown serta receipt pada empat viewport produksi.
+
+### Changed
+- Beri Poca satu respons singkat setelah proof berhasil disimpan tanpa mengganti aset, memutar loop dekoratif, atau menunda capture berikutnya.
+- Buat pemeriksaan processing Reveal atomik agar QA tidak membaca dua state berbeda ketika export lokal selesai sangat cepat.
+- Pertahankan timer 3/5/10, atomic retake, source capture, camera recovery, local processing, dan seluruh geometry preview/export tanpa perubahan.
+
+### Validation
+- Node 81/81, Python 10/10, overlay 14/14, preview derivative 28/28, serta Asset Quality 14 frame/26 sticker/11 mascot/3 guest lulus.
+- QA produksi lulus pada 390×844, 768×1024, 1440×900, dan 900×510 untuk delapan state visual termasuk countdown dan receipt, dengan overflow 0, target pendek 0, primary action terlihat, serta runtime error 0.
+- Capture Delight menampilkan `Proof 1 of 3`, cue `Hold this pose`, progress timer, satu recent slot, dan receipt `Proof 1 saved` pada empat viewport. Reduced motion mempertahankan informasi tanpa perjalanan besar.
+- Seluruh 14 variant lulus preview/export parity. Output tepat Single 1080×1350 dan Strip 720×1800; camera denied recovery, fake-device capture, retake satu slot, keyboard tray, focus return, serta rapid transition lock lulus.
+- Screenshot mobile dan desktop untuk countdown/receipt direview tanpa fix visual tambahan. Detector Impeccable berjalan satu kali dan mengembalikan daftar kosong dalam mode regex-degraded.
+
 ## [0.31.0] - 2026-08-31
 
 ### Added

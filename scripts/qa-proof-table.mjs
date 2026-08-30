@@ -83,9 +83,13 @@ async function waitForCameraReady(page) {
   }, null, { timeout: 30_000 });
 }
 
-async function captureProof(page) {
+async function captureProof(page, { onCountdown } = {}) {
   await waitForCameraReady(page);
   await page.locator('#primaryBtn').click();
+  if (onCountdown) {
+    await page.locator('#countdown').waitFor({ state: 'visible', timeout: 5_000 });
+    await onCountdown();
+  }
   await page.waitForFunction(() => {
     const button = document.querySelector('#primaryBtn');
     const review = document.querySelector('[data-panel="review"]');
@@ -438,11 +442,41 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(cameraCompanion.companionOverlapsTarget, false, 'Camera Poca must not cover the live proof');
   assert.equal(cameraCompanion.bayFooterWithinStage, true, `Capture Bay footer must remain inside the stage: ${JSON.stringify(cameraCompanion)}`);
   await shot('02', 'camera');
-  await captureProof(page);
+  let captureDelight;
+  await captureProof(page, {
+    onCountdown: async () => {
+      captureDelight = await page.locator('#countdown').evaluate((countdown) => ({
+        phase: countdown.dataset.phase,
+        proof: document.querySelector('#countdownProof')?.textContent.trim(),
+        value: document.querySelector('#countdownValue')?.textContent.trim(),
+        cue: document.querySelector('#countdownCue')?.textContent.trim(),
+        progress: document.querySelector('#countdownProgress')?.style.getPropertyValue('--countdown-progress'),
+      }));
+      await shot('02b', 'camera-countdown');
+    },
+  });
+  assert.equal(captureDelight.phase, 'counting');
+  assert.equal(captureDelight.proof, 'Proof 1 of 3');
+  assert.equal(captureDelight.cue, 'Hold this pose');
+  assert.match(captureDelight.value, /^[1-3]$/);
+  assert.ok(Number(captureDelight.progress) > 0);
   if (await page.locator('[data-panel="camera"]').isVisible()) {
     const nextCameraDocket = await auditCameraProofDocket(page);
     assert.equal(nextCameraDocket.counter, 'Proof 2 / 3');
     assert.deepEqual(nextCameraDocket.slotStates, ['Saved', 'Next', 'Waiting']);
+    const captureReceipt = await page.evaluate(() => ({
+      text: document.querySelector('#shotBadge')?.textContent.trim(),
+      hidden: document.querySelector('#shotBadge')?.hidden,
+      recentSlots: document.querySelectorAll('.slot-card[data-capture-recent="true"]').length,
+      moment: document.querySelector('.stage-shell')?.dataset.captureMoment,
+    }));
+    assert.deepEqual(captureReceipt, {
+      text: 'Proof 1 saved',
+      hidden: false,
+      recentSlots: 1,
+      moment: 'saved',
+    });
+    await shot('02c', 'camera-receipt');
   }
   if (await page.locator('[data-panel="camera"]').isVisible()) await captureProof(page);
   if (await page.locator('[data-panel="camera"]').isVisible()) await captureProof(page);
@@ -661,9 +695,13 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   await page.locator('#primaryBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'reveal');
   chapterContinuity.reveal = await auditChapterContinuity(page, 'reveal', viewport);
-  assert.equal(await page.locator('#controlSheet').getAttribute('data-reveal-state'), 'processing');
+  const revealEntry = await page.evaluate(() => ({
+    state: document.querySelector('#controlSheet')?.dataset.revealState,
+    dossierVisible: getComputedStyle(document.querySelector('.reveal-dossier')).display !== 'none',
+  }));
+  assert.equal(revealEntry.state, 'processing');
+  assert.equal(revealEntry.dossierVisible, false);
   assert.match(await page.locator('#revealPanelPoca').getAttribute('src'), /poca-sleepy-loading\.png$/);
-  assert.equal(await page.locator('.reveal-dossier').isVisible(), false);
   await page.waitForFunction(() => document.querySelector('#revealTitle')?.textContent === 'Proof approved.', null, { timeout: 40_000 });
   const revealTheatre = await auditRevealTheatre(page);
   assert.equal(revealTheatre.revealState, 'ready');
@@ -690,9 +728,10 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   if (exportStrip) exported = await downloadPng(page, 'polara-strip-proof-table.png');
   report.viewports[name] = {
     viewport, stages: stageAudit, frameRail, frameEdition, decorateWorkshop, chapterContinuity, revealTheatre,
-    captureReview: {
-      camera: initialCameraDocket,
-      review: reviewInspection,
+      captureReview: {
+        camera: initialCameraDocket,
+        captureDelight,
+        review: reviewInspection,
       cameraCompanion,
       reviewCompanion: {
         companionOverlapsTarget: reviewCompanion.companionOverlapsTarget,

@@ -23,6 +23,7 @@ import {
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';
+import { getCaptureMomentCopy } from './ui/capture-delight.js?v=1';
 import { getRevealDossier } from './ui/reveal-dossier.js?v=1';
 
 const POLARA_URL = 'polara.vercel.app';
@@ -53,7 +54,9 @@ const refs = {
   poseUserGuide: $('poseUserGuide'), poseGuestPreview: $('poseGuestPreview'),
   cameraMessage: $('cameraMessage'), cameraOverlayTitle: $('cameraOverlayTitle'), cameraOverlayActions: $('cameraOverlayActions'),
   cameraBayCounter: $('cameraBayCounter'), cameraBayStatus: $('cameraBayStatus'),
-  retryCamera: $('retryCameraBtn'), demoMode: $('demoModeBtn'), countdown: $('countdown'), flash: $('flashLayer'),
+  retryCamera: $('retryCameraBtn'), demoMode: $('demoModeBtn'), countdown: $('countdown'),
+  countdownProof: $('countdownProof'), countdownValue: $('countdownValue'), countdownCue: $('countdownCue'),
+  countdownProgress: $('countdownProgress'), flash: $('flashLayer'),
   shotBadge: $('shotBadge'), cameraSlots: $('cameraSlots'), cameraPanelTitle: $('cameraPanelTitle'),
   cameraPanelCopy: $('cameraPanelCopy'), cameraStateNote: $('cameraStateNote'),
   reviewPhoto: $('reviewPhoto'), reviewPhotoRegion: $('reviewPhotoRegion'), reviewGuest: $('reviewGuest'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
@@ -88,7 +91,7 @@ function initialState() {
     step: 'start', mode: 3, timer: 3, facing: 'user', demo: false,
     experience: 'regular', guestId: null, guestLayout: 'matched', guestSide: 'right',
     cameraStatus: 'idle', cameraError: null, shooting: false,
-    photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null,
+    photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null, recentCaptureSlot: null,
     frameId: null, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
     revealReady: false, busy: false, scroll: { frameX: 0, decorateX: 0 },
   };
@@ -99,6 +102,8 @@ let phCanvas = null;
 let renderToken = 0;
 let cameraRequestId = 0;
 let countdownRequestId = 0;
+let captureMomentTimer = null;
+let reviewArrivalTimer = null;
 let revealRequestId = 0;
 let preparedExportRequestId = 0;
 let preparedFramedExport = null;
@@ -605,7 +610,46 @@ function showCameraState() {
 function cancelCountdown() {
   countdownRequestId += 1;
   refs.countdown.hidden = true;
+  refs.countdown.dataset.phase = 'idle';
+  refs.countdownProgress.style.setProperty('--countdown-progress', '0');
   refs.countdownLive.textContent = '';
+  clearCaptureMoment();
+}
+
+function clearCaptureMoment() {
+  clearTimeout(captureMomentTimer);
+  captureMomentTimer = null;
+  refs.cameraWrap.dataset.captureMoment = 'idle';
+  refs.stageShell.dataset.captureMoment = 'idle';
+  refs.shotBadge.dataset.state = 'idle';
+  refs.shotBadge.hidden = true;
+}
+
+function setCaptureMoment(moment, copy) {
+  clearTimeout(captureMomentTimer);
+  captureMomentTimer = null;
+  if (moment !== 'saved') refs.cameraWrap.dataset.captureMoment = moment;
+  refs.stageShell.dataset.captureMoment = moment;
+
+  if (moment !== 'saved') {
+    refs.shotBadge.dataset.state = moment;
+    refs.shotBadge.hidden = true;
+    return;
+  }
+
+  refs.shotBadge.textContent = copy.receipt;
+  refs.shotBadge.dataset.state = 'saved';
+  refs.shotBadge.hidden = false;
+  captureMomentTimer = window.setTimeout(() => {
+    refs.cameraWrap.dataset.captureMoment = 'idle';
+    refs.stageShell.dataset.captureMoment = 'idle';
+    refs.shotBadge.dataset.state = 'idle';
+    refs.shotBadge.hidden = true;
+    if (state.step === 'camera' && state.recentCaptureSlot != null) {
+      state.recentCaptureSlot = null;
+      renderCameraPanel();
+    }
+  }, reducedMotion.matches ? 360 : 900);
 }
 
 function suspendCameraSession(message) {
@@ -645,6 +689,7 @@ function renderSlotCards(container, onSelect) {
     button.type = 'button';
     button.className = `slot-card${selected ? ' active' : ''}`;
     button.dataset.proofState = proofState;
+    button.dataset.captureRecent = String(Boolean(photo) && index === state.recentCaptureSlot);
     button.setAttribute('aria-label', photo ? `Choose proof ${index + 1}, ${stateLabel}` : `Proof ${index + 1}, ${stateLabel}`);
     button.setAttribute('aria-pressed', String(selected));
     button.innerHTML = photo
@@ -675,9 +720,13 @@ function renderCameraPanel() {
   showCameraState();
 }
 
-async function runCountdown(seconds) {
+async function runCountdown(seconds, copy) {
   const requestId = ++countdownRequestId;
+  setCaptureMoment('counting', copy);
   refs.countdown.hidden = false;
+  refs.countdown.dataset.phase = 'counting';
+  refs.countdownProof.textContent = copy.proofLabel;
+  refs.countdownCue.textContent = copy.countdownCue;
   try {
     for (let number = seconds; number > 0; number -= 1) {
       if (requestId !== countdownRequestId || document.hidden || state.step !== 'camera') {
@@ -685,7 +734,8 @@ async function runCountdown(seconds) {
         error.name = 'AbortError';
         throw error;
       }
-      refs.countdown.textContent = String(number);
+      refs.countdownValue.textContent = String(number);
+      refs.countdownProgress.style.setProperty('--countdown-progress', String((seconds - number + 1) / seconds));
       refs.countdownLive.textContent = `${number}`;
       await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 300 : 760));
     }
@@ -696,7 +746,10 @@ async function runCountdown(seconds) {
     }
     refs.countdownLive.textContent = 'Photo taken';
   } finally {
-    if (requestId === countdownRequestId) refs.countdown.hidden = true;
+    if (requestId === countdownRequestId) {
+      refs.countdown.hidden = true;
+      refs.countdown.dataset.phase = 'idle';
+    }
   }
 }
 
@@ -711,12 +764,14 @@ async function takePhoto() {
   state.shooting = true;
   updateActions();
   const slot = state.activeSlot;
-  refs.shotBadge.hidden = false;
-  refs.shotBadge.textContent = state.mode === 3 ? `Slot ${slot + 1}` : 'Single';
+  state.recentCaptureSlot = null;
+  const wasRetake = state.retakeSlot != null;
+  const captureCopy = getCaptureMomentCopy({ slotIndex: slot, mode: state.mode, retake: wasRetake });
   status(`Get ready for proof ${slot + 1}…`);
 
   try {
-    await runCountdown(state.timer);
+    await runCountdown(state.timer, captureCopy);
+    setCaptureMoment('shutter', captureCopy);
     flash();
     const replacement = state.demo
       ? createDemoCapture(slot, state.mode)
@@ -724,9 +779,10 @@ async function takePhoto() {
     // Commit pengganti hanya setelah capture sukses.
     state.photos[slot] = replacement;
     state.selectedSlot = slot;
-    refs.shotBadge.hidden = true;
+    state.recentCaptureSlot = slot;
+    setCaptureMoment('saved', captureCopy);
 
-    if (state.retakeSlot != null) {
+    if (wasRetake) {
       state.retakeSlot = null;
       state.shooting = false;
       await goToStep('review', `Proof ${slot + 1} was replaced. Other proofs stay unchanged.`);
@@ -746,7 +802,7 @@ async function takePhoto() {
     status(`Photo saved to proof ${slot + 1}. Prepare the pose for proof ${nextEmpty + 1}.`);
   } catch (error) {
     state.shooting = false;
-    refs.shotBadge.hidden = true;
+    clearCaptureMoment();
     if (state.step === 'camera') {
       status(error?.name === 'AbortError'
         ? 'Capture paused. Existing proofs remain safe.'
@@ -764,6 +820,15 @@ function renderReview() {
   if (photo) refs.reviewPhoto.src = photo.src;
   refs.reviewPhoto.alt = `${proofLabel} under review`;
   refs.reviewWrap.dataset.activeProof = String(activeProof);
+  const freshArrival = state.recentCaptureSlot === state.selectedSlot;
+  refs.reviewWrap.dataset.proofArrival = freshArrival ? 'fresh' : 'steady';
+  clearTimeout(reviewArrivalTimer);
+  if (freshArrival) {
+    reviewArrivalTimer = window.setTimeout(() => {
+      refs.reviewWrap.dataset.proofArrival = 'steady';
+      state.recentCaptureSlot = null;
+    }, reducedMotion.matches ? 220 : 760);
+  }
   refs.reviewProofTag.textContent = proofLabel;
   refs.reviewProofLabel.textContent = proofLabel;
   refs.reviewSourceMeta.textContent = `Original ${photo?.naturalWidth || 0}×${photo?.naturalHeight || 0} · kept locally`;
