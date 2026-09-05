@@ -108,13 +108,21 @@ def write_or_check(path: Path, content: bytes, check: bool) -> None:
 def generate(check: bool = False) -> None:
     manifest = load_json(MANIFEST_PATH)
     policy = load_json(POLICY_PATH)
-    fixture_path = resolve_project_path(policy["pickerFixture"]["source"])
-    prompt_path = resolve_project_path(policy["pickerFixture"]["promptSource"])
-    prompt = prompt_path.read_text(encoding="utf-8").strip()
-    fixture = Image.open(fixture_path).convert("RGB")
-    panels = photo_panels(fixture)
+    fixtures = {}
+    for fixture_policy in policy["pickerFixtures"]:
+        fixture_path = resolve_project_path(fixture_policy["source"])
+        prompt_path = resolve_project_path(fixture_policy["promptSource"])
+        fixtures[fixture_policy["id"]] = {
+            "panels": photo_panels(Image.open(fixture_path).convert("RGB")),
+            "prompt": prompt_path.read_text(encoding="utf-8").strip(),
+        }
+    families = {family["id"]: family for family in manifest["families"]}
 
     for frame in manifest["frames"]:
+        fixture_id = families[frame["family"]]["pickerFixtureId"]
+        fixture = fixtures[fixture_id]
+        panels = fixture["panels"]
+        prompt = fixture["prompt"]
         frame_only, composite = build_preview(frame, panels)
         fallback_prompt = f"Deterministic frame-only thumbnail derived from {frame['overlaySrc']}; no generated subject."
         composite_prompt = f"{prompt}\n\nDerived picker use: composited under {frame['overlaySrc']} using canonical photo geometry."

@@ -85,7 +85,7 @@ function validateFrame(frame, ids) {
 const raw = await fs.readFile(inputPath, 'utf8');
 const manifest = JSON.parse(raw);
 if (!Array.isArray(manifest.frames)) fail('Manifest harus memiliki array frames.');
-if (manifest.frames.length !== 14) fail(`Manifest produksi harus berisi tepat 14 frame Hero; ditemukan ${manifest.frames.length}.`);
+if (manifest.frames.length !== 16) fail(`Manifest produksi harus berisi tepat 16 frame Hero; ditemukan ${manifest.frames.length}.`);
 if (manifest.familyProfileVersion !== 'frame-family-v2') fail('Manifest harus memakai frame-family-v2.');
 if (!Array.isArray(manifest.families) || manifest.families.length !== 7) {
   fail('Manifest harus memiliki tepat tujuh family profile.');
@@ -107,6 +107,9 @@ for (const family of manifest.families) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*-exclusive$/.test(family.exclusiveStickerId || '')) {
     fail(`${family.id}.exclusiveStickerId invalid.`);
   }
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(family.pickerFixtureId || '')) {
+    fail(`${family.id}.pickerFixtureId invalid.`);
+  }
   familyProfiles.set(family.id, family);
 }
 
@@ -117,8 +120,8 @@ for (const frame of manifest.frames) {
 }
 for (const familyId of familyProfiles.keys()) {
   const variants = manifest.frames.filter((frame) => frame.family === familyId);
-  if (variants.length !== 2 || new Set(variants.map((frame) => frame.mode)).size !== 2) {
-    fail(`${familyId} harus memiliki variant Single dan Strip.`);
+  if (variants.length < 2 || new Set(variants.map((frame) => frame.mode)).size !== 2) {
+    fail(`${familyId} harus memiliki sedikitnya satu variant Single dan Strip.`);
   }
 }
 

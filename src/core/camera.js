@@ -123,38 +123,17 @@ export function captureFrame(videoEl, { mirror = true } = {}) {
   return createPhotoRecord({ src, naturalWidth: width, naturalHeight: height });
 }
 
-// Fallback eksplisit untuk mencoba flow tanpa kamera. Ini bukan foto user dan
-// selalu diberi label DEMO agar tidak membingungkan saat QA.
-export function createDemoCapture(slotIndex = 0, mode = 3) {
-  const width = mode === 3 ? 1200 : 1440;
-  const height = mode === 3 ? 900 : 1800;
-  const canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
-  const ctx = canvas.getContext('2d');
-  if (!ctx) throw new Error('The browser could not prepare the demo proof.');
-  const palettes = [
-    ['#ffd4e6', '#8fd3ff'],
-    ['#cab8ff', '#ffe26f'],
-    ['#8fd3ff', '#ff8fbd'],
-  ];
-  const [from, to] = palettes[slotIndex % palettes.length];
-  const gradient = ctx.createLinearGradient(0, 0, width, height);
-  gradient.addColorStop(0, from);
-  gradient.addColorStop(1, to);
-  ctx.fillStyle = gradient;
-  ctx.fillRect(0, 0, width, height);
-
-  ctx.fillStyle = 'rgba(255,255,255,.72)';
-  ctx.beginPath();
-  ctx.arc(width * .5, height * .42, Math.min(width, height) * .19, 0, Math.PI * 2);
-  ctx.fill();
-  ctx.fillStyle = '#4b2e1f';
-  ctx.font = `700 ${Math.round(Math.min(width, height) * .08)}px Fredoka, sans-serif`;
-  ctx.textAlign = 'center';
-  ctx.fillText(`DEMO PROOF ${slotIndex + 1}`, width / 2, height * .76);
-  ctx.font = `600 ${Math.round(Math.min(width, height) * .035)}px Nunito, sans-serif`;
-  ctx.fillText('Use the camera when ready', width / 2, height * .84);
-
-  return createPhotoRecord({ src: canvas.toDataURL('image/png'), naturalWidth: width, naturalHeight: height });
+// Fallback eksplisit untuk mencoba flow tanpa kamera. Raster rights-safe ini
+// selalu membawa label DEMO dan tidak pernah menggantikan capture kamera user.
+export async function createDemoCapture(slotIndex = 0) {
+  const proofIndex = (slotIndex % 3) + 1;
+  const src = `assets/media/demo-proofs/demo-proof-${proofIndex}.jpg`;
+  const image = new Image();
+  image.decoding = 'async';
+  image.src = src;
+  await image.decode();
+  if (!image.naturalWidth || !image.naturalHeight) {
+    throw new Error('The browser could not load the demo proof.');
+  }
+  return createPhotoRecord({ src, naturalWidth: image.naturalWidth, naturalHeight: image.naturalHeight });
 }

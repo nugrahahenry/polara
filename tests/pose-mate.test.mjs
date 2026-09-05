@@ -20,22 +20,25 @@ test('Pose Mate exposes an explicit opt-in while Regular Booth remains the defau
 });
 
 
-test('PM-01 is a fictional synthetic runtime asset with no collaboration claim', async () => {
+test('Pose Mate exposes original fictional Juno and Mina guests without collaboration claims', async () => {
   const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
-  const guest = manifest.guests.find((item) => item.id === 'polara-pm-01');
   const guestModule = await import('../src/modules/guests/index.js');
-  const runtimeGuest = guestModule.getGuest(guest.id);
+  const options = guestModule.getGuestOptions();
 
-  assert.ok(guest);
-  assert.equal(guest.kind, 'fictional-synthetic');
-  assert.equal(guest.publicFigure, false);
-  assert.equal(guest.collaborationClaim, false);
-  assert.match(guest.runtimeSrc, /^assets\/guests\/[a-z0-9-]+\.png$/);
-  assert.equal(runtimeGuest.id, guest.id);
-  assert.equal(runtimeGuest.src, guest.runtimeSrc);
-  assert.equal(runtimeGuest.kind, guest.kind);
-  const digest = createHash('sha256').update(await readBytes(guest.runtimeSrc)).digest('hex');
-  assert.equal(digest, guest.sha256);
+  assert.deepEqual(options.map((guest) => [guest.id, guest.name]), [
+    ['polara-pm-01', 'Juno'],
+    ['polara-pm-02', 'Mina'],
+  ]);
+  for (const option of options) {
+    const guest = manifest.guests.find((item) => item.id === option.id);
+    assert.ok(guest);
+    assert.equal(guest.kind, 'fictional-synthetic');
+    assert.equal(guest.publicFigure, false);
+    assert.equal(guest.collaborationClaim, false);
+    assert.equal(option.src, guest.runtimeSrc);
+    const digest = createHash('sha256').update(await readBytes(guest.runtimeSrc)).digest('hex');
+    assert.equal(digest, guest.sha256);
+  }
 });
 
 
@@ -60,6 +63,28 @@ test('PM-01 pose pack maps Single and every Strip proof to a verified runtime as
     assert.equal(manifestAsset.collaborationClaim, false);
     const digest = createHash('sha256').update(await readBytes(asset.src)).digest('hex');
     assert.equal(digest, manifestAsset.sha256);
+  }
+});
+
+
+test('PM-02 female pose pack maps Single and every Strip proof to the same verified identity', async () => {
+  const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
+  const guestModule = await import('../src/modules/guests/index.js');
+  const assets = guestModule.getGuestAssets('polara-pm-02');
+
+  assert.deepEqual(assets.map((asset) => asset.pose), ['neutral', 'peace', 'half-heart']);
+  assert.equal(guestModule.poseForSlot(0, 1, 'polara-pm-02').pose, 'half-heart');
+  assert.equal(guestModule.poseForSlot(0, 3, 'polara-pm-02').pose, 'neutral');
+  assert.equal(guestModule.poseForSlot(1, 3, 'polara-pm-02').pose, 'peace');
+  assert.equal(guestModule.poseForSlot(2, 3, 'polara-pm-02').pose, 'half-heart');
+
+  for (const asset of assets) {
+    const manifestAsset = manifest.guests.find((item) => item.id === asset.id);
+    assert.ok(manifestAsset, `Missing manifest entry for ${asset.id}`);
+    assert.equal(manifestAsset.guestId || manifestAsset.id, 'polara-pm-02');
+    assert.equal(manifestAsset.runtimeSrc, asset.src);
+    assert.equal(manifestAsset.publicFigure, false);
+    assert.equal(manifestAsset.collaborationClaim, false);
   }
 });
 

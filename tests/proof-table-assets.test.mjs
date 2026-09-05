@@ -10,7 +10,7 @@ const PNG_SIGNATURE = Buffer.from([137, 80, 78, 71, 13, 10, 26, 10]);
 
 
 test('setiap Hero memakai picker runtime tetapi overlay export tetap terpisah', async () => {
-  assert.equal(frameOverlayTemplates.length, 14);
+  assert.equal(frameOverlayTemplates.length, 16);
 
   for (const frame of frameOverlayTemplates) {
     assert.match(frame.pickerThumbnailSrc, /^assets\/frames\/composites\/[a-z0-9-]+-thumbnail\.png$/);

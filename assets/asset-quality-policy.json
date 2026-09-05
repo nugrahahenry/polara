@@ -5,9 +5,9 @@
     "requireCharacterFreeOverlay": true,
     "requirePickerComposite": true,
     "familyCount": 7,
-    "variantCount": 14,
+    "variantCount": 16,
     "familyProfileVersion": "frame-family-v2",
-    "familyProfileFields": ["story", "material", "palette", "exclusiveStickerId"],
+    "familyProfileFields": ["story", "material", "palette", "exclusiveStickerId", "pickerFixtureId"],
     "singleCanvas": [1080, 1350],
     "stripCanvas": [720, 1800],
     "singleThumbnail": [360, 450],
@@ -32,13 +32,24 @@
     "dimensions": [1254, 1254],
     "maximumBytes": 1200000
   },
-  "pickerFixture": {
-    "id": "polara-picker-friends-v1",
-    "source": "assets/_originals/fixtures/polara-picker-friends-v1.png",
-    "promptSource": "assets/_originals/fixtures/polara-picker-friends-v1.prompt.txt",
-    "kind": "fictional-synthetic",
-    "publicFigure": false,
-    "collaborationClaim": false,
-    "runtimePolicy": "picker-thumbnail-only"
-  }
+  "pickerFixtures": [
+    {
+      "id": "polara-picker-friends-v1",
+      "source": "assets/_originals/fixtures/polara-picker-friends-v1.png",
+      "promptSource": "assets/_originals/fixtures/polara-picker-friends-v1.prompt.txt",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "runtimePolicy": "picker-thumbnail-only"
+    },
+    {
+      "id": "polara-picker-besties-v1",
+      "source": "assets/_originals/fixtures/polara-picker-besties-v1.png",
+      "promptSource": "assets/_originals/fixtures/polara-picker-besties-v1.prompt.txt",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "runtimePolicy": "picker-thumbnail-only"
+    }
+  ]
 }

@@ -30,12 +30,12 @@ test('manifest defines seven complete frame family profiles', async () => {
 
 
 test('generated templates carry the same family profile for Single and Strip', () => {
-  assert.equal(frameOverlayTemplates.length, 14);
+  assert.equal(frameOverlayTemplates.length, 16);
   const byFamily = Map.groupBy(frameOverlayTemplates, (frame) => frame.familyId);
   assert.equal(byFamily.size, 7);
 
   for (const [familyId, variants] of byFamily) {
-    assert.equal(variants.length, 2, familyId);
+    assert.ok(variants.length >= 2, familyId);
     assert.deepEqual(new Set(variants.map((frame) => frame.mode)), new Set(['single', 'strip']));
     assert.ok(variants.every((frame) => frame.familyProfile?.id === familyId));
     assert.deepEqual(variants[0].familyProfile, variants[1].familyProfile);

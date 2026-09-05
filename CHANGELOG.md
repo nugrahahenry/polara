@@ -5,6 +5,26 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.33.0] - 2026-09-05
+
+### Added
+- Tambahkan **Frame and Guest Editions** dengan pilihan Pose Mate Juno dan Mina, masing-masing memiliki pose Natural, Peace, dan Half-heart dari karakter fiktif orisinal Polara.
+- Tambahkan Poca Purikura Blueberry untuk Single dan Strip sehingga katalog kini berisi 16 variant dari tujuh keluarga frame.
+- Tambahkan fixture picker khusus keluarga berupa pasangan teman perempuan fiktif-sintetis agar thumbnail frame lebih menyatu, mudah dibandingkan, dan tidak bergantung pada figur publik atau klaim kolaborasi.
+- Tambahkan generator deterministik untuk edition frame dan integrasi guest pack, lengkap dengan provenance serta hash aset runtime.
+- Ganti placeholder lingkaran pada Demo mode dengan tiga proof editorial fiktif yang menyatu dengan frame dan tetap membawa label Polara Demo.
+
+### Changed
+- Jadikan **Fill frame** sebagai default satu kali saat proof baru pertama kali memasuki tahap Frame. Pilihan manual Full photo tetap dipertahankan ketika pengguna kembali dari tahap lain.
+- Rapikan footer pada mobile, tablet, desktop, dan short landscape dengan lebar konten yang lebih terjaga, atribusi `Built by` yang tetap terbaca, serta kelompok tautan sosial yang lebih kohesif.
+- Pertahankan pemrosesan lokal, retake per-slot, geometry preview/export, output Single 1080×1350, output Strip 720×1800, serta seluruh flow canonical tanpa perubahan.
+
+### Validation
+- Node 86/86, Python 10/10, overlay 16/16, preview derivative 32/32, dan Asset Quality 16 frame/26 sticker/11 mascot/6 guest/3 demo lulus.
+- QA browser lulus pada 390×844, 768×1024, 1440×900, dan 900×510 dengan overflow 0, target pendek 0, primary action terlihat, reduced motion, camera recovery, retake per-slot, serta runtime error 0.
+- Seluruh 16 variant lulus preview/export parity. Output tepat Single 1080×1350 dan Strip 720×1800; pilihan Mina, default Fill frame, persistence Full photo, picker/tray keyboard, serta opening focus protection lulus.
+- Seluruh aset guest dan picker memakai karakter fiktif orisinal, tanpa figur publik, lookalike, endorsement, atau klaim kolaborasi.
+
 ## [0.32.0] - 2026-08-31
 
 ### Added

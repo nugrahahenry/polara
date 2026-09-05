@@ -8,8 +8,8 @@ import { exclusiveStickers } from '../src/modules/stickers/index.js';
 const manifest = JSON.parse(fs.readFileSync(new URL('../assets/frames/frame-overlay-manifest.json', import.meta.url), 'utf8'));
 
 test('Cloud Picnic and Lucky Ticket ship complete Single, Strip, and exclusive sets', () => {
-  assert.equal(manifest.frames.length, 14);
-  assert.equal(frameOverlayTemplates.length, 14);
+  assert.equal(manifest.frames.length, 16);
+  assert.equal(frameOverlayTemplates.length, 16);
   for (const family of ['cloud-picnic', 'lucky-ticket']) {
     const frames = frameOverlayTemplates.filter((frame) => frame.familyId === family);
     assert.deepEqual(new Set(frames.map((frame) => frame.mode)), new Set(['single', 'strip']));

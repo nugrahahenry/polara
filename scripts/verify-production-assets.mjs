@@ -48,6 +48,7 @@ async function verify() {
   const policy = await readJson('assets/asset-quality-policy.json');
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
   const guestManifest = await readJson('assets/guests/guest-manifest.json');
+  const demoManifest = await readJson('assets/media/demo-proofs/manifest.json');
   requireQuality(policy.schemaVersion === 2 && policy.profile === 'polara-asset-quality-v2', 'Unknown asset-quality policy.');
   requireQuality(manifest.familyProfileVersion === policy.frames.familyProfileVersion, 'Frame family profile version drifted.');
   requireQuality(manifest.families.length === policy.frames.familyCount, 'Frame family profile count drifted.');
@@ -109,6 +110,16 @@ async function verify() {
     await inspectPng(guest.runtimeSrc, policy.guests.dimensions, policy.guests.maximumBytes, { requireTransparent: true });
   }
 
+  requireQuality(demoManifest.proofs.length === 3, 'Demo proof collection must contain three poses.');
+  for (const proof of demoManifest.proofs) {
+    requireQuality(proof.kind === 'fictional-synthetic', `${proof.id} must be fictional-synthetic.`);
+    requireQuality(proof.publicFigure === false && proof.collaborationClaim === false, `${proof.id} rights metadata is unsafe.`);
+    requireQuality(proof.width === 1024 && proof.height === 512, `${proof.id} dimensions drifted.`);
+    const bytes = await fs.readFile(resolveAsset(proof.src));
+    requireQuality(bytes[0] === 0xff && bytes[1] === 0xd8, `${proof.id} is not a JPEG.`);
+    requireQuality(createHash('sha256').update(bytes).digest('hex') === proof.sha256, `${proof.id} hash drifted.`);
+  }
+
   const expected = {
     'assets/frames': unique(frameOverlayTemplates.map((frame) => frame.overlaySrc)),
     'assets/frames/thumbnails': unique(frameOverlayTemplates.map((frame) => frame.thumbnailSrc)),
@@ -121,11 +132,16 @@ async function verify() {
     requireQuality(JSON.stringify(await listPng(directory)) === JSON.stringify(paths), `${directory} contains missing or orphan PNG assets.`);
   }
 
-  requireQuality(policy.pickerFixture.kind === 'fictional-synthetic', 'Picker fixture must be fictional-synthetic.');
-  requireQuality(policy.pickerFixture.publicFigure === false && policy.pickerFixture.collaborationClaim === false, 'Picker fixture rights metadata is unsafe.');
-  requireQuality(/^assets\/_originals\/fixtures\/[a-z0-9-]+\.png$/.test(policy.pickerFixture.source), 'Picker fixture source policy is invalid.');
-  requireQuality(/^assets\/_originals\/fixtures\/[a-z0-9-]+\.prompt\.txt$/.test(policy.pickerFixture.promptSource), 'Picker prompt source policy is invalid.');
-  console.log(`ASSET QUALITY PASS: frames=${frameOverlayTemplates.length} stickers=${stickers.length} mascots=${mascots.length} guests=${guestManifest.guests.length}`);
+  const pickerFixtureIds = new Set(policy.pickerFixtures.map((fixture) => fixture.id));
+  requireQuality(pickerFixtureIds.size === policy.pickerFixtures.length && pickerFixtureIds.size >= 2, 'Picker fixture collection is incomplete or duplicated.');
+  for (const fixture of policy.pickerFixtures) {
+    requireQuality(fixture.kind === 'fictional-synthetic', `${fixture.id} must be fictional-synthetic.`);
+    requireQuality(fixture.publicFigure === false && fixture.collaborationClaim === false, `${fixture.id} rights metadata is unsafe.`);
+    requireQuality(/^assets\/_originals\/fixtures\/[a-z0-9-]+\.png$/.test(fixture.source), `${fixture.id} source policy is invalid.`);
+    requireQuality(/^assets\/_originals\/fixtures\/[a-z0-9-]+\.prompt\.txt$/.test(fixture.promptSource), `${fixture.id} prompt policy is invalid.`);
+  }
+  requireQuality(manifest.families.every((family) => pickerFixtureIds.has(family.pickerFixtureId)), 'A frame family references an unknown picker fixture.');
+  console.log(`ASSET QUALITY PASS: frames=${frameOverlayTemplates.length} stickers=${stickers.length} mascots=${mascots.length} guests=${guestManifest.guests.length} demos=${demoManifest.proofs.length}`);
 }
 
 verify().catch((error) => {

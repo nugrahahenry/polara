@@ -17,7 +17,17 @@ export function createPhotoRecord({ src, naturalWidth, naturalHeight }) {
     naturalWidth: Math.max(1, Number(naturalWidth) || 1),
     naturalHeight: Math.max(1, Number(naturalHeight) || 1),
     ...DEFAULT_PHOTO_TRANSFORM,
+    frameFitInitialized: false,
   };
+}
+
+export function initializePhotoForFrame(photo) {
+  if (!photo || photo.frameFitInitialized) return photo;
+  return { ...photo, fit: 'cover', frameFitInitialized: true };
+}
+
+export function initializePhotosForFrame(photos = []) {
+  return photos.map(initializePhotoForFrame);
 }
 
 export function patchPhotoTransform(photo, patch = {}) {

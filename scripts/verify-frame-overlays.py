@@ -73,6 +73,18 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
             {"x": 40, "y": 1074, "width": 640, "height": 412, "radius": 14},
         ],
     ),
+    "poca-purikura-blue.single": (
+        (1080, 1350),
+        [{"x": 124, "y": 270, "width": 832, "height": 840}],
+    ),
+    "poca-purikura-blue.strip": (
+        (720, 1800),
+        [
+            {"x": 76, "y": 214, "width": 568, "height": 388},
+            {"x": 76, "y": 640, "width": 568, "height": 388},
+            {"x": 76, "y": 1066, "width": 568, "height": 388},
+        ],
+    ),
     "cloud-picnic.single": (
         (1080, 1350),
         [{"x": 90, "y": 190, "width": 900, "height": 960, "radius": 34}],
@@ -123,6 +135,18 @@ EXPECTED_CONTRACTS: dict[str, dict[str, Any]] = {
         "mode": "strip",
         "maskType": "rectangles",
         "masterRequired": True,
+    },
+    "poca-purikura-blue.single": {
+        "family": "poca-purikura",
+        "mode": "single",
+        "maskType": "rectangles",
+        "masterRequired": False,
+    },
+    "poca-purikura-blue.strip": {
+        "family": "poca-purikura",
+        "mode": "strip",
+        "maskType": "rectangles",
+        "masterRequired": False,
     },
     "vintage-film-lofi.single": {
         "family": "vintage-film-lofi",
@@ -498,19 +522,19 @@ def verify(root: Path) -> None:
     manifest = load_manifest(manifest_path)
     frames = manifest["frames"]
     require(
-        len(frames) == 14,
-        f"Manifest harus berisi tepat 14 frame; ditemukan {len(frames)}.",
+        len(frames) == 16,
+        f"Manifest harus berisi tepat 16 frame; ditemukan {len(frames)}.",
     )
     ids = [frame.get("id") for frame in frames]
     require(len(set(ids)) == len(ids), "Manifest memiliki ID duplikat.")
     require(
         set(ids) == set(EXPECTED_GEOMETRY),
-        "Manifest tidak memuat tepat empat belas ID Hero canonical.",
+        "Manifest tidak memuat tepat enam belas ID Hero canonical.",
     )
 
     hashes = [verify_frame(root, frame) for frame in frames]
-    require(len(set(hashes)) == 14, "Runtime overlay memiliki hash duplikat.")
-    print("14/14 overlay passed")
+    require(len(set(hashes)) == 16, "Runtime overlay memiliki hash duplikat.")
+    print("16/16 overlay passed")
 
 
 def main() -> int:

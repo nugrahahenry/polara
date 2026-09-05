@@ -1,6 +1,6 @@
 {
   "name": "polara",
-  "version": "0.32.0",
+  "version": "0.33.0",
   "private": true,
   "type": "module",
   "scripts": {
@@ -9,11 +9,14 @@
     "test:all": "npm test && npm run test:python && npm run frames:verify && npm run assets:verify",
     "qa:proof-table": "node scripts/qa-proof-table.mjs",
     "frames:generate": "node scripts/generate-frame-overlay-registry.mjs assets/frames/frame-overlay-manifest.json src/modules/templates/frame-overlays.generated.js",
+    "frames:editions": "python scripts/generate-frame-editions.py",
     "assets:sanitize": "node scripts/sanitize-transparent-png.mjs",
     "assets:previews": "python scripts/generate-picker-previews.py",
     "assets:previews:check": "python scripts/generate-picker-previews.py --check",
+    "assets:demo": "python scripts/generate-demo-proofs.py",
     "frames:remaster": "python scripts/remaster-frame-overlays.py",
     "frames:expand": "python scripts/generate-new-frame-families.py",
+    "guests:integrate": "python scripts/integrate-pose-mate-pack.py",
     "stickers:generate": "python scripts/generate-sticker-workshop.py",
     "assets:verify": "node scripts/verify-production-assets.mjs",
     "frames:verify": "python scripts/verify-frame-overlays.py ."

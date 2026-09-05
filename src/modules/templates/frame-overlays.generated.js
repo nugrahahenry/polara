@@ -26,7 +26,8 @@ export const frameOverlayTemplates = [
         "#8fd3ff",
         "#ffe26f"
       ],
-      "exclusiveStickerId": "poca-purikura-exclusive"
+      "exclusiveStickerId": "poca-purikura-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
     },
     "canvas": {
       "width": 1080,
@@ -75,7 +76,120 @@ export const frameOverlayTemplates = [
         "#8fd3ff",
         "#ffe26f"
       ],
-      "exclusiveStickerId": "poca-purikura-exclusive"
+      "exclusiveStickerId": "poca-purikura-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
+    },
+    "canvas": {
+      "width": 720,
+      "height": 1800
+    },
+    "maskType": "rectangles",
+    "photoWindows": [
+      {
+        "x": 76,
+        "y": 214,
+        "width": 568,
+        "height": 388
+      },
+      {
+        "x": 76,
+        "y": 640,
+        "width": 568,
+        "height": 388
+      },
+      {
+        "x": 76,
+        "y": 1066,
+        "width": 568,
+        "height": 388
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#fff7ef",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "poca-purikura-blue.single",
+    "familyId": "poca-purikura",
+    "name": "Poca Purikura Blueberry",
+    "category": "purikura",
+    "mode": "single",
+    "tone": "brand-hero",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Single · 1080 × 1350",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/poca-purikura-blue-single-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-blue-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-blue-single-thumbnail.png",
+    "familyProfile": {
+      "id": "poca-purikura",
+      "story": "Glossy pink energy for playful poses and expressive close-ups.",
+      "material": "Glossy pop",
+      "palette": [
+        "#ec5e9e",
+        "#8fd3ff",
+        "#ffe26f"
+      ],
+      "exclusiveStickerId": "poca-purikura-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
+    },
+    "canvas": {
+      "width": 1080,
+      "height": 1350
+    },
+    "maskType": "rectangles",
+    "photoWindows": [
+      {
+        "x": 124,
+        "y": 270,
+        "width": 832,
+        "height": 840
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#fff7ef",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "poca-purikura-blue.strip",
+    "familyId": "poca-purikura",
+    "name": "Poca Purikura Blueberry",
+    "category": "purikura",
+    "mode": "strip",
+    "tone": "brand-hero",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Strip 3 · 720 × 1800",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/poca-purikura-blue-strip-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-blue-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-blue-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "poca-purikura",
+      "story": "Glossy pink energy for playful poses and expressive close-ups.",
+      "material": "Glossy pop",
+      "palette": [
+        "#ec5e9e",
+        "#8fd3ff",
+        "#ffe26f"
+      ],
+      "exclusiveStickerId": "poca-purikura-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
     },
     "canvas": {
       "width": 720,
@@ -136,7 +250,8 @@ export const frameOverlayTemplates = [
         "#c87a55",
         "#f1d5a8"
       ],
-      "exclusiveStickerId": "poca-vintage-film-exclusive"
+      "exclusiveStickerId": "poca-vintage-film-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     "canvas": {
       "width": 1080,
@@ -185,7 +300,8 @@ export const frameOverlayTemplates = [
         "#c87a55",
         "#f1d5a8"
       ],
-      "exclusiveStickerId": "poca-vintage-film-exclusive"
+      "exclusiveStickerId": "poca-vintage-film-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     "canvas": {
       "width": 720,
@@ -246,7 +362,8 @@ export const frameOverlayTemplates = [
         "#ff8fbd",
         "#cab8ff"
       ],
-      "exclusiveStickerId": "poca-seoul-y2k-exclusive"
+      "exclusiveStickerId": "poca-seoul-y2k-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
     },
     "canvas": {
       "width": 1080,
@@ -295,7 +412,8 @@ export const frameOverlayTemplates = [
         "#ff8fbd",
         "#cab8ff"
       ],
-      "exclusiveStickerId": "poca-seoul-y2k-exclusive"
+      "exclusiveStickerId": "poca-seoul-y2k-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
     },
     "canvas": {
       "width": 720,
@@ -356,7 +474,8 @@ export const frameOverlayTemplates = [
         "#b94d36",
         "#ead6b8"
       ],
-      "exclusiveStickerId": "poca-daily-reporter-exclusive"
+      "exclusiveStickerId": "poca-daily-reporter-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     "canvas": {
       "width": 1080,
@@ -431,7 +550,8 @@ export const frameOverlayTemplates = [
         "#b94d36",
         "#ead6b8"
       ],
-      "exclusiveStickerId": "poca-daily-reporter-exclusive"
+      "exclusiveStickerId": "poca-daily-reporter-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     "canvas": {
       "width": 720,
@@ -495,7 +615,8 @@ export const frameOverlayTemplates = [
         "#d5af63",
         "#2e62a1"
       ],
-      "exclusiveStickerId": "poca-midnight-photographer-exclusive"
+      "exclusiveStickerId": "poca-midnight-photographer-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     "canvas": {
       "width": 1080,
@@ -570,7 +691,8 @@ export const frameOverlayTemplates = [
         "#d5af63",
         "#2e62a1"
       ],
-      "exclusiveStickerId": "poca-midnight-photographer-exclusive"
+      "exclusiveStickerId": "poca-midnight-photographer-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     "canvas": {
       "width": 720,
@@ -634,7 +756,8 @@ export const frameOverlayTemplates = [
         "#ffc4dc",
         "#fff1a8"
       ],
-      "exclusiveStickerId": "poca-cloud-picnic-exclusive"
+      "exclusiveStickerId": "poca-cloud-picnic-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
     },
     "canvas": {
       "width": 1080,
@@ -684,7 +807,8 @@ export const frameOverlayTemplates = [
         "#ffc4dc",
         "#fff1a8"
       ],
-      "exclusiveStickerId": "poca-cloud-picnic-exclusive"
+      "exclusiveStickerId": "poca-cloud-picnic-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
     },
     "canvas": {
       "width": 720,
@@ -748,7 +872,8 @@ export const frameOverlayTemplates = [
         "#f3c64e",
         "#f8efe0"
       ],
-      "exclusiveStickerId": "poca-lucky-ticket-exclusive"
+      "exclusiveStickerId": "poca-lucky-ticket-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     "canvas": {
       "width": 1080,
@@ -831,7 +956,8 @@ export const frameOverlayTemplates = [
         "#f3c64e",
         "#f8efe0"
       ],
-      "exclusiveStickerId": "poca-lucky-ticket-exclusive"
+      "exclusiveStickerId": "poca-lucky-ticket-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     "canvas": {
       "width": 720,

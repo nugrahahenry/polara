@@ -7,50 +7,85 @@
       "id": "poca-purikura",
       "story": "Glossy pink energy for playful poses and expressive close-ups.",
       "material": "Glossy pop",
-      "palette": ["#ec5e9e", "#8fd3ff", "#ffe26f"],
-      "exclusiveStickerId": "poca-purikura-exclusive"
+      "palette": [
+        "#ec5e9e",
+        "#8fd3ff",
+        "#ffe26f"
+      ],
+      "exclusiveStickerId": "poca-purikura-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
     },
     {
       "id": "vintage-film-lofi",
       "story": "Warm contact-sheet character for memories that should feel found.",
       "material": "Matte film",
-      "palette": ["#4f3024", "#c87a55", "#f1d5a8"],
-      "exclusiveStickerId": "poca-vintage-film-exclusive"
+      "palette": [
+        "#4f3024",
+        "#c87a55",
+        "#f1d5a8"
+      ],
+      "exclusiveStickerId": "poca-vintage-film-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     {
       "id": "seoul-snap-y2k",
       "story": "Clean Y2K studio details with a crisp, confident photo edge.",
       "material": "Digital chrome",
-      "palette": ["#6ec7ff", "#ff8fbd", "#cab8ff"],
-      "exclusiveStickerId": "poca-seoul-y2k-exclusive"
+      "palette": [
+        "#6ec7ff",
+        "#ff8fbd",
+        "#cab8ff"
+      ],
+      "exclusiveStickerId": "poca-seoul-y2k-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
     },
     {
       "id": "polara-daily",
       "story": "An editorial front page that makes an everyday moment headline-worthy.",
       "material": "Warm newsprint",
-      "palette": ["#1d1713", "#b94d36", "#ead6b8"],
-      "exclusiveStickerId": "poca-daily-reporter-exclusive"
+      "palette": [
+        "#1d1713",
+        "#b94d36",
+        "#ead6b8"
+      ],
+      "exclusiveStickerId": "poca-daily-reporter-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     {
       "id": "polara-midnight-club",
       "story": "Deep night-studio ink for polished portraits with quiet drama.",
       "material": "Midnight ink",
-      "palette": ["#071428", "#d5af63", "#2e62a1"],
-      "exclusiveStickerId": "poca-midnight-photographer-exclusive"
+      "palette": [
+        "#071428",
+        "#d5af63",
+        "#2e62a1"
+      ],
+      "exclusiveStickerId": "poca-midnight-photographer-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     },
     {
       "id": "cloud-picnic",
       "story": "Airy weekend color for lighthearted groups and sunny keepsakes.",
       "material": "Soft pastel",
-      "palette": ["#8fd3ff", "#ffc4dc", "#fff1a8"],
-      "exclusiveStickerId": "poca-cloud-picnic-exclusive"
+      "palette": [
+        "#8fd3ff",
+        "#ffc4dc",
+        "#fff1a8"
+      ],
+      "exclusiveStickerId": "poca-cloud-picnic-exclusive",
+      "pickerFixtureId": "polara-picker-besties-v1"
     },
     {
       "id": "lucky-ticket",
       "story": "A collectible ticket frame that turns the session into an event.",
       "material": "Ticket stock",
-      "palette": ["#17458f", "#f3c64e", "#f8efe0"],
-      "exclusiveStickerId": "poca-lucky-ticket-exclusive"
+      "palette": [
+        "#17458f",
+        "#f3c64e",
+        "#f8efe0"
+      ],
+      "exclusiveStickerId": "poca-lucky-ticket-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1"
     }
   ],
   "frames": [
@@ -160,6 +195,114 @@
       "qualityProfile": "polara-proof-edge-v1",
       "edgePalette": [
         "#ec5e9e",
+        "#8fd3ff",
+        "#ffe26f"
+      ]
+    },
+    {
+      "id": "poca-purikura-blue.single",
+      "family": "poca-purikura",
+      "name": "Poca Purikura Blueberry",
+      "category": "purikura",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "overlaySrc": "assets/frames/poca-purikura-blue-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-blue-single-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-blue-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "photoWindows": [
+        {
+          "x": 124,
+          "y": 270,
+          "width": 832,
+          "height": 840
+        }
+      ],
+      "sha256": "da05ecab298feef8b6d75be4712b11f0778ad9f376a1d6a7c4f745985b8a245b",
+      "byteSize": 715259,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "slotBackground": "#fff7ef",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Footer tengah bersih; metadata dinamis tidak diaktifkan pada v1.",
+      "decorativeElements": [
+        "Polara wordmark",
+        "Poca ribbon",
+        "heart/paw/star/sparkle",
+        "blueberry gingham",
+        "character-free footer"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#7087ed",
+        "#8fd3ff",
+        "#ffe26f"
+      ]
+    },
+    {
+      "id": "poca-purikura-blue.strip",
+      "family": "poca-purikura",
+      "name": "Poca Purikura Blueberry",
+      "category": "purikura",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "overlaySrc": "assets/frames/poca-purikura-blue-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/poca-purikura-blue-strip-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-blue-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "photoWindows": [
+        {
+          "x": 76,
+          "y": 214,
+          "width": 568,
+          "height": 388
+        },
+        {
+          "x": 76,
+          "y": 640,
+          "width": 568,
+          "height": 388
+        },
+        {
+          "x": 76,
+          "y": 1066,
+          "width": 568,
+          "height": 388
+        }
+      ],
+      "sha256": "25701ab6019f8cdc9f5b16c4663a7d74f1a3a924a7955922ddbda8642e504e10",
+      "byteSize": 603120,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "slotBackground": "#fff7ef",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Footer dekoratif; metadata dinamis tidak diaktifkan pada v1.",
+      "decorativeElements": [
+        "compact Polara wordmark",
+        "Poca ribbon",
+        "heart/paw/star/sparkle",
+        "blueberry gingham",
+        "character-free footer"
+      ],
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#7087ed",
         "#8fd3ff",
         "#ffe26f"
       ]

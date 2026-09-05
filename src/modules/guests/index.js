@@ -6,29 +6,50 @@ const PM01_POSES = Object.freeze({
   neutral: Object.freeze({
     id: 'polara-pm-01-neutral',
     guestId: DEFAULT_GUEST_ID,
-    name: 'Mina',
+    name: 'Juno',
     src: 'assets/guests/polara-pm-01-neutral.png',
-    alt: 'Mina, a fictional Polara guest, in a relaxed neutral pose.',
+    alt: 'Juno, a fictional Polara guest, in a relaxed neutral pose.',
     pose: 'neutral',
     kind: 'fictional-synthetic',
   }),
   peace: Object.freeze({
     id: 'polara-pm-01-peace',
     guestId: DEFAULT_GUEST_ID,
-    name: 'Mina',
+    name: 'Juno',
     src: 'assets/guests/polara-pm-01-peace.png',
-    alt: 'Mina, a fictional Polara guest, making a peace sign.',
+    alt: 'Juno, a fictional Polara guest, making a peace sign.',
     pose: 'peace',
     kind: 'fictional-synthetic',
   }),
   'half-heart': Object.freeze({
     id: DEFAULT_GUEST_ID,
     guestId: DEFAULT_GUEST_ID,
-    name: 'Mina',
+    name: 'Juno',
     src: 'assets/guests/polara-pm-01-half-heart.png',
-    alt: 'Mina, a fictional Polara guest, making half of a heart pose.',
+    alt: 'Juno, a fictional Polara guest, making half of a heart pose.',
     pose: 'half-heart',
     kind: 'fictional-synthetic',
+  }),
+});
+
+const PM02_POSES = Object.freeze({
+  neutral: Object.freeze({
+    id: 'polara-pm-02-neutral', guestId: 'polara-pm-02', name: 'Mina',
+    src: 'assets/guests/polara-pm-02-neutral.png',
+    alt: 'Mina, a fictional Polara guest, in a relaxed neutral pose.',
+    pose: 'neutral', kind: 'fictional-synthetic',
+  }),
+  peace: Object.freeze({
+    id: 'polara-pm-02-peace', guestId: 'polara-pm-02', name: 'Mina',
+    src: 'assets/guests/polara-pm-02-peace.png',
+    alt: 'Mina, a fictional Polara guest, making a peace sign.',
+    pose: 'peace', kind: 'fictional-synthetic',
+  }),
+  'half-heart': Object.freeze({
+    id: 'polara-pm-02', guestId: 'polara-pm-02', name: 'Mina',
+    src: 'assets/guests/polara-pm-02-half-heart.png',
+    alt: 'Mina, a fictional Polara guest, making half of a heart pose.',
+    pose: 'half-heart', kind: 'fictional-synthetic',
   }),
 });
 
@@ -37,6 +58,11 @@ const GUESTS = Object.freeze({
     ...PM01_POSES['half-heart'],
     id: DEFAULT_GUEST_ID,
     poses: PM01_POSES,
+  }),
+  'polara-pm-02': Object.freeze({
+    ...PM02_POSES['half-heart'],
+    id: 'polara-pm-02',
+    poses: PM02_POSES,
   }),
 });
 
@@ -69,6 +95,10 @@ const LAYOUTS = Object.freeze({
 
 export function getGuest(id = DEFAULT_GUEST_ID) {
   return GUESTS[id] || null;
+}
+
+export function getGuestOptions() {
+  return Object.values(GUESTS).map(({ id, name, src, alt, kind }) => ({ id, name, src, alt, kind }));
 }
 
 export function getGuestAssets(id = DEFAULT_GUEST_ID) {

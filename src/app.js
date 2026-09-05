@@ -7,7 +7,7 @@ import {
   renderTemplate, setPhotoSlot, refreshPhotoSlots, setMeta, exportPng, exportRawPng,
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
-import { applyPhotoGeometry, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
+import { applyPhotoGeometry, initializePhotosForFrame, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
 import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=15';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
@@ -18,8 +18,8 @@ import {
 import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=2';
 import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
-  getGuest, getGuestAssets, poseGuideForSlot, retryWithoutGuestOnFailure,
-} from './modules/guests/index.js?v=3';
+  getGuest, getGuestAssets, getGuestOptions, poseGuideForSlot, retryWithoutGuestOnFailure,
+} from './modules/guests/index.js?v=4';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';
@@ -48,7 +48,8 @@ const refs = {
   primary: $('primaryBtn'), secondary: $('secondaryBtn'), tertiary: $('tertiaryBtn'), back: $('backBtn'),
   status: $('status'), countdownLive: $('countdownLive'),
   experienceChoose: $('experienceChoose'), modeChoose: $('modeChoose'), timerChoose: $('timerChoose'),
-  startGuestPreview: $('startGuestPreview'), poseMateControls: $('poseMateControls'),
+  startGuestPreview: $('startGuestPreview'), poseMateControls: $('poseMateControls'), guestChoose: $('guestChoose'),
+  guestOptionList: $('guestOptionList'), poseMateKicker: $('poseMateKicker'), poseMateTitle: $('poseMateTitle'), poseMateNote: $('poseMateNote'),
   guestLayoutChoose: $('guestLayoutChoose'), guestSide: $('guestSideBtn'), poseGuideText: $('poseGuideText'),
   video: $('video'), cameraWrap: $('cameraWrap'), cameraOverlay: $('cameraOverlay'),
   poseUserGuide: $('poseUserGuide'), poseGuestPreview: $('poseGuestPreview'),
@@ -202,6 +203,7 @@ function syncGuestExperienceSurfaces() {
   const active = Boolean(guestComposition);
   refs.stageShell.dataset.experience = active ? POSE_MATE_EXPERIENCE : 'regular';
   refs.startGuestPreview.hidden = !active;
+  refs.guestChoose.hidden = state.experience !== POSE_MATE_EXPERIENCE;
   refs.poseMateControls.hidden = !active;
   refs.poseUserGuide.hidden = !active;
   refs.poseGuestPreview.hidden = !active;
@@ -213,6 +215,11 @@ function syncGuestExperienceSurfaces() {
     button.classList.toggle('active', selected);
     button.setAttribute('aria-pressed', String(selected));
   });
+  refs.guestOptionList.querySelectorAll('[data-guest-id]').forEach((button) => {
+    const selected = button.dataset.guestId === state.guestId;
+    button.classList.toggle('active', selected);
+    button.setAttribute('aria-pressed', String(selected));
+  });
   if (!active) {
     ['position', 'display', 'max-width', 'width', 'height', 'left', 'top', 'transform', 'object-fit', 'pointer-events']
       .forEach((property) => refs.reviewPhoto.style.removeProperty(property));
@@ -220,9 +227,13 @@ function syncGuestExperienceSurfaces() {
   }
   [refs.cameraWrap, refs.reviewWrap].forEach((element) => applyGuestVariables(element, guestComposition));
   refs.startGuestPreview.src = guestComposition.asset.src;
+  refs.startGuestPreview.alt = `${guestComposition.asset.name}, an original fictional Polara guest.`;
   refs.poseGuestPreview.src = guestComposition.asset.src;
   refs.reviewGuest.src = guestComposition.asset.src;
   refs.reviewGuest.alt = `${guestComposition.asset.name}, a fictional Polara guest.`;
+  refs.poseMateKicker.textContent = `Pose Mate · ${guestComposition.asset.guestId.replace('polara-', '').toUpperCase()}`;
+  refs.poseMateTitle.textContent = `Match ${guestComposition.asset.name}'s gesture`;
+  refs.poseMateNote.textContent = `${guestComposition.asset.name} is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.`;
   refs.poseGuideText.textContent = poseGuideForSlot(state.activeSlot, state.mode);
   refs.poseUserGuide.dataset.poseCue = poseGuideForSlot(state.activeSlot, state.mode);
   refs.guestSide.textContent = guestComposition.side === 'right' ? `Move ${guestComposition.asset.name} to the left` : `Move ${guestComposition.asset.name} to the right`;
@@ -452,6 +463,7 @@ async function goToStep(nextStep, message, { focusTitle = true } = {}) {
     if (nextStep === 'camera') renderCameraPanel();
     if (nextStep === 'review') renderReview();
     if (nextStep === 'frame') {
+      state.photos = initializePhotosForFrame(state.photos);
       ensureCurrentFrame();
       await renderTemplateList();
       renderPhotoTabs();
@@ -529,11 +541,32 @@ refs.guestLayoutChoose.addEventListener('click', (event) => {
   status(state.guestLayout === 'matched' ? 'Matched gesture composition selected.' : 'Side-by-side composition selected.');
 });
 
+refs.guestOptionList.addEventListener('click', async (event) => {
+  const button = event.target.closest('[data-guest-id]');
+  if (!button || state.experience !== POSE_MATE_EXPERIENCE || button.dataset.guestId === state.guestId) return;
+  const guest = getGuest(button.dataset.guestId);
+  if (!guest) return;
+  const requestId = guestSelectionGate.begin();
+  button.setAttribute('aria-busy', 'true');
+  try {
+    await Promise.all(getGuestAssets(guest.id).map(preloadGuestAsset));
+    if (!guestSelectionGate.isCurrent(requestId)) return;
+    state.guestId = guest.id;
+    invalidatePreparedExport();
+    syncGuestExperienceSurfaces();
+    status(`${guest.name} selected as your Pose Mate.`);
+  } catch {
+    if (guestSelectionGate.isCurrent(requestId)) status(`${guest.name} could not load. Your current Pose Mate stays selected.`);
+  } finally {
+    button.removeAttribute('aria-busy');
+  }
+});
+
 refs.guestSide.addEventListener('click', () => {
   state.guestSide = state.guestSide === 'right' ? 'left' : 'right';
   invalidatePreparedExport();
   syncGuestExperienceSurfaces();
-  status(`Mina moved to the ${state.guestSide}.`);
+  status(`${getGuest(state.guestId)?.name || 'Guest'} moved to the ${state.guestSide}.`);
 });
 
 async function beginCamera({ retake = false } = {}) {
@@ -774,7 +807,7 @@ async function takePhoto() {
     setCaptureMoment('shutter', captureCopy);
     flash();
     const replacement = state.demo
-      ? createDemoCapture(slot, state.mode)
+      ? await createDemoCapture(slot)
       : captureFrame(refs.video, { mirror: state.facing === 'user' });
     // Commit pengganti hanya setelah capture sukses.
     state.photos[slot] = replacement;
@@ -1623,11 +1656,11 @@ refs.experienceChoose.addEventListener('click', async (event) => {
     const guest = getGuest(DEFAULT_GUEST_ID);
     button.setAttribute('aria-busy', 'true');
     try {
-      await Promise.all(getGuestAssets(guest.id).map(preloadGuestAsset));
+      await Promise.all(getGuestOptions().flatMap((option) => getGuestAssets(option.id)).map(preloadGuestAsset));
       if (!guestSelectionGate.isCurrent(requestId)) return;
       state.experience = POSE_MATE_EXPERIENCE;
       state.guestId = guest.id;
-      status('Pose Mate selected. Mina will join every preview and exact-size export.');
+      status('Pose Mate selected. Choose Juno or Mina for every preview and exact-size export.');
     } catch {
       if (!guestSelectionGate.isCurrent(requestId)) return;
       state.experience = 'regular';

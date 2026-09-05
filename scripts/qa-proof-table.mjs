@@ -364,13 +364,19 @@ async function runOpeningAudit({ name, viewport }) {
     if (message.type() === 'error') report.runtimeErrors.push(`console: ${message.text()}`);
   });
   page.on('pageerror', (error) => report.runtimeErrors.push(`page: ${error.message}`));
-  await page.goto(baseUrl, { waitUntil: 'domcontentloaded', timeout: 30_000 });
+  // Module initialization intentionally keeps DOMContentLoaded behind the authored
+  // opening. Observe from the first committed response so QA cannot miss it.
+  await page.goto(baseUrl, { waitUntil: 'commit', timeout: 30_000 });
   const boot = page.locator('#bootScreen');
-  await boot.waitFor({ state: 'visible', timeout: 3_000 });
   await page.waitForFunction(() => {
+    const screen = document.querySelector('#bootScreen');
     const poca = document.querySelector('.boot-poca');
     const wordmark = document.querySelector('.boot-wordmark');
-    return poca?.complete && poca.naturalWidth > 0 && wordmark?.complete && wordmark.naturalWidth > 0;
+    return screen
+      && getComputedStyle(screen).display !== 'none'
+      && document.querySelector('#appWorkspace')?.inert === true
+      && poca?.complete && poca.naturalWidth > 0
+      && wordmark?.complete && wordmark.naturalWidth > 0;
   }, null, { timeout: 3_000 });
   const audit = await boot.evaluate((screen) => {
     const bounds = screen.getBoundingClientRect();
@@ -395,6 +401,48 @@ async function runOpeningAudit({ name, viewport }) {
   assert.equal(await page.locator('#appWorkspace').evaluate((workspace) => workspace.inert), false);
   assert.equal(await page.locator('.skip-link').evaluate((link) => link.inert), false);
   report.opening[name] = audit;
+  await context.close();
+}
+
+async function runEditorialFixtureAudit({ name, viewport }) {
+  const context = await browser.newContext({ viewport, permissions: ['camera'], reducedMotion: 'reduce' });
+  const page = await startPage(context);
+  await page.locator('[data-experience="pose-mate"]').click();
+  await page.locator('#guestChoose').waitFor({ state: 'visible', timeout: 30_000 });
+  await page.locator('[data-guest-id="polara-pm-02"]').click();
+  await page.waitForFunction(() => /polara-pm-02-(?:neutral|peace|half-heart)\.png$/.test(document.querySelector('#startGuestPreview')?.getAttribute('src') || ''));
+  assert.equal(await page.locator('[data-guest-id="polara-pm-02"]').getAttribute('aria-pressed'), 'true');
+  assert.equal(await page.locator('#guestOptionList .guest-option.active').count(), 1);
+  assert.equal(await page.locator('#guestOptionList .guest-option.active').getAttribute('data-guest-id'), 'polara-pm-02');
+  await page.locator('[data-guest-id="polara-pm-02"]').evaluate((button) => button.blur());
+  await page.evaluate(() => window.scrollTo({ top: 0, behavior: 'instant' }));
+  if (writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${name}-01b-pose-mate-mina.png`) });
+
+  await page.locator('[data-experience="regular"]').click();
+  await page.locator('#primaryBtn').click();
+  await waitForCameraReady(page);
+  await page.locator('#tertiaryBtn').click();
+  for (let slot = 0; slot < 3; slot += 1) await captureProof(page);
+  await waitForPanel(page, 'review');
+  await page.locator('#primaryBtn').click();
+  await waitForPanel(page, 'frame');
+  await page.locator('#canvasScale .ph-photo').first().waitFor({ state: 'visible' });
+  await page.waitForFunction(() => {
+    const canvas = document.querySelector('#canvasScale .ph-canvas');
+    const photos = [...(canvas?.querySelectorAll('.ph-photo') || [])];
+    const overlay = canvas?.querySelector('.ph-frame-overlay');
+    return photos.length === 3
+      && photos.every((photo) => photo.complete && photo.naturalWidth > 0)
+      && (!overlay || (overlay.complete && overlay.naturalWidth > 0));
+  }, null, { timeout: 30_000 });
+  await page.waitForTimeout(180);
+  const proofSources = await page.locator('#canvasScale .ph-photo').evaluateAll((photos) => photos.map((photo) => photo.getAttribute('src')));
+  assert.equal(proofSources.length, 3);
+  assert.ok(proofSources.every((src) => /assets\/media\/demo-proofs\/demo-proof-[123]\.jpg$/.test(src || '')));
+  assert.equal(await page.locator('#fitCoverBtn').getAttribute('aria-pressed'), 'true');
+  if (writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${name}-04b-frames-editorial.png`) });
+  report.editorialFixtures ||= {};
+  report.editorialFixtures[name] = { guest: 'Mina PM-02', proofSources, defaultFit: 'cover' };
   await context.close();
 }
 
@@ -532,6 +580,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.match(await page.locator('#templateList .tpl-thumb-image').first().getAttribute('src'), /frames\/composites\//);
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-holding-photo-frame\.png$/);
   assert.equal(await page.locator('#canvasView').getAttribute('data-proof-mode'), 'strip');
+  assert.equal(await page.locator('#fitCoverBtn').getAttribute('aria-pressed'), 'true', `${name}: a fresh proof must default to Fill frame`);
   if (viewport.width >= 1180) {
     assert.equal(await page.locator('#stageDocketStep').textContent(), '04 / Frames');
   }
@@ -549,7 +598,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(frameRail.overflowX, 'auto');
   assert.equal(frameRail.overflowY, 'hidden');
   assert.ok(frameRail.visibleCards >= 2 && frameRail.visibleCards < 3, `${name}: frame rail should reveal about 2-2.5 cards`);
-  assert.equal(await page.locator('#templateList .tpl-btn').count(), 7, `${name}: each mode must expose seven frame families`);
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 8, `${name}: each mode must expose eight frame variants`);
   const frameEdition = await auditFrameEdition(page);
   assert.equal(frameEdition.exists, true);
   assert.equal(frameEdition.family, 'poca-purikura');
@@ -564,6 +613,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
 
   await page.locator('#photoSlotTabs .slot-tab').nth(1).click();
   assert.equal(await page.locator('#photoSlotTabs .slot-tab').nth(1).getAttribute('aria-selected'), 'true');
+  assert.equal(await page.locator('#fitCoverBtn').getAttribute('aria-pressed'), 'true');
+  await page.locator('#fitContainBtn').click();
+  assert.equal(await page.locator('#fitContainBtn').getAttribute('aria-pressed'), 'true');
 
   await page.locator('#templateList .tpl-btn').first().focus();
   await page.keyboard.press('End');
@@ -603,6 +655,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
     await page.locator('#templateList .tpl-btn[aria-selected="true"]').getAttribute('data-template-id'),
     selectedFrameId,
   );
+  assert.equal(await page.locator('#fitContainBtn').getAttribute('aria-pressed'), 'true', `${name}: a manual Full photo choice must survive Back`);
   await offsetChapterView(page, viewport);
   await page.locator('#primaryBtn').evaluate((button) => button.click());
   await waitForPanel(page, 'decorate');
@@ -767,6 +820,7 @@ async function runSingleExport() {
 
 const VARIANTS = [
   { id: 'poca-purikura.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
+  { id: 'poca-purikura-blue.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
   { id: 'vintage-film-lofi.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
   { id: 'seoul-snap-y2k.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
   { id: 'polara-daily-single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
@@ -774,6 +828,7 @@ const VARIANTS = [
   { id: 'cloud-picnic.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles', radii: ['34px'] },
   { id: 'lucky-ticket.single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
   { id: 'poca-purikura.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
+  { id: 'poca-purikura-blue.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'vintage-film-lofi.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'seoul-snap-y2k.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'polara-daily-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['14px', '14px', '14px'] },
@@ -889,6 +944,8 @@ async function runRapidTransitionRegression() {
 try {
   await runOpeningAudit({ name: '390x844', viewport: { width: 390, height: 844 } });
   await runOpeningAudit({ name: '1440x900', viewport: { width: 1440, height: 900 } });
+  await runEditorialFixtureAudit({ name: '390x844', viewport: { width: 390, height: 844 } });
+  await runEditorialFixtureAudit({ name: '1440x900', viewport: { width: 1440, height: 900 } });
   report.exports.strip = await runFlow({ name: '390x844', viewport: { width: 390, height: 844 }, screenshots: true, retake: true, exportStrip: true });
   await runFlow({ name: '1440x900', viewport: { width: 1440, height: 900 }, screenshots: true });
   await runFlow({ name: '768x1024', viewport: { width: 768, height: 1024 }, screenshots: true });

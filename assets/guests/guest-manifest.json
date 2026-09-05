@@ -4,7 +4,7 @@
     {
       "id": "polara-pm-01-neutral",
       "guestId": "polara-pm-01",
-      "name": "Mina",
+      "name": "Juno",
       "runtimeSrc": "assets/guests/polara-pm-01-neutral.png",
       "pose": "neutral",
       "kind": "fictional-synthetic",
@@ -21,7 +21,7 @@
     {
       "id": "polara-pm-01-peace",
       "guestId": "polara-pm-01",
-      "name": "Mina",
+      "name": "Juno",
       "runtimeSrc": "assets/guests/polara-pm-01-peace.png",
       "pose": "peace",
       "kind": "fictional-synthetic",
@@ -37,7 +37,7 @@
     },
     {
       "id": "polara-pm-01",
-      "name": "Mina",
+      "name": "Juno",
       "runtimeSrc": "assets/guests/polara-pm-01-half-heart.png",
       "pose": "half-heart",
       "kind": "fictional-synthetic",
@@ -48,6 +48,53 @@
       "width": 1254,
       "height": 1254,
       "sha256": "98a8159a99e02a8e460e030fcd6776c4795fe8da25d0b3117e3524dcf09d8393"
+    },
+    {
+      "id": "polara-pm-02-neutral",
+      "name": "Mina",
+      "runtimeSrc": "assets/guests/polara-pm-02-neutral.png",
+      "pose": "neutral",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "rightsScope": "Original Polara production runtime",
+      "provenance": "Original fictional ImageGen source, then deterministic local chroma extraction",
+      "generationPromptEmbedded": true,
+      "width": 1254,
+      "height": 1254,
+      "sha256": "b729fa057fdacea4bf0972dbbf3b3b44e20351bb81777acb52f106da5d8bc6a4",
+      "guestId": "polara-pm-02"
+    },
+    {
+      "id": "polara-pm-02-peace",
+      "name": "Mina",
+      "runtimeSrc": "assets/guests/polara-pm-02-peace.png",
+      "pose": "peace",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "rightsScope": "Original Polara production runtime",
+      "provenance": "Original fictional ImageGen source, then deterministic local chroma extraction",
+      "generationPromptEmbedded": true,
+      "width": 1254,
+      "height": 1254,
+      "sha256": "1d9db4f3102b09c42de3e930c99f2aa01a42b1194e1def315f1a35f72480e254",
+      "guestId": "polara-pm-02"
+    },
+    {
+      "id": "polara-pm-02",
+      "name": "Mina",
+      "runtimeSrc": "assets/guests/polara-pm-02-half-heart.png",
+      "pose": "half-heart",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "rightsScope": "Original Polara production runtime",
+      "provenance": "Original fictional ImageGen source, then deterministic local chroma extraction",
+      "generationPromptEmbedded": true,
+      "width": 1254,
+      "height": 1254,
+      "sha256": "a0c9c1bc08f9de9a038a7581713e39e1722598d38cd28bcc065be3c4ff460214"
     }
   ]
 }

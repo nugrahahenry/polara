@@ -14,7 +14,7 @@ const manifest = JSON.parse(
 );
 
 test('runtime overlays do not retain source RGB inside fully transparent pixels', async () => {
-  assert.equal(manifest.frames.length, 14);
+  assert.equal(manifest.frames.length, 16);
   const contaminatedOverlays = [];
 
   for (const frame of manifest.frames) {
@@ -69,6 +69,9 @@ test('runtime Pose Mate guests have clean transparent backgrounds', async () => 
     'polara-pm-01-half-heart.png',
     'polara-pm-01-neutral.png',
     'polara-pm-01-peace.png',
+    'polara-pm-02-half-heart.png',
+    'polara-pm-02-neutral.png',
+    'polara-pm-02-peace.png',
   ]);
 
   const contaminatedGuests = [];

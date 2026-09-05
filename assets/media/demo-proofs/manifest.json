@@ -1,0 +1,38 @@
+{
+  "version": 1,
+  "proofs": [
+    {
+      "id": "polara-demo-proof-1",
+      "src": "assets/media/demo-proofs/demo-proof-1.jpg",
+      "width": 1024,
+      "height": 512,
+      "sha256": "22337f92ed72dd981d35d08fe63d2953dd754d3d53cfe5ea1e939aed121d2c4b",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "runtimeUse": "explicit demo mode only"
+    },
+    {
+      "id": "polara-demo-proof-2",
+      "src": "assets/media/demo-proofs/demo-proof-2.jpg",
+      "width": 1024,
+      "height": 512,
+      "sha256": "55b5bc9eb8364cd7b7d21c930242e06d523399f7f4fec038bd35c4edf0a4b690",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "runtimeUse": "explicit demo mode only"
+    },
+    {
+      "id": "polara-demo-proof-3",
+      "src": "assets/media/demo-proofs/demo-proof-3.jpg",
+      "width": 1024,
+      "height": 512,
+      "sha256": "8478ee2d5a598297370d0d59ab0407c8a6be2a6bcd02a81d0057b886ea40ae66",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "runtimeUse": "explicit demo mode only"
+    }
+  ]
+}

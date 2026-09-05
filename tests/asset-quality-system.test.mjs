@@ -25,15 +25,16 @@ test('asset quality policy locks production budgets and fictional picker provena
   assert.equal(policy.frames.familyProfileVersion, 'frame-family-v2');
   assert.equal(policy.frames.requireCharacterFreeOverlay, true);
   assert.equal(policy.frames.requirePickerComposite, true);
-  assert.equal(policy.pickerFixture.kind, 'fictional-synthetic');
-  assert.equal(policy.pickerFixture.publicFigure, false);
-  assert.equal(policy.pickerFixture.collaborationClaim, false);
-  assert.match(policy.pickerFixture.source, /^assets\/_originals\/fixtures\/[a-z0-9-]+\.png$/);
+  assert.equal(policy.pickerFixtures.length, 2);
+  assert.ok(policy.pickerFixtures.every((fixture) => fixture.kind === 'fictional-synthetic'));
+  assert.ok(policy.pickerFixtures.every((fixture) => fixture.publicFigure === false));
+  assert.ok(policy.pickerFixtures.every((fixture) => fixture.collaborationClaim === false));
+  assert.ok(policy.pickerFixtures.every((fixture) => /^assets\/_originals\/fixtures\/[a-z0-9-]+\.png$/.test(fixture.source)));
 });
 
 test('all frame families separate character-free overlay, fallback thumbnail, and picker composite', async () => {
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
-  assert.equal(manifest.frames.length, 14);
+  assert.equal(manifest.frames.length, 16);
 
   for (const frame of manifest.frames) {
     assert.equal(frame.characterPolicy, 'character-free', frame.id);

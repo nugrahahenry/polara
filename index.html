@@ -298,7 +298,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=320" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=330" />
 </head>
 <body>
   <!--
@@ -448,7 +448,18 @@
           <span class="section-label">Booth experience</span>
           <div class="segmented experience-choose" id="experienceChoose" role="group" aria-label="Booth experience">
             <button type="button" data-experience="regular" aria-pressed="true" class="choice-btn active">Regular Booth<small>Your classic Polara session</small></button>
-            <button type="button" data-experience="pose-mate" aria-pressed="false" class="choice-btn">Pose Mate<small>Pose with fictional guest Mina</small></button>
+            <button type="button" data-experience="pose-mate" aria-pressed="false" class="choice-btn">Pose Mate<small>Pose with an original Polara guest</small></button>
+          </div>
+          <div class="guest-choose" id="guestChoose" hidden>
+            <span class="section-label">Pose guest</span>
+            <div class="guest-option-list" id="guestOptionList" role="group" aria-label="Choose a fictional Pose Mate guest">
+              <button type="button" class="guest-option active" data-guest-id="polara-pm-01" aria-pressed="true">
+                <span class="guest-option-avatar" aria-hidden="true">J</span><span>Juno<small>Soft studio</small></span>
+              </button>
+              <button type="button" class="guest-option" data-guest-id="polara-pm-02" aria-pressed="false">
+                <span class="guest-option-avatar guest-option-avatar-mina" aria-hidden="true">M</span><span>Mina<small>Blue day</small></span>
+              </button>
+            </div>
           </div>
           <span class="section-label">Print format</span>
           <div class="segmented" id="modeChoose" role="group" aria-label="Print format">
@@ -471,8 +482,8 @@
           <section class="pose-mate-controls" id="poseMateControls" aria-labelledby="poseMateTitle" hidden>
             <div class="pose-mate-head">
               <div>
-                <span class="pose-mate-kicker">Pose Mate · PM-01</span>
-                <h3 id="poseMateTitle">Match Mina's gesture</h3>
+                <span class="pose-mate-kicker" id="poseMateKicker">Pose Mate · PM-01</span>
+                <h3 id="poseMateTitle">Match Juno's gesture</h3>
               </div>
               <strong class="pose-cue" id="poseGuideText">Natural</strong>
             </div>
@@ -481,8 +492,8 @@
               <button type="button" class="choice-btn active" data-guest-layout="matched" aria-pressed="true">Matched gesture</button>
               <button type="button" class="choice-btn" data-guest-layout="side-by-side" aria-pressed="false">Side by side</button>
             </div>
-            <button type="button" class="mini-btn guest-side-toggle" id="guestSideBtn">Move Mina to the left</button>
-            <p class="pose-mate-note">Mina is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.</p>
+            <button type="button" class="mini-btn guest-side-toggle" id="guestSideBtn">Move Juno to the left</button>
+            <p class="pose-mate-note" id="poseMateNote">Juno is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.</p>
           </section>
           <p class="privacy-note" id="cameraStateNote">Press Take photo when everyone is ready.</p>
         </section>
@@ -517,8 +528,8 @@
               <span class="asset-rail-hint" id="frameRailHint">Swipe, scroll, or use Arrow keys.</span>
             </div>
             <div class="asset-rail-meter">
-              <span id="frameRailPosition">1 of 7</span>
-              <progress id="frameRailProgress" max="7" value="1" aria-label="Frame rail position"></progress>
+              <span id="frameRailPosition">1 of 8</span>
+              <progress id="frameRailProgress" max="8" value="1" aria-label="Frame rail position"></progress>
             </div>
           </div>
           <div id="frameRailShell" class="asset-rail-shell" data-at-start="true" data-at-end="false">
@@ -672,6 +683,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=32"></script>
+  <script type="module" src="src/app.js?v=33"></script>
 </body>
 </html>
