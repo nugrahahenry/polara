@@ -298,7 +298,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=330" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=340" />
 </head>
 <body>
   <!--
@@ -326,8 +326,8 @@
     <p class="boot-local-note">Your photos stay in this browser.</p>
   </div>
 
-  <a class="skip-link" href="#controlSheet">Skip to controls</a>
-  <header class="app-header">
+  <a class="skip-link" href="#controlSheet" inert>Skip to controls</a>
+  <header class="app-header" inert>
     <div class="brand">
       <img class="brand-logo" src="assets/brand/logo-polara.png" alt="Polara" />
       <span class="brand-tag">Print Room</span>
@@ -341,11 +341,11 @@
     </div>
   </header>
 
-  <nav class="progress-wrap" id="progressWrap" role="progressbar" aria-label="Photo booth progress" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1">
+  <nav class="progress-wrap" id="progressWrap" role="progressbar" aria-label="Photo booth progress" aria-valuemin="1" aria-valuemax="6" aria-valuenow="1" inert>
     <ol class="progress-list" id="progressList"></ol>
   </nav>
 
-  <main class="workspace" id="appWorkspace">
+  <main class="workspace" id="appWorkspace" inert>
     <section class="stage-shell" id="stageShell" data-step="start" aria-label="Polara proof preview">
       <div class="stage-docket" aria-hidden="true">
         <span><strong>Polara</strong> / Proof Table</span>
@@ -507,24 +507,18 @@
 
         <section class="control-panel" data-panel="frame" hidden>
           <h2 class="panel-title" tabindex="-1">Choose a frame</h2>
-          <p class="panel-copy">Compare each finished example, then choose the edition that fits your photos.</p>
-          <section class="frame-edition-dossier" id="frameEditionDossier" aria-labelledby="frameEditionName" aria-live="polite">
-            <div class="frame-edition-copy">
-              <h3 id="frameEditionName">Selected frame</h3>
-              <p id="frameEditionStory">A photo-first Polara edition.</p>
+          <p class="panel-copy">Browse by mood, then audition a finished example on the proof table.</p>
+          <section class="frame-collection-room" aria-labelledby="frameCollectionTitle">
+            <div class="frame-collection-head">
+              <h3 id="frameCollectionTitle">Collection room</h3>
+              <span id="frameCollectionCount" aria-live="polite">8 editions</span>
             </div>
-            <div class="frame-edition-palette" id="frameEditionPalette" aria-hidden="true"></div>
-            <dl class="frame-edition-facts">
-              <div><dt>Material</dt><dd id="frameEditionMaterial">Proof paper</dd></div>
-              <div class="frame-edition-exclusive-fact">
-                <dt>Poca match</dt>
-                <dd><img id="frameEditionExclusiveImage" src="assets/brand/logo-polara.png" alt="" loading="lazy" /><span id="frameEditionExclusive">Available in Decorate</span></dd>
-              </div>
-            </dl>
+            <p id="frameCollectionDescription">Every frame available for this format. Browsing never changes your active frame.</p>
+            <div id="frameCollectionFilters" class="frame-collection-filters" role="group" aria-label="Filter frame editions"></div>
           </section>
           <div class="asset-rail-status">
             <div>
-              <strong>Frame editions</strong>
+              <strong id="frameRailTitle">Frame editions</strong>
               <span class="asset-rail-hint" id="frameRailHint">Swipe, scroll, or use Arrow keys.</span>
             </div>
             <div class="asset-rail-meter">
@@ -535,6 +529,25 @@
           <div id="frameRailShell" class="asset-rail-shell" data-at-start="true" data-at-end="false">
             <div id="templateList" role="listbox" aria-label="Frame tray" aria-describedby="frameRailHint"></div>
           </div>
+          <section class="frame-edition-dossier" id="frameEditionDossier" aria-labelledby="frameEditionName" aria-live="polite">
+            <div class="frame-edition-copy">
+              <h3 id="frameEditionName">Selected frame</h3>
+              <p id="frameEditionStory">A photo-first Polara edition.</p>
+            </div>
+            <div class="frame-edition-palette" id="frameEditionPalette" aria-hidden="true"></div>
+            <dl class="frame-edition-facts">
+              <div><dt>Material</dt><dd id="frameEditionMaterial">Proof paper</dd></div>
+              <div>
+                <dt>Collection</dt>
+                <dd id="frameEditionCollection">All editions</dd>
+                <span class="frame-edition-shelf-state" id="frameEditionShelfState">On this shelf</span>
+              </div>
+              <div class="frame-edition-exclusive-fact">
+                <dt>Poca match</dt>
+                <dd><img id="frameEditionExclusiveImage" src="assets/brand/logo-polara.png" alt="" loading="lazy" /><span id="frameEditionExclusive">Available in Decorate</span></dd>
+              </div>
+            </dl>
+          </section>
           <div class="photo-adjust">
             <div class="tray-head"><h3>Adjust proof</h3><button type="button" class="mini-btn" id="resetPhotoBtn">Reset proof</button></div>
             <span class="section-label">Active proof</span>
@@ -622,7 +635,7 @@
     </aside>
   </main>
 
-  <p class="status-bar" id="status" role="status" aria-live="polite">Choose a format and timer, then open the camera when ready.</p>
+  <p class="status-bar" id="status" role="status" aria-live="polite" inert>Choose a format and timer, then open the camera when ready.</p>
   <p class="sr-only" id="countdownLive" aria-live="assertive"></p>
 
   <dialog id="newSessionDialog" aria-labelledby="newSessionTitle">
@@ -652,7 +665,7 @@
     </div>
   </dialog>
 
-  <footer class="app-footer">
+  <footer class="app-footer" inert>
     <div class="footer-inner">
       <div class="maker-seal">
         <svg class="maker-spark" viewBox="0 0 24 24" aria-hidden="true">
@@ -683,6 +696,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=33"></script>
+  <script type="module" src="src/app.js?v=34"></script>
 </body>
 </html>

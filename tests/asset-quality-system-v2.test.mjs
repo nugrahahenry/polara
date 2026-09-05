@@ -13,7 +13,8 @@ const readJson = async (relativePath) => JSON.parse(await readText(relativePath)
 
 test('manifest defines seven complete frame family profiles', async () => {
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
-  assert.equal(manifest.familyProfileVersion, 'frame-family-v2');
+  assert.equal(manifest.familyProfileVersion, 'frame-family-v3');
+  assert.equal(manifest.collectionProfileVersion, 'frame-collection-v1');
   assert.equal(manifest.families.length, 7);
 
   const familyIds = new Set(manifest.frames.map((frame) => frame.family));

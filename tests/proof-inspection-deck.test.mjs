@@ -28,10 +28,11 @@ test('frame picker is a single horizontal proof rail without nested vertical scr
 });
 
 
-test('frame rail persists its horizontal position across steps', () => {
+test('frame rail persists its horizontal position per collection across steps', () => {
   assert.match(app, /scroll:\s*\{\s*frameX:\s*0,/);
   assert.match(app, /state\.scroll\.frameX\s*=\s*refs\.templateList\.scrollLeft/);
-  assert.match(app, /refs\.templateList\.scrollLeft\s*=\s*state\.scroll\.frameX\s*\|\|\s*0/);
+  assert.match(app, /state\.scroll\.frameByCollection\[state\.frameCollectionId\]\s*=\s*refs\.templateList\.scrollLeft/);
+  assert.match(app, /state\.scroll\.frameByCollection\[state\.frameCollectionId\]\s*\?\?/);
   assert.doesNotMatch(app, /state\.scroll\.frame\s*=\s*refs\.templateList\.scrollTop/);
 });
 

@@ -349,6 +349,9 @@ async function auditFrameEdition(page) {
       name: document.querySelector('#frameEditionName')?.textContent.trim() || '',
       story: document.querySelector('#frameEditionStory')?.textContent.trim() || '',
       material: document.querySelector('#frameEditionMaterial')?.textContent.trim() || '',
+      collection: document.querySelector('#frameEditionCollection')?.textContent.trim() || '',
+      shelfState: document.querySelector('#frameEditionShelfState')?.textContent.trim() || '',
+      offShelf: dossier?.dataset.offShelf || '',
       paletteCount: document.querySelectorAll('#frameEditionPalette span').length,
       exclusive: document.querySelector('#frameEditionExclusive')?.textContent.trim() || '',
       exclusiveImage: document.querySelector('#frameEditionExclusiveImage')?.getAttribute('src') || '',
@@ -368,28 +371,28 @@ async function runOpeningAudit({ name, viewport }) {
   // opening. Observe from the first committed response so QA cannot miss it.
   await page.goto(baseUrl, { waitUntil: 'commit', timeout: 30_000 });
   const boot = page.locator('#bootScreen');
-  await page.waitForFunction(() => {
+  const openingAuditHandle = await page.waitForFunction(() => {
     const screen = document.querySelector('#bootScreen');
     const poca = document.querySelector('.boot-poca');
     const wordmark = document.querySelector('.boot-wordmark');
-    return screen
+    const ready = screen
       && getComputedStyle(screen).display !== 'none'
       && document.querySelector('#appWorkspace')?.inert === true
       && poca?.complete && poca.naturalWidth > 0
       && wordmark?.complete && wordmark.naturalWidth > 0;
-  }, null, { timeout: 3_000 });
-  const audit = await boot.evaluate((screen) => {
+    if (!ready) return false;
     const bounds = screen.getBoundingClientRect();
     const proof = screen.querySelector('.boot-proof')?.getBoundingClientRect();
     return {
-      visible: getComputedStyle(screen).display !== 'none',
+      visible: true,
       fillsViewport: Math.abs(bounds.width - window.innerWidth) < 1 && Math.abs(bounds.height - window.innerHeight) < 1,
       proofInsideViewport: Boolean(proof && proof.top >= 0 && proof.left >= 0 && proof.bottom <= window.innerHeight && proof.right <= window.innerWidth),
       appInert: Boolean(document.querySelector('#appWorkspace')?.inert),
       skipLinkInert: Boolean(document.querySelector('.skip-link')?.inert),
       label: screen.getAttribute('aria-label') || '',
     };
-  });
+  }, null, { timeout: 3_000 });
+  const audit = await openingAuditHandle.jsonValue();
   assert.equal(audit.visible, true);
   assert.equal(audit.fillsViewport, true);
   assert.equal(audit.proofInsideViewport, true);
@@ -398,6 +401,10 @@ async function runOpeningAudit({ name, viewport }) {
   assert.match(audit.label, /Poca is opening the Polara print room/);
   if (writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${name}-00-opening.png`) });
   await boot.waitFor({ state: 'hidden', timeout: 5_000 });
+  await page.waitForFunction(() => (
+    document.querySelector('#appWorkspace')?.inert === false
+    && document.querySelector('.skip-link')?.inert === false
+  ));
   assert.equal(await page.locator('#appWorkspace').evaluate((workspace) => workspace.inert), false);
   assert.equal(await page.locator('.skip-link').evaluate((link) => link.inert), false);
   report.opening[name] = audit;
@@ -599,17 +606,69 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(frameRail.overflowY, 'hidden');
   assert.ok(frameRail.visibleCards >= 2 && frameRail.visibleCards < 3, `${name}: frame rail should reveal about 2-2.5 cards`);
   assert.equal(await page.locator('#templateList .tpl-btn').count(), 8, `${name}: each mode must expose eight frame variants`);
+  const frameCollection = {
+    optionCount: await page.locator('#frameCollectionFilters .frame-collection-btn').count(),
+    labels: await page.locator('#frameCollectionFilters .frame-collection-btn').allTextContents(),
+    active: await page.locator('#frameCollectionFilters .frame-collection-btn[aria-pressed="true"]').getAttribute('data-frame-collection'),
+    defaultCount: await page.locator('#frameCollectionCount').textContent(),
+  };
+  assert.equal(frameCollection.optionCount, 4);
+  assert.equal(frameCollection.active, 'all');
+  assert.equal(frameCollection.defaultCount, '8 editions');
+  assert.deepEqual(frameCollection.labels.map((label) => label.replace(/\s+/g, ' ').trim()), [
+    'All editions8', 'Pop room4', 'Studio room3', 'Keepsakes1',
+  ]);
   const frameEdition = await auditFrameEdition(page);
   assert.equal(frameEdition.exists, true);
   assert.equal(frameEdition.family, 'poca-purikura');
   assert.equal(frameEdition.name, 'Poca Purikura');
   assert.ok(frameEdition.story.length >= 24);
   assert.ok(frameEdition.material.length >= 3);
+  assert.equal(frameEdition.collection, 'Pop room · 2 editions');
+  assert.equal(frameEdition.shelfState, 'On this shelf');
+  assert.equal(frameEdition.offShelf, 'false');
   assert.equal(frameEdition.paletteCount, 3);
   assert.match(frameEdition.exclusive, /Poca Purikura.*Decorate/);
   assert.match(frameEdition.exclusiveImage, /poca-purikura-exclusive\.png$/);
   assert.equal(frameEdition.insideControlWidth, true, `${name}: selected edition dossier must stay inside the control sheet`);
   await shot('04', 'frames');
+
+  await page.locator('[data-frame-collection="studio-room"]').click();
+  await page.waitForFunction(() => document.querySelectorAll('#templateList .tpl-btn').length === 3);
+  assert.equal(await page.locator('#frameCollectionCount').textContent(), '3 editions');
+  assert.equal(await page.locator('#frameEditionShelfState').textContent(), 'Active from Pop room');
+  assert.equal(await page.locator('#frameEditionDossier').getAttribute('data-off-shelf'), 'true');
+  await page.locator('#templateList .tpl-btn').first().click();
+  await page.waitForFunction(() => document.querySelector('#frameEditionDossier')?.dataset.offShelf === 'false');
+  if (screenshots && writeScreenshots) {
+    await page.evaluate(() => {
+      window.scrollTo({ top: 0, behavior: 'auto' });
+      document.querySelector('#controlScroll').scrollTop = 0;
+    });
+    await page.waitForTimeout(80);
+    await page.screenshot({ path: path.join(screenshotRoot, `${name}-04c-collection-room.png`) });
+  }
+  const studioRailX = await page.locator('#templateList').evaluate((rail) => {
+    rail.scrollLeft = rail.scrollWidth;
+    return rail.scrollLeft;
+  });
+  assert.ok(studioRailX > 0, `${name}: Studio room rail must accept horizontal scrolling`);
+  await page.locator('[data-frame-collection="all"]').click();
+  await page.waitForFunction(() => document.querySelectorAll('#templateList .tpl-btn').length === 8);
+  await page.locator('[data-frame-collection="studio-room"]').click();
+  await page.waitForFunction((expected) => {
+    const rail = document.querySelector('#templateList');
+    return rail && Math.abs(rail.scrollLeft - expected) <= 2;
+  }, studioRailX);
+  frameCollection.studioScrollRestored = true;
+  await page.locator('#frameCollectionFilters .frame-collection-btn').first().focus();
+  await page.keyboard.press('End');
+  await page.waitForFunction(() => document.querySelector('[data-frame-collection="keepsakes"]')?.getAttribute('aria-pressed') === 'true');
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 1);
+  await page.keyboard.press('Home');
+  await page.waitForFunction(() => document.querySelector('[data-frame-collection="all"]')?.getAttribute('aria-pressed') === 'true');
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 8);
+  await page.locator('#templateList .tpl-btn').first().click();
 
   await page.locator('#photoSlotTabs .slot-tab').nth(1).click();
   assert.equal(await page.locator('#photoSlotTabs .slot-tab').nth(1).getAttribute('aria-selected'), 'true');
@@ -780,7 +839,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   let exported = null;
   if (exportStrip) exported = await downloadPng(page, 'polara-strip-proof-table.png');
   report.viewports[name] = {
-    viewport, stages: stageAudit, frameRail, frameEdition, decorateWorkshop, chapterContinuity, revealTheatre,
+    viewport, stages: stageAudit, frameRail, frameCollection, frameEdition, decorateWorkshop, chapterContinuity, revealTheatre,
       captureReview: {
         camera: initialCameraDocket,
         captureDelight,
@@ -984,7 +1043,7 @@ try {
   assert.deepEqual(report.runtimeErrors, []);
   report.accessibility = {
     privacyDialog: 'native modal, Escape closes, trigger focus restored',
-    keyboardTrays: 'Arrow selection passed for Review; Home/End passed for frame and sticker trays; horizontal frame and sticker rail positions restored after Back',
+    keyboardTrays: 'Arrow selection passed for Review; Home/End passed for collection, frame, and sticker trays; collection-specific frame and sticker rail positions restored',
     touchTargets: 'all visible buttons and links at least 44×44 in audited stages',
     reducedMotion: 'all flows passed with prefers-reduced-motion: reduce',
     progress: 'six English labels, aria-current, status labels, and six Proof Stamps at ready',

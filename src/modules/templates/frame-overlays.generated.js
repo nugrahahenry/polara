@@ -1,5 +1,23 @@
 // GENERATED FILE. DO NOT EDIT.
 // Source: frame-overlay-manifest.json
+export const frameCollections = [
+  {
+    "id": "pop-room",
+    "label": "Pop room",
+    "description": "Bright, playful, and expressive editions."
+  },
+  {
+    "id": "studio-room",
+    "label": "Studio room",
+    "description": "Editorial, film, and night portrait editions."
+  },
+  {
+    "id": "keepsakes",
+    "label": "Keepsakes",
+    "description": "Collectible editions made to feel like an event."
+  }
+];
+
 export const frameOverlayTemplates = [
   {
     "id": "poca-purikura.single",
@@ -19,6 +37,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-single-thumbnail.png",
     "familyProfile": {
       "id": "poca-purikura",
+      "collectionId": "pop-room",
       "story": "Glossy pink energy for playful poses and expressive close-ups.",
       "material": "Glossy pop",
       "palette": [
@@ -69,6 +88,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-strip-thumbnail.png",
     "familyProfile": {
       "id": "poca-purikura",
+      "collectionId": "pop-room",
       "story": "Glossy pink energy for playful poses and expressive close-ups.",
       "material": "Glossy pop",
       "palette": [
@@ -131,6 +151,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-blue-single-thumbnail.png",
     "familyProfile": {
       "id": "poca-purikura",
+      "collectionId": "pop-room",
       "story": "Glossy pink energy for playful poses and expressive close-ups.",
       "material": "Glossy pop",
       "palette": [
@@ -181,6 +202,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/poca-purikura-blue-strip-thumbnail.png",
     "familyProfile": {
       "id": "poca-purikura",
+      "collectionId": "pop-room",
       "story": "Glossy pink energy for playful poses and expressive close-ups.",
       "material": "Glossy pop",
       "palette": [
@@ -243,6 +265,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/vintage-film-lofi-single-thumbnail.png",
     "familyProfile": {
       "id": "vintage-film-lofi",
+      "collectionId": "studio-room",
       "story": "Warm contact-sheet character for memories that should feel found.",
       "material": "Matte film",
       "palette": [
@@ -293,6 +316,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/vintage-film-lofi-strip-thumbnail.png",
     "familyProfile": {
       "id": "vintage-film-lofi",
+      "collectionId": "studio-room",
       "story": "Warm contact-sheet character for memories that should feel found.",
       "material": "Matte film",
       "palette": [
@@ -355,6 +379,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/seoul-snap-y2k-single-thumbnail.png",
     "familyProfile": {
       "id": "seoul-snap-y2k",
+      "collectionId": "pop-room",
       "story": "Clean Y2K studio details with a crisp, confident photo edge.",
       "material": "Digital chrome",
       "palette": [
@@ -405,6 +430,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/seoul-snap-y2k-strip-thumbnail.png",
     "familyProfile": {
       "id": "seoul-snap-y2k",
+      "collectionId": "pop-room",
       "story": "Clean Y2K studio details with a crisp, confident photo edge.",
       "material": "Digital chrome",
       "palette": [
@@ -467,6 +493,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/polara-daily-single-thumbnail.png",
     "familyProfile": {
       "id": "polara-daily",
+      "collectionId": "studio-room",
       "story": "An editorial front page that makes an everyday moment headline-worthy.",
       "material": "Warm newsprint",
       "palette": [
@@ -543,6 +570,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/polara-daily-strip-thumbnail.png",
     "familyProfile": {
       "id": "polara-daily",
+      "collectionId": "studio-room",
       "story": "An editorial front page that makes an everyday moment headline-worthy.",
       "material": "Warm newsprint",
       "palette": [
@@ -608,6 +636,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-single-thumbnail.png",
     "familyProfile": {
       "id": "polara-midnight-club",
+      "collectionId": "studio-room",
       "story": "Deep night-studio ink for polished portraits with quiet drama.",
       "material": "Midnight ink",
       "palette": [
@@ -684,6 +713,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-strip-thumbnail.png",
     "familyProfile": {
       "id": "polara-midnight-club",
+      "collectionId": "studio-room",
       "story": "Deep night-studio ink for polished portraits with quiet drama.",
       "material": "Midnight ink",
       "palette": [
@@ -749,6 +779,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-single-thumbnail.png",
     "familyProfile": {
       "id": "cloud-picnic",
+      "collectionId": "pop-room",
       "story": "Airy weekend color for lighthearted groups and sunny keepsakes.",
       "material": "Soft pastel",
       "palette": [
@@ -800,6 +831,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-strip-thumbnail.png",
     "familyProfile": {
       "id": "cloud-picnic",
+      "collectionId": "pop-room",
       "story": "Airy weekend color for lighthearted groups and sunny keepsakes.",
       "material": "Soft pastel",
       "palette": [
@@ -865,6 +897,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-single-thumbnail.png",
     "familyProfile": {
       "id": "lucky-ticket",
+      "collectionId": "keepsakes",
       "story": "A collectible ticket frame that turns the session into an event.",
       "material": "Ticket stock",
       "palette": [
@@ -949,6 +982,7 @@ export const frameOverlayTemplates = [
     "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-strip-thumbnail.png",
     "familyProfile": {
       "id": "lucky-ticket",
+      "collectionId": "keepsakes",
       "story": "A collectible ticket frame that turns the session into an event.",
       "material": "Ticket stock",
       "palette": [

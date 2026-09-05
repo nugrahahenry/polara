@@ -51,7 +51,11 @@ test('capture choreography connects countdown, shutter, recent slot, and Review 
 
 
 test('capture delight has an intentional reduced-motion path', async () => {
-  const css = await readText('styles/proof-table.css');
+  const [app, css] = await Promise.all([
+    readText('src/app.js'),
+    readText('styles/proof-table.css'),
+  ]);
+  assert.match(app, /reducedMotion\.matches\s*\?\s*1200\s*:\s*1400/);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*#cameraWrap::before[\s\S]*animation:\s*none/s);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.slot-card\[data-capture-recent="true"\][\s\S]*animation:\s*none/s);
   assert.match(css, /@media \(prefers-reduced-motion: reduce\)[\s\S]*\.review-photo-wrap\[data-proof-arrival="fresh"\][\s\S]*animation:\s*none/s);

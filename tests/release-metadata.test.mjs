@@ -16,8 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.33.0 Frame and Guest Editions checkpoint', () => {
-  assert.equal(packageJson.version, '0.33.0');
+test('release metadata records the v0.34.0 Collection Room checkpoint', () => {
+  assert.equal(packageJson.version, '0.34.0');
+  assert.match(changelog, /## \[0\.34\.0\] - 2026-09-05/);
+  assert.match(changelog, /Collection Room/i);
+  assert.match(changelog, /frame-collection-v1/i);
+  assert.match(changelog, /posisi rail per koleksi/i);
   assert.match(changelog, /## \[0\.33\.0\] - 2026-09-05/);
   assert.match(changelog, /Frame and Guest Editions/i);
   assert.match(changelog, /Poca Purikura Blueberry/i);
@@ -68,8 +72,8 @@ test('release metadata records the v0.33.0 Frame and Guest Editions checkpoint',
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=33/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=330/);
+  assert.match(indexHtml, /src\/app\.js\?v=34/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=340/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);

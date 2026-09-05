@@ -86,15 +86,33 @@ const raw = await fs.readFile(inputPath, 'utf8');
 const manifest = JSON.parse(raw);
 if (!Array.isArray(manifest.frames)) fail('Manifest harus memiliki array frames.');
 if (manifest.frames.length !== 16) fail(`Manifest produksi harus berisi tepat 16 frame Hero; ditemukan ${manifest.frames.length}.`);
-if (manifest.familyProfileVersion !== 'frame-family-v2') fail('Manifest harus memakai frame-family-v2.');
+if (manifest.familyProfileVersion !== 'frame-family-v3') fail('Manifest harus memakai frame-family-v3.');
+if (manifest.collectionProfileVersion !== 'frame-collection-v1') fail('Manifest harus memakai frame-collection-v1.');
+if (!Array.isArray(manifest.collections) || manifest.collections.length !== 3) {
+  fail('Manifest harus memiliki tepat tiga collection profile.');
+}
 if (!Array.isArray(manifest.families) || manifest.families.length !== 7) {
   fail('Manifest harus memiliki tepat tujuh family profile.');
+}
+
+const collectionIds = new Set();
+for (const collection of manifest.collections) {
+  if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(collection.id || '')) fail('Collection profile memiliki id invalid.');
+  if (collectionIds.has(collection.id)) fail(`Collection profile duplikat: ${collection.id}.`);
+  if (typeof collection.label !== 'string' || collection.label.length < 3 || collection.label.length > 32) {
+    fail(`${collection.id}.label harus 3-32 karakter.`);
+  }
+  if (typeof collection.description !== 'string' || collection.description.length < 24 || collection.description.length > 100) {
+    fail(`${collection.id}.description harus 24-100 karakter.`);
+  }
+  collectionIds.add(collection.id);
 }
 
 const familyProfiles = new Map();
 for (const family of manifest.families) {
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(family.id || '')) fail('Family profile memiliki id invalid.');
   if (familyProfiles.has(family.id)) fail(`Family profile duplikat: ${family.id}.`);
+  if (!collectionIds.has(family.collectionId)) fail(`${family.id}.collectionId tidak dikenal.`);
   if (typeof family.story !== 'string' || family.story.length < 24 || family.story.length > 120) {
     fail(`${family.id}.story harus 24-120 karakter.`);
   }
@@ -165,7 +183,7 @@ const runtimeFields = manifest.frames.map((frame) => ({
 }));
 
 const banner = `// GENERATED FILE. DO NOT EDIT.\n// Source: ${path.basename(inputPath)}\n`;
-const output = `${banner}export const frameOverlayTemplates = ${JSON.stringify(runtimeFields, null, 2)};\n`;
+const output = `${banner}export const frameCollections = ${JSON.stringify(manifest.collections, null, 2)};\n\nexport const frameOverlayTemplates = ${JSON.stringify(runtimeFields, null, 2)};\n`;
 
 await fs.mkdir(path.dirname(outputPath), { recursive: true });
 await fs.writeFile(outputPath, output, 'utf8');

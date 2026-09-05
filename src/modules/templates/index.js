@@ -4,7 +4,7 @@
 // (fetch + DOMParser, ambil <style>+.ph-canvas dari file HTML standalone GPT).
 // Prioritas viral (RISET.md): Newspaper, Y2K Korean, Vintage Film, Purikura, Live Frame.
 import { loadTemplateFragment, loadTemplateDoc, buildTemplateDoc } from './loader.js';
-import { frameOverlayTemplates } from './frame-overlays.generated.js';
+import { frameCollections, frameOverlayTemplates } from './frame-overlays.generated.js';
 import { buildOverlayTemplateHtml } from './overlay-renderer.js';
 
 const kosmik = {
@@ -131,6 +131,7 @@ export const legacyPickerRollbackTemplates = [
 ];
 
 export const templates = [...frameOverlayTemplates];
+export { frameCollections };
 export const getTemplate = (id) => templates.find(t => t.id === id) || templates[0];
 
 // Balikin markup .ph-canvas (+ style) siap-pakai, baik dari `html` inline maupun `file` lazy-load.

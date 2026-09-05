@@ -49,15 +49,19 @@ async function verify() {
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
   const guestManifest = await readJson('assets/guests/guest-manifest.json');
   const demoManifest = await readJson('assets/media/demo-proofs/manifest.json');
-  requireQuality(policy.schemaVersion === 2 && policy.profile === 'polara-asset-quality-v2', 'Unknown asset-quality policy.');
+  requireQuality(policy.schemaVersion === 3 && policy.profile === 'polara-asset-quality-v3', 'Unknown asset-quality policy.');
   requireQuality(manifest.familyProfileVersion === policy.frames.familyProfileVersion, 'Frame family profile version drifted.');
+  requireQuality(manifest.collectionProfileVersion === policy.frames.collectionProfileVersion, 'Frame collection profile version drifted.');
+  requireQuality(manifest.collections.length === policy.frames.collectionCount, 'Frame collection count drifted.');
   requireQuality(manifest.families.length === policy.frames.familyCount, 'Frame family profile count drifted.');
   requireQuality(manifest.frames.length === policy.frames.variantCount && frameOverlayTemplates.length === policy.frames.variantCount, 'Frame registry variant count drifted.');
   requireQuality(new Set(frameOverlayTemplates.map((frame) => frame.familyId)).size === policy.frames.familyCount, 'Frame registry family count drifted.');
 
   const familyProfiles = new Map(manifest.families.map((family) => [family.id, family]));
+  const collectionIds = new Set(manifest.collections.map((collection) => collection.id));
   for (const [familyId, family] of familyProfiles) {
     requireQuality(policy.frames.familyProfileFields.every((field) => family[field] != null), `${familyId} family profile is incomplete.`);
+    requireQuality(collectionIds.has(family.collectionId), `${familyId} references an unknown collection.`);
     requireQuality(family.palette.length === 3 && family.palette.every((color) => /^#[a-fA-F0-9]{6}$/.test(color)), `${familyId} family palette is invalid.`);
     requireQuality(exclusiveStickers.some((sticker) => sticker.id === family.exclusiveStickerId && sticker.exclusiveFamilyId === familyId), `${familyId} exclusive sticker is not paired.`);
   }

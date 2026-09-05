@@ -20,6 +20,9 @@ test('Polara opens with a bounded Poca print room sequence', () => {
 
 
 test('opening sequence protects focus and respects reduced motion', () => {
+  assert.match(html, /class="skip-link"[^>]*\sinert/);
+  assert.match(html, /class="workspace"[^>]*\sinert/);
+  assert.match(html, /class="app-footer"[^>]*\sinert/);
   assert.match(app, /setAppInert\(true\)/);
   assert.match(app, /setAppInert\(false\)/);
   assert.match(app, /querySelectorAll\('\.skip-link, \.app-header/);

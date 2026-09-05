@@ -8,7 +8,7 @@ import {
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
 import { applyPhotoGeometry, initializePhotosForFrame, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
-import { templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=15';
+import { frameCollections, templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=16';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
   findAvailableTemplate, getTemplatePreviewConfig, selectFramePreservingEditorState,
@@ -23,6 +23,9 @@ import {
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';
+import {
+  ALL_FRAME_COLLECTION_ID, buildFrameCollectionOptions, filterFramesByCollection, getFrameFamilyEditionCount,
+} from './ui/frame-collections.js?v=1';
 import { getCaptureMomentCopy } from './ui/capture-delight.js?v=1';
 import { getRevealDossier } from './ui/reveal-dossier.js?v=1';
 
@@ -64,8 +67,11 @@ const refs = {
   reviewProofTag: $('reviewProofTag'), reviewProofLabel: $('reviewProofLabel'), reviewSourceMeta: $('reviewSourceMeta'), reviewSlots: $('reviewSlots'),
   stage: $('canvasScale'), revealBuddy: $('revealBuddy'), templateList: $('templateList'),
   frameRailShell: $('frameRailShell'), frameRailPosition: $('frameRailPosition'), frameRailProgress: $('frameRailProgress'),
+  frameRailTitle: $('frameRailTitle'), frameCollectionFilters: $('frameCollectionFilters'),
+  frameCollectionCount: $('frameCollectionCount'), frameCollectionDescription: $('frameCollectionDescription'),
   frameEditionDossier: $('frameEditionDossier'), frameEditionName: $('frameEditionName'),
   frameEditionStory: $('frameEditionStory'), frameEditionMaterial: $('frameEditionMaterial'),
+  frameEditionCollection: $('frameEditionCollection'), frameEditionShelfState: $('frameEditionShelfState'),
   frameEditionPalette: $('frameEditionPalette'), frameEditionExclusive: $('frameEditionExclusive'),
   frameEditionExclusiveImage: $('frameEditionExclusiveImage'),
   photoSlotTabs: $('photoSlotTabs'), fitContain: $('fitContainBtn'), fitCover: $('fitCoverBtn'),
@@ -93,8 +99,8 @@ function initialState() {
     experience: 'regular', guestId: null, guestLayout: 'matched', guestSide: 'right',
     cameraStatus: 'idle', cameraError: null, shooting: false,
     photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null, recentCaptureSlot: null,
-    frameId: null, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
-    revealReady: false, busy: false, scroll: { frameX: 0, decorateX: 0 },
+    frameId: null, frameCollectionId: ALL_FRAME_COLLECTION_ID, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
+    revealReady: false, busy: false, scroll: { frameX: 0, frameByCollection: { all: 0 }, decorateX: 0 },
   };
 }
 
@@ -290,7 +296,10 @@ function meaningfulSession() {
 }
 
 function saveScrollState() {
-  if (state.step === 'frame') state.scroll.frameX = refs.templateList.scrollLeft;
+  if (state.step === 'frame') {
+    state.scroll.frameX = refs.templateList.scrollLeft;
+    state.scroll.frameByCollection[state.frameCollectionId] = refs.templateList.scrollLeft;
+  }
   if (state.step === 'decorate') state.scroll.decorateX = refs.stickerTray.scrollLeft;
 }
 
@@ -355,7 +364,9 @@ function isStackedChapterViewport() {
 async function restoreChapterView({ focusTitle = true } = {}) {
   await new Promise((resolve) => requestAnimationFrame(resolve));
   refs.controlScroll.scrollTop = 0;
-  if (state.step === 'frame') refs.templateList.scrollLeft = state.scroll.frameX || 0;
+  if (state.step === 'frame') {
+    refs.templateList.scrollLeft = state.scroll.frameByCollection[state.frameCollectionId] ?? state.scroll.frameX ?? 0;
+  }
   if (state.step === 'decorate') refs.stickerTray.scrollLeft = state.scroll.decorateX || 0;
   syncAllRailWayfinding();
   if (isStackedChapterViewport()) window.scrollTo({ top: 0, behavior: 'auto' });
@@ -465,6 +476,7 @@ async function goToStep(nextStep, message, { focusTitle = true } = {}) {
     if (nextStep === 'frame') {
       state.photos = initializePhotosForFrame(state.photos);
       ensureCurrentFrame();
+      renderFrameCollectionFilters();
       await renderTemplateList();
       renderPhotoTabs();
       syncPhotoControls();
@@ -682,7 +694,7 @@ function setCaptureMoment(moment, copy) {
       state.recentCaptureSlot = null;
       renderCameraPanel();
     }
-  }, reducedMotion.matches ? 360 : 900);
+  }, reducedMotion.matches ? 1200 : 1400);
 }
 
 function suspendCameraSession(message) {
@@ -890,6 +902,19 @@ const framesForMode = ({ includeUnavailable = false } = {}) => templates.filter(
   && (includeUnavailable || !unavailableFrameIds.has(template.id))
 ));
 
+const frameCollectionOptionsForMode = () => buildFrameCollectionOptions(
+  frameCollections,
+  framesForMode({ includeUnavailable: true }),
+);
+
+function ensureCurrentFrameCollection() {
+  const options = frameCollectionOptionsForMode();
+  if (!options.some((collection) => collection.id === state.frameCollectionId)) {
+    state.frameCollectionId = ALL_FRAME_COLLECTION_ID;
+  }
+  return options;
+}
+
 function ensureCurrentFrame() {
   const available = framesForMode();
   if (!available.some((template) => template.id === state.frameId)) {
@@ -904,7 +929,10 @@ async function renderTemplateList() {
   refs.templateList.innerHTML = '';
   refs.templateList.classList.toggle('mode-strip', state.mode === 3);
   thumbFrames = [];
-  const available = framesForMode({ includeUnavailable: true });
+  const available = filterFramesByCollection(
+    framesForMode({ includeUnavailable: true }),
+    state.frameCollectionId,
+  );
   available.forEach((template, index) => {
     const unavailable = unavailableFrameIds.has(template.id);
     const button = document.createElement('button');
@@ -968,7 +996,49 @@ async function renderTemplateList() {
   });
   wireCollectionKeyboard(refs.templateList, '.tpl-btn');
   renderFrameEditionDossier();
-  requestAnimationFrame(syncAllRailWayfinding);
+  requestAnimationFrame(() => {
+    refs.templateList.scrollLeft = state.scroll.frameByCollection[state.frameCollectionId] || 0;
+    syncAllRailWayfinding();
+  });
+}
+
+function renderFrameCollectionFilters() {
+  const options = ensureCurrentFrameCollection();
+  const active = options.find((collection) => collection.id === state.frameCollectionId) || options[0];
+  refs.frameCollectionFilters.innerHTML = '';
+  refs.frameCollectionCount.textContent = `${active.count} ${active.count === 1 ? 'edition' : 'editions'}`;
+  refs.frameCollectionDescription.textContent = `${active.description} Browsing never changes your active frame.`;
+  refs.frameRailTitle.textContent = active.id === ALL_FRAME_COLLECTION_ID ? 'Frame editions' : active.label;
+
+  options.forEach((collection) => {
+    const button = document.createElement('button');
+    const selected = collection.id === state.frameCollectionId;
+    button.type = 'button';
+    button.className = `frame-collection-btn${selected ? ' active' : ''}`;
+    button.dataset.frameCollection = collection.id;
+    button.setAttribute('aria-pressed', String(selected));
+    button.setAttribute('aria-label', `${collection.label}, ${collection.count} ${collection.count === 1 ? 'edition' : 'editions'}`);
+    const label = document.createElement('span');
+    label.textContent = collection.label;
+    const count = document.createElement('span');
+    count.className = 'frame-collection-btn-count';
+    count.textContent = String(collection.count);
+    button.append(label, count);
+    button.addEventListener('click', async () => {
+      if (collection.id === state.frameCollectionId) return;
+      const restoreFocus = document.activeElement === button;
+      saveScrollState();
+      state.frameCollectionId = collection.id;
+      renderFrameCollectionFilters();
+      await renderTemplateList();
+      if (restoreFocus) {
+        refs.frameCollectionFilters.querySelector(`[data-frame-collection="${CSS.escape(collection.id)}"]`)?.focus({ preventScroll: true });
+      }
+      status(`${collection.label} opened. Your active frame remains ${getTemplate(state.frameId).name}.`);
+    });
+    refs.frameCollectionFilters.appendChild(button);
+  });
+  wireCollectionKeyboard(refs.frameCollectionFilters, '.frame-collection-btn', { activateOnMove: true });
 }
 
 function renderFrameEditionDossier() {
@@ -981,6 +1051,12 @@ function renderFrameEditionDossier() {
   refs.frameEditionName.textContent = template.name;
   refs.frameEditionStory.textContent = familyProfile.story;
   refs.frameEditionMaterial.textContent = familyProfile.material;
+  const collection = frameCollections.find((item) => item.id === familyProfile.collectionId);
+  const editionCount = getFrameFamilyEditionCount(framesForMode({ includeUnavailable: true }), template);
+  refs.frameEditionCollection.textContent = `${collection?.label || 'Collection'} · ${editionCount} ${editionCount === 1 ? 'edition' : 'editions'}`;
+  const onShelf = state.frameCollectionId === ALL_FRAME_COLLECTION_ID || state.frameCollectionId === familyProfile.collectionId;
+  refs.frameEditionShelfState.textContent = onShelf ? 'On this shelf' : `Active from ${collection?.label || 'another shelf'}`;
+  refs.frameEditionDossier.dataset.offShelf = String(!onShelf);
   refs.frameEditionExclusive.textContent = exclusive ? `${exclusive.name} in Decorate` : 'Available in Decorate';
   refs.frameEditionExclusiveImage.hidden = !exclusive;
   if (exclusive) refs.frameEditionExclusiveImage.src = exclusive.src;

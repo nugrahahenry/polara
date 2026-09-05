@@ -16,6 +16,7 @@ PRODUCT.md
 DESIGN.md
 .impeccable/design.json
 .impeccable/design.local.json
+.impeccable/review/
 
 .DS_Store
 

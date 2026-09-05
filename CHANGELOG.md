@@ -5,6 +5,25 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.34.0] - 2026-09-05
+
+### Added
+- Tambahkan **Collection Room** pada tahap Frames dengan All editions, Pop room, Studio room, dan Keepsakes agar delapan edition per format tetap mudah dipindai ketika katalog bertambah.
+- Tambahkan profil canonical `frame-collection-v1`, relasi koleksi pada tujuh keluarga, jumlah edition per keluarga, serta status ketika frame aktif berada di shelf lain.
+- Tambahkan regression contract untuk taxonomy koleksi, filter per format, pemetaan 16 variant, focus restoration, serta batas UI-only terhadap export canvas.
+
+### Changed
+- Susun alur baca Frames menjadi pilih koleksi, bandingkan frame, lalu baca dossier edition aktif. Pemilihan koleksi tidak pernah mengganti frame atau transform foto secara diam-diam.
+- Simpan posisi rail per koleksi dan pertahankan Arrow, Home, End, focus-visible, target 44×44 px, serta item terakhir yang dapat dijangkau.
+- Perkuat opening focus protection sejak HTML pertama agar loading lambat tidak membuka workspace sebelum inisialisasi selesai, sementara fail safe tetap memulihkan interaksi.
+- Pertahankan capture receipt cukup lama untuk dibaca pada reduced motion tanpa menambah animasi atau menahan capture berikutnya.
+- Naikkan Asset Quality System ke `polara-asset-quality-v3` tanpa menambah atau mengganti aset runtime.
+
+### Validation
+- Node 90/90, Python 10/10, overlay 16/16, preview derivative 32/32, dan Asset Quality 16 frame/26 sticker/11 mascot/6 guest/3 demo lulus.
+- QA browser lulus pada 390×844, 768×1024, 1440×900, dan 900×510 dengan overflow 0, target pendek 0, primary action terlihat, collection keyboard, per-collection scroll restoration, reduced motion, camera recovery, retake per-slot, serta runtime error 0.
+- Seluruh 16 variant lulus preview/export parity. Output tepat Single 1080×1350 dan Strip 720×1800; filter koleksi dan dossier tetap UI-only.
+
 ## [0.33.0] - 2026-09-05
 
 ### Added

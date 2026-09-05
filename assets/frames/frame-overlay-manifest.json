@@ -1,10 +1,29 @@
 {
   "version": "frame-overlay-v1",
   "generatedAt": "2026-08-18",
-  "familyProfileVersion": "frame-family-v2",
+  "familyProfileVersion": "frame-family-v3",
+  "collectionProfileVersion": "frame-collection-v1",
+  "collections": [
+    {
+      "id": "pop-room",
+      "label": "Pop room",
+      "description": "Bright, playful, and expressive editions."
+    },
+    {
+      "id": "studio-room",
+      "label": "Studio room",
+      "description": "Editorial, film, and night portrait editions."
+    },
+    {
+      "id": "keepsakes",
+      "label": "Keepsakes",
+      "description": "Collectible editions made to feel like an event."
+    }
+  ],
   "families": [
     {
       "id": "poca-purikura",
+      "collectionId": "pop-room",
       "story": "Glossy pink energy for playful poses and expressive close-ups.",
       "material": "Glossy pop",
       "palette": [
@@ -17,6 +36,7 @@
     },
     {
       "id": "vintage-film-lofi",
+      "collectionId": "studio-room",
       "story": "Warm contact-sheet character for memories that should feel found.",
       "material": "Matte film",
       "palette": [
@@ -29,6 +49,7 @@
     },
     {
       "id": "seoul-snap-y2k",
+      "collectionId": "pop-room",
       "story": "Clean Y2K studio details with a crisp, confident photo edge.",
       "material": "Digital chrome",
       "palette": [
@@ -41,6 +62,7 @@
     },
     {
       "id": "polara-daily",
+      "collectionId": "studio-room",
       "story": "An editorial front page that makes an everyday moment headline-worthy.",
       "material": "Warm newsprint",
       "palette": [
@@ -53,6 +75,7 @@
     },
     {
       "id": "polara-midnight-club",
+      "collectionId": "studio-room",
       "story": "Deep night-studio ink for polished portraits with quiet drama.",
       "material": "Midnight ink",
       "palette": [
@@ -65,6 +88,7 @@
     },
     {
       "id": "cloud-picnic",
+      "collectionId": "pop-room",
       "story": "Airy weekend color for lighthearted groups and sunny keepsakes.",
       "material": "Soft pastel",
       "palette": [
@@ -77,6 +101,7 @@
     },
     {
       "id": "lucky-ticket",
+      "collectionId": "keepsakes",
       "story": "A collectible ticket frame that turns the session into an event.",
       "material": "Ticket stock",
       "palette": [
