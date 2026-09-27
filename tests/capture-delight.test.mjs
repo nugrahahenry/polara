@@ -9,16 +9,16 @@ const projectRoot = new URL('../', import.meta.url);
 const readText = (relativePath) => fs.readFile(new URL(relativePath, projectRoot), 'utf8');
 
 
-test('capture moment copy stays factual for a new proof and a safe retake', () => {
+test('capture moment copy stays factual for a new photo and a safe retake', () => {
   assert.deepEqual(getCaptureMomentCopy({ slotIndex: 1, mode: 3, retake: false }), {
-    proofLabel: 'Proof 2 of 3',
+    proofLabel: 'Photo 2 of 3',
     countdownCue: 'Hold this pose',
-    receipt: 'Proof 2 saved',
+    receipt: 'Photo 2 saved',
   });
   assert.deepEqual(getCaptureMomentCopy({ slotIndex: 0, mode: 1, retake: true }), {
-    proofLabel: 'Proof 1 of 1',
+    proofLabel: 'Photo 1 of 1',
     countdownCue: 'The original stays safe',
-    receipt: 'Proof 1 replaced',
+    receipt: 'Photo 1 replaced',
   });
 });
 

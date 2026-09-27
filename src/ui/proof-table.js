@@ -10,12 +10,12 @@ export const PROOF_STEPS = Object.freeze([
 const POCA = Object.freeze({
   start: { id: 'poca-excited-jump', src: 'assets/mascot/poca-excited-jump.png', alt: 'Poca jumps excitedly.' },
   camera: { id: 'poca-camera', src: 'assets/mascot/poca-camera.png', alt: 'Poca is ready with a camera.' },
-  review: { id: 'poca-peeking', src: 'assets/mascot/poca-peeking.png', alt: 'Poca peeks at your proofs.' },
+  review: { id: 'poca-peeking', src: 'assets/mascot/poca-peeking.png', alt: 'Poca peeks at your photos.' },
   frame: { id: 'poca-holding-photo-frame', src: 'assets/mascot/poca-holding-photo-frame.png', alt: 'Poca holds a photo frame.' },
   decorateEmpty: { id: 'poca-decorate-guide', src: 'assets/mascot/poca-decorate-guide.png', alt: 'Poca shows where to decorate.' },
-  decorateReady: { id: 'poca-peeking', src: 'assets/mascot/poca-peeking.png', alt: 'Poca peeks at your decorated proof.' },
+  decorateReady: { id: 'poca-peeking', src: 'assets/mascot/poca-peeking.png', alt: 'Poca peeks at your decorated photo.' },
   processing: { id: 'poca-sleepy-loading', src: 'assets/mascot/poca-sleepy-loading.png', alt: 'Poca waits while your print develops.' },
-  revealReady: { id: 'poca-proof-approved', src: 'assets/mascot/poca-proof-approved.png', alt: 'Poca approves your finished proof.' },
+  revealReady: { id: 'poca-proof-approved', src: 'assets/mascot/poca-proof-approved.png', alt: 'Poca approves your finished print.' },
 });
 
 export const PRIVACY_POCA = Object.freeze({

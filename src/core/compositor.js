@@ -200,7 +200,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
     wrap.tabIndex = interactive ? 0 : -1;
     wrap.setAttribute('role', interactive ? 'option' : 'img');
     wrap.setAttribute('aria-label', interactive
-      ? `${item.name}. Gunakan tombol panah untuk geser, plus/minus untuk ukuran, kurung siku untuk memutar, Delete untuk hapus.`
+      ? `${item.name}. Use Arrow keys to move, plus and minus to resize, brackets to rotate, and Delete to remove.`
       : `${item.name} sticker on proof.`);
     if (interactive) wrap.setAttribute('aria-selected', String(selected));
     Object.assign(wrap.style, {

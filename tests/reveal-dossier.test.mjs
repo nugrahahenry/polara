@@ -5,7 +5,7 @@ import fs from 'node:fs';
 import { getRevealDossier } from '../src/ui/reveal-dossier.js';
 
 
-test('Reveal dossier reports exact format, selected frame, decoration count, and local-only truth', () => {
+test('Reveal dossier reports exact format, selected frame, decoration count, and browser-only storage', () => {
   assert.deepEqual(getRevealDossier({
     mode: 3,
     frameName: 'Cloud Picnic',
@@ -14,14 +14,14 @@ test('Reveal dossier reports exact format, selected frame, decoration count, and
     format: 'Strip 3 · 720×1800',
     frame: 'Cloud Picnic',
     decorations: '4 stickers',
-    privacy: 'Local-only session',
+    privacy: 'Saved only in this browser',
   });
 
   assert.deepEqual(getRevealDossier({ mode: 1, frameName: '', stickerCount: 0 }), {
     format: 'Single · 1080×1350',
     frame: 'Polara frame',
     decorations: 'No stickers',
-    privacy: 'Local-only session',
+    privacy: 'Saved only in this browser',
   });
 });
 

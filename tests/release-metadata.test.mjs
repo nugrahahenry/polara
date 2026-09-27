@@ -16,8 +16,13 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.35.0 Asset Expansion checkpoint', () => {
-  assert.equal(packageJson.version, '0.35.0');
+test('release metadata records the v0.35.1 Pose Mate and copy checkpoint', () => {
+  assert.equal(packageJson.version, '0.35.1');
+  assert.match(changelog, /## \[0\.35\.1\] - 2026-09-27/);
+  assert.match(changelog, /inside that same photo window/i);
+  assert.match(changelog, /selected photo controls/i);
+  assert.match(changelog, /Active proof/i);
+  assert.match(changelog, /Photo 1 of 3/i);
   assert.match(changelog, /## \[0\.35\.0\] - 2026-09-27/);
   assert.match(changelog, /Asset Expansion/i);
   assert.match(changelog, /asset-expansion-v1/i);
@@ -77,8 +82,8 @@ test('release metadata records the v0.35.0 Asset Expansion checkpoint', () => {
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=35/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=350/);
+  assert.match(indexHtml, /src\/app\.js\?v=36/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=351/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);
@@ -117,7 +122,7 @@ test('release metadata records the v0.35.0 Asset Expansion checkpoint', () => {
 test('review proof image has a valid initial source before JavaScript hydration', () => {
   assert.match(
     indexHtml,
-    /<img id="reviewPhoto" src="assets\/brand\/logo-polara\.png" alt="Active proof under review" \/>/,
+    /<img id="reviewPhoto" src="assets\/brand\/logo-polara\.png" alt="Selected photo" \/>/,
   );
 });
 

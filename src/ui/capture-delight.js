@@ -5,10 +5,10 @@ function normalizedMode(mode) {
 
 export function getCaptureMomentCopy({ slotIndex = 0, mode = 1, retake = false } = {}) {
   const total = normalizedMode(mode);
-  const proof = Math.min(total, Math.max(1, Number(slotIndex) + 1 || 1));
+  const photo = Math.min(total, Math.max(1, Number(slotIndex) + 1 || 1));
   return {
-    proofLabel: `Proof ${proof} of ${total}`,
+    proofLabel: `Photo ${photo} of ${total}`,
     countdownCue: retake ? 'The original stays safe' : 'Hold this pose',
-    receipt: retake ? `Proof ${proof} replaced` : `Proof ${proof} saved`,
+    receipt: retake ? `Photo ${photo} replaced` : `Photo ${photo} saved`,
   };
 }

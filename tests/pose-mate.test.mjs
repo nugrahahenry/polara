@@ -146,7 +146,7 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   assert.equal(matched.asset.pose, 'neutral');
   assert.equal(matched.layout, 'matched');
   assert.equal(matched.side, 'right');
-  assert.deepEqual(matched.userRegion, { x: 0, y: 0, width: 0.68, height: 1 });
+  assert.deepEqual(matched.userRegion, { x: 0, y: 0, width: 1, height: 1 });
   assert.deepEqual(matched.guestRegion, { x: 0.54, y: 0, width: 0.46, height: 1 });
   assert.equal(sideBySide.flipGuest, true);
   assert.equal(sideBySide.asset.pose, 'peace');

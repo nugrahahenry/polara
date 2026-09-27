@@ -492,7 +492,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-camera\.png$/);
   const initialCameraDocket = await auditCameraProofDocket(page);
   assert.equal(initialCameraDocket.state, 'ready');
-  assert.equal(initialCameraDocket.counter, 'Proof 1 / 3');
+  assert.equal(initialCameraDocket.counter, 'Photo 1 / 3');
   assert.equal(initialCameraDocket.localStatus, 'Local session');
   assert.deepEqual(initialCameraDocket.slotStates, ['Next', 'Waiting', 'Waiting']);
   const cameraCompanion = await auditStageCompanion(page, '#cameraWrap');
@@ -513,13 +513,13 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
     },
   });
   assert.equal(captureDelight.phase, 'counting');
-  assert.equal(captureDelight.proof, 'Proof 1 of 3');
+  assert.equal(captureDelight.proof, 'Photo 1 of 3');
   assert.equal(captureDelight.cue, 'Hold this pose');
   assert.match(captureDelight.value, /^[1-3]$/);
   assert.ok(Number(captureDelight.progress) > 0);
   if (await page.locator('[data-panel="camera"]').isVisible()) {
     const nextCameraDocket = await auditCameraProofDocket(page);
-    assert.equal(nextCameraDocket.counter, 'Proof 2 / 3');
+    assert.equal(nextCameraDocket.counter, 'Photo 2 / 3');
     assert.deepEqual(nextCameraDocket.slotStates, ['Saved', 'Next', 'Waiting']);
     const captureReceipt = await page.evaluate(() => ({
       text: document.querySelector('#shotBadge')?.textContent.trim(),
@@ -528,7 +528,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
       moment: document.querySelector('.stage-shell')?.dataset.captureMoment,
     }));
     assert.deepEqual(captureReceipt, {
-      text: 'Proof 1 saved',
+      text: 'Photo 1 saved',
       hidden: false,
       recentSlots: 1,
       moment: 'saved',
@@ -543,9 +543,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   const reviewSources = await page.locator('#reviewSlots .slot-card img').evaluateAll((images) => images.map((image) => image.src));
   await page.locator('#reviewSlots .slot-card').nth(1).click();
   const reviewInspection = await auditReviewInspection(page);
-  assert.equal(reviewInspection.tag, 'Proof 2 of 3');
-  assert.equal(reviewInspection.label, 'Proof 2 of 3');
-  assert.match(reviewInspection.meta, /^Original \d+×\d+ · kept locally$/);
+  assert.equal(reviewInspection.tag, 'Photo 2 of 3');
+  assert.equal(reviewInspection.label, 'Photo 2 of 3');
+  assert.match(reviewInspection.meta, /^Original \d+×\d+ · kept on this device$/);
   assert.equal(reviewInspection.activeProof, '2');
   assert.equal(reviewInspection.inspectingCount, 1);
   const reviewCompanion = await auditStageCompanion(page, '#reviewPhoto');
@@ -590,6 +590,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-holding-photo-frame\.png$/);
   assert.equal(await page.locator('#canvasView').getAttribute('data-proof-mode'), 'strip');
   assert.equal(await page.locator('#fitCoverBtn').getAttribute('aria-pressed'), 'true', `${name}: a fresh proof must default to Fill frame`);
+  await page.locator('#canvasScale .ph-slot[data-slot="1"]').click();
+  assert.equal(await page.locator('#photoSlotTabs .slot-tab').nth(0).getAttribute('aria-selected'), 'true', `${name}: clicking a photo in the preview must select that photo`);
+  assert.equal(await page.locator('#canvasScale .ph-slot[data-slot="1"]').getAttribute('aria-current'), 'true', `${name}: selected preview photo must expose current state`);
   if (viewport.width >= 1180) {
     assert.equal(await page.locator('#stageDocketStep').textContent(), '04 / Frames');
   }
@@ -616,9 +619,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   };
   assert.equal(frameCollection.optionCount, 4);
   assert.equal(frameCollection.active, 'all');
-  assert.equal(frameCollection.defaultCount, '8 editions');
+  assert.equal(frameCollection.defaultCount, '8 styles');
   assert.deepEqual(frameCollection.labels.map((label) => label.replace(/\s+/g, ' ').trim()), [
-    'All editions8', 'Pop room4', 'Studio room3', 'Keepsakes1',
+    'All styles8', 'Pop room4', 'Studio room3', 'Keepsakes1',
   ]);
   const frameEdition = await auditFrameEdition(page);
   assert.equal(frameEdition.exists, true);
@@ -626,8 +629,8 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(frameEdition.name, 'Poca Purikura');
   assert.ok(frameEdition.story.length >= 24);
   assert.ok(frameEdition.material.length >= 3);
-  assert.equal(frameEdition.collection, 'Pop room · 2 editions');
-  assert.equal(frameEdition.shelfState, 'On this shelf');
+  assert.equal(frameEdition.collection, 'Pop room · 2 styles');
+  assert.equal(frameEdition.shelfState, 'In this collection');
   assert.equal(frameEdition.offShelf, 'false');
   assert.equal(frameEdition.paletteCount, 3);
   assert.match(frameEdition.exclusive, /Poca Purikura.*Decorate/);
@@ -639,8 +642,8 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
 
   await page.locator('[data-frame-collection="studio-room"]').click();
   await page.waitForFunction(() => document.querySelectorAll('#templateList .tpl-btn').length === 3);
-  assert.equal(await page.locator('#frameCollectionCount').textContent(), '3 editions');
-  assert.equal(await page.locator('#frameEditionShelfState').textContent(), 'Active from Pop room');
+  assert.equal(await page.locator('#frameCollectionCount').textContent(), '3 styles');
+  assert.equal(await page.locator('#frameEditionShelfState').textContent(), 'From Pop room');
   assert.equal(await page.locator('#frameEditionDossier').getAttribute('data-off-shelf'), 'true');
   await page.locator('#templateList .tpl-btn').first().click();
   await page.waitForFunction(() => document.querySelector('#frameEditionDossier')?.dataset.offShelf === 'false');
@@ -828,7 +831,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(revealTheatre.dossierFormat, 'Strip 3 · 720×1800');
   assert.ok(revealTheatre.dossierFrame.length > 0);
   assert.equal(revealTheatre.dossierDecorations, '1 sticker');
-  assert.equal(revealTheatre.dossierPrivacy, 'Local-only session');
+  assert.equal(revealTheatre.dossierPrivacy, 'Saved only in this browser');
   assert.equal(revealTheatre.actionDisplay, 'grid');
   assert.notEqual(revealTheatre.primaryGridColumn, 'auto');
   assert.equal(revealTheatre.primaryBelowUtilities, true);

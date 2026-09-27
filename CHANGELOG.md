@@ -5,6 +5,13 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.35.1] - 2026-09-27
+
+### Fixed
+- Pose Mate Match pose now keeps the real camera photo full frame and places the guest inside that same photo window for camera, review, preview, and export.
+- Frame-stage photos can be selected directly from the center preview. The selected photo controls update without requiring the small photo tabs.
+- Simplified the visible language to use photo, print, and frame consistently. Internal labels such as Active proof and Proof 1 of 3 now read Selected photo and Photo 1 of 3.
+
 ## [0.35.0] - 2026-09-27
 
 ### Added

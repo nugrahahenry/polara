@@ -430,7 +430,7 @@ function updateActions() {
     setButton(refs.tertiary, { label: 'Demo mode', tone: 'ghost', hidden: state.demo, disabled: state.shooting });
   } else if (state.step === 'review') {
     setButton(refs.primary, { label: 'Choose frame', tone: 'primary' });
-    setButton(refs.secondary, { label: `Retake proof ${state.selectedSlot + 1}`, tone: 'secondary' });
+    setButton(refs.secondary, { label: `Retake photo ${state.selectedSlot + 1}`, tone: 'secondary' });
   } else if (state.step === 'frame') {
     setButton(refs.primary, { label: 'Continue to Decorate', tone: 'primary', disabled: !state.frameId });
   } else if (state.step === 'decorate') {
@@ -551,7 +551,7 @@ refs.guestLayoutChoose.addEventListener('click', (event) => {
   });
   invalidatePreparedExport();
   syncGuestExperienceSurfaces();
-  status(state.guestLayout === 'matched' ? 'Matched gesture composition selected.' : 'Side-by-side composition selected.');
+  status(state.guestLayout === 'matched' ? 'Match pose selected.' : 'Side-by-side selected.');
 });
 
 refs.guestOptionList.addEventListener('click', async (event) => {
@@ -589,7 +589,7 @@ async function beginCamera({ retake = false } = {}) {
     state.activeSlot = state.photos.findIndex((photo) => !photo);
     if (state.activeSlot < 0) state.activeSlot = state.selectedSlot;
   }
-  await goToStep('camera', retake ? 'The previous proof stays safe until its replacement succeeds.' : 'Allow camera access, then get ready to pose.');
+  await goToStep('camera', retake ? 'The previous photo stays safe until its replacement succeeds.' : 'Allow camera access, then get ready to pose.');
   if (state.demo) {
     state.cameraStatus = 'demo';
     showCameraState();
@@ -612,7 +612,7 @@ async function requestCamera({ switching = false } = {}) {
     refs.video.style.transform = state.facing === 'user' ? 'scaleX(-1)' : 'none';
     stream.getVideoTracks()[0]?.addEventListener('ended', () => {
       if (requestId !== cameraRequestId || state.step !== 'camera' || state.demo) return;
-      suspendCameraSession('Camera disconnected. Existing proofs are safe; restart the camera to continue.');
+      suspendCameraSession('Camera disconnected. Existing photos are safe. Restart the camera to continue.');
     }, { once: true });
     showCameraState();
     status('Camera ready. Keep everyone inside the guide, then press Take photo.');
@@ -646,10 +646,10 @@ function showCameraState() {
   else if (state.cameraStatus === 'idle') refs.cameraMessage.textContent = 'Camera has not started.';
   refs.video.hidden = demo;
   refs.cameraStateNote.textContent = demo
-    ? 'Demo mode aktif. Setiap Take photo membuat placeholder lokal untuk menguji flow.'
+    ? 'Demo mode is on. Each photo uses a local sample so you can test the flow.'
     : state.cameraStatus === 'ready' ? 'Camera ready. The full capture is kept without permanent cropping.'
-      : state.cameraStatus === 'paused' ? 'Press Try again to restart the camera. Existing proofs will not change.'
-        : 'The session and existing proofs remain safe.';
+      : state.cameraStatus === 'paused' ? 'Press Try again to restart the camera. Existing photos will not change.'
+        : 'The session and existing photos remain safe.';
   updateActions();
 }
 
@@ -736,11 +736,11 @@ function renderSlotCards(container, onSelect) {
     button.className = `slot-card${selected ? ' active' : ''}`;
     button.dataset.proofState = proofState;
     button.dataset.captureRecent = String(Boolean(photo) && index === state.recentCaptureSlot);
-    button.setAttribute('aria-label', photo ? `Choose proof ${index + 1}, ${stateLabel}` : `Proof ${index + 1}, ${stateLabel}`);
+    button.setAttribute('aria-label', photo ? `Choose photo ${index + 1}, ${stateLabel}` : `Photo ${index + 1}, ${stateLabel}`);
     button.setAttribute('aria-pressed', String(selected));
     button.innerHTML = photo
-      ? `<img src="${photo.src}" alt="Proof preview ${index + 1}" /><span class="slot-number">${index + 1}</span><span class="slot-state">${stateLabel}</span>`
-      : `<span class="slot-empty">Proof ${index + 1}</span><span class="slot-number">${index + 1}</span><span class="slot-state">${stateLabel}</span>`;
+      ? `<img src="${photo.src}" alt="Photo preview ${index + 1}" /><span class="slot-number">${index + 1}</span><span class="slot-state">${stateLabel}</span>`
+      : `<span class="slot-empty">Photo ${index + 1}</span><span class="slot-number">${index + 1}</span><span class="slot-state">${stateLabel}</span>`;
     button.addEventListener('click', () => onSelect(index));
     container.appendChild(button);
   });
@@ -749,18 +749,18 @@ function renderSlotCards(container, onSelect) {
 
 function renderCameraPanel() {
   const slot = state.activeSlot + 1;
-  refs.cameraBayCounter.textContent = `Proof ${slot} / ${state.mode}`;
-  refs.cameraPanelTitle.textContent = state.retakeSlot != null ? `Retake slot ${slot}` : state.mode === 3 ? `Pose for proof ${slot}` : 'One main pose';
+  refs.cameraBayCounter.textContent = `Photo ${slot} / ${state.mode}`;
+  refs.cameraPanelTitle.textContent = state.retakeSlot != null ? `Retake photo ${slot}` : state.mode === 3 ? `Pose for photo ${slot}` : 'One main pose';
   refs.cameraPanelCopy.textContent = state.retakeSlot != null
-    ? 'The previous proof stays in place until the replacement capture succeeds.'
+    ? 'The previous photo stays in place until the replacement capture succeeds.'
     : state.experience === POSE_MATE_EXPERIENCE
-      ? `Match the ${poseGuideForSlot(state.activeSlot, state.mode).toLowerCase()} cue. Polara keeps your full capture untouched.`
+      ? `Match the ${poseGuideForSlot(state.activeSlot, state.mode).toLowerCase()} pose. Polara keeps your full capture untouched.`
       : 'Polara keeps the full capture. Adjust fit, zoom, and pan after choosing a frame.';
   renderSlotCards(refs.cameraSlots, (index) => {
     state.activeSlot = index;
     state.retakeSlot = state.photos[index] ? index : null;
     renderCameraPanel();
-    status(state.photos[index] ? `Proof ${index + 1} selected for retake; the previous proof is still safe.` : `Proof ${index + 1} is ready.`);
+    status(state.photos[index] ? `Photo ${index + 1} selected for retake; the previous photo is still safe.` : `Photo ${index + 1} is ready.`);
   });
   syncGuestExperienceSurfaces();
   showCameraState();
@@ -813,7 +813,7 @@ async function takePhoto() {
   state.recentCaptureSlot = null;
   const wasRetake = state.retakeSlot != null;
   const captureCopy = getCaptureMomentCopy({ slotIndex: slot, mode: state.mode, retake: wasRetake });
-  status(`Get ready for proof ${slot + 1}…`);
+  status(`Get ready for photo ${slot + 1}…`);
 
   try {
     await runCountdown(state.timer, captureCopy);
@@ -831,27 +831,27 @@ async function takePhoto() {
     if (wasRetake) {
       state.retakeSlot = null;
       state.shooting = false;
-      await goToStep('review', `Proof ${slot + 1} was replaced. Other proofs stay unchanged.`);
+      await goToStep('review', `Photo ${slot + 1} was replaced. Other photos stay unchanged.`);
       return;
     }
 
     const nextEmpty = state.photos.findIndex((photo) => !photo);
     if (nextEmpty === -1) {
       state.shooting = false;
-      await goToStep('review', state.mode === 3 ? 'All three proofs are ready. Check each one before choosing a frame.' : 'Your proof is ready. Review it before choosing a frame.');
+      await goToStep('review', state.mode === 3 ? 'All three photos are ready. Check each one before choosing a frame.' : 'Your photo is ready. Review it before choosing a frame.');
       return;
     }
 
     state.activeSlot = nextEmpty;
     state.shooting = false;
     renderCameraPanel();
-    status(`Photo saved to proof ${slot + 1}. Prepare the pose for proof ${nextEmpty + 1}.`);
+    status(`Photo ${slot + 1} saved. Prepare the pose for photo ${nextEmpty + 1}.`);
   } catch (error) {
     state.shooting = false;
     clearCaptureMoment();
     if (state.step === 'camera') {
       status(error?.name === 'AbortError'
-        ? 'Capture paused. Existing proofs remain safe.'
+        ? 'Capture paused. Existing photos remain safe.'
         : `The photo was not captured. ${error.message || 'Please try again.'}`);
     }
   }
@@ -861,11 +861,11 @@ async function takePhoto() {
 function renderReview() {
   state.selectedSlot = Math.min(state.selectedSlot, state.photos.length - 1);
   const photo = state.photos[state.selectedSlot] || state.photos.find(Boolean);
-  const activeProof = state.selectedSlot + 1;
-  const proofLabel = `Proof ${activeProof} of ${state.mode}`;
+  const activePhoto = state.selectedSlot + 1;
+  const photoLabel = `Photo ${activePhoto} of ${state.mode}`;
   if (photo) refs.reviewPhoto.src = photo.src;
-  refs.reviewPhoto.alt = `${proofLabel} under review`;
-  refs.reviewWrap.dataset.activeProof = String(activeProof);
+  refs.reviewPhoto.alt = `${photoLabel}, selected for review`;
+  refs.reviewWrap.dataset.activeProof = String(activePhoto);
   const freshArrival = state.recentCaptureSlot === state.selectedSlot;
   refs.reviewWrap.dataset.proofArrival = freshArrival ? 'fresh' : 'steady';
   clearTimeout(reviewArrivalTimer);
@@ -875,9 +875,9 @@ function renderReview() {
       state.recentCaptureSlot = null;
     }, reducedMotion.matches ? 220 : 760);
   }
-  refs.reviewProofTag.textContent = proofLabel;
-  refs.reviewProofLabel.textContent = proofLabel;
-  refs.reviewSourceMeta.textContent = `Original ${photo?.naturalWidth || 0}×${photo?.naturalHeight || 0} · kept locally`;
+  refs.reviewProofTag.textContent = photoLabel;
+  refs.reviewProofLabel.textContent = photoLabel;
+  refs.reviewSourceMeta.textContent = `Original ${photo?.naturalWidth || 0}×${photo?.naturalHeight || 0} · kept on this device`;
   syncGuestExperienceSurfaces();
   if (photo && currentGuestComposition()) {
     const apply = () => applyPhotoGeometry(refs.reviewPhotoRegion, refs.reviewPhoto, photo);
@@ -990,7 +990,7 @@ async function renderTemplateList() {
       if (!isRequestedFrameStillSelected(template.id, state.frameId)) return;
       status(template.status === 'experimental-static'
         ? 'Live Frame is an experimental visual. The result remains a static PNG, not a GIF or video.'
-        : `${template.name} selected. Photo transforms are preserved.`);
+        : `${template.name} selected. Your photo adjustments are kept.`);
     });
     refs.templateList.appendChild(button);
     buildTemplateThumb(template, thumb);
@@ -1007,9 +1007,9 @@ function renderFrameCollectionFilters() {
   const options = ensureCurrentFrameCollection();
   const active = options.find((collection) => collection.id === state.frameCollectionId) || options[0];
   refs.frameCollectionFilters.innerHTML = '';
-  refs.frameCollectionCount.textContent = `${active.count} ${active.count === 1 ? 'edition' : 'editions'}`;
-  refs.frameCollectionDescription.textContent = `${active.description} Browsing never changes your active frame.`;
-  refs.frameRailTitle.textContent = active.id === ALL_FRAME_COLLECTION_ID ? 'Frame editions' : active.label;
+  refs.frameCollectionCount.textContent = `${active.count} ${active.count === 1 ? 'style' : 'styles'}`;
+  refs.frameCollectionDescription.textContent = active.description;
+  refs.frameRailTitle.textContent = active.id === ALL_FRAME_COLLECTION_ID ? 'Frame styles' : active.label;
 
   options.forEach((collection) => {
     const button = document.createElement('button');
@@ -1018,7 +1018,7 @@ function renderFrameCollectionFilters() {
     button.className = `frame-collection-btn${selected ? ' active' : ''}`;
     button.dataset.frameCollection = collection.id;
     button.setAttribute('aria-pressed', String(selected));
-    button.setAttribute('aria-label', `${collection.label}, ${collection.count} ${collection.count === 1 ? 'edition' : 'editions'}`);
+    button.setAttribute('aria-label', `${collection.label}, ${collection.count} ${collection.count === 1 ? 'style' : 'styles'}`);
     const label = document.createElement('span');
     label.textContent = collection.label;
     const count = document.createElement('span');
@@ -1035,7 +1035,7 @@ function renderFrameCollectionFilters() {
       if (restoreFocus) {
         refs.frameCollectionFilters.querySelector(`[data-frame-collection="${CSS.escape(collection.id)}"]`)?.focus({ preventScroll: true });
       }
-      status(`${collection.label} opened. Your active frame remains ${getTemplate(state.frameId).name}.`);
+      status(`${collection.label} opened. Your selected frame remains ${getTemplate(state.frameId).name}.`);
     });
     refs.frameCollectionFilters.appendChild(button);
   });
@@ -1054,16 +1054,16 @@ function renderFrameEditionDossier() {
   refs.frameEditionMaterial.textContent = familyProfile.material;
   const collection = frameCollections.find((item) => item.id === familyProfile.collectionId);
   const editionCount = getFrameFamilyEditionCount(framesForMode({ includeUnavailable: true }), template);
-  refs.frameEditionCollection.textContent = `${collection?.label || 'Collection'} · ${editionCount} ${editionCount === 1 ? 'edition' : 'editions'}`;
+  refs.frameEditionCollection.textContent = `${collection?.label || 'Collection'} · ${editionCount} ${editionCount === 1 ? 'style' : 'styles'}`;
   const onShelf = state.frameCollectionId === ALL_FRAME_COLLECTION_ID || state.frameCollectionId === familyProfile.collectionId;
-  refs.frameEditionShelfState.textContent = onShelf ? 'On this shelf' : `Active from ${collection?.label || 'another shelf'}`;
+  refs.frameEditionShelfState.textContent = onShelf ? 'In this collection' : `From ${collection?.label || 'another collection'}`;
   refs.frameEditionDossier.dataset.offShelf = String(!onShelf);
   const kit = familyProfile.assetKit;
   refs.frameEditionKitStatus.textContent = kit?.status === 'ready' ? 'Ready kit' : 'Kit pending';
   refs.frameEditionKitStatus.dataset.status = kit?.status || 'unknown';
   refs.frameEditionKitStatus.title = kit?.status === 'ready'
-    ? 'Single, Strip, composite preview, dan sticker companion siap dipakai.'
-    : 'Kit aset ini belum lengkap.';
+    ? 'Single, Strip, composite preview, and sticker companion are ready.'
+    : 'This frame kit is not complete yet.';
   refs.frameEditionExclusive.textContent = exclusive ? `${exclusive.name} in Decorate` : 'Available in Decorate';
   refs.frameEditionExclusiveImage.hidden = !exclusive;
   if (exclusive) refs.frameEditionExclusiveImage.src = exclusive.src;
@@ -1167,6 +1167,7 @@ async function renderCanvas() {
     });
     fitStage(templateDims(template));
     refreshPhotoSlots(phCanvas, state.photos, { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
+    bindCanvasPhotoSelection(phCanvas);
     renderEditorStickers();
   } catch (error) {
     if (template.renderMode === 'png-overlay') {
@@ -1188,8 +1189,40 @@ async function renderCanvas() {
         return;
       }
     }
-    status(`Frame failed to load. The session is safe; choose another frame or try again. ${error.message || ''}`);
+    status(`This frame could not load. Your session is safe. Choose another frame or try again. ${error.message || ''}`);
   }
+}
+
+function syncCanvasPhotoSelection(canvasEl) {
+  canvasEl?.querySelectorAll('.ph-slot[data-photo-selectable="true"]').forEach((slot, index) => {
+    slot.setAttribute('aria-current', String(index === state.selectedSlot));
+  });
+}
+
+function bindCanvasPhotoSelection(canvasEl) {
+  if (!canvasEl) return;
+  canvasEl.querySelectorAll('.ph-slot').forEach((slot, index) => {
+    if (!state.photos[index]) return;
+    slot.dataset.photoSelectable = 'true';
+    slot.tabIndex = 0;
+    slot.setAttribute('role', 'button');
+    slot.setAttribute('aria-label', `Select photo ${index + 1} to adjust`);
+    const select = () => {
+      if (!['frame', 'decorate'].includes(state.step)) return;
+      setActiveProof(index);
+      renderPhotoTabs();
+      syncPhotoControls();
+      syncCanvasPhotoSelection(canvasEl);
+      status(`Photo ${index + 1} selected. Choose Full photo or Fill frame.`);
+    };
+    slot.addEventListener('click', select);
+    slot.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      event.preventDefault();
+      select();
+    });
+  });
+  syncCanvasPhotoSelection(canvasEl);
 }
 
 function fitStage(dims) {
@@ -1220,6 +1253,7 @@ function renderPhotoTabs() {
       setActiveProof(index);
       renderPhotoTabs();
       syncPhotoControls();
+      syncCanvasPhotoSelection(phCanvas);
     });
     refs.photoSlotTabs.appendChild(button);
   });
@@ -1262,7 +1296,7 @@ refs.resetPhoto.addEventListener('click', () => {
   state.photos[state.selectedSlot] = resetPhotoTransform(photo);
   setPhotoSlot(phCanvas, state.selectedSlot + 1, state.photos[state.selectedSlot], { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
   syncPhotoControls();
-  status(`Proof ${state.selectedSlot + 1} now shows the full photo.`);
+  status(`Photo ${state.selectedSlot + 1} now shows the full photo.`);
 });
 
 function snapshotStickers() {
@@ -1314,11 +1348,11 @@ function renderStickerBench() {
   if (view.active) refs.stickerInspectorImage.src = view.active.src;
   refs.stickerInspectorName.textContent = view.active?.instanceLabel
     || (view.count
-      ? `${view.count} sticker${view.count === 1 ? '' : 's'} on this proof`
+      ? `${view.count} sticker${view.count === 1 ? '' : 's'} on this photo`
       : 'Pick a sticker from the rail');
   refs.stickerInspectorHint.textContent = view.active
     ? `${view.active.categoryLabel} · Drag to move · handles resize and rotate · Arrow keys nudge · Delete removes`
-    : 'Each sticker is added locally and stays editable on the proof.';
+    : 'Each sticker is added locally and stays editable on the photo.';
 
   if (view.state === 'editing' && window.innerWidth <= 540) {
     const scrollBounds = refs.controlScroll.getBoundingClientRect();
@@ -1380,7 +1414,7 @@ function renderStickerTray() {
       state.stickers.push(item);
       state.selectedSticker = item.uid;
       renderEditorStickers();
-      status(`${asset.name} added. Drag it on the proof or use the keyboard.`);
+      status(`${asset.name} added. Drag it on the photo or use the keyboard.`);
     });
     refs.stickerTray.appendChild(button);
   });
@@ -1504,11 +1538,11 @@ async function startReveal({ focusTitle = true } = {}) {
   status('Poca is developing your print…');
   await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 20 : 980));
   if (requestId !== revealRequestId || state.step !== 'reveal') return;
-  status('The proof is visible while Polara prepares the file for mobile sharing.');
+  status('Your print is visible while Polara prepares the file for sharing.');
   try {
     await prepareFramedExport();
   } catch (error) {
-    if (error?.name !== 'AbortError') status('The proof is ready. File preparation will retry when you save or share.');
+    if (error?.name !== 'AbortError') status('Your print is ready. File preparation will retry when you save or share.');
   }
   if (requestId !== revealRequestId || state.step !== 'reveal') return;
   state.revealReady = true;
@@ -1516,7 +1550,7 @@ async function startReveal({ focusTitle = true } = {}) {
   syncPoca();
   renderProgress();
   updateActions();
-  status('Proof approved. Ready to share or save.');
+  status('Print approved. Ready to share or save.');
 }
 
 async function withBusy(message, task) {
@@ -1535,7 +1569,7 @@ async function downloadFramed() {
       await download(prepared.blob, prepared.filename);
       status(`PNG saved (${prepared.width}×${prepared.height}).`);
     } catch (error) {
-      status(error.message || 'Export failed. Your proof is safe; try again.');
+      status(error.message || 'Export failed. Your print is safe; try again.');
     }
   });
 }
@@ -1555,7 +1589,7 @@ async function downloadRaw() {
       await assertExportDimensions(url, state.mode === 3 ? 720 : 1080, state.mode === 3 ? 1800 : 1350);
       const blob = await dataUrlToBlob(url);
       await download(blob, `polara-photo-only-${Date.now()}.png`);
-      status('The unframed photo was saved. The framed proof remains in this session.');
+      status('The unframed photo was saved. The framed print remains in this session.');
     } catch (error) {
       status(`The unframed photo could not be created. ${error.message || 'Please try again.'}`);
     }
@@ -1571,11 +1605,11 @@ async function shareResult() {
       try {
         // Panggil sebelum await pertama agar transient user activation di HP tidak hilang.
         await navigator.share({ files: [preparedAtClick.file], text });
-        status('Your proof was shared.');
+        status('Your print was shared.');
         return;
       } catch (error) {
         if (error?.name === 'AbortError') {
-          status('Sharing was cancelled. The proof remains ready to try again.');
+          status('Sharing was cancelled. The print remains ready to try again.');
           return;
         }
         status('Native sharing did not open. Polara is preparing a download instead.');
@@ -1587,7 +1621,7 @@ async function shareResult() {
       await download(prepared.blob, prepared.filename);
       status('File sharing is unsupported or did not open, so the PNG was downloaded instead.');
     } catch (error) {
-      status(`Sharing did not complete. ${error.message || 'The proof is safe; try again.'}`);
+      status(`Sharing did not complete. ${error.message || 'The print is safe; try again.'}`);
     }
   });
 }
@@ -1640,7 +1674,7 @@ refs.back.addEventListener('click', async () => {
   if (state.step === 'camera') {
     if (state.retakeSlot != null || state.photos.some(Boolean)) {
       state.retakeSlot = null;
-      await goToStep('review', 'Existing proofs are preserved.');
+      await goToStep('review', 'Existing photos are preserved.');
     } else {
       await goToStep('start', 'Format and timer choices are unchanged.');
     }
@@ -1648,9 +1682,9 @@ refs.back.addEventListener('click', async () => {
     state.retakeSlot = state.selectedSlot;
     state.activeSlot = state.selectedSlot;
     await beginCamera({ retake: true });
-  } else if (state.step === 'frame') await goToStep('review', 'Back to Review without resetting proof choices.');
+  } else if (state.step === 'frame') await goToStep('review', 'Back to Review without resetting photo choices.');
   else if (state.step === 'decorate') await goToStep('frame', 'Caption and stickers stay in the session while you choose another frame.');
-  else if (state.step === 'reveal') await goToStep('decorate', 'The proof stays intact. Continue decorating.');
+  else if (state.step === 'reveal') await goToStep('decorate', 'The print stays intact. Continue decorating.');
 });
 
 refs.retryCamera.addEventListener('click', async () => { state.demo = false; await requestCamera(); });
@@ -1781,7 +1815,7 @@ function handleResize() {
 window.addEventListener('resize', handleResize);
 window.visualViewport?.addEventListener('resize', handleResize);
 document.addEventListener('visibilitychange', () => {
-  if (document.hidden) suspendCameraSession('Camera paused while Polara is hidden. Existing proofs remain safe.');
+  if (document.hidden) suspendCameraSession('Camera paused while Polara is hidden. Existing photos remain safe.');
 });
 window.addEventListener('pagehide', () => {
   cameraRequestId += 1;

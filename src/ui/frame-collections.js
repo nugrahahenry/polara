@@ -10,8 +10,8 @@ export function filterFramesByCollection(frames = [], collectionId = ALL_FRAME_C
 export function buildFrameCollectionOptions(collections = [], frames = []) {
   const all = {
     id: ALL_FRAME_COLLECTION_ID,
-    label: 'All editions',
-    description: 'Every frame available for this format.',
+    label: 'All styles',
+    description: 'Every frame style available for this format.',
     count: frames.length,
   };
   const populated = collections

@@ -69,12 +69,15 @@ const GUESTS = Object.freeze({
 const LAYOUTS = Object.freeze({
   matched: Object.freeze({
     right: Object.freeze({
-      userRegion: Object.freeze({ x: 0, y: 0, width: 0.68, height: 1 }),
+      // Match pose keeps the real camera image as one full photo. The guest is
+      // composited inside that same photo window instead of occupying a
+      // separate panel beside it.
+      userRegion: Object.freeze({ x: 0, y: 0, width: 1, height: 1 }),
       guestRegion: Object.freeze({ x: 0.54, y: 0, width: 0.46, height: 1 }),
       flipGuest: false,
     }),
     left: Object.freeze({
-      userRegion: Object.freeze({ x: 0.32, y: 0, width: 0.68, height: 1 }),
+      userRegion: Object.freeze({ x: 0, y: 0, width: 1, height: 1 }),
       guestRegion: Object.freeze({ x: 0, y: 0, width: 0.46, height: 1 }),
       flipGuest: true,
     }),

@@ -873,6 +873,8 @@ input, textarea { caret-color: var(--pink-deep); }
   text-transform: uppercase;
 }
 .photo-adjust { border-top: 1px solid var(--proof-hairline); }
+.ph-slot[data-photo-selectable="true"] { cursor: pointer; }
+.ph-slot[data-photo-selectable="true"]:focus-visible { outline: 3px solid var(--proof-focus); outline-offset: -3px; }
 .slot-tab.active { background: var(--proof-blue); }
 .caption-availability-note { border: 0; background: #fff7dc; }
 .tray-head > img { display: none; }
