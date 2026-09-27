@@ -299,7 +299,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=351" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=352" />
 </head>
 <body>
   <!--
@@ -322,6 +322,7 @@
       <img class="boot-poca" src="assets/mascot/poca-excited-jump.png" alt="" />
       <img class="boot-wordmark" src="assets/brand/logo-polara.png" alt="Polara" />
       <p>Poca is opening the print room.</p>
+      <span class="boot-ready-stamp" aria-hidden="true">Ready</span>
       <div class="boot-progress" aria-hidden="true"><span></span></div>
     </div>
     <p class="boot-local-note">Your photos stay in this browser.</p>
@@ -467,12 +468,6 @@
             <button type="button" class="choice-btn" data-mode="1" aria-pressed="false">Single<small>1 photo · 4:5</small></button>
             <button type="button" class="choice-btn active" data-mode="3" aria-pressed="true">Strip 3<small>Polara default</small></button>
           </div>
-          <span class="section-label">Timer per shot</span>
-          <div class="timer-grid" id="timerChoose" role="group" aria-label="Shot timer">
-            <button type="button" class="choice-btn active" data-timer="3" aria-pressed="true">3 sec</button>
-            <button type="button" class="choice-btn" data-timer="5" aria-pressed="false">5 sec</button>
-            <button type="button" class="choice-btn" data-timer="10" aria-pressed="false">10 sec</button>
-          </div>
           <p class="privacy-note">Polara works on your photos in this browser. It does not upload them or ask for an account.</p>
         </section>
 
@@ -495,6 +490,15 @@
             </div>
             <button type="button" class="mini-btn guest-side-toggle" id="guestSideBtn">Move Juno to the left</button>
             <p class="pose-mate-note" id="poseMateNote">Juno is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.</p>
+          </section>
+          <section class="camera-timer-controls" aria-labelledby="timerLabel">
+            <span class="section-label" id="timerLabel">Countdown</span>
+            <div class="timer-grid" id="timerChoose" role="group" aria-label="Shot timer">
+              <button type="button" class="choice-btn active" data-timer="3" aria-pressed="true">3 sec</button>
+              <button type="button" class="choice-btn" data-timer="5" aria-pressed="false">5 sec</button>
+              <button type="button" class="choice-btn" data-timer="10" aria-pressed="false">10 sec</button>
+            </div>
+            <p class="timer-help">Choose before each photo. The countdown locks while the camera is taking a photo.</p>
           </section>
           <p class="privacy-note" id="cameraStateNote">Press Take photo when everyone is ready.</p>
         </section>
@@ -701,6 +705,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=37"></script>
+  <script type="module" src="src/app.js?v=38"></script>
 </body>
 </html>

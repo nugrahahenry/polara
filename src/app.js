@@ -28,6 +28,7 @@ import {
 } from './ui/frame-collections.js?v=1';
 import { getCaptureMomentCopy } from './ui/capture-delight.js?v=1';
 import { getRevealDossier } from './ui/reveal-dossier.js?v=1';
+import { selectShotTimer } from './ui/shot-timer.js?v=1';
 
 const POLARA_URL = 'polara.vercel.app';
 const BRAND_LINE = `Polara · ${POLARA_URL}`;
@@ -152,6 +153,8 @@ async function finishBootScreen(bootState) {
   const minimum = bootState.reduced ? 80 : 760;
   const remaining = Math.max(0, minimum - (performance.now() - bootState.startedAt));
   if (remaining) await wait(remaining);
+  bootState.screen.classList.add('is-ready');
+  bootState.screen.setAttribute('aria-label', 'Your print room is ready');
   bootState.screen.classList.add('is-opening');
   document.documentElement.classList.add('app-entering');
   await wait(bootState.reduced ? 40 : 680);
@@ -542,13 +545,17 @@ function syncStartControls() {
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
   });
+  syncGuestExperienceSurfaces();
+  updateActions();
+}
+
+function syncTimerControls() {
   refs.timerChoose.querySelectorAll('[data-timer]').forEach((button) => {
     const active = Number(button.dataset.timer) === state.timer;
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
+    button.disabled = state.shooting || state.busy;
   });
-  syncGuestExperienceSurfaces();
-  updateActions();
 }
 
 refs.modeChoose.addEventListener('click', (event) => {
@@ -567,8 +574,10 @@ refs.modeChoose.addEventListener('click', (event) => {
 refs.timerChoose.addEventListener('click', (event) => {
   const button = event.target.closest('[data-timer]');
   if (!button) return;
-  state.timer = Number(button.dataset.timer);
-  syncStartControls();
+  const selectedTimer = selectShotTimer(state, button.dataset.timer);
+  if (!selectedTimer) return;
+  state.timer = selectedTimer;
+  syncTimerControls();
   status(`Timer ${state.timer} seconds selected.`);
 });
 
@@ -794,6 +803,7 @@ function renderCameraPanel() {
     renderCameraPanel();
     status(state.photos[index] ? `Photo ${index + 1} selected for retake; the previous photo is still safe.` : `Photo ${index + 1} is ready.`);
   });
+  syncTimerControls();
   syncGuestExperienceSurfaces();
   showCameraState();
 }
@@ -841,6 +851,7 @@ async function takePhoto() {
   if (state.shooting || !['ready', 'demo'].includes(state.cameraStatus)) return;
   state.shooting = true;
   updateActions();
+  syncTimerControls();
   const slot = state.activeSlot;
   state.recentCaptureSlot = null;
   const wasRetake = state.retakeSlot != null;
@@ -863,6 +874,7 @@ async function takePhoto() {
     if (wasRetake) {
       state.retakeSlot = null;
       state.shooting = false;
+      syncTimerControls();
       await goToStep('review', `Photo ${slot + 1} was replaced. Other photos stay unchanged.`);
       return;
     }
@@ -870,16 +882,19 @@ async function takePhoto() {
     const nextEmpty = state.photos.findIndex((photo) => !photo);
     if (nextEmpty === -1) {
       state.shooting = false;
+      syncTimerControls();
       await goToStep('review', state.mode === 3 ? 'All three photos are ready. Check each one before choosing a frame.' : 'Your photo is ready. Review it before choosing a frame.');
       return;
     }
 
     state.activeSlot = nextEmpty;
     state.shooting = false;
+    syncTimerControls();
     renderCameraPanel();
     status(`Photo ${slot + 1} saved. Prepare the pose for photo ${nextEmpty + 1}.`);
   } catch (error) {
     state.shooting = false;
+    syncTimerControls();
     clearCaptureMoment();
     if (state.step === 'camera') {
       status(error?.name === 'AbortError'

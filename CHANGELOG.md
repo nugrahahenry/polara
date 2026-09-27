@@ -5,6 +5,16 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.35.3] - 2026-09-27
+
+### Changed
+- Camera timer now owns the 3, 5, and 10 second countdown choices, so the timer can be adjusted before each photo or retake instead of taking space on Start.
+- Countdown controls lock during capture to keep one photo's timing stable.
+- Pose Mate opening keeps the Poca companion clear of the guest preview and shows a small ready cue before the bounded reveal.
+
+### Validation
+- Added focused timer-state and opening-readiness regression tests.
+
 ## [0.35.2] - 2026-09-27
 
 ### Fixed

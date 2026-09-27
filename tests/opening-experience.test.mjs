@@ -38,6 +38,14 @@ test('boot fail safe remains armed until initialization finishes', () => {
   assert.match(finish, /clearTimeout\(window\.__polaraBootFallback\)/);
 });
 
+test('opening readiness is tied to completed initialization without a longer wait', () => {
+  assert.match(html, /class="boot-ready-stamp"/);
+  assert.match(app, /screen.classList.add\('is-ready'\)/);
+  assert.match(app, /Your print room is ready/);
+  assert.match(app, /bootState.reduced \? 80 : 760/);
+  assert.match(css, /\.boot-screen\.is-ready \.boot-ready-stamp/);
+});
+
 
 test('public application copy contains no em dash or en dash', () => {
   for (const [name, source] of [['index.html', html], ['src/app.js', app]]) {

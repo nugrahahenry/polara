@@ -1199,6 +1199,17 @@ input, textarea { caret-color: var(--pink-deep); }
   filter: drop-shadow(0 16px 20px rgba(75,46,31,.2));
   pointer-events: none;
 }
+.stage-shell[data-experience="pose-mate"] .start-guest-preview {
+  right: -8%;
+  bottom: 2%;
+  width: 58%;
+  filter: drop-shadow(0 11px 13px rgba(75,46,31,.2));
+}
+.stage-shell[data-experience="pose-mate"] .proof-buddy { z-index: 9; }
+.camera-timer-controls { margin-top: 14px; }
+.camera-timer-controls .section-label { margin-top: 0; }
+.timer-help { margin: 8px 0 0; color: var(--proof-muted); font-size: .68rem; line-height: 1.4; }
+.timer-grid .choice-btn:disabled { cursor: not-allowed; opacity: .58; transform: none; }
 .stage-shell[data-experience="pose-mate"] .hero-strip { transform: translateX(-9%) rotate(-3deg); }
 .stage-shell[data-experience="pose-mate"] .hero-photo {
   background: linear-gradient(145deg, #ffe8f2 0 54%, #d7efff 54% 100%);
@@ -1609,6 +1620,22 @@ html.boot-pending .boot-screen { display: grid; }
 .boot-screen.is-opening .boot-shutter-top { transform: translateY(-102%); }
 .boot-screen.is-opening .boot-shutter-bottom { transform: translateY(102%); }
 .boot-screen.is-opening .boot-proof { opacity: 0; filter: blur(5px); transform: translateY(-12px) scale(.98); }
+.boot-ready-stamp {
+  display: inline-grid;
+  place-items: center;
+  min-height: 24px;
+  padding: 4px 9px;
+  border: 1px solid rgba(78,183,248,.5);
+  border-radius: 999px;
+  color: #17608c;
+  background: rgba(219,244,255,.82);
+  font: 800 .62rem/1 var(--font-ui);
+  letter-spacing: .04em;
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 180ms ease, transform 180ms ease;
+}
+.boot-screen.is-ready .boot-ready-stamp { opacity: 1; transform: none; }
 @keyframes boot-poca-arrival {
   0% { opacity: 0; transform: translateY(18px) rotate(-4deg) scale(.9); }
   68% { opacity: 1; transform: translateY(-4px) rotate(1deg) scale(1.02); }
@@ -1771,4 +1798,5 @@ html.app-entering .workspace { animation: proof-desk-arrival 720ms cubic-bezier(
   .boot-progress span,
   html.app-entering .workspace { animation: none !important; transition-duration: .01ms !important; }
   .boot-progress span { transform: scaleX(1); }
+  .boot-ready-stamp { transition: none; }
 }
