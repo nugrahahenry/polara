@@ -22,8 +22,10 @@ test('asset quality policy locks production budgets and fictional picker provena
   const policy = await readJson('assets/asset-quality-policy.json');
   assert.equal(policy.schemaVersion, 3);
   assert.equal(policy.profile, 'polara-asset-quality-v3');
+  assert.equal(policy.assetExpansionProfileVersion, 'asset-expansion-v1');
   assert.equal(policy.frames.familyProfileVersion, 'frame-family-v3');
   assert.equal(policy.frames.collectionProfileVersion, 'frame-collection-v1');
+  assert.ok(policy.frames.familyProfileFields.includes('assetKit'));
   assert.equal(policy.frames.requireCharacterFreeOverlay, true);
   assert.equal(policy.frames.requirePickerComposite, true);
   assert.equal(policy.pickerFixtures.length, 2);

@@ -15,6 +15,7 @@ test('manifest defines seven complete frame family profiles', async () => {
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
   assert.equal(manifest.familyProfileVersion, 'frame-family-v3');
   assert.equal(manifest.collectionProfileVersion, 'frame-collection-v1');
+  assert.equal(manifest.assetExpansionProfileVersion, 'asset-expansion-v1');
   assert.equal(manifest.families.length, 7);
 
   const familyIds = new Set(manifest.frames.map((frame) => frame.family));
@@ -26,6 +27,8 @@ test('manifest defines seven complete frame family profiles', async () => {
     assert.equal(family.palette.length, 3);
     assert.ok(family.palette.every((color) => /^#[a-f0-9]{6}$/i.test(color)));
     assert.match(family.exclusiveStickerId, /^[a-z0-9-]+-exclusive$/);
+    assert.equal(family.assetKit.status, 'ready');
+    assert.deepEqual(family.assetKit.formats, ['single', 'strip']);
   }
 });
 

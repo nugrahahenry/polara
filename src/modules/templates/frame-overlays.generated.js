@@ -46,7 +46,17 @@ export const frameOverlayTemplates = [
         "#ffe26f"
       ],
       "exclusiveStickerId": "poca-purikura-exclusive",
-      "pickerFixtureId": "polara-picker-besties-v1"
+      "pickerFixtureId": "polara-picker-besties-v1",
+      "assetKit": {
+        "id": "poca-purikura-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-purikura-exclusive"
+      }
     },
     "canvas": {
       "width": 1080,
@@ -97,7 +107,17 @@ export const frameOverlayTemplates = [
         "#ffe26f"
       ],
       "exclusiveStickerId": "poca-purikura-exclusive",
-      "pickerFixtureId": "polara-picker-besties-v1"
+      "pickerFixtureId": "polara-picker-besties-v1",
+      "assetKit": {
+        "id": "poca-purikura-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-purikura-exclusive"
+      }
     },
     "canvas": {
       "width": 720,
@@ -160,7 +180,17 @@ export const frameOverlayTemplates = [
         "#ffe26f"
       ],
       "exclusiveStickerId": "poca-purikura-exclusive",
-      "pickerFixtureId": "polara-picker-besties-v1"
+      "pickerFixtureId": "polara-picker-besties-v1",
+      "assetKit": {
+        "id": "poca-purikura-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-purikura-exclusive"
+      }
     },
     "canvas": {
       "width": 1080,
@@ -211,7 +241,17 @@ export const frameOverlayTemplates = [
         "#ffe26f"
       ],
       "exclusiveStickerId": "poca-purikura-exclusive",
-      "pickerFixtureId": "polara-picker-besties-v1"
+      "pickerFixtureId": "polara-picker-besties-v1",
+      "assetKit": {
+        "id": "poca-purikura-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-purikura-exclusive"
+      }
     },
     "canvas": {
       "width": 720,
@@ -274,7 +314,17 @@ export const frameOverlayTemplates = [
         "#f1d5a8"
       ],
       "exclusiveStickerId": "poca-vintage-film-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1"
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "vintage-film-lofi-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-vintage-film-exclusive"
+      }
     },
     "canvas": {
       "width": 1080,
@@ -325,7 +375,17 @@ export const frameOverlayTemplates = [
         "#f1d5a8"
       ],
       "exclusiveStickerId": "poca-vintage-film-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1"
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "vintage-film-lofi-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-vintage-film-exclusive"
+      }
     },
     "canvas": {
       "width": 720,
@@ -388,7 +448,17 @@ export const frameOverlayTemplates = [
         "#cab8ff"
       ],
       "exclusiveStickerId": "poca-seoul-y2k-exclusive",
-      "pickerFixtureId": "polara-picker-besties-v1"
+      "pickerFixtureId": "polara-picker-besties-v1",
+      "assetKit": {
+        "id": "seoul-snap-y2k-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-seoul-y2k-exclusive"
+      }
     },
     "canvas": {
       "width": 1080,
@@ -439,7 +509,17 @@ export const frameOverlayTemplates = [
         "#cab8ff"
       ],
       "exclusiveStickerId": "poca-seoul-y2k-exclusive",
-      "pickerFixtureId": "polara-picker-besties-v1"
+      "pickerFixtureId": "polara-picker-besties-v1",
+      "assetKit": {
+        "id": "seoul-snap-y2k-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-seoul-y2k-exclusive"
+      }
     },
     "canvas": {
       "width": 720,
@@ -502,7 +582,17 @@ export const frameOverlayTemplates = [
         "#ead6b8"
       ],
       "exclusiveStickerId": "poca-daily-reporter-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1"
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "polara-daily-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-daily-reporter-exclusive"
+      }
     },
     "canvas": {
       "width": 1080,
@@ -579,7 +669,17 @@ export const frameOverlayTemplates = [
         "#ead6b8"
       ],
       "exclusiveStickerId": "poca-daily-reporter-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1"
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "polara-daily-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-daily-reporter-exclusive"
+      }
     },
     "canvas": {
       "width": 720,
@@ -645,7 +745,17 @@ export const frameOverlayTemplates = [
         "#2e62a1"
       ],
       "exclusiveStickerId": "poca-midnight-photographer-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1"
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "polara-midnight-club-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-midnight-photographer-exclusive"
+      }
     },
     "canvas": {
       "width": 1080,
@@ -722,7 +832,17 @@ export const frameOverlayTemplates = [
         "#2e62a1"
       ],
       "exclusiveStickerId": "poca-midnight-photographer-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1"
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "polara-midnight-club-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-midnight-photographer-exclusive"
+      }
     },
     "canvas": {
       "width": 720,
@@ -788,7 +908,17 @@ export const frameOverlayTemplates = [
         "#fff1a8"
       ],
       "exclusiveStickerId": "poca-cloud-picnic-exclusive",
-      "pickerFixtureId": "polara-picker-besties-v1"
+      "pickerFixtureId": "polara-picker-besties-v1",
+      "assetKit": {
+        "id": "cloud-picnic-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-cloud-picnic-exclusive"
+      }
     },
     "canvas": {
       "width": 1080,
@@ -840,7 +970,17 @@ export const frameOverlayTemplates = [
         "#fff1a8"
       ],
       "exclusiveStickerId": "poca-cloud-picnic-exclusive",
-      "pickerFixtureId": "polara-picker-besties-v1"
+      "pickerFixtureId": "polara-picker-besties-v1",
+      "assetKit": {
+        "id": "cloud-picnic-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-cloud-picnic-exclusive"
+      }
     },
     "canvas": {
       "width": 720,
@@ -906,7 +1046,17 @@ export const frameOverlayTemplates = [
         "#f8efe0"
       ],
       "exclusiveStickerId": "poca-lucky-ticket-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1"
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "lucky-ticket-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-lucky-ticket-exclusive"
+      }
     },
     "canvas": {
       "width": 1080,
@@ -991,7 +1141,17 @@ export const frameOverlayTemplates = [
         "#f8efe0"
       ],
       "exclusiveStickerId": "poca-lucky-ticket-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1"
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "lucky-ticket-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-lucky-ticket-exclusive"
+      }
     },
     "canvas": {
       "width": 720,

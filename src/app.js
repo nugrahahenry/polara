@@ -8,7 +8,7 @@ import {
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
 } from './core/compositor.js';
 import { applyPhotoGeometry, initializePhotosForFrame, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
-import { frameCollections, templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=16';
+import { frameCollections, templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=17';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
   findAvailableTemplate, getTemplatePreviewConfig, selectFramePreservingEditorState,
@@ -72,6 +72,7 @@ const refs = {
   frameEditionDossier: $('frameEditionDossier'), frameEditionName: $('frameEditionName'),
   frameEditionStory: $('frameEditionStory'), frameEditionMaterial: $('frameEditionMaterial'),
   frameEditionCollection: $('frameEditionCollection'), frameEditionShelfState: $('frameEditionShelfState'),
+  frameEditionKitStatus: $('frameEditionKitStatus'),
   frameEditionPalette: $('frameEditionPalette'), frameEditionExclusive: $('frameEditionExclusive'),
   frameEditionExclusiveImage: $('frameEditionExclusiveImage'),
   photoSlotTabs: $('photoSlotTabs'), fitContain: $('fitContainBtn'), fitCover: $('fitCoverBtn'),
@@ -1057,6 +1058,12 @@ function renderFrameEditionDossier() {
   const onShelf = state.frameCollectionId === ALL_FRAME_COLLECTION_ID || state.frameCollectionId === familyProfile.collectionId;
   refs.frameEditionShelfState.textContent = onShelf ? 'On this shelf' : `Active from ${collection?.label || 'another shelf'}`;
   refs.frameEditionDossier.dataset.offShelf = String(!onShelf);
+  const kit = familyProfile.assetKit;
+  refs.frameEditionKitStatus.textContent = kit?.status === 'ready' ? 'Ready kit' : 'Kit pending';
+  refs.frameEditionKitStatus.dataset.status = kit?.status || 'unknown';
+  refs.frameEditionKitStatus.title = kit?.status === 'ready'
+    ? 'Single, Strip, composite preview, dan sticker companion siap dipakai.'
+    : 'Kit aset ini belum lengkap.';
   refs.frameEditionExclusive.textContent = exclusive ? `${exclusive.name} in Decorate` : 'Available in Decorate';
   refs.frameEditionExclusiveImage.hidden = !exclusive;
   if (exclusive) refs.frameEditionExclusiveImage.src = exclusive.src;

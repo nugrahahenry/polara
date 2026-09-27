@@ -33,7 +33,7 @@ test('Daily dan Midnight memisahkan frame, fallback, dan composite tanpa mascot 
     assert.notEqual(frame.pickerThumbnailSrc, frame.thumbnailSrc);
     assert.equal(frame.characterPolicy, 'character-free');
     assert.equal('mascotSrc' in frame, false);
-    assert.doesNotMatch(JSON.stringify(frame), /(?:true-composite|review|_originals|\.zip)/i);
+    assert.doesNotMatch(JSON.stringify(frame), /(?:true-composite|"review"|_originals|\.zip)/i);
     for (const src of [frame.overlaySrc, frame.thumbnailSrc, frame.pickerThumbnailSrc]) {
       const png = await fs.readFile(new URL(`../${src}`, import.meta.url));
       assert.deepEqual(png.subarray(0, 8), PNG_SIGNATURE, `${frame.id}: ${src}`);

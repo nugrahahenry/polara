@@ -355,6 +355,8 @@ async function auditFrameEdition(page) {
       paletteCount: document.querySelectorAll('#frameEditionPalette span').length,
       exclusive: document.querySelector('#frameEditionExclusive')?.textContent.trim() || '',
       exclusiveImage: document.querySelector('#frameEditionExclusiveImage')?.getAttribute('src') || '',
+      kitStatus: document.querySelector('#frameEditionKitStatus')?.textContent.trim() || '',
+      kitStatusCode: document.querySelector('#frameEditionKitStatus')?.dataset.status || '',
       insideControlWidth: Boolean(bounds && controlBounds && bounds.left >= controlBounds.left && bounds.right <= controlBounds.right),
     };
   });
@@ -630,6 +632,8 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(frameEdition.paletteCount, 3);
   assert.match(frameEdition.exclusive, /Poca Purikura.*Decorate/);
   assert.match(frameEdition.exclusiveImage, /poca-purikura-exclusive\.png$/);
+  assert.equal(frameEdition.kitStatus, 'Ready kit');
+  assert.equal(frameEdition.kitStatusCode, 'ready');
   assert.equal(frameEdition.insideControlWidth, true, `${name}: selected edition dossier must stay inside the control sheet`);
   await shot('04', 'frames');
 

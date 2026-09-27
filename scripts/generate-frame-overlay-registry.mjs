@@ -88,6 +88,7 @@ if (!Array.isArray(manifest.frames)) fail('Manifest harus memiliki array frames.
 if (manifest.frames.length !== 16) fail(`Manifest produksi harus berisi tepat 16 frame Hero; ditemukan ${manifest.frames.length}.`);
 if (manifest.familyProfileVersion !== 'frame-family-v3') fail('Manifest harus memakai frame-family-v3.');
 if (manifest.collectionProfileVersion !== 'frame-collection-v1') fail('Manifest harus memakai frame-collection-v1.');
+if (manifest.assetExpansionProfileVersion !== 'asset-expansion-v1') fail('Manifest harus memakai asset-expansion-v1.');
 if (!Array.isArray(manifest.collections) || manifest.collections.length !== 3) {
   fail('Manifest harus memiliki tepat tiga collection profile.');
 }
@@ -127,6 +128,18 @@ for (const family of manifest.families) {
   }
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(family.pickerFixtureId || '')) {
     fail(`${family.id}.pickerFixtureId invalid.`);
+  }
+  const assetKit = family.assetKit;
+  if (!assetKit || !/^[a-z0-9]+(?:-[a-z0-9]+)*-kit-v1$/.test(assetKit.id || '')) {
+    fail(`${family.id}.assetKit.id invalid.`);
+  }
+  if (assetKit.status !== 'ready') fail(`${family.id}.assetKit.status harus ready.`);
+  if (JSON.stringify(assetKit.formats) !== JSON.stringify(['single', 'strip'])) {
+    fail(`${family.id}.assetKit.formats harus mencakup Single dan Strip.`);
+  }
+  if (assetKit.preview !== 'composite') fail(`${family.id}.assetKit.preview harus composite.`);
+  if (assetKit.stickerCompanion !== family.exclusiveStickerId) {
+    fail(`${family.id}.assetKit.stickerCompanion harus sama dengan exclusiveStickerId.`);
   }
   familyProfiles.set(family.id, family);
 }

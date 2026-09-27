@@ -298,7 +298,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=340" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=350" />
 </head>
 <body>
   <!--
@@ -531,7 +531,10 @@
           </div>
           <section class="frame-edition-dossier" id="frameEditionDossier" aria-labelledby="frameEditionName" aria-live="polite">
             <div class="frame-edition-copy">
-              <h3 id="frameEditionName">Selected frame</h3>
+              <div class="frame-edition-title-row">
+                <h3 id="frameEditionName">Selected frame</h3>
+                <span class="frame-edition-kit-badge" id="frameEditionKitStatus">Ready kit</span>
+              </div>
               <p id="frameEditionStory">A photo-first Polara edition.</p>
             </div>
             <div class="frame-edition-palette" id="frameEditionPalette" aria-hidden="true"></div>
@@ -696,6 +699,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=34"></script>
+  <script type="module" src="src/app.js?v=35"></script>
 </body>
 </html>

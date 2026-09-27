@@ -5,6 +5,21 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.35.0] - 2026-09-27
+
+### Added
+- Tambahkan kontrak **Asset Expansion v1** untuk mengaudit satu keluarga sebagai kit lengkap: Single, Strip, overlay PNG, thumbnail frame-only, composite picker, dan Poca Exclusive companion.
+- Tambahkan badge **Ready kit** pada dossier frame supaya kelengkapan aset terlihat sebelum pengguna masuk ke Hias.
+- Tambahkan regression contract untuk status kit, coverage format, preview composite, dan batas UI-only terhadap export canvas.
+
+### Changed
+- Naikkan manifest dan policy aset dengan `asset-expansion-v1` tanpa mengubah geometry, compositor, atau hasil export.
+- Regenerator dan verifier kini menolak keluarga yang belum memiliki kit Single + Strip atau companion sticker yang sesuai.
+
+### Validation
+- Asset Expansion, Node, overlay, thumbnail, Asset Quality, dan preview/export parity dijalankan ulang sebelum checkpoint dipublikasikan.
+- Flow Mulai → Kamera → Review → Frame → Hias → Reveal, Strip 3 default, local-only processing, dan output exact tetap dipertahankan.
+
 ## [0.34.0] - 2026-09-05
 
 ### Added

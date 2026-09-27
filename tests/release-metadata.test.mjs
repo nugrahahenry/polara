@@ -16,8 +16,13 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.34.0 Collection Room checkpoint', () => {
-  assert.equal(packageJson.version, '0.34.0');
+test('release metadata records the v0.35.0 Asset Expansion checkpoint', () => {
+  assert.equal(packageJson.version, '0.35.0');
+  assert.match(changelog, /## \[0\.35\.0\] - 2026-09-27/);
+  assert.match(changelog, /Asset Expansion/i);
+  assert.match(changelog, /asset-expansion-v1/i);
+  assert.match(changelog, /Ready kit/i);
+  assert.match(changelog, /## \[0\.34\.0\] - 2026-09-05/);
   assert.match(changelog, /## \[0\.34\.0\] - 2026-09-05/);
   assert.match(changelog, /Collection Room/i);
   assert.match(changelog, /frame-collection-v1/i);
@@ -72,8 +77,8 @@ test('release metadata records the v0.34.0 Collection Room checkpoint', () => {
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=34/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=340/);
+  assert.match(indexHtml, /src\/app\.js\?v=35/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=350/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);

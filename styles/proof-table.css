@@ -670,6 +670,31 @@ input, textarea { caret-color: var(--pink-deep); }
   border-radius: 14px;
   background: linear-gradient(135deg, var(--frame-family-wash), transparent 46%), var(--proof-paper-raised);
 }
+.frame-edition-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.frame-edition-title-row h3 { min-width: 0; }
+.frame-edition-kit-badge {
+  flex: 0 0 auto;
+  padding: 4px 7px;
+  border: 1px solid rgba(67, 128, 93, .28);
+  border-radius: var(--radius-pill);
+  background: rgba(227, 247, 231, .78);
+  color: #2f6b47;
+  font-size: .55rem;
+  font-weight: 900;
+  letter-spacing: .03em;
+  line-height: 1;
+  white-space: nowrap;
+}
+.frame-edition-kit-badge[data-status="pending"] {
+  border-color: rgba(168, 92, 52, .28);
+  background: rgba(255, 239, 220, .84);
+  color: #8a4b2d;
+}
 .frame-edition-copy { min-width: 0; }
 .frame-edition-copy h3 {
   margin: 0;
