@@ -16,8 +16,10 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.35.1 Pose Mate and copy checkpoint', () => {
-  assert.equal(packageJson.version, '0.35.1');
+test('release metadata records the v0.35.2 seated-bust Pose Mate checkpoint', () => {
+  assert.equal(packageJson.version, '0.35.2');
+  assert.match(changelog, /## \[0\.35\.2\] - 2026-09-27/);
+  assert.match(changelog, /seated bust/i);
   assert.match(changelog, /## \[0\.35\.1\] - 2026-09-27/);
   assert.match(changelog, /inside that same photo window/i);
   assert.match(changelog, /selected photo controls/i);
@@ -82,7 +84,7 @@ test('release metadata records the v0.35.1 Pose Mate and copy checkpoint', () =>
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=36/);
+  assert.match(indexHtml, /src\/app\.js\?v=37/);
   assert.match(indexHtml, /styles\/proof-table\.css\?v=351/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);

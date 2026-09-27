@@ -63,18 +63,33 @@ export function setPhotoSlot(canvasEl, slotNum, photo, options = {}) {
     guest.draggable = false;
     Object.assign(guest.style, {
       position: 'absolute',
-      left: `${region.x * 100}%`,
-      top: `${region.y * 100}%`,
-      width: `${region.width * 100}%`,
-      height: `${region.height * 100}%`,
       display: 'block',
       maxWidth: 'none',
-      objectFit: 'contain',
-      objectPosition: 'center bottom',
       transform: guestComposition.flipGuest ? 'scaleX(-1)' : 'none',
       pointerEvents: 'none',
       zIndex: '2',
     });
+    const crop = guestComposition.guestCrop;
+    if (crop) {
+      // All production guest assets are square. Scale the source crop to cover
+      // the region, matching the canvas export path below.
+      const imageSize = Math.max(region.width / crop.width, region.height / crop.height);
+      guest.style.width = `${imageSize * 100}%`;
+      guest.style.height = `${imageSize * 100}%`;
+      guest.style.left = `${(region.x + region.width / 2 - (crop.x + crop.width / 2) * imageSize) * 100}%`;
+      guest.style.top = `${(region.y + region.height / 2 - (crop.y + crop.height / 2) * imageSize) * 100}%`;
+      guest.style.objectFit = 'fill';
+      guest.style.objectPosition = 'center';
+      guest.style.transformOrigin = 'center center';
+    } else {
+      guest.style.left = `${region.x * 100}%`;
+      guest.style.top = `${region.y * 100}%`;
+      guest.style.width = `${region.width * 100}%`;
+      guest.style.height = `${region.height * 100}%`;
+      guest.style.objectFit = 'contain';
+      guest.style.objectPosition = 'center bottom';
+      guest.style.transformOrigin = 'center bottom';
+    }
     guest.addEventListener('error', () => onGuestAssetError?.(guestComposition.asset), { once: true });
     slot.appendChild(guest);
   }
@@ -425,9 +440,18 @@ function drawGuestComposition(ctx, photoImage, photo, guestImage, composition, x
   const regionY = y + guest.y * height;
   const regionWidth = guest.width * width;
   const regionHeight = guest.height * height;
-  const scale = Math.min(regionWidth / guestImage.naturalWidth, regionHeight / guestImage.naturalHeight);
-  const drawWidth = guestImage.naturalWidth * scale;
-  const drawHeight = guestImage.naturalHeight * scale;
+  const crop = composition.guestCrop;
+  const sourceX = crop ? crop.x * guestImage.naturalWidth : 0;
+  const sourceY = crop ? crop.y * guestImage.naturalHeight : 0;
+  const sourceWidth = crop ? crop.width * guestImage.naturalWidth : guestImage.naturalWidth;
+  const sourceHeight = crop ? crop.height * guestImage.naturalHeight : guestImage.naturalHeight;
+  const scale = crop
+    ? Math.max(regionWidth / sourceWidth, regionHeight / sourceHeight)
+    : Math.min(regionWidth / sourceWidth, regionHeight / sourceHeight);
+  const drawWidth = sourceWidth * scale;
+  const drawHeight = sourceHeight * scale;
+  const drawX = (regionWidth - drawWidth) / 2;
+  const drawY = crop ? regionY + (regionHeight - drawHeight) / 2 : regionY + regionHeight - drawHeight;
   ctx.save();
   ctx.beginPath();
   ctx.rect(regionX, regionY, regionWidth, regionHeight);
@@ -435,9 +459,9 @@ function drawGuestComposition(ctx, photoImage, photo, guestImage, composition, x
   if (composition.flipGuest) {
     ctx.translate(regionX + regionWidth, 0);
     ctx.scale(-1, 1);
-    ctx.drawImage(guestImage, (regionWidth - drawWidth) / 2, regionY + regionHeight - drawHeight, drawWidth, drawHeight);
+    ctx.drawImage(guestImage, sourceX, sourceY, sourceWidth, sourceHeight, drawX, drawY, drawWidth, drawHeight);
   } else {
-    ctx.drawImage(guestImage, regionX + (regionWidth - drawWidth) / 2, regionY + regionHeight - drawHeight, drawWidth, drawHeight);
+    ctx.drawImage(guestImage, sourceX, sourceY, sourceWidth, sourceHeight, regionX + drawX, drawY, drawWidth, drawHeight);
   }
   ctx.restore();
 }

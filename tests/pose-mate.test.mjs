@@ -150,6 +150,8 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   assert.deepEqual(matched.guestRegion, { x: 0.54, y: 0, width: 0.46, height: 1 });
   assert.equal(sideBySide.flipGuest, true);
   assert.equal(sideBySide.asset.pose, 'peace');
+  assert.deepEqual(sideBySide.guestRegion, { x: 0, y: 0.08, width: 0.42, height: 0.64 });
+  assert.deepEqual(sideBySide.guestCrop, { x: 0.08, y: 0.02, width: 0.84, height: 0.68 });
   assert.equal(guestModule.poseGuideForSlot(2, 3), 'Half-heart');
   assert.equal(guestModule.createGuestComposition({
     experience: 'pose-mate', guestId: 'unknown-guest',
@@ -175,6 +177,8 @@ test('camera, review, preview, and raw export all receive the same guest composi
   assert.match(compositor, /className\s*=\s*'ph-guest'/);
   assert.match(compositor, /drawGuestComposition/);
   assert.match(compositor, /resolveGuestComposition/);
+  assert.match(compositor, /guestComposition\.guestCrop/);
+  assert.match(app, /applyGuestImageGeometry/);
 });
 
 

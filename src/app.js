@@ -205,6 +205,36 @@ function applyGuestVariables(element, composition) {
   element.style.setProperty('--pose-guest-transform', composition.flipGuest ? 'scaleX(-1)' : 'none');
 }
 
+function applyGuestImageGeometry(image, composition) {
+  if (!image || !composition) return;
+  const region = composition.guestRegion;
+  const crop = composition.guestCrop;
+  image.style.position = 'absolute';
+  image.style.maxWidth = 'none';
+  image.style.pointerEvents = 'none';
+  image.style.transform = composition.flipGuest ? 'scaleX(-1)' : 'none';
+  if (crop) {
+    // Guest runtime assets are square. Cover the bust crop so the companion
+    // reads as seated beside the camera photo, not as a full-body cutout.
+    const imageSize = Math.max(region.width / crop.width, region.height / crop.height);
+    image.style.width = `${imageSize * 100}%`;
+    image.style.height = `${imageSize * 100}%`;
+    image.style.left = `${(region.x + region.width / 2 - (crop.x + crop.width / 2) * imageSize) * 100}%`;
+    image.style.top = `${(region.y + region.height / 2 - (crop.y + crop.height / 2) * imageSize) * 100}%`;
+    image.style.objectFit = 'fill';
+    image.style.objectPosition = 'center';
+    image.style.transformOrigin = 'center center';
+  } else {
+    image.style.left = `${region.x * 100}%`;
+    image.style.top = `${region.y * 100}%`;
+    image.style.width = `${region.width * 100}%`;
+    image.style.height = `${region.height * 100}%`;
+    image.style.objectFit = 'contain';
+    image.style.objectPosition = 'center bottom';
+    image.style.transformOrigin = 'center bottom';
+  }
+}
+
 function syncGuestExperienceSurfaces() {
   const guestComposition = currentGuestComposition();
   const active = Boolean(guestComposition);
@@ -238,6 +268,8 @@ function syncGuestExperienceSurfaces() {
   refs.poseGuestPreview.src = guestComposition.asset.src;
   refs.reviewGuest.src = guestComposition.asset.src;
   refs.reviewGuest.alt = `${guestComposition.asset.name}, a fictional Polara guest.`;
+  applyGuestImageGeometry(refs.poseGuestPreview, guestComposition);
+  applyGuestImageGeometry(refs.reviewGuest, guestComposition);
   refs.poseMateKicker.textContent = `Pose Mate · ${guestComposition.asset.guestId.replace('polara-', '').toUpperCase()}`;
   refs.poseMateTitle.textContent = `Match ${guestComposition.asset.name}'s gesture`;
   refs.poseMateNote.textContent = `${guestComposition.asset.name} is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.`;

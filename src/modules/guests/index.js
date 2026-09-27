@@ -66,6 +66,11 @@ const GUESTS = Object.freeze({
   }),
 });
 
+// Side by side reads as two people sharing a laptop-sized camera window. Keep
+// the original pose assets, but show the upper-body crop so legs do not pull
+// the composition down or make the guest feel like a separate cutout.
+const SEATED_BUST_CROP = Object.freeze({ x: 0.08, y: 0.02, width: 0.84, height: 0.68 });
+
 const LAYOUTS = Object.freeze({
   matched: Object.freeze({
     right: Object.freeze({
@@ -85,12 +90,14 @@ const LAYOUTS = Object.freeze({
   'side-by-side': Object.freeze({
     right: Object.freeze({
       userRegion: Object.freeze({ x: 0, y: 0, width: 0.62, height: 1 }),
-      guestRegion: Object.freeze({ x: 0.58, y: 0, width: 0.42, height: 1 }),
+      guestRegion: Object.freeze({ x: 0.58, y: 0.08, width: 0.42, height: 0.64 }),
+      guestCrop: SEATED_BUST_CROP,
       flipGuest: false,
     }),
     left: Object.freeze({
       userRegion: Object.freeze({ x: 0.38, y: 0, width: 0.62, height: 1 }),
-      guestRegion: Object.freeze({ x: 0, y: 0, width: 0.42, height: 1 }),
+      guestRegion: Object.freeze({ x: 0, y: 0.08, width: 0.42, height: 0.64 }),
+      guestCrop: SEATED_BUST_CROP,
       flipGuest: true,
     }),
   }),
@@ -175,6 +182,7 @@ export function createGuestComposition({
     side: normalizedSide,
     userRegion: { ...geometry.userRegion },
     guestRegion: { ...geometry.guestRegion },
+    ...(geometry.guestCrop ? { guestCrop: { ...geometry.guestCrop } } : {}),
     flipGuest: geometry.flipGuest,
   };
 }

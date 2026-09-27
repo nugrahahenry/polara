@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.35.2] - 2026-09-27
+
+### Fixed
+- Pose Mate Side by side now crops the guest to a seated bust from head to chest, while Match pose keeps its full-height gesture composition.
+- The same crop metadata now drives Camera, Review, Frame preview, Reveal, and exact export output.
+
+### Validation
+- Re-ran the full Node suite, asset and overlay checks, preview thumbnail checks, exact export dimensions, and responsive browser QA.
+
 ## [0.35.1] - 2026-09-27
 
 ### Fixed
