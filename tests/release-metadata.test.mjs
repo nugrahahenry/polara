@@ -16,8 +16,10 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.35.3 Camera timer and opening checkpoint', () => {
-  assert.equal(packageJson.version, '0.35.3');
+test('release metadata records the v0.35.4 Pose Mate stacking fix', () => {
+  assert.equal(packageJson.version, '0.35.4');
+  assert.match(changelog, /## \[0\.35\.4\] - 2026-09-27/);
+  assert.match(changelog, /global Poca buddy/i);
   assert.match(changelog, /## \[0\.35\.3\] - 2026-09-27/);
   assert.match(changelog, /Camera timer/i);
   assert.match(changelog, /Poca/i);
@@ -88,7 +90,7 @@ test('release metadata records the v0.35.3 Camera timer and opening checkpoint',
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
   assert.match(indexHtml, /src\/app\.js\?v=38/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=352/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=353/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);

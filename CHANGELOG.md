@@ -5,6 +5,14 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.35.4] - 2026-09-27
+
+### Fixed
+- Pose Mate Start no longer renders the global Poca buddy over the guest preview. The guest stays fully readable while Poca remains available in the later capture and review stages.
+
+### Validation
+- Added a regression guard for the Pose Mate Start stacking rule and updated the stylesheet cache version.
+
 ## [0.35.3] - 2026-09-27
 
 ### Changed

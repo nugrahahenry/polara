@@ -10,13 +10,15 @@ const readBytes = (path) => fs.readFile(new URL(path, root));
 
 
 test('Pose Mate exposes an explicit opt-in while Regular Booth remains the default', async () => {
-  const [html, app] = await Promise.all([read('index.html'), read('src/app.js')]);
+  const [html, app, css] = await Promise.all([read('index.html'), read('src/app.js'), read('styles/proof-table.css')]);
 
   assert.match(html, /id="experienceChoose"/);
   assert.match(html, /data-experience="regular"[^>]+aria-pressed="true"/);
   assert.match(html, /data-experience="pose-mate"/);
   assert.match(app, /experience:\s*'regular'/);
   assert.match(app, /guestId:\s*null/);
+  assert.match(css, /data-experience="pose-mate"\]\[data-step="start"\] \.proof-buddy/);
+  assert.match(css, /visibility:\s*hidden/);
 });
 
 

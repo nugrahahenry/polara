@@ -1204,8 +1204,12 @@ input, textarea { caret-color: var(--pink-deep); }
   bottom: 2%;
   width: 58%;
   filter: drop-shadow(0 11px 13px rgba(75,46,31,.2));
+  z-index: 4;
 }
-.stage-shell[data-experience="pose-mate"] .proof-buddy { z-index: 9; }
+.stage-shell[data-experience="pose-mate"][data-step="start"] .proof-buddy {
+  visibility: hidden;
+  opacity: 0;
+}
 .camera-timer-controls { margin-top: 14px; }
 .camera-timer-controls .section-label { margin-top: 0; }
 .timer-help { margin: 8px 0 0; color: var(--proof-muted); font-size: .68rem; line-height: 1.4; }
