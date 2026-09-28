@@ -610,7 +610,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(frameRail.overflowX, 'auto');
   assert.equal(frameRail.overflowY, 'hidden');
   assert.ok(frameRail.visibleCards >= 2 && frameRail.visibleCards < 3, `${name}: frame rail should reveal about 2-2.5 cards`);
-  assert.equal(await page.locator('#templateList .tpl-btn').count(), 8, `${name}: each mode must expose eight frame variants`);
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 9, `${name}: each mode must expose nine frame variants`);
   const frameCollection = {
     optionCount: await page.locator('#frameCollectionFilters .frame-collection-btn').count(),
     labels: await page.locator('#frameCollectionFilters .frame-collection-btn').allTextContents(),
@@ -619,9 +619,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   };
   assert.equal(frameCollection.optionCount, 4);
   assert.equal(frameCollection.active, 'all');
-  assert.equal(frameCollection.defaultCount, '8 styles');
+  assert.equal(frameCollection.defaultCount, '9 styles');
   assert.deepEqual(frameCollection.labels.map((label) => label.replace(/\s+/g, ' ').trim()), [
-    'All styles8', 'Pop room4', 'Studio room3', 'Keepsakes1',
+    'All styles9', 'Pop room4', 'Studio room3', 'Keepsakes2',
   ]);
   const frameEdition = await auditFrameEdition(page);
   assert.equal(frameEdition.exists, true);
@@ -661,7 +661,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   });
   assert.ok(studioRailX > 0, `${name}: Studio room rail must accept horizontal scrolling`);
   await page.locator('[data-frame-collection="all"]').click();
-  await page.waitForFunction(() => document.querySelectorAll('#templateList .tpl-btn').length === 8);
+  await page.waitForFunction(() => document.querySelectorAll('#templateList .tpl-btn').length === 9);
   await page.locator('[data-frame-collection="studio-room"]').click();
   await page.waitForFunction((expected) => {
     const rail = document.querySelector('#templateList');
@@ -671,10 +671,10 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   await page.locator('#frameCollectionFilters .frame-collection-btn').first().focus();
   await page.keyboard.press('End');
   await page.waitForFunction(() => document.querySelector('[data-frame-collection="keepsakes"]')?.getAttribute('aria-pressed') === 'true');
-  assert.equal(await page.locator('#templateList .tpl-btn').count(), 1);
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 2);
   await page.keyboard.press('Home');
   await page.waitForFunction(() => document.querySelector('[data-frame-collection="all"]')?.getAttribute('aria-pressed') === 'true');
-  assert.equal(await page.locator('#templateList .tpl-btn').count(), 8);
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 9);
   await page.locator('#templateList .tpl-btn').first().click();
 
   await page.locator('#photoSlotTabs .slot-tab').nth(1).click();
@@ -893,6 +893,7 @@ const VARIANTS = [
   { id: 'polara-midnight-club-single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
   { id: 'cloud-picnic.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles', radii: ['34px'] },
   { id: 'lucky-ticket.single', mode: 1, width: 1080, height: 1350, maskType: 'polygon' },
+  { id: 'postcard-club.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles', radii: ['34px'] },
   { id: 'poca-purikura.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'poca-purikura-blue.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'vintage-film-lofi.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
@@ -901,6 +902,7 @@ const VARIANTS = [
   { id: 'polara-midnight-club-strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['14px', '14px', '14px'] },
   { id: 'cloud-picnic.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['24px', '24px', '24px'] },
   { id: 'lucky-ticket.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['20px', '20px', '20px'] },
+  { id: 'postcard-club.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['28px', '28px', '28px'] },
 ];
 
 async function reachFrames(page, mode) {

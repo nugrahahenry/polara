@@ -1189,5 +1189,143 @@ export const frameOverlayTemplates = [
       "date": null,
       "brand": null
     }
+  },
+  {
+    "id": "postcard-club.single",
+    "familyId": "postcard-club",
+    "name": "Postcard Club",
+    "category": "editorial-postcard",
+    "mode": "single",
+    "tone": "postcard-keepsake",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Single · 1080 × 1350",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/postcard-club-single-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/postcard-club-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/postcard-club-single-thumbnail.png",
+    "familyProfile": {
+      "id": "postcard-club",
+      "collectionId": "keepsakes",
+      "story": "A tactile postcard edition for moments worth sending home.",
+      "material": "Recycled postcard",
+      "palette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ],
+      "exclusiveStickerId": "poca-postcard-club-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "postcard-club-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-postcard-club-exclusive"
+      }
+    },
+    "canvas": {
+      "width": 1080,
+      "height": 1350
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 205,
+        "y": 240,
+        "width": 670,
+        "height": 870,
+        "radius": 34
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#f4d7bc",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "postcard-club.strip",
+    "familyId": "postcard-club",
+    "name": "Postcard Club",
+    "category": "editorial-postcard",
+    "mode": "strip",
+    "tone": "postcard-keepsake",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Strip 3 · 720 × 1800",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/postcard-club-strip-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/postcard-club-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/postcard-club-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "postcard-club",
+      "collectionId": "keepsakes",
+      "story": "A tactile postcard edition for moments worth sending home.",
+      "material": "Recycled postcard",
+      "palette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ],
+      "exclusiveStickerId": "poca-postcard-club-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "postcard-club-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-postcard-club-exclusive"
+      }
+    },
+    "canvas": {
+      "width": 720,
+      "height": 1800
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 152,
+        "y": 230,
+        "width": 419,
+        "height": 375,
+        "radius": 28
+      },
+      {
+        "x": 155,
+        "y": 730,
+        "width": 415,
+        "height": 375,
+        "radius": 28
+      },
+      {
+        "x": 152,
+        "y": 1230,
+        "width": 419,
+        "height": 350,
+        "radius": 28
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#f4d7bc",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
   }
 ];

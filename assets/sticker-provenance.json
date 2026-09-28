@@ -20,6 +20,16 @@
       "collaborationClaim": false,
       "background": "transparent",
       "hiddenRgbPolicy": "zero-at-alpha-0"
+    },
+    {
+      "runtimeSrc": "assets/stickers/poca-postcard-club-exclusive.png",
+      "sha256": "a59497bfbdad29ac587aa22dff19f7c7b85c417c1eecc73529e1e384ed8a0903",
+      "kind": "original-fictional",
+      "sourceMode": "built-in-imagegen-edit-plus-local-alpha-cleanup",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "background": "transparent",
+      "hiddenRgbPolicy": "zero-at-alpha-0"
     }
   ]
 }

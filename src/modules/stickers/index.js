@@ -134,6 +134,11 @@ export const exclusiveStickers = [
     src: STICKER + 'poca-lucky-ticket-exclusive.png', exclusiveFamilyId: 'lucky-ticket', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .76, scale: .21, rotation: 4 }, minScale: .1, maxScale: .42,
   },
+  {
+    id: 'poca-postcard-club-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Postcard Club',
+    src: STICKER + 'poca-postcard-club-exclusive.png', exclusiveFamilyId: 'postcard-club', pickerBadge: 'Exclusive',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .76, scale: .21, rotation: 4 }, minScale: .1, maxScale: .42,
+  },
 ];
 
 export const stickers = [...universalStickers, ...exclusiveStickers];

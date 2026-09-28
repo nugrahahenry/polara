@@ -109,6 +109,18 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
             {"x": 74, "y": 1084, "width": 572, "height": 422, "radius": 20},
         ],
     ),
+    "postcard-club.single": (
+        (1080, 1350),
+        [{"x": 205, "y": 240, "width": 670, "height": 870, "radius": 34}],
+    ),
+    "postcard-club.strip": (
+        (720, 1800),
+        [
+            {"x": 152, "y": 230, "width": 419, "height": 375, "radius": 28},
+            {"x": 155, "y": 730, "width": 415, "height": 375, "radius": 28},
+            {"x": 152, "y": 1230, "width": 419, "height": 350, "radius": 28},
+        ],
+    ),
 }
 
 EXPECTED_POLYGONS: dict[str, list[list[int]]] = {
@@ -217,6 +229,12 @@ EXPECTED_CONTRACTS: dict[str, dict[str, Any]] = {
     },
     "lucky-ticket.strip": {
         "family": "lucky-ticket", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "postcard-club.single": {
+        "family": "postcard-club", "mode": "single", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "postcard-club.strip": {
+        "family": "postcard-club", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
     },
 }
 
@@ -522,19 +540,19 @@ def verify(root: Path) -> None:
     manifest = load_manifest(manifest_path)
     frames = manifest["frames"]
     require(
-        len(frames) == 16,
-        f"Manifest harus berisi tepat 16 frame; ditemukan {len(frames)}.",
+        len(frames) == 18,
+        f"Manifest harus berisi tepat 18 frame; ditemukan {len(frames)}.",
     )
     ids = [frame.get("id") for frame in frames]
     require(len(set(ids)) == len(ids), "Manifest memiliki ID duplikat.")
     require(
         set(ids) == set(EXPECTED_GEOMETRY),
-        "Manifest tidak memuat tepat enam belas ID Hero canonical.",
+        "Manifest tidak memuat tepat delapan belas ID Hero canonical.",
     )
 
     hashes = [verify_frame(root, frame) for frame in frames]
-    require(len(set(hashes)) == 16, "Runtime overlay memiliki hash duplikat.")
-    print("16/16 overlay passed")
+    require(len(set(hashes)) == 18, "Runtime overlay memiliki hash duplikat.")
+    print("18/18 overlay passed")
 
 
 def main() -> int:

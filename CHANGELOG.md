@@ -5,6 +5,17 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.36.0] - 2026-09-28
+
+### Added
+- Menambahkan keluarga frame **Postcard Club** dengan variant Single dan Strip 3 berformat PNG overlay, rounded-rectangle geometry, thumbnail frame-only, serta composite picker.
+- Menambahkan Poca Postcard Club Exclusive sebagai sticker opsional yang mengikuti identitas Poca produksi dan tetap UI/export controlled.
+- Memperluas registry menjadi delapan keluarga dan 18 variant tanpa mengubah flow photobooth atau ukuran export.
+
+### Validation
+- Node 97/97, overlay 18/18, preview derivative 36/36, dan Asset Quality lulus.
+- Seluruh frame tetap character-free; preview, Hias, Reveal, Save, dan Share memakai geometry manifest yang sama.
+
 ## [0.35.4] - 2026-09-27
 
 ### Fixed

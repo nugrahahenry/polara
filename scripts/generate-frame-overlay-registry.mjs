@@ -85,15 +85,15 @@ function validateFrame(frame, ids) {
 const raw = await fs.readFile(inputPath, 'utf8');
 const manifest = JSON.parse(raw);
 if (!Array.isArray(manifest.frames)) fail('Manifest harus memiliki array frames.');
-if (manifest.frames.length !== 16) fail(`Manifest produksi harus berisi tepat 16 frame Hero; ditemukan ${manifest.frames.length}.`);
+if (manifest.frames.length !== 18) fail(`Manifest produksi harus berisi tepat 18 frame Hero; ditemukan ${manifest.frames.length}.`);
 if (manifest.familyProfileVersion !== 'frame-family-v3') fail('Manifest harus memakai frame-family-v3.');
 if (manifest.collectionProfileVersion !== 'frame-collection-v1') fail('Manifest harus memakai frame-collection-v1.');
 if (manifest.assetExpansionProfileVersion !== 'asset-expansion-v1') fail('Manifest harus memakai asset-expansion-v1.');
 if (!Array.isArray(manifest.collections) || manifest.collections.length !== 3) {
   fail('Manifest harus memiliki tepat tiga collection profile.');
 }
-if (!Array.isArray(manifest.families) || manifest.families.length !== 7) {
-  fail('Manifest harus memiliki tepat tujuh family profile.');
+if (!Array.isArray(manifest.families) || manifest.families.length !== 8) {
+  fail('Manifest harus memiliki tepat delapan family profile.');
 }
 
 const collectionIds = new Set();
@@ -174,6 +174,8 @@ const runtimeFields = manifest.frames.map((frame) => ({
           ? 'weekend-airy'
           : frame.family === 'lucky-ticket'
             ? 'club-ticket'
+            : frame.family === 'postcard-club'
+              ? 'postcard-keepsake'
             : 'statement',
   premium: false,
   status: 'runtime-overlay',

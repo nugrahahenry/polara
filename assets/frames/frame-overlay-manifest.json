@@ -119,6 +119,20 @@
       "exclusiveStickerId": "poca-lucky-ticket-exclusive",
       "pickerFixtureId": "polara-picker-friends-v1",
       "assetKit": { "id": "lucky-ticket-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-lucky-ticket-exclusive" }
+    },
+    {
+      "id": "postcard-club",
+      "collectionId": "keepsakes",
+      "story": "A tactile postcard edition for moments worth sending home.",
+      "material": "Recycled postcard",
+      "palette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ],
+      "exclusiveStickerId": "poca-postcard-club-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": { "id": "postcard-club-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-postcard-club-exclusive" }
     }
   ],
   "frames": [
@@ -1067,6 +1081,118 @@
         "cobalt stock",
         "admit marks",
         "three-color proof signature"
+      ]
+    },
+    {
+      "id": "postcard-club.single",
+      "family": "postcard-club",
+      "name": "Postcard Club",
+      "category": "editorial-postcard",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 205,
+          "y": 240,
+          "width": 670,
+          "height": 870,
+          "radius": 34
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-single-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "sha256": "261d5b7de7d2a0d2690475dcc0fa698b7fefb6a039033a40837206f07ee60613",
+      "byteSize": 1013520,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ],
+      "slotBackground": "#f4d7bc",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "postcard paper",
+        "stamp blocks",
+        "registration marks",
+        "coral and indigo ink"
+      ]
+    },
+    {
+      "id": "postcard-club.strip",
+      "family": "postcard-club",
+      "name": "Postcard Club",
+      "category": "editorial-postcard",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 152,
+          "y": 230,
+          "width": 419,
+          "height": 375,
+          "radius": 28
+        },
+        {
+          "x": 155,
+          "y": 730,
+          "width": 415,
+          "height": 375,
+          "radius": 28
+        },
+        {
+          "x": 152,
+          "y": 1230,
+          "width": 419,
+          "height": 350,
+          "radius": 28
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-strip-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "sha256": "18a7cb8e2d245a369386f3f36d9fb53035222b3b20379deb8e8eca6044ef4a3e",
+      "byteSize": 738431,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "qualityProfile": "polara-proof-edge-v1",
+      "edgePalette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ],
+      "slotBackground": "#f4d7bc",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "postcard paper",
+        "stamp blocks",
+        "registration marks",
+        "coral and indigo ink"
       ]
     }
   ]

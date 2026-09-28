@@ -10,7 +10,7 @@ const readJson = async (relativePath) => JSON.parse(await fs.readFile(new URL(re
 test('asset expansion profile exposes a complete ready kit for every family', async () => {
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
   assert.equal(manifest.assetExpansionProfileVersion, 'asset-expansion-v1');
-  assert.equal(manifest.families.length, 7);
+  assert.equal(manifest.families.length, 8);
 
   for (const family of manifest.families) {
     assert.match(family.assetKit?.id || '', /^[a-z0-9-]+-kit-v1$/);
@@ -23,7 +23,7 @@ test('asset expansion profile exposes a complete ready kit for every family', as
 
 test('runtime frame families carry kit metadata without entering export surfaces', async () => {
   const families = new Map(frameOverlayTemplates.map((frame) => [frame.familyId, frame.familyProfile]));
-  assert.equal(families.size, 7);
+  assert.equal(families.size, 8);
   for (const profile of families.values()) {
     assert.equal(profile.assetKit.status, 'ready');
     assert.deepEqual(profile.assetKit.formats, ['single', 'strip']);

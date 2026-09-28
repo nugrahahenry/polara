@@ -26,8 +26,8 @@ const ALLOWED_CATEGORIES = new Set(['word', 'charm', 'prop', 'accent', 'material
 
 test('Sticker Workshop ships six purposeful additions and complete category metadata', () => {
   assert.equal(universalStickers.length, 19);
-  assert.equal(exclusiveStickers.length, 7);
-  assert.equal(stickers.length, 26);
+  assert.equal(exclusiveStickers.length, 8);
+  assert.equal(stickers.length, 27);
 
   for (const asset of stickers) {
     assert.ok(ALLOWED_CATEGORIES.has(asset.category), `${asset.id}: ${asset.category}`);
