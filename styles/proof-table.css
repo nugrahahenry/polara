@@ -217,6 +217,13 @@ input, textarea { caret-color: var(--pink-deep); }
 .stage-footline::before { bottom: calc(100% + 8px); }
 .control-sheet { max-height: calc(100dvh - 156px); border-radius: 20px; }
 .control-scroll { padding: 26px 24px 138px; }
+
+@media (min-width: 1180px) {
+  .workspace { min-height: calc(100dvh - 156px); align-items: start; }
+  .stage-shell { height: clamp(560px, calc(100dvh - 128px), 840px); }
+  .control-sheet { height: calc(100dvh - 156px); max-height: calc(100dvh - 156px); }
+}
+
 .control-panel { animation: panel-proof-in 260ms var(--ease-proof) both; }
 @keyframes panel-proof-in { from { opacity: .01; transform: translateY(10px); filter: blur(3px); } to { opacity: 1; transform: none; filter: none; } }
 .panel-title { max-width: 15ch; font-size: clamp(1.55rem, 2.2vw, 2rem); line-height: 1.02; letter-spacing: -.025em; }
@@ -1086,6 +1093,34 @@ input, textarea { caret-color: var(--pink-deep); }
   box-shadow: 0 12px 26px rgba(75,46,31,.09), inset 0 0 0 4px rgba(255,255,255,.7);
   text-align: left;
 }
+.reveal-dossier-head {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--proof-hairline);
+  color: var(--proof-muted);
+  font: 800 .57rem/1 var(--font-ui);
+  letter-spacing: .11em;
+  text-transform: uppercase;
+}
+.reveal-dossier-head strong {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  color: #2b6d58;
+  font-weight: 800;
+  letter-spacing: .07em;
+}
+.reveal-dossier-head i {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #5aa980;
+  box-shadow: 0 0 0 3px rgba(90,169,128,.15);
+}
 .reveal-dossier::before,
 .reveal-dossier::after {
   content: '';
@@ -1451,6 +1486,7 @@ input, textarea { caret-color: var(--pink-deep); }
   .sticker-bench[data-state="editing"] #stickerRailHint { order: 3; }
   .sticker-bench[data-state="editing"] #stickerRailShell { order: 4; }
   .reveal-dossier { grid-template-columns: 88px minmax(0,1fr); gap: 12px; padding: 12px; }
+  .reveal-dossier-head { padding-bottom: 8px; font-size: .53rem; }
   .reveal-facts { gap: 8px 10px; }
   .reveal-approval-seal strong { font-size: .76rem; }
   .privacy-dialog {
@@ -1502,6 +1538,7 @@ input, textarea { caret-color: var(--pink-deep); }
   .control-sheet[data-reveal-state="ready"] .reveal-panel { padding-block: 4px; }
   .reveal-panel .privacy-note { display: none; }
   .reveal-dossier { grid-template-columns: 72px minmax(0,1fr); gap: 9px; margin-bottom: 6px; padding: 9px; }
+  .reveal-dossier-head { padding-bottom: 6px; font-size: .48rem; }
   .reveal-facts { gap: 6px 8px; }
   .reveal-facts div { padding-top: 5px; }
   .reveal-facts dd { font-size: .6rem; }

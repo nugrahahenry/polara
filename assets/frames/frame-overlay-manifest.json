@@ -1290,8 +1290,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-ink-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "9dd7788ac4dace76a350004355b51cc1b048fb6eba089cae890760a336d2c058",
-      "byteSize": 33790,
+      "sha256": "bef8701814ee94b46c89febdca819ec0039c6b9a30c7486ba17f6957cbc8be4e",
+      "byteSize": 30354,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1302,18 +1302,18 @@
         "date": null,
         "brand": null
       },
-      "metadataAreaNote": "Ink edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "metadataAreaNote": "Edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
       "decorativeElements": [
         "paper grid",
         "ink registration marks",
-        "coral and navy print blocks",
+        "edition color blocks",
         "character-free postcard proof"
       ],
       "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#d88968",
         "#1f2f4f",
-        "#f4d7bc"
+        "#f7f2e9"
       ]
     },
     {
@@ -1353,8 +1353,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-ink-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "c418f305708a99209a3a82b9e5561bed14bb7034f4779675811474ac1feca253",
-      "byteSize": 28492,
+      "sha256": "0c46bd001e6b16cf48d2b8a0a96bba6898a808f8f23206862a9af0c3bc8525f4",
+      "byteSize": 26170,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1365,18 +1365,242 @@
         "date": null,
         "brand": null
       },
-      "metadataAreaNote": "Ink edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "metadataAreaNote": "Edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
       "decorativeElements": [
         "paper grid",
         "ink registration marks",
-        "coral and navy print blocks",
+        "edition color blocks",
         "character-free postcard proof"
       ],
       "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#d88968",
         "#1f2f4f",
-        "#f4d7bc"
+        "#f7f2e9"
+      ]
+    },
+    {
+      "id": "postcard-club-sage.single",
+      "family": "postcard-club",
+      "name": "Postcard Club Sage",
+      "category": "editorial-postcard",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 170,
+          "y": 210,
+          "width": 740,
+          "height": 870,
+          "radius": 26
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-sage-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-sage-single-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-sage-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "sha256": "8b2aa05cff11312c2d2eb58f68a4bd70e68068ac91e582399ecebf563e1fbeca",
+      "byteSize": 30477,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "slotBackground": "#eef0e6",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "paper grid",
+        "ink registration marks",
+        "edition color blocks",
+        "character-free postcard proof"
+      ],
+      "qualityProfile": "polara-proof-edge-v2",
+      "edgePalette": [
+        "#799b83",
+        "#243b36",
+        "#eef0e6"
+      ]
+    },
+    {
+      "id": "postcard-club-sage.strip",
+      "family": "postcard-club",
+      "name": "Postcard Club Sage",
+      "category": "editorial-postcard",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 76,
+          "y": 174,
+          "width": 568,
+          "height": 394,
+          "radius": 22
+        },
+        {
+          "x": 76,
+          "y": 606,
+          "width": 568,
+          "height": 394,
+          "radius": 22
+        },
+        {
+          "x": 76,
+          "y": 1038,
+          "width": 568,
+          "height": 394,
+          "radius": 22
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-sage-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-sage-strip-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-sage-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "sha256": "d18c919d192b6ad090b571081c64874d26cd8b1caef09b96fe275a4bce324407",
+      "byteSize": 26453,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "slotBackground": "#eef0e6",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "paper grid",
+        "ink registration marks",
+        "edition color blocks",
+        "character-free postcard proof"
+      ],
+      "qualityProfile": "polara-proof-edge-v2",
+      "edgePalette": [
+        "#799b83",
+        "#243b36",
+        "#eef0e6"
+      ]
+    },
+    {
+      "id": "postcard-club-night.single",
+      "family": "postcard-club",
+      "name": "Postcard Club Night",
+      "category": "editorial-postcard",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 170,
+          "y": 210,
+          "width": 740,
+          "height": 870,
+          "radius": 26
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-night-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-night-single-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-night-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "sha256": "e01a5e214191ffdd985fd8276b2e0864eb996cb16f22dadc042e5d13e31b621b",
+      "byteSize": 30435,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "slotBackground": "#e8edf3",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "paper grid",
+        "ink registration marks",
+        "edition color blocks",
+        "character-free postcard proof"
+      ],
+      "qualityProfile": "polara-proof-edge-v2",
+      "edgePalette": [
+        "#c18b49",
+        "#15263e",
+        "#e8edf3"
+      ]
+    },
+    {
+      "id": "postcard-club-night.strip",
+      "family": "postcard-club",
+      "name": "Postcard Club Night",
+      "category": "editorial-postcard",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 76,
+          "y": 174,
+          "width": 568,
+          "height": 394,
+          "radius": 22
+        },
+        {
+          "x": 76,
+          "y": 606,
+          "width": 568,
+          "height": 394,
+          "radius": 22
+        },
+        {
+          "x": 76,
+          "y": 1038,
+          "width": 568,
+          "height": 394,
+          "radius": 22
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-night-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-night-strip-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-night-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "sha256": "e200f25dbbad0b44a1ec75dfaac144d1ffd965684313e6d790500e5c07c6b751",
+      "byteSize": 26353,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "slotBackground": "#e8edf3",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "paper grid",
+        "ink registration marks",
+        "edition color blocks",
+        "character-free postcard proof"
+      ],
+      "qualityProfile": "polara-proof-edge-v2",
+      "edgePalette": [
+        "#c18b49",
+        "#15263e",
+        "#e8edf3"
       ]
     }
   ]

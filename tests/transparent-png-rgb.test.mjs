@@ -14,7 +14,7 @@ const manifest = JSON.parse(
 );
 
 test('runtime overlays do not retain source RGB inside fully transparent pixels', async () => {
-  assert.equal(manifest.frames.length, 20);
+  assert.equal(manifest.frames.length, 24);
   const contaminatedOverlays = [];
 
   for (const frame of manifest.frames) {

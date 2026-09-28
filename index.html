@@ -299,7 +299,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=355" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=356" />
 </head>
 <body>
   <!--
@@ -621,6 +621,10 @@
           <h2 class="panel-title" id="revealTitle" tabindex="-1">Developing your print…</h2>
           <p class="panel-copy">Once the print is ready, share it or save the full-size PNG.</p>
           <section class="reveal-dossier" aria-label="Approved print details">
+            <div class="reveal-dossier-head">
+              <span>Print room receipt</span>
+              <strong><i aria-hidden="true"></i>Ready to keep</strong>
+            </div>
             <div class="reveal-approval-seal" aria-hidden="true"><span>Proof</span><strong>Approved</strong></div>
             <dl class="reveal-facts">
               <div><dt>Format</dt><dd id="revealDossierFormat">Strip 3 · 720×1800</dd></div>
@@ -705,6 +709,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=39"></script>
+  <script type="module" src="src/app.js?v=40"></script>
 </body>
 </html>

@@ -5,6 +5,19 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.40.0] - 2026-09-29
+
+### Added
+- Menambahkan empat edisi Postcard Club character-free: Sage dan Night untuk Single serta Strip 3.
+- Proof Approved kini memiliki receipt header dengan status Ready to keep agar hasil akhir lebih mudah dipindai.
+
+### Changed
+- Stage desktop mendapat ruang vertikal lebih lega dan fit inset lebih rapat sehingga frame Strip terlihat lebih besar pada laptop tanpa mengubah geometry export.
+- Seluruh thumbnail frame baru dibuat ulang dari overlay canonical dan tetap dipisahkan dari output export.
+
+### Validation
+- Registry menjadi 24 variant dari 8 keluarga; exact export tetap Single 1080×1350 dan Strip 720×1800.
+
 ## [0.39.0] - 2026-09-29
 
 ### Added

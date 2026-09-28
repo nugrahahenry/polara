@@ -32,6 +32,8 @@ test('Reveal dossier is an authored UI layer and never part of the export canvas
   const canvasStage = html.match(/<section class="stage-view canvas-stage"[^]*?<\/section>/)?.[0] || '';
   const revealPanel = html.match(/<section class="control-panel reveal-panel"[^]*?<\/section>\s*<p class="privacy-note"[^]*?<\/section>/)?.[0] || '';
   assert.match(html, /class="reveal-dossier"/);
+  assert.match(html, /class="reveal-dossier-head"/);
+  assert.match(html, /Ready to keep/);
   assert.match(html, /id="revealDossierFormat"/);
   assert.doesNotMatch(canvasStage, /reveal-dossier/);
   assert.match(revealPanel, /reveal-dossier/);

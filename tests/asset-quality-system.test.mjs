@@ -37,7 +37,7 @@ test('asset quality policy locks production budgets and fictional picker provena
 
 test('all frame families separate character-free overlay, fallback thumbnail, and picker composite', async () => {
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
-  assert.equal(manifest.frames.length, 20);
+  assert.equal(manifest.frames.length, 24);
 
   for (const frame of manifest.frames) {
     assert.equal(frame.characterPolicy, 'character-free', frame.id);

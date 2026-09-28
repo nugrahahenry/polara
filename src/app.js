@@ -1326,8 +1326,9 @@ function bindCanvasPhotoSelection(canvasEl) {
 
 function fitStage(dims) {
   if (!phCanvas) return;
-  const width = Math.max(260, refs.canvasView.clientWidth - 36);
-  const height = Math.max(300, refs.canvasView.clientHeight - 34);
+  const wideDesktop = window.matchMedia?.('(min-width: 1180px)').matches === true;
+  const width = Math.max(260, refs.canvasView.clientWidth - (wideDesktop ? 24 : 36));
+  const height = Math.max(300, refs.canvasView.clientHeight - (wideDesktop ? 12 : 34));
   const scale = Math.min(width / dims.w, height / dims.h, 1) || .35;
   refs.stage.style.position = 'relative';
   refs.stage.style.width = `${Math.round(dims.w * scale)}px`;

@@ -34,7 +34,7 @@ test('manifest defines eight complete frame family profiles', async () => {
 
 
 test('generated templates carry the same family profile for Single and Strip', () => {
-  assert.equal(frameOverlayTemplates.length, 20);
+  assert.equal(frameOverlayTemplates.length, 24);
   const byFamily = Map.groupBy(frameOverlayTemplates, (frame) => frame.familyId);
   assert.equal(byFamily.size, 8);
 

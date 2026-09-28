@@ -133,6 +133,30 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
             {"x": 76, "y": 1038, "width": 568, "height": 394, "radius": 22},
         ],
     ),
+    "postcard-club-sage.single": (
+        (1080, 1350),
+        [{"x": 170, "y": 210, "width": 740, "height": 870, "radius": 26}],
+    ),
+    "postcard-club-sage.strip": (
+        (720, 1800),
+        [
+            {"x": 76, "y": 174, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 606, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 1038, "width": 568, "height": 394, "radius": 22},
+        ],
+    ),
+    "postcard-club-night.single": (
+        (1080, 1350),
+        [{"x": 170, "y": 210, "width": 740, "height": 870, "radius": 26}],
+    ),
+    "postcard-club-night.strip": (
+        (720, 1800),
+        [
+            {"x": 76, "y": 174, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 606, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 1038, "width": 568, "height": 394, "radius": 22},
+        ],
+    ),
 }
 
 EXPECTED_POLYGONS: dict[str, list[list[int]]] = {
@@ -252,6 +276,18 @@ EXPECTED_CONTRACTS: dict[str, dict[str, Any]] = {
         "family": "postcard-club", "mode": "single", "maskType": "rounded-rectangles", "masterRequired": False,
     },
     "postcard-club-ink.strip": {
+        "family": "postcard-club", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "postcard-club-sage.single": {
+        "family": "postcard-club", "mode": "single", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "postcard-club-sage.strip": {
+        "family": "postcard-club", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "postcard-club-night.single": {
+        "family": "postcard-club", "mode": "single", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "postcard-club-night.strip": {
         "family": "postcard-club", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
     },
 }
@@ -558,19 +594,19 @@ def verify(root: Path) -> None:
     manifest = load_manifest(manifest_path)
     frames = manifest["frames"]
     require(
-        len(frames) == 20,
-        f"Manifest harus berisi tepat 20 frame; ditemukan {len(frames)}.",
+        len(frames) == 24,
+        f"Manifest harus berisi tepat 24 frame; ditemukan {len(frames)}.",
     )
     ids = [frame.get("id") for frame in frames]
     require(len(set(ids)) == len(ids), "Manifest memiliki ID duplikat.")
     require(
         set(ids) == set(EXPECTED_GEOMETRY),
-        "Manifest tidak memuat tepat dua puluh ID Hero canonical.",
+        "Manifest tidak memuat tepat dua puluh empat ID Hero canonical.",
     )
 
     hashes = [verify_frame(root, frame) for frame in frames]
-    require(len(set(hashes)) == 20, "Runtime overlay memiliki hash duplikat.")
-    print("20/20 overlay passed")
+    require(len(set(hashes)) == 24, "Runtime overlay memiliki hash duplikat.")
+    print("24/24 overlay passed")
 
 
 def main() -> int:

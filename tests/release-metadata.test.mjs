@@ -16,8 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.39.0 preview fallback guard', () => {
-  assert.equal(packageJson.version, '0.39.0');
+test('release metadata records the v0.40.0 frame expansion and desktop proof polish', () => {
+  assert.equal(packageJson.version, '0.40.0');
+  assert.match(changelog, /## \[0\.40\.0\] - 2026-09-29/);
+  assert.match(changelog, /Postcard Club character-free/);
+  assert.match(changelog, /Ready to keep/);
+  assert.match(changelog, /## \[0\.39\.0\] - 2026-09-29/);
   assert.match(changelog, /## \[0\.39\.0\] - 2026-09-29/);
   assert.match(changelog, /fallback preview/i);
   assert.match(changelog, /unavailable/i);
@@ -103,8 +107,8 @@ test('release metadata records the v0.39.0 preview fallback guard', () => {
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=39/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=355/);
+  assert.match(indexHtml, /src\/app\.js\?v=40/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=356/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);

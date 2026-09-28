@@ -36,10 +36,10 @@ test('collection options and filters keep All editions complete for each format'
   const singleOptions = buildFrameCollectionOptions(frameCollections, single);
 
   assert.equal(singleOptions[0].id, ALL_FRAME_COLLECTION_ID);
-  assert.equal(singleOptions[0].count, 10);
-  assert.equal(filterFramesByCollection(single, ALL_FRAME_COLLECTION_ID).length, 10);
-  assert.equal(filterFramesByCollection(strip, ALL_FRAME_COLLECTION_ID).length, 10);
-  assert.deepEqual(singleOptions.slice(1).map((option) => option.count), [4, 3, 3]);
+  assert.equal(singleOptions[0].count, 12);
+  assert.equal(filterFramesByCollection(single, ALL_FRAME_COLLECTION_ID).length, 12);
+  assert.equal(filterFramesByCollection(strip, ALL_FRAME_COLLECTION_ID).length, 12);
+  assert.deepEqual(singleOptions.slice(1).map((option) => option.count), [4, 3, 5]);
 });
 
 
