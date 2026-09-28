@@ -16,7 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "assets" / "frames" / "frame-overlay-manifest.json"
 FONT_BOLD = Path("C:/Windows/Fonts/segoeuib.ttf")
 FONT_REGULAR = Path("C:/Windows/Fonts/segoeui.ttf")
-PROFILE = "polara-proof-edge-v1"
+PROFILE = "polara-proof-edge-v2"
 
 
 def font(path: Path, size: int) -> ImageFont.FreeTypeFont:

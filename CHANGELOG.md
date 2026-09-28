@@ -5,6 +5,17 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.37.0] - 2026-09-28
+
+### Changed
+- Remaster seluruh 18 overlay runtime dengan perimeter proof yang konsisten, crop marks, label `POLARA / PROOF`, dan tiga proof swatch dari palette keluarga.
+- Alpha photo window kini dinormalisasi ulang dari geometry manifest untuk menjaga preview, Hias, Reveal, Save, dan Share tetap memakai lubang foto yang sama.
+- Regenerasi seluruh 36 thumbnail picker langsung dari overlay canonical, sehingga frame-only dan composite tidak lagi menyimpang dari hasil export.
+
+### Validation
+- Profile kualitas frame dinaikkan ke `polara-proof-edge-v2`.
+- Seluruh overlay, thumbnail, composite, hidden RGB, exact export, dan responsive QA tetap lulus.
+
 ## [0.36.0] - 2026-09-28
 
 ### Added

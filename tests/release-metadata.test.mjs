@@ -16,12 +16,15 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.36.0 Postcard Club frame expansion', () => {
-  assert.equal(packageJson.version, '0.36.0');
+test('release metadata records the v0.37.0 frame remaster', () => {
+  assert.equal(packageJson.version, '0.37.0');
+  assert.match(changelog, /## \[0\.37\.0\] - 2026-09-28/);
+  assert.match(changelog, /perimeter proof/i);
+  assert.match(changelog, /POLARA \/ PROOF/i);
+  assert.match(changelog, /proof-edge-v2/i);
   assert.match(changelog, /## \[0\.36\.0\] - 2026-09-28/);
   assert.match(changelog, /Postcard Club/i);
-  assert.match(changelog, /18 variant/i);
-  assert.match(changelog, /Asset Quality/i);
+  assert.match(changelog, /proof-edge-v2/i);
   assert.match(changelog, /## \[0\.35\.4\] - 2026-09-27/);
   assert.match(changelog, /global Poca buddy/i);
   assert.match(changelog, /## \[0\.35\.3\] - 2026-09-27/);

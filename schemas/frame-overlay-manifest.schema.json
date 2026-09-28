@@ -307,7 +307,7 @@
           }
         },
         "qualityProfile": {
-          "const": "polara-proof-edge-v1"
+          "const": "polara-proof-edge-v2"
         },
         "edgePalette": {
           "type": "array",

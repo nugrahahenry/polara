@@ -34,7 +34,16 @@
       ],
       "exclusiveStickerId": "poca-purikura-exclusive",
       "pickerFixtureId": "polara-picker-besties-v1",
-      "assetKit": { "id": "poca-purikura-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-purikura-exclusive" }
+      "assetKit": {
+        "id": "poca-purikura-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-purikura-exclusive"
+      }
     },
     {
       "id": "vintage-film-lofi",
@@ -48,7 +57,16 @@
       ],
       "exclusiveStickerId": "poca-vintage-film-exclusive",
       "pickerFixtureId": "polara-picker-friends-v1",
-      "assetKit": { "id": "vintage-film-lofi-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-vintage-film-exclusive" }
+      "assetKit": {
+        "id": "vintage-film-lofi-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-vintage-film-exclusive"
+      }
     },
     {
       "id": "seoul-snap-y2k",
@@ -62,7 +80,16 @@
       ],
       "exclusiveStickerId": "poca-seoul-y2k-exclusive",
       "pickerFixtureId": "polara-picker-besties-v1",
-      "assetKit": { "id": "seoul-snap-y2k-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-seoul-y2k-exclusive" }
+      "assetKit": {
+        "id": "seoul-snap-y2k-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-seoul-y2k-exclusive"
+      }
     },
     {
       "id": "polara-daily",
@@ -76,7 +103,16 @@
       ],
       "exclusiveStickerId": "poca-daily-reporter-exclusive",
       "pickerFixtureId": "polara-picker-friends-v1",
-      "assetKit": { "id": "polara-daily-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-daily-reporter-exclusive" }
+      "assetKit": {
+        "id": "polara-daily-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-daily-reporter-exclusive"
+      }
     },
     {
       "id": "polara-midnight-club",
@@ -90,7 +126,16 @@
       ],
       "exclusiveStickerId": "poca-midnight-photographer-exclusive",
       "pickerFixtureId": "polara-picker-friends-v1",
-      "assetKit": { "id": "polara-midnight-club-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-midnight-photographer-exclusive" }
+      "assetKit": {
+        "id": "polara-midnight-club-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-midnight-photographer-exclusive"
+      }
     },
     {
       "id": "cloud-picnic",
@@ -104,7 +149,16 @@
       ],
       "exclusiveStickerId": "poca-cloud-picnic-exclusive",
       "pickerFixtureId": "polara-picker-besties-v1",
-      "assetKit": { "id": "cloud-picnic-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-cloud-picnic-exclusive" }
+      "assetKit": {
+        "id": "cloud-picnic-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-cloud-picnic-exclusive"
+      }
     },
     {
       "id": "lucky-ticket",
@@ -118,7 +172,16 @@
       ],
       "exclusiveStickerId": "poca-lucky-ticket-exclusive",
       "pickerFixtureId": "polara-picker-friends-v1",
-      "assetKit": { "id": "lucky-ticket-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-lucky-ticket-exclusive" }
+      "assetKit": {
+        "id": "lucky-ticket-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-lucky-ticket-exclusive"
+      }
     },
     {
       "id": "postcard-club",
@@ -132,7 +195,16 @@
       ],
       "exclusiveStickerId": "poca-postcard-club-exclusive",
       "pickerFixtureId": "polara-picker-friends-v1",
-      "assetKit": { "id": "postcard-club-kit-v1", "status": "ready", "formats": ["single", "strip"], "preview": "composite", "stickerCompanion": "poca-postcard-club-exclusive" }
+      "assetKit": {
+        "id": "postcard-club-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-postcard-club-exclusive"
+      }
     }
   ],
   "frames": [
@@ -158,8 +230,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-single-overlay-master.png",
-      "sha256": "7fe963b8df5b2bfcf7d98fe0420e558707eea38bb4f9d79b6db7423ca61188ae",
-      "byteSize": 726268,
+      "sha256": "590740d9f875cfaa7f3c292a8e1b03de92c323da9bfd9cbf39595c157d534ed0",
+      "byteSize": 723084,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -178,7 +250,7 @@
         "pink gingham",
         "character-free footer"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#ec5e9e",
         "#8fd3ff",
@@ -219,8 +291,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-strip-overlay-master.png",
-      "sha256": "2560f9be8a5c3ced0d8ac6c9ffbe157f924ae2584191067836342d56f96627a0",
-      "byteSize": 608732,
+      "sha256": "19a356729ce2c1846cb634c94077327cb2a18946a64e3c8a49ed6a88a15d5e58",
+      "byteSize": 607516,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -239,7 +311,7 @@
         "pink gingham",
         "character-free footer"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#ec5e9e",
         "#8fd3ff",
@@ -267,8 +339,8 @@
           "height": 840
         }
       ],
-      "sha256": "da05ecab298feef8b6d75be4712b11f0778ad9f376a1d6a7c4f745985b8a245b",
-      "byteSize": 715259,
+      "sha256": "7242b564b841ed7223505b6a5789c7b2ffc0408f911c6d8eb8aa1f431ed3c5da",
+      "byteSize": 713635,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -287,9 +359,9 @@
         "blueberry gingham",
         "character-free footer"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
-        "#7087ed",
+        "#ec5e9e",
         "#8fd3ff",
         "#ffe26f"
       ]
@@ -327,8 +399,8 @@
           "height": 388
         }
       ],
-      "sha256": "25701ab6019f8cdc9f5b16c4663a7d74f1a3a924a7955922ddbda8642e504e10",
-      "byteSize": 603120,
+      "sha256": "59ca642d907caaeccf1f3651d5193d82820d2c7b7ac28d7fb0d1ceac01c56913",
+      "byteSize": 602598,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -347,9 +419,9 @@
         "blueberry gingham",
         "character-free footer"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
-        "#7087ed",
+        "#ec5e9e",
         "#8fd3ff",
         "#ffe26f"
       ]
@@ -376,8 +448,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/vintage-film-lofi-single-overlay-master.png",
-      "sha256": "59fdad1873c3a05e8cf56515565cb6ff0af60e03b078c7c06a00906e4cc358d9",
-      "byteSize": 242980,
+      "sha256": "a2e81d6cc11bcbe203181bfc953cf8a7b08f35677538c34d3ff76d7a98546ee2",
+      "byteSize": 244167,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -396,7 +468,7 @@
         "cream technical labels",
         "35MM/ISO marks"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#e3b67a",
         "#342824",
@@ -437,8 +509,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/vintage-film-lofi-strip-overlay-master.png",
-      "sha256": "2f9d12c8198f505b99b2cca3b9e7e15f0cd79916678f5eaef25df1ac4e710abe",
-      "byteSize": 283637,
+      "sha256": "d68f139ca27297e44de1066a0d89d77618163fb0320bcf8d9dc8c8f842f36d9b",
+      "byteSize": 296624,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -457,7 +529,7 @@
         "warm film burn",
         "F01/F02/F03 marks"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#e3b67a",
         "#342824",
@@ -486,8 +558,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/seoul-snap-y2k-single-overlay-master.png",
-      "sha256": "26a0a18ff7048b516711f447709d9ca30b5b8ab22ff6be21de373a0c8bd0649a",
-      "byteSize": 896153,
+      "sha256": "ef45111257ec0071615a073b82effadf82e98a65af8bcf0b37667e06e45d4f43",
+      "byteSize": 888999,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -507,7 +579,7 @@
         "digi-cam console",
         "focus brackets outside window"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#ff8fbd",
         "#8fd3ff",
@@ -548,8 +620,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/seoul-snap-y2k-strip-overlay-master.png",
-      "sha256": "85b5ab24ed7ac1ccf788d2b0d54e0113a5b7f634765b5d77efa7936956c54978",
-      "byteSize": 530665,
+      "sha256": "0bbb209c51b7c9c674ace5c9a57fd8e7429e5701edc7a15955a19250655c91b8",
+      "byteSize": 526099,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -569,7 +641,7 @@
         "Y2K console",
         "focus brackets outside windows"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#ff8fbd",
         "#8fd3ff",
@@ -616,8 +688,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-daily-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "e90838abe1af69037e15e270f54ea7e5dd374e8d360199bf74ab221706d966b0",
-      "byteSize": 1359029,
+      "sha256": "fb532ef6f95b918ac4f9c157fb180d73e1e1f09239184ff400bee34bd66a117b",
+      "byteSize": 1353009,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -635,7 +707,7 @@
         "editorial grid",
         "character-free photo report"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#df6d57",
         "#40312a",
@@ -679,8 +751,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-daily-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "aa9ce8638e2b894677a38d20e8bd2d4cd605c55b4309175d4188b6b7a0c455c1",
-      "byteSize": 997678,
+      "sha256": "5415c39ae15b232c5454f6f58a862d8e183fec71dda37b512683a52eceef61f2",
+      "byteSize": 992095,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -698,7 +770,7 @@
         "archive footer",
         "character-free photo report"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#df6d57",
         "#40312a",
@@ -745,8 +817,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "2a1be232e30a95e5de64dc44f7c28812569b3e1729ae98aa46d50aeb7783346e",
-      "byteSize": 835752,
+      "sha256": "9c09a77623e548be348776ea4c37b2338acbe5c6215bbceea8dafc7068393387",
+      "byteSize": 831767,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -764,7 +836,7 @@
         "keepsake footer",
         "character-free proof stage"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#5f8cff",
         "#ff8fbd",
@@ -808,8 +880,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "0b23763c01b0f4eceaff44ea8d8dd472deeec94a249119828bba51cdc25e9393",
-      "byteSize": 568821,
+      "sha256": "03be012cbe53abaeb9a0438a43f9ad50383ac7e3304c8fecf9d6da4c5c1ee15a",
+      "byteSize": 566384,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -827,7 +899,7 @@
         "electric blue accents",
         "character-free technical footer"
       ],
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#5f8cff",
         "#ff8fbd",
@@ -857,12 +929,12 @@
       "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "a89fcb3472abf15a25b2ad001508a191ee7301845b8844867236232dffc7937f",
-      "byteSize": 27493,
+      "sha256": "ef9e645a788b71d4e9d9b4ed0028311f1c2b4bccd6684109bdc765ab2a8d8906",
+      "byteSize": 31216,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#8fd3ff",
         "#ff8fbd",
@@ -920,12 +992,12 @@
       "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "55af113d606344a61ce664df3305cfb2e558f1b59115bd72df069b342d4e4a2d",
-      "byteSize": 24384,
+      "sha256": "62aedb3140899d75ba296ba0b02a6ae68a7adf56da589e4b6fe54b419fb09ff8",
+      "byteSize": 26634,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#8fd3ff",
         "#ff8fbd",
@@ -994,12 +1066,12 @@
       "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "2c43dbea29eea5552a79d325975007e6670e675213af4074c59994ff5537b164",
-      "byteSize": 24876,
+      "sha256": "405f6a5a65e8d063a46f10a8c0587257dd9fa565af7bb78c51d719e41304ec6d",
+      "byteSize": 28250,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#ff8fbd",
         "#8fd3ff",
@@ -1057,12 +1129,12 @@
       "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "53c5c3976e8d207bda32a38e57ecb0c225434e098c65756a8c04fd7cdd8a2c2f",
-      "byteSize": 25053,
+      "sha256": "ff7e7164af8d95c9d6b347a61adbc87c90117712b37c40f9e45fef7749eedfd5",
+      "byteSize": 27014,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#ff8fbd",
         "#8fd3ff",
@@ -1106,12 +1178,12 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "261d5b7de7d2a0d2690475dcc0fa698b7fefb6a039033a40837206f07ee60613",
-      "byteSize": 1013520,
+      "sha256": "fdadb924f04caad6f1b165af9184ba03e3ffade9c9d60cfb460de0de732df32e",
+      "byteSize": 1019808,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#d88968",
         "#1f2f4f",
@@ -1169,12 +1241,12 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "18a7cb8e2d245a369386f3f36d9fb53035222b3b20379deb8e8eca6044ef4a3e",
-      "byteSize": 738431,
+      "sha256": "f0f0d15be40ccbdad2ef9cd5581eaeaf3b442565ff29e0f1e9113e406c3e9590",
+      "byteSize": 742280,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v1",
+      "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#d88968",
         "#1f2f4f",
