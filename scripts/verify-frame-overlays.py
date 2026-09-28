@@ -121,6 +121,18 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
             {"x": 152, "y": 1230, "width": 419, "height": 350, "radius": 28},
         ],
     ),
+    "postcard-club-ink.single": (
+        (1080, 1350),
+        [{"x": 170, "y": 210, "width": 740, "height": 870, "radius": 26}],
+    ),
+    "postcard-club-ink.strip": (
+        (720, 1800),
+        [
+            {"x": 76, "y": 174, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 606, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 1038, "width": 568, "height": 394, "radius": 22},
+        ],
+    ),
 }
 
 EXPECTED_POLYGONS: dict[str, list[list[int]]] = {
@@ -234,6 +246,12 @@ EXPECTED_CONTRACTS: dict[str, dict[str, Any]] = {
         "family": "postcard-club", "mode": "single", "maskType": "rounded-rectangles", "masterRequired": False,
     },
     "postcard-club.strip": {
+        "family": "postcard-club", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "postcard-club-ink.single": {
+        "family": "postcard-club", "mode": "single", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "postcard-club-ink.strip": {
         "family": "postcard-club", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
     },
 }
@@ -540,19 +558,19 @@ def verify(root: Path) -> None:
     manifest = load_manifest(manifest_path)
     frames = manifest["frames"]
     require(
-        len(frames) == 18,
-        f"Manifest harus berisi tepat 18 frame; ditemukan {len(frames)}.",
+        len(frames) == 20,
+        f"Manifest harus berisi tepat 20 frame; ditemukan {len(frames)}.",
     )
     ids = [frame.get("id") for frame in frames]
     require(len(set(ids)) == len(ids), "Manifest memiliki ID duplikat.")
     require(
         set(ids) == set(EXPECTED_GEOMETRY),
-        "Manifest tidak memuat tepat delapan belas ID Hero canonical.",
+        "Manifest tidak memuat tepat dua puluh ID Hero canonical.",
     )
 
     hashes = [verify_frame(root, frame) for frame in frames]
-    require(len(set(hashes)) == 18, "Runtime overlay memiliki hash duplikat.")
-    print("18/18 overlay passed")
+    require(len(set(hashes)) == 20, "Runtime overlay memiliki hash duplikat.")
+    print("20/20 overlay passed")
 
 
 def main() -> int:

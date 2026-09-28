@@ -16,8 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.37.0 frame remaster', () => {
-  assert.equal(packageJson.version, '0.37.0');
+test('release metadata records the v0.38.0 asset expansion and inactive-slot guard', () => {
+  assert.equal(packageJson.version, '0.38.0');
+  assert.match(changelog, /## \[0\.38\.0\] - 2026-09-28/);
+  assert.match(changelog, /Postcard Club Ink/i);
+  assert.match(changelog, /inactive/);
+  assert.match(changelog, /20 variant/i);
   assert.match(changelog, /## \[0\.37\.0\] - 2026-09-28/);
   assert.match(changelog, /perimeter proof/i);
   assert.match(changelog, /POLARA \/ PROOF/i);

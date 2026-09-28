@@ -113,13 +113,25 @@ const EXPECTED = {
       { x: 152, y: 1230, width: 419, height: 350, radius: 28 },
     ],
   },
+  'postcard-club-ink.single': {
+    mode: 'single', canvas: { width: 1080, height: 1350 }, maskType: 'rounded-rectangles',
+    windows: [{ x: 170, y: 210, width: 740, height: 870, radius: 26 }],
+  },
+  'postcard-club-ink.strip': {
+    mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
+    windows: [
+      { x: 76, y: 174, width: 568, height: 394, radius: 22 },
+      { x: 76, y: 606, width: 568, height: 394, radius: 22 },
+      { x: 76, y: 1038, width: 568, height: 394, radius: 22 },
+    ],
+  },
 };
 
 
-test('registry generated memuat delapan belas Hero PNG dari delapan keluarga dengan geometry canonical', () => {
-  assert.equal(frameOverlayTemplates.length, 18);
+test('registry generated memuat dua puluh Hero PNG dari delapan keluarga dengan geometry canonical', () => {
+  assert.equal(frameOverlayTemplates.length, 20);
   assert.equal(new Set(frameOverlayTemplates.map((template) => template.familyId)).size, 8);
-  assert.equal(new Set(frameOverlayTemplates.map((template) => template.id)).size, 18);
+  assert.equal(new Set(frameOverlayTemplates.map((template) => template.id)).size, 20);
   assert.deepEqual(new Set(frameOverlayTemplates.map((template) => template.id)), new Set(Object.keys(EXPECTED)));
 
   frameOverlayTemplates.forEach((template) => {
@@ -149,5 +161,5 @@ test('registry generated memisahkan overlay export dari picker thumbnail runtime
     assert.match(template.pickerDetail, /^(Single|Strip 3) · \d+ × \d+$/);
   });
 
-  assert.equal(new Set(frameOverlayTemplates.map((template) => template.pickerThumbnailSrc)).size, 18);
+  assert.equal(new Set(frameOverlayTemplates.map((template) => template.pickerThumbnailSrc)).size, 20);
 });

@@ -85,7 +85,7 @@ function validateFrame(frame, ids) {
 const raw = await fs.readFile(inputPath, 'utf8');
 const manifest = JSON.parse(raw);
 if (!Array.isArray(manifest.frames)) fail('Manifest harus memiliki array frames.');
-if (manifest.frames.length !== 18) fail(`Manifest produksi harus berisi tepat 18 frame Hero; ditemukan ${manifest.frames.length}.`);
+if (manifest.frames.length !== 20) fail(`Manifest produksi harus berisi tepat 20 frame Hero; ditemukan ${manifest.frames.length}.`);
 if (manifest.familyProfileVersion !== 'frame-family-v3') fail('Manifest harus memakai frame-family-v3.');
 if (manifest.collectionProfileVersion !== 'frame-collection-v1') fail('Manifest harus memakai frame-collection-v1.');
 if (manifest.assetExpansionProfileVersion !== 'asset-expansion-v1') fail('Manifest harus memakai asset-expansion-v1.');

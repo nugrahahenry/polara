@@ -5,6 +5,19 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.38.0] - 2026-09-28
+
+### Added
+- Menambahkan dua varian character-free **Postcard Club Ink** untuk Single dan Strip 3, dengan paper grid, ink registration marks, dan geometry rounded-rectangle yang tetap manifest-owned.
+- Regenerasi preview frame-only dan composite Postcard Club Ink langsung dari overlay canonical.
+
+### Fixed
+- Slot foto kosong sekarang tetap terlihat untuk menjaga Strip 3, tetapi diberi state `empty`, tidak focusable, tidak clickable, dan tidak pernah ikut terbaca sebagai target export atau kontrol aktif.
+- Kartu frame picker sekarang membedakan state `active`, `inactive`, dan `unavailable` secara eksplisit.
+
+### Validation
+- Registry menjadi 20 variant dengan 8 keluarga; Asset Quality, 20/20 overlay, 40 preview derivative, hidden RGB, dan Node 100/100 lulus.
+
 ## [0.37.0] - 2026-09-28
 
 ### Changed

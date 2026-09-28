@@ -9,6 +9,7 @@ import {
 } from './core/compositor.js';
 import { applyPhotoGeometry, initializePhotosForFrame, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
 import { frameCollections, templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=17';
+import { applyPhotoSlotPresentation, getPhotoSlotPresentation } from './modules/templates/photo-slot-ui.js';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
   findAvailableTemplate, getTemplatePreviewConfig, selectFramePreservingEditorState,
@@ -991,6 +992,7 @@ async function renderTemplateList() {
     button.dataset.mode = template.mode;
     button.setAttribute('role', 'option');
     button.setAttribute('aria-selected', String(template.id === state.frameId));
+    button.dataset.frameState = unavailable ? 'unavailable' : template.id === state.frameId ? 'active' : 'inactive';
     button.setAttribute('aria-posinset', String(index + 1));
     button.setAttribute('aria-setsize', String(available.length));
     const thumb = document.createElement('span');
@@ -1128,6 +1130,7 @@ function updateTemplateSelection() {
     const active = button.dataset.templateId === state.frameId;
     button.classList.toggle('active', active);
     button.setAttribute('aria-selected', String(active));
+    button.dataset.frameState = button.disabled ? 'unavailable' : active ? 'active' : 'inactive';
   });
 }
 
@@ -1213,7 +1216,6 @@ async function renderCanvas() {
       brand: BRAND_LINE,
     });
     fitStage(templateDims(template));
-    refreshPhotoSlots(phCanvas, state.photos, { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
     bindCanvasPhotoSelection(phCanvas);
     renderEditorStickers();
   } catch (error) {
@@ -1241,17 +1243,28 @@ async function renderCanvas() {
 }
 
 function syncCanvasPhotoSelection(canvasEl) {
-  canvasEl?.querySelectorAll('.ph-slot[data-photo-selectable="true"]').forEach((slot, index) => {
-    slot.setAttribute('aria-current', String(index === state.selectedSlot));
+  canvasEl?.querySelectorAll('.ph-slot').forEach((slot, index) => {
+    applyPhotoSlotPresentation(slot, getPhotoSlotPresentation({
+      photo: state.photos[index],
+      index,
+      selectedSlot: state.selectedSlot,
+      interactive: ['frame', 'decorate'].includes(state.step),
+    }));
   });
 }
 
 function bindCanvasPhotoSelection(canvasEl) {
   if (!canvasEl) return;
   canvasEl.querySelectorAll('.ph-slot').forEach((slot, index) => {
-    if (!state.photos[index]) return;
-    slot.dataset.photoSelectable = 'true';
-    slot.tabIndex = 0;
+    const presentation = getPhotoSlotPresentation({
+      photo: state.photos[index],
+      index,
+      selectedSlot: state.selectedSlot,
+      interactive: ['frame', 'decorate'].includes(state.step),
+    });
+    applyPhotoSlotPresentation(slot, presentation);
+    if (!presentation.selectable) return;
+    // Keep the canvas contract explicit here so the active slot stays a UI-only control.
     slot.setAttribute('role', 'button');
     slot.setAttribute('aria-label', `Select photo ${index + 1} to adjust`);
     const select = () => {

@@ -875,6 +875,9 @@ input, textarea { caret-color: var(--pink-deep); }
 .photo-adjust { border-top: 1px solid var(--proof-hairline); }
 .ph-slot[data-photo-selectable="true"] { cursor: pointer; }
 .ph-slot[data-photo-selectable="true"]:focus-visible { outline: 3px solid var(--proof-focus); outline-offset: -3px; }
+.ph-slot[data-photo-selectable="false"] { cursor: default; pointer-events: none; }
+.tpl-btn[data-frame-state="inactive"] .tpl-thumb-image { opacity: .92; }
+.tpl-btn[data-frame-state="unavailable"] { cursor: not-allowed; }
 .slot-tab.active { background: var(--proof-blue); }
 .caption-availability-note { border: 0; background: #fff7dc; }
 .tray-head > img { display: none; }

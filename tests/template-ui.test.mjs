@@ -5,6 +5,7 @@ import {
   findAvailableTemplate,
   isRequestedFrameStillSelected,
   getTemplatePreviewConfig,
+  getFramePreviewState,
   selectFramePreservingEditorState,
   templateSupportsDynamicText,
 } from '../src/modules/templates/template-ui.js';
@@ -34,6 +35,17 @@ test('picker memakai composite bila tersedia tanpa mengganti thumbnail fallback'
     }),
     { kind: 'image', src: 'assets/frames/composites/proof.png?v=frame-overlay-v1' },
   );
+});
+
+test('preview frame membedakan aktif, tidak aktif, dan gagal tanpa mengubah pilihan', () => {
+  assert.equal(getFramePreviewState({ active: true }), 'active');
+  assert.equal(getFramePreviewState(), 'inactive');
+  assert.equal(getFramePreviewState({ active: true, unavailable: true }), 'unavailable');
+});
+
+test('state kartu preview tetap berubah ketika frame aktif berpindah', async () => {
+  const app = await (await import('node:fs/promises')).readFile(new URL('../src/app.js', import.meta.url), 'utf8');
+  assert.match(app, /button\.dataset\.frameState = button\.disabled \? 'unavailable' : active \? 'active' : 'inactive'/);
 });
 
 

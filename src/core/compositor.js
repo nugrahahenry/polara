@@ -95,9 +95,19 @@ export function setPhotoSlot(canvasEl, slotNum, photo, options = {}) {
   }
 }
 
+export function clearPhotoSlot(canvasEl, slotNum) {
+  const slot = canvasEl?.querySelector(`.ph-slot[data-slot="${slotNum}"]`)
+    || canvasEl?.querySelectorAll('.ph-slot')[slotNum - 1];
+  if (!slot) return;
+  slot.querySelectorAll(':scope > .ph-photo, :scope > .ph-photo-region, :scope > .ph-guest')
+    .forEach((item) => item.remove());
+}
+
 export function refreshPhotoSlots(canvasEl, photos, options = {}) {
-  photos.forEach((photo, index) => {
+  canvasEl?.querySelectorAll('.ph-slot').forEach((_, index) => {
+    const photo = photos[index];
     if (photo) setPhotoSlot(canvasEl, index + 1, photo, options);
+    else clearPhotoSlot(canvasEl, index + 1);
   });
 }
 

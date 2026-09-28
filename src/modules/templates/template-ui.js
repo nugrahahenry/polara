@@ -5,6 +5,11 @@ export function getTemplatePreviewConfig(template) {
   return { kind: 'image', src: `${previewSrc}?v=${version}` };
 }
 
+export function getFramePreviewState({ active = false, unavailable = false } = {}) {
+  if (unavailable) return 'unavailable';
+  return active ? 'active' : 'inactive';
+}
+
 export function selectFramePreservingEditorState(state, frameId) {
   state.frameId = frameId;
   return state;

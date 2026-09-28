@@ -1266,6 +1266,118 @@
         "registration marks",
         "coral and indigo ink"
       ]
+    },
+    {
+      "id": "postcard-club-ink.single",
+      "family": "postcard-club",
+      "name": "Postcard Club Ink",
+      "category": "editorial-postcard",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 170,
+          "y": 210,
+          "width": 740,
+          "height": 870,
+          "radius": 26
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-ink-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-ink-single-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-ink-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "sha256": "9dd7788ac4dace76a350004355b51cc1b048fb6eba089cae890760a336d2c058",
+      "byteSize": 33790,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "slotBackground": "#f7f2e9",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Ink edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "paper grid",
+        "ink registration marks",
+        "coral and navy print blocks",
+        "character-free postcard proof"
+      ],
+      "qualityProfile": "polara-proof-edge-v2",
+      "edgePalette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ]
+    },
+    {
+      "id": "postcard-club-ink.strip",
+      "family": "postcard-club",
+      "name": "Postcard Club Ink",
+      "category": "editorial-postcard",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 76,
+          "y": 174,
+          "width": 568,
+          "height": 394,
+          "radius": 22
+        },
+        {
+          "x": 76,
+          "y": 606,
+          "width": 568,
+          "height": 394,
+          "radius": 22
+        },
+        {
+          "x": 76,
+          "y": 1038,
+          "width": 568,
+          "height": 394,
+          "radius": 22
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-ink-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-ink-strip-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-ink-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "sha256": "c418f305708a99209a3a82b9e5561bed14bb7034f4779675811474ac1feca253",
+      "byteSize": 28492,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "slotBackground": "#f7f2e9",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Ink edition copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "paper grid",
+        "ink registration marks",
+        "coral and navy print blocks",
+        "character-free postcard proof"
+      ],
+      "qualityProfile": "polara-proof-edge-v2",
+      "edgePalette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ]
     }
   ]
 }
