@@ -16,8 +16,11 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.38.0 asset expansion and inactive-slot guard', () => {
-  assert.equal(packageJson.version, '0.38.0');
+test('release metadata records the v0.39.0 preview fallback guard', () => {
+  assert.equal(packageJson.version, '0.39.0');
+  assert.match(changelog, /## \[0\.39\.0\] - 2026-09-29/);
+  assert.match(changelog, /fallback preview/i);
+  assert.match(changelog, /unavailable/i);
   assert.match(changelog, /## \[0\.38\.0\] - 2026-09-28/);
   assert.match(changelog, /Postcard Club Ink/i);
   assert.match(changelog, /inactive/);
@@ -100,8 +103,8 @@ test('release metadata records the v0.38.0 asset expansion and inactive-slot gua
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=38/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=354/);
+  assert.match(indexHtml, /src\/app\.js\?v=39/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=355/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);

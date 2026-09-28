@@ -5,6 +5,7 @@ import {
   findAvailableTemplate,
   isRequestedFrameStillSelected,
   getTemplatePreviewConfig,
+  getTemplatePreviewSources,
   getFramePreviewState,
   selectFramePreservingEditorState,
   templateSupportsDynamicText,
@@ -34,6 +35,30 @@ test('picker memakai composite bila tersedia tanpa mengganti thumbnail fallback'
       assetVersion: 'frame-overlay-v1',
     }),
     { kind: 'image', src: 'assets/frames/composites/proof.png?v=frame-overlay-v1' },
+  );
+});
+
+test('preview source memakai composite lalu fallback overlay canonical', () => {
+  assert.deepEqual(
+    getTemplatePreviewSources({
+      thumbnailSrc: 'assets/frames/thumbnails/plain.png',
+      pickerThumbnailSrc: 'assets/frames/composites/proof.png',
+      assetVersion: 'frame-overlay-v1',
+    }),
+    [
+      { kind: 'image', role: 'picker', src: 'assets/frames/composites/proof.png?v=frame-overlay-v1' },
+      { kind: 'image', role: 'frame', src: 'assets/frames/thumbnails/plain.png?v=frame-overlay-v1' },
+    ],
+  );
+});
+
+test('preview source tidak menggandakan URL composite ketika fallback sama', () => {
+  assert.deepEqual(
+    getTemplatePreviewSources({
+      thumbnailSrc: 'assets/frames/composites/proof.png',
+      pickerThumbnailSrc: 'assets/frames/composites/proof.png',
+    }),
+    [{ kind: 'image', role: 'picker', src: 'assets/frames/composites/proof.png?v=1' }],
   );
 });
 

@@ -12,7 +12,7 @@ import { frameCollections, templates, getTemplate, resolveTemplateHtml, resolveT
 import { applyPhotoSlotPresentation, getPhotoSlotPresentation } from './modules/templates/photo-slot-ui.js';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
-  findAvailableTemplate, getTemplatePreviewConfig, selectFramePreservingEditorState,
+  findAvailableTemplate, getTemplatePreviewConfig, getTemplatePreviewSources, selectFramePreservingEditorState,
   isRequestedFrameStillSelected,
   templateSupportsDynamicText,
 } from './modules/templates/template-ui.js?v=13';
@@ -1135,24 +1135,55 @@ function updateTemplateSelection() {
 }
 
 async function buildTemplateThumb(template, mount) {
-  const preview = getTemplatePreviewConfig(template);
-  if (preview.kind === 'image') {
+  const previewSources = getTemplatePreviewSources(template);
+  if (previewSources.length) {
     const image = document.createElement('img');
     image.className = 'tpl-thumb-image';
-    image.src = preview.src;
     image.alt = '';
     image.loading = 'lazy';
     image.decoding = 'async';
+    const button = mount.closest('.tpl-btn');
+    let sourceIndex = 0;
+    const applySource = () => {
+      const source = previewSources[sourceIndex];
+      image.dataset.previewSource = source.role;
+      image.src = source.src;
+    };
     image.addEventListener('error', () => {
+      sourceIndex += 1;
+      if (sourceIndex < previewSources.length) {
+        mount.dataset.previewState = 'fallback';
+        const note = document.createElement('span');
+        note.className = 'tpl-preview-note';
+        note.textContent = 'Frame preview';
+        mount.appendChild(note);
+        applySource();
+        return;
+      }
       image.remove();
+      mount.dataset.previewState = 'unavailable';
       const fallback = document.createElement('span');
       fallback.className = 'tpl-thumb-fallback';
       fallback.textContent = 'Preview unavailable';
       mount.appendChild(fallback);
-    }, { once: true });
+      if (button) {
+        button.disabled = true;
+        button.classList.add('unavailable');
+        button.dataset.frameState = 'unavailable';
+        button.setAttribute('aria-selected', 'false');
+        const currentLabel = button.getAttribute('aria-label') || template.name;
+        if (!currentLabel.includes('Preview unavailable')) {
+          button.setAttribute('aria-label', `${currentLabel}, Preview unavailable`);
+        }
+      }
+    });
     mount.appendChild(image);
+    applySource();
     return;
   }
+
+  const preview = getTemplatePreviewConfig(template);
+  if (preview.kind === 'image') return;
 
   try {
     const { w, h } = templateDims(template);
@@ -1170,6 +1201,14 @@ async function buildTemplateThumb(template, mount) {
     requestAnimationFrame(() => scaleThumb(frame, w, h, template.mode, focus));
   } catch (error) {
     mount.textContent = 'Preview unavailable';
+    mount.dataset.previewState = 'unavailable';
+    const button = mount.closest('.tpl-btn');
+    if (button) {
+      button.disabled = true;
+      button.classList.add('unavailable');
+      button.dataset.frameState = 'unavailable';
+      button.setAttribute('aria-selected', 'false');
+    }
     console.debug('Frame thumbnail failed:', template.id, error);
   }
 }

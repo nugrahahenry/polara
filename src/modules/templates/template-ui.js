@@ -5,6 +5,26 @@ export function getTemplatePreviewConfig(template) {
   return { kind: 'image', src: `${previewSrc}?v=${version}` };
 }
 
+export function getTemplatePreviewSources(template) {
+  const version = encodeURIComponent(template.assetVersion || '1');
+  const sources = [];
+  if (template.pickerThumbnailSrc) {
+    sources.push({
+      kind: 'image',
+      role: 'picker',
+      src: `${template.pickerThumbnailSrc}?v=${version}`,
+    });
+  }
+  if (template.thumbnailSrc && template.thumbnailSrc !== template.pickerThumbnailSrc) {
+    sources.push({
+      kind: 'image',
+      role: 'frame',
+      src: `${template.thumbnailSrc}?v=${version}`,
+    });
+  }
+  return sources;
+}
+
 export function getFramePreviewState({ active = false, unavailable = false } = {}) {
   if (unavailable) return 'unavailable';
   return active ? 'active' : 'inactive';

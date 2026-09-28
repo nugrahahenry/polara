@@ -5,6 +5,18 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.39.0] - 2026-09-29
+
+### Added
+- Menambahkan fallback preview berurutan dari composite picker ke thumbnail frame-only canonical.
+
+### Fixed
+- Preview frame yang gagal tidak lagi meninggalkan kartu yang terlihat valid. Kartu diberi state unavailable dan dikeluarkan dari pilihan sampai aset pulih.
+- State active, inactive, dan unavailable kini memiliki perbedaan visual yang lebih jelas tanpa mengubah frame, crop, atau export.
+
+### Validation
+- Fallback preview, slot kosong, picker state, dan seluruh regression test lulus.
+
 ## [0.38.0] - 2026-09-28
 
 ### Added
