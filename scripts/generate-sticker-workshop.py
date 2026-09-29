@@ -220,11 +220,11 @@ def postmark_heart() -> Image.Image:
     draw = ImageDraw.Draw(image)
     draw.ellipse((112, 112, 912, 912), fill=CREAM, outline=INK, width=24)
     draw.ellipse((160, 160, 864, 864), outline=PINK_DEEP, width=18)
-    for y in (292, 732):
+    for y in (286, 744):
         draw.line((192, y, 832, y), fill=BLUE_DEEP, width=12)
-    display_text(draw, (512, 292), "SENT", 92, INK)
-    display_text(draw, (512, 732), "WITH LOVE", 62, INK)
-    draw.polygon([(512, 630), (430, 548), (350, 568), (342, 662), (512, 812), (682, 662), (674, 568), (594, 548)], fill=PINK, outline=INK)
+    display_text(draw, (512, 246), "SENT", 84, INK)
+    display_text(draw, (512, 782), "WITH LOVE", 58, INK)
+    draw.polygon([(512, 654), (454, 536), (384, 554), (378, 624), (512, 720), (646, 624), (640, 554), (570, 536)], fill=PINK, outline=INK)
     return image
 
 

@@ -30,6 +30,15 @@ const PM01_POSES = Object.freeze({
     pose: 'half-heart',
     kind: 'fictional-synthetic',
   }),
+  seated: Object.freeze({
+    id: 'polara-pm-01-seated',
+    guestId: DEFAULT_GUEST_ID,
+    name: 'Juno',
+    src: 'assets/guests/polara-pm-01-seated.png',
+    alt: 'Juno, a fictional Polara guest, seated beside you.',
+    pose: 'seated',
+    kind: 'fictional-synthetic',
+  }),
 });
 
 const PM02_POSES = Object.freeze({
@@ -51,6 +60,12 @@ const PM02_POSES = Object.freeze({
     alt: 'Mina, a fictional Polara guest, making half of a heart pose.',
     pose: 'half-heart', kind: 'fictional-synthetic',
   }),
+  seated: Object.freeze({
+    id: 'polara-pm-02-seated', guestId: 'polara-pm-02', name: 'Mina',
+    src: 'assets/guests/polara-pm-02-seated.png',
+    alt: 'Mina, a fictional Polara guest, seated beside you.',
+    pose: 'seated', kind: 'fictional-synthetic',
+  }),
 });
 
 const GUESTS = Object.freeze({
@@ -66,10 +81,10 @@ const GUESTS = Object.freeze({
   }),
 });
 
-// Side by side reads as two people sharing a laptop-sized camera window. Keep
-// the original pose assets, but show the upper-body crop so legs do not pull
-// the composition down or make the guest feel like a separate cutout.
-const SEATED_BUST_CROP = Object.freeze({ x: 0.04, y: 0.02, width: 0.92, height: 0.64 });
+// Duduk bersama keeps the real camera as the full photo window, then layers a
+// dedicated seated guest into that same window. The guest is cropped just below
+// the waist so the pair reads like two people sharing a laptop camera.
+const SEATED_BUST_CROP = Object.freeze({ x: 0.02, y: 0, width: 0.96, height: 0.76 });
 
 const LAYOUTS = Object.freeze({
   matched: Object.freeze({
@@ -89,16 +104,16 @@ const LAYOUTS = Object.freeze({
   }),
   'side-by-side': Object.freeze({
     right: Object.freeze({
-      // Both people share one clipped camera window. Busts sit on one baseline
-      // so the guest reads as a seated companion, not a floating cutout.
-      userRegion: Object.freeze({ x: 0.03, y: 0.2, width: 0.47, height: 0.64 }),
-      guestRegion: Object.freeze({ x: 0.5, y: 0.16, width: 0.47, height: 0.68 }),
+      // The camera photo remains full width. The seated guest is layered inside
+      // the same clipped window, like a friend sitting beside the user.
+      userRegion: Object.freeze({ x: 0, y: 0, width: 1, height: 1 }),
+      guestRegion: Object.freeze({ x: 0.47, y: 0.13, width: 0.5, height: 0.78 }),
       guestCrop: SEATED_BUST_CROP,
       flipGuest: false,
     }),
     left: Object.freeze({
-      userRegion: Object.freeze({ x: 0.5, y: 0.2, width: 0.47, height: 0.64 }),
-      guestRegion: Object.freeze({ x: 0.03, y: 0.16, width: 0.47, height: 0.68 }),
+      userRegion: Object.freeze({ x: 0, y: 0, width: 1, height: 1 }),
+      guestRegion: Object.freeze({ x: 0.03, y: 0.13, width: 0.5, height: 0.78 }),
       guestCrop: SEATED_BUST_CROP,
       flipGuest: true,
     }),
@@ -117,6 +132,10 @@ export function getGuestAssets(id = DEFAULT_GUEST_ID) {
   const guest = getGuest(id);
   if (!guest) return [];
   return ['neutral', 'peace', 'half-heart'].map((pose) => guest.poses[pose]);
+}
+
+export function getSeatedGuestAsset(id = DEFAULT_GUEST_ID) {
+  return getGuest(id)?.poses.seated || null;
 }
 
 export function poseForSlot(index, mode, guestId = DEFAULT_GUEST_ID) {
@@ -173,10 +192,13 @@ export function createGuestComposition({
   slotIndex = 0,
 } = {}) {
   if (experience !== POSE_MATE_EXPERIENCE) return null;
-  const asset = poseForSlot(slotIndex, mode, guestId || DEFAULT_GUEST_ID);
-  if (!asset) return null;
   const normalizedLayout = LAYOUTS[layout] ? layout : 'matched';
   const normalizedSide = side === 'left' ? 'left' : 'right';
+  const resolvedGuestId = guestId || DEFAULT_GUEST_ID;
+  const asset = normalizedLayout === 'side-by-side'
+    ? getSeatedGuestAsset(resolvedGuestId)
+    : poseForSlot(slotIndex, mode, resolvedGuestId);
+  if (!asset) return null;
   const geometry = LAYOUTS[normalizedLayout][normalizedSide];
   return {
     asset,

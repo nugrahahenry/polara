@@ -151,14 +151,32 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   assert.deepEqual(matched.userRegion, { x: 0, y: 0, width: 1, height: 1 });
   assert.deepEqual(matched.guestRegion, { x: 0.54, y: 0, width: 0.46, height: 1 });
   assert.equal(sideBySide.flipGuest, true);
-  assert.equal(sideBySide.asset.pose, 'peace');
-  assert.deepEqual(sideBySide.guestRegion, { x: 0.03, y: 0.16, width: 0.47, height: 0.68 });
-  assert.deepEqual(sideBySide.userRegion, { x: 0.5, y: 0.2, width: 0.47, height: 0.64 });
-  assert.deepEqual(sideBySide.guestCrop, { x: 0.04, y: 0.02, width: 0.92, height: 0.64 });
+  assert.equal(sideBySide.asset.pose, 'seated');
+  assert.equal(sideBySide.asset.src, 'assets/guests/polara-pm-01-seated.png');
+  assert.deepEqual(sideBySide.guestRegion, { x: 0.03, y: 0.13, width: 0.5, height: 0.78 });
+  assert.deepEqual(sideBySide.userRegion, { x: 0, y: 0, width: 1, height: 1 });
+  assert.deepEqual(sideBySide.guestCrop, { x: 0.02, y: 0, width: 0.96, height: 0.76 });
   assert.equal(guestModule.poseGuideForSlot(2, 3), 'Half-heart');
   assert.equal(guestModule.createGuestComposition({
     experience: 'pose-mate', guestId: 'unknown-guest',
   }), null);
+});
+
+
+test('seated Pose Mate assets are registered for both fictional guests', async () => {
+  const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
+  const guestModule = await import('../src/modules/guests/index.js');
+  for (const guestId of ['polara-pm-01', 'polara-pm-02']) {
+    const asset = guestModule.getSeatedGuestAsset(guestId);
+    const entry = manifest.guests.find((item) => item.id === asset.id);
+    assert.equal(asset.pose, 'seated');
+    assert.ok(entry);
+    assert.equal(entry.width, 1254);
+    assert.equal(entry.height, 1254);
+    assert.equal(entry.publicFigure, false);
+    assert.equal(entry.collaborationClaim, false);
+    assert.equal(createHash('sha256').update(await readBytes(asset.src)).digest('hex'), entry.sha256);
+  }
 });
 
 

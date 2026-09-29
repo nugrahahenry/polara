@@ -5,6 +5,18 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.42.0] - 2026-09-29
+
+### Added
+- Menambahkan guest seated khusus untuk Juno dan Mina. Komposisi Duduk bersama kini mempertahankan foto kamera penuh lalu menempatkan guest duduk di dalam photo window yang sama.
+
+### Fixed
+- Duduk bersama tidak lagi membagi foto menjadi dua panel atau membuat guest tampak gepeng. Crop kepala sampai bawah pinggang memakai aset seated baru yang konsisten di Camera, Review, Frame, Hias, Reveal, dan export.
+- Stiker Sent With Love ditata ulang agar copy dan ikon hati tidak saling menutup.
+
+### Validation
+- Guest runtime menjadi 8 aset dengan canvas 1254×1254, alpha bersih, dan provenance fictional-synthetic. Exact export tetap Single 1080×1350 dan Strip 720×1800.
+
 ## [0.41.0] - 2026-09-29
 
 ### Added

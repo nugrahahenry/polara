@@ -20,7 +20,7 @@ import { getStickerPack, createStickerInstance, preloadMascots } from './modules
 import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
   getGuest, getGuestAssets, getGuestOptions, poseGuideForSlot, retryWithoutGuestOnFailure,
-} from './modules/guests/index.js?v=5';
+} from './modules/guests/index.js?v=6';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';
@@ -275,8 +275,12 @@ function syncGuestExperienceSurfaces() {
   applyGuestImageGeometry(refs.poseGuestPreview, guestComposition);
   applyGuestImageGeometry(refs.reviewGuest, guestComposition);
   refs.poseMateKicker.textContent = `Pose Mate · ${guestComposition.asset.guestId.replace('polara-', '').toUpperCase()}`;
-  refs.poseMateTitle.textContent = `Match ${guestComposition.asset.name}'s gesture`;
-  refs.poseMateNote.textContent = `${guestComposition.asset.name} is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.`;
+  refs.poseMateTitle.textContent = state.guestLayout === 'side-by-side'
+    ? `Sit with ${guestComposition.asset.name}`
+    : `Match ${guestComposition.asset.name}'s gesture`;
+  refs.poseMateNote.textContent = state.guestLayout === 'side-by-side'
+    ? `${guestComposition.asset.name} is seated inside the same camera window. Your photo stays untouched and the composition remains reversible through export.`
+    : `${guestComposition.asset.name} is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.`;
   refs.poseGuideText.textContent = poseGuideForSlot(state.activeSlot, state.mode);
   refs.poseUserGuide.dataset.poseCue = poseGuideForSlot(state.activeSlot, state.mode);
   refs.guestSide.textContent = guestComposition.side === 'right' ? `Move ${guestComposition.asset.name} to the left` : `Move ${guestComposition.asset.name} to the right`;
@@ -593,7 +597,7 @@ refs.guestLayoutChoose.addEventListener('click', (event) => {
   });
   invalidatePreparedExport();
   syncGuestExperienceSurfaces();
-  status(state.guestLayout === 'matched' ? 'Match pose selected.' : 'Side-by-side selected.');
+  status(state.guestLayout === 'matched' ? 'Match pose selected.' : 'Sit together selected.');
 });
 
 refs.guestOptionList.addEventListener('click', async (event) => {

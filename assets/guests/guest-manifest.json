@@ -82,6 +82,38 @@
       "guestId": "polara-pm-02"
     },
     {
+      "id": "polara-pm-01-seated",
+      "guestId": "polara-pm-01",
+      "name": "Juno",
+      "runtimeSrc": "assets/guests/polara-pm-01-seated.png",
+      "pose": "seated",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "rightsScope": "Original Polara production runtime",
+      "provenance": "Identity-preserve generation from PM-01, then local alpha normalization",
+      "generationPromptEmbedded": true,
+      "width": 1254,
+      "height": 1254,
+      "sha256": "edcf92c0236fbcbf9cf19f5d31a259016ee720e0f6c48bbb34b025861dd5e26c"
+    },
+    {
+      "id": "polara-pm-02-seated",
+      "guestId": "polara-pm-02",
+      "name": "Mina",
+      "runtimeSrc": "assets/guests/polara-pm-02-seated.png",
+      "pose": "seated",
+      "kind": "fictional-synthetic",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "rightsScope": "Original Polara production runtime",
+      "provenance": "Identity-preserve generation from PM-02, then local alpha normalization",
+      "generationPromptEmbedded": true,
+      "width": 1254,
+      "height": 1254,
+      "sha256": "a38eed69b6ebe896ef064a6d1a8374a0ce766135afa67ea33c804bb6cd80a20f"
+    },
+    {
       "id": "polara-pm-02",
       "name": "Mina",
       "runtimeSrc": "assets/guests/polara-pm-02-half-heart.png",
