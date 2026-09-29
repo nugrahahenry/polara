@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.45.4] - 2026-09-30
+
+### Changed
+- Footer maker label kini menampilkan `hnry.dev` secara langsung agar identitas maker konsisten dengan portfolio dan kontrak brand. URL maker serta kanal WhatsApp, Instagram, dan GitHub tidak berubah.
+- QA browser mempertahankan pemeriksaan camera readiness dengan fake device, lalu memakai tiga demo proof lokal yang sudah dipoles untuk screenshot, preview, dan export evidence. Hasil QA tidak lagi menampilkan pola hijau synthetic camera sebagai bukti visual utama.
+
+### Validation
+- Flow, local processing, preview/export geometry, dan exact output tetap tidak berubah. Perubahan ini tidak menambah backend, database, akun, cloud, AI, atau data network baru.
+
 ## [0.45.3] - 2026-09-29
 
 ### Changed

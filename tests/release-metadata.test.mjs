@@ -16,8 +16,14 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.45.3 Strip typography remaster', () => {
-  assert.equal(packageJson.version, '0.45.3');
+test('release metadata records the v0.45.4 footer and QA evidence checkpoint', () => {
+  assert.equal(packageJson.version, '0.45.4');
+  assert.match(changelog, /## \[0\.45\.4\] - 2026-09-30/);
+  assert.match(changelog, /Footer maker label.*hnry\.dev/i);
+  assert.match(changelog, /camera readiness.*fake device/i);
+  assert.match(changelog, /demo proof lokal/i);
+  assert.match(changelog, /tidak menambah backend, database/i);
+  assert.match(changelog, /## \[0\.45\.3\] - 2026-09-29/);
   assert.match(changelog, /## \[0\.45\.3\] - 2026-09-29/);
   assert.match(changelog, /tipografi utility.*Strip/i);
   assert.match(changelog, /sans condensed/i);

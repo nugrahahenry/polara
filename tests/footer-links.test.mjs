@@ -21,7 +21,7 @@ test('footer Polara exposes the maker identity and privacy truth', () => {
   assert.match(html, /class="maker-seal"/);
   assert.match(
     html,
-    /class="maker-link"[^>]*href="https:\/\/hnry\.dev"[^>]*>Henry Nugraha<\/a>/,
+    /class="maker-link"[^>]*href="https:\/\/hnry\.dev"[^>]*>hnry\.dev<\/a>/,
   );
   assert.match(html, /Your photos stay in this browser\. Nothing is uploaded, and no account is needed\./);
   assert.match(html, /© 2026 Polara · Digital photobooth/);

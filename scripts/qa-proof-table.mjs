@@ -525,6 +525,11 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(cameraCompanion.companionOverlapsTarget, false, 'Camera Poca must not cover the live proof');
   assert.equal(cameraCompanion.bayFooterWithinStage, true, `Capture Bay footer must remain inside the stage: ${JSON.stringify(cameraCompanion)}`);
   await shot('02', 'camera');
+  // Keep the camera permission/readiness path real, then switch the visual
+  // fixture to the polished local demo proofs so screenshots and exports are
+  // useful evidence instead of Chrome's synthetic green camera feed.
+  await page.locator('#tertiaryBtn').click();
+  await page.waitForFunction(() => document.querySelector('#cameraWrap')?.dataset.cameraState === 'demo');
   let captureDelight;
   await captureProof(page, {
     onCountdown: async () => {
@@ -905,6 +910,7 @@ async function runSingleExport() {
   await page.locator('[data-mode="1"]').click();
   await page.locator('#primaryBtn').click();
   await waitForCameraReady(page);
+  await page.locator('#tertiaryBtn').click();
   await captureProof(page);
   await waitForPanel(page, 'review');
   await page.locator('#primaryBtn').click();
@@ -949,6 +955,7 @@ async function reachFrames(page, mode) {
   await page.locator(`[data-mode="${mode}"]`).click();
   await page.locator('#primaryBtn').click();
   await waitForCameraReady(page);
+  await page.locator('#tertiaryBtn').click();
   for (let slot = 0; slot < mode; slot += 1) {
     await captureProof(page);
   }
