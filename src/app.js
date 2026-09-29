@@ -219,15 +219,17 @@ function applyGuestImageGeometry(image, composition) {
   image.style.pointerEvents = 'none';
   image.style.transform = composition.flipGuest ? 'scaleX(-1)' : 'none';
   if (crop) {
-    // Guest runtime assets are square. Cover the bust crop so the companion
-    // reads as seated beside the camera photo, not as a full-body cutout.
+    // Guest runtime assets are square. Cover the bust crop without stretching
+    // the source, clip to the same crop used by export, and pin its lower edge
+    // to the camera window so the companion has a clear seated baseline.
     const imageSize = Math.max(region.width / crop.width, region.height / crop.height);
     image.style.width = `${imageSize * 100}%`;
     image.style.height = `${imageSize * 100}%`;
     image.style.left = `${(region.x + region.width / 2 - (crop.x + crop.width / 2) * imageSize) * 100}%`;
-    image.style.top = `${(region.y + region.height / 2 - (crop.y + crop.height / 2) * imageSize) * 100}%`;
-    image.style.objectFit = 'fill';
+    image.style.top = `${(region.y + region.height - (crop.y + crop.height) * imageSize) * 100}%`;
+    image.style.objectFit = 'contain';
     image.style.objectPosition = 'center';
+    image.style.clipPath = `inset(${crop.y * 100}% ${(1 - crop.x - crop.width) * 100}% ${(1 - crop.y - crop.height) * 100}% ${crop.x * 100}%)`;
     image.style.transformOrigin = 'center center';
   } else {
     image.style.left = `${region.x * 100}%`;
@@ -236,6 +238,7 @@ function applyGuestImageGeometry(image, composition) {
     image.style.height = `${region.height * 100}%`;
     image.style.objectFit = 'contain';
     image.style.objectPosition = 'center bottom';
+    image.style.clipPath = 'none';
     image.style.transformOrigin = 'center bottom';
   }
 }
@@ -481,6 +484,7 @@ function updateActions() {
     setButton(refs.secondary, { label: 'Save PNG', tone: 'secondary', hidden: false, disabled: !state.revealReady });
     setButton(refs.tertiary, { label: 'Photo only', tone: 'ghost', hidden: false, disabled: !state.revealReady });
   }
+  syncTimerControls();
 }
 
 async function goToStep(nextStep, message, { focusTitle = true } = {}) {

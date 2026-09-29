@@ -27,4 +27,5 @@ test('timer belongs to Camera, not Start, and receives capture locking', async (
   assert.match(camera, /Choose before each photo/);
   assert.match(app, /selectShotTimer\(state, button.dataset.timer\)/);
   assert.match(app, /button.disabled = state.shooting \|\| state.busy/);
+  assert.match(app, /function updateActions\(\)[\s\S]*?syncTimerControls\(\);\s*\n}/);
 });

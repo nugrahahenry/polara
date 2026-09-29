@@ -115,10 +115,10 @@ const GUESTS = Object.freeze({
 // dedicated seated guest into that same window. The guest is cropped just below
 // the waist and kept deliberately smaller so the pair reads like two people
 // sharing a laptop camera, not a full-body cutout taking over the photo.
-// Crop the seated companion to a centered bust while keeping the source and
-// render region close in aspect ratio. This avoids the stretched, narrow look
-// that appears when a wide crop is forced into a tall side panel.
-const SEATED_BUST_CROP = Object.freeze({ x: 0.18, y: 0.02, width: 0.64, height: 0.88 });
+// Crop the seated companion above the lap so the pair reads like two people
+// sharing a camera, not a full-body cutout floating beside the user. The crop
+// is intentionally wider and anchored to the lower edge of the camera window.
+const SEATED_BUST_CROP = Object.freeze({ x: 0.1, y: 0.04, width: 0.8, height: 0.71 });
 
 const LAYOUTS = Object.freeze({
   matched: Object.freeze({
@@ -141,13 +141,13 @@ const LAYOUTS = Object.freeze({
       // The camera photo remains full width. The seated guest is layered inside
       // the same clipped window, like a friend sitting beside the user.
       userRegion: Object.freeze({ x: 0, y: 0, width: 1, height: 1 }),
-      guestRegion: Object.freeze({ x: 0.54, y: 0.25, width: 0.44, height: 0.6 }),
+      guestRegion: Object.freeze({ x: 0.5, y: 0.44, width: 0.48, height: 0.5 }),
       guestCrop: SEATED_BUST_CROP,
       flipGuest: false,
     }),
     left: Object.freeze({
       userRegion: Object.freeze({ x: 0, y: 0, width: 1, height: 1 }),
-      guestRegion: Object.freeze({ x: 0.02, y: 0.25, width: 0.44, height: 0.6 }),
+      guestRegion: Object.freeze({ x: 0.02, y: 0.44, width: 0.48, height: 0.5 }),
       guestCrop: SEATED_BUST_CROP,
       flipGuest: true,
     }),

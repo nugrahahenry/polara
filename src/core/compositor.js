@@ -467,7 +467,10 @@ function drawGuestComposition(ctx, photoImage, photo, guestImage, composition, x
   const drawWidth = sourceWidth * scale;
   const drawHeight = sourceHeight * scale;
   const drawX = (regionWidth - drawWidth) / 2;
-  const drawY = crop ? regionY + (regionHeight - drawHeight) / 2 : regionY + regionHeight - drawHeight;
+  // Keep the cropped bust on the same lower baseline as the camera preview.
+  // The visible source crop can overflow upward, but never appears to float
+  // below the shared photo window.
+  const drawY = regionY + regionHeight - drawHeight;
   ctx.save();
   ctx.beginPath();
   ctx.rect(regionX, regionY, regionWidth, regionHeight);

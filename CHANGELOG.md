@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.45.5] - 2026-09-30
+
+### Fixed
+- Sit together kini memakai bust crop yang lebih lebar, dipotong konsisten pada preview kamera, review, dan export, lalu ditambatkan ke baseline bawah agar companion tidak terlihat gepeng atau melayang.
+- Kontrol countdown Camera kembali aktif setelah perpindahan tahap selesai. Pilihan 3, 5, dan 10 detik dapat diganti sebelum capture dan tetap terkunci saat countdown berjalan.
+
+### Validation
+- Composition preview dan export tetap memakai guest crop serta ukuran exact yang sama. Tidak ada perubahan pada local-only processing, flow canonical, retake per-slot, atau kontrak Single 1080×1350 dan Strip 720×1800.
+
 ## [0.45.4] - 2026-09-30
 
 ### Changed

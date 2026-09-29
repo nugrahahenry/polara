@@ -153,12 +153,13 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   assert.equal(sideBySide.flipGuest, true);
   assert.equal(sideBySide.asset.pose, 'seated');
   assert.equal(sideBySide.asset.src, 'assets/guests/polara-pm-01-seated.png');
-  assert.deepEqual(sideBySide.guestRegion, { x: 0.02, y: 0.25, width: 0.44, height: 0.6 });
+  assert.deepEqual(sideBySide.guestRegion, { x: 0.02, y: 0.44, width: 0.48, height: 0.5 });
   assert.deepEqual(sideBySide.userRegion, { x: 0, y: 0, width: 1, height: 1 });
-  assert.deepEqual(sideBySide.guestCrop, { x: 0.18, y: 0.02, width: 0.64, height: 0.88 });
+  assert.deepEqual(sideBySide.guestCrop, { x: 0.1, y: 0.04, width: 0.8, height: 0.71 });
   const cropRatio = sideBySide.guestCrop.width / sideBySide.guestCrop.height;
   const regionRatio = sideBySide.guestRegion.width / sideBySide.guestRegion.height;
-  assert.ok(Math.abs(cropRatio - regionRatio) < 0.05, 'seated guest crop and render region should share the same visual ratio');
+  assert.ok(Math.abs(cropRatio - regionRatio) < 0.2, 'seated bust crop and render region should stay visually compatible');
+  assert.ok(sideBySide.guestRegion.y + sideBySide.guestRegion.height >= 0.94, 'seated guest should land on the lower camera baseline');
   assert.equal(guestModule.poseGuideForSlot(2, 3), 'Half-heart');
   assert.equal(guestModule.poseGuideForSlot(0, 3, 'side-by-side'), 'Relaxed');
   assert.equal(guestModule.poseGuideForSlot(1, 3, 'side-by-side'), 'Wave');
@@ -228,7 +229,10 @@ test('camera, review, preview, and raw export all receive the same guest composi
   assert.match(compositor, /drawGuestComposition/);
   assert.match(compositor, /resolveGuestComposition/);
   assert.match(compositor, /guestComposition\.guestCrop/);
+  assert.match(compositor, /drawY = regionY \+ regionHeight - drawHeight/);
   assert.match(app, /applyGuestImageGeometry/);
+  assert.match(app, /clipPath/);
+  assert.doesNotMatch(app, /objectFit = 'fill'/);
 });
 
 

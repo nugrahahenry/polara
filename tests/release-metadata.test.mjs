@@ -16,8 +16,13 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.45.4 footer and QA evidence checkpoint', () => {
-  assert.equal(packageJson.version, '0.45.4');
+test('release metadata records the v0.45.5 Pose Mate and timer checkpoint', () => {
+  assert.equal(packageJson.version, '0.45.5');
+  assert.match(changelog, /## \[0\.45\.5\] - 2026-09-30/);
+  assert.match(changelog, /bust crop yang lebih lebar/i);
+  assert.match(changelog, /countdown Camera kembali aktif/i);
+  assert.match(changelog, /1080×1350/);
+  assert.match(changelog, /720×1800/);
   assert.match(changelog, /## \[0\.45\.4\] - 2026-09-30/);
   assert.match(changelog, /Footer maker label.*hnry\.dev/i);
   assert.match(changelog, /camera readiness.*fake device/i);
@@ -140,7 +145,7 @@ test('release metadata records the v0.45.4 footer and QA evidence checkpoint', (
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=47/);
+  assert.match(indexHtml, /src\/app\.js\?v=48/);
   assert.match(indexHtml, /data-guest-layout="side-by-side"[^>]*>Sit together</);
   assert.match(indexHtml, /styles\/proof-table\.css\?v=358/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
