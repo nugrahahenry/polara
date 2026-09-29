@@ -140,7 +140,7 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
     experience: 'pose-mate', guestId: 'polara-pm-01', layout: 'matched', side: 'right', mode: 3, slotIndex: 0,
   });
   const sideBySide = guestModule.createGuestComposition({
-    experience: 'pose-mate', guestId: 'polara-pm-01', layout: 'side-by-side', side: 'left', mode: 3, slotIndex: 1,
+    experience: 'pose-mate', guestId: 'polara-pm-01', layout: 'side-by-side', side: 'left', mode: 3, slotIndex: 0,
   });
 
   assert.equal(regular, null);
@@ -153,10 +153,13 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   assert.equal(sideBySide.flipGuest, true);
   assert.equal(sideBySide.asset.pose, 'seated');
   assert.equal(sideBySide.asset.src, 'assets/guests/polara-pm-01-seated.png');
-  assert.deepEqual(sideBySide.guestRegion, { x: 0.03, y: 0.13, width: 0.5, height: 0.78 });
+  assert.deepEqual(sideBySide.guestRegion, { x: 0.02, y: 0.24, width: 0.38, height: 0.62 });
   assert.deepEqual(sideBySide.userRegion, { x: 0, y: 0, width: 1, height: 1 });
   assert.deepEqual(sideBySide.guestCrop, { x: 0.02, y: 0, width: 0.96, height: 0.76 });
   assert.equal(guestModule.poseGuideForSlot(2, 3), 'Half-heart');
+  assert.equal(guestModule.poseGuideForSlot(0, 3, 'side-by-side'), 'Relaxed');
+  assert.equal(guestModule.poseGuideForSlot(1, 3, 'side-by-side'), 'Wave');
+  assert.equal(guestModule.poseGuideForSlot(2, 3, 'side-by-side'), 'Half-heart');
   assert.equal(guestModule.createGuestComposition({
     experience: 'pose-mate', guestId: 'unknown-guest',
   }), null);
@@ -176,6 +179,28 @@ test('seated Pose Mate assets are registered for both fictional guests', async (
     assert.equal(entry.publicFigure, false);
     assert.equal(entry.collaborationClaim, false);
     assert.equal(createHash('sha256').update(await readBytes(asset.src)).digest('hex'), entry.sha256);
+  }
+});
+
+
+test('Sit together maps three seated poses across Strip and keeps Single relaxed', async () => {
+  const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
+  const guestModule = await import('../src/modules/guests/index.js');
+  for (const guestId of ['polara-pm-01', 'polara-pm-02']) {
+    const stripAssets = [0, 1, 2].map((slotIndex) => guestModule.createGuestComposition({
+      experience: 'pose-mate', guestId, layout: 'side-by-side', mode: 3, slotIndex,
+    }).asset);
+    assert.deepEqual(stripAssets.map((asset) => asset.pose), ['seated', 'seated-wave', 'seated-heart']);
+    assert.equal(guestModule.createGuestComposition({
+      experience: 'pose-mate', guestId, layout: 'side-by-side', mode: 1, slotIndex: 0,
+    }).asset.pose, 'seated');
+    assert.equal(guestModule.getGuestRuntimeAssets(guestId).length, 6);
+    for (const asset of stripAssets.slice(1)) {
+      const entry = manifest.guests.find((item) => item.id === asset.id);
+      assert.ok(entry, `Missing seated variant ${asset.id}`);
+      assert.equal(entry.pose, asset.pose);
+      assert.equal(createHash('sha256').update(await readBytes(asset.src)).digest('hex'), entry.sha256);
+    }
   }
 });
 

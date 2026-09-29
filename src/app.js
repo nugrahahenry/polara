@@ -19,8 +19,9 @@ import {
 import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=3';
 import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
-  getGuest, getGuestAssets, getGuestOptions, poseGuideForSlot, retryWithoutGuestOnFailure,
-} from './modules/guests/index.js?v=6';
+  getGuest, getGuestOptions, getGuestRuntimeAssets, poseGuideForSlot,
+  retryWithoutGuestOnFailure,
+} from './modules/guests/index.js?v=7';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';
@@ -281,8 +282,8 @@ function syncGuestExperienceSurfaces() {
   refs.poseMateNote.textContent = state.guestLayout === 'side-by-side'
     ? `${guestComposition.asset.name} is seated inside the same camera window. Your photo stays untouched and the composition remains reversible through export.`
     : `${guestComposition.asset.name} is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.`;
-  refs.poseGuideText.textContent = poseGuideForSlot(state.activeSlot, state.mode);
-  refs.poseUserGuide.dataset.poseCue = poseGuideForSlot(state.activeSlot, state.mode);
+  refs.poseGuideText.textContent = poseGuideForSlot(state.activeSlot, state.mode, state.guestLayout);
+  refs.poseUserGuide.dataset.poseCue = poseGuideForSlot(state.activeSlot, state.mode, state.guestLayout);
   refs.guestSide.textContent = guestComposition.side === 'right' ? `Move ${guestComposition.asset.name} to the left` : `Move ${guestComposition.asset.name} to the right`;
 }
 
@@ -608,7 +609,7 @@ refs.guestOptionList.addEventListener('click', async (event) => {
   const requestId = guestSelectionGate.begin();
   button.setAttribute('aria-busy', 'true');
   try {
-    await Promise.all(getGuestAssets(guest.id).map(preloadGuestAsset));
+    await Promise.all(getGuestRuntimeAssets(guest.id).map(preloadGuestAsset));
     if (!guestSelectionGate.isCurrent(requestId)) return;
     state.guestId = guest.id;
     invalidatePreparedExport();
@@ -800,7 +801,7 @@ function renderCameraPanel() {
   refs.cameraPanelCopy.textContent = state.retakeSlot != null
     ? 'The previous photo stays in place until the replacement capture succeeds.'
     : state.experience === POSE_MATE_EXPERIENCE
-      ? `Match the ${poseGuideForSlot(state.activeSlot, state.mode).toLowerCase()} pose. Polara keeps your full capture untouched.`
+      ? `${state.guestLayout === 'side-by-side' ? 'Sit with' : 'Match the'} ${poseGuideForSlot(state.activeSlot, state.mode, state.guestLayout).toLowerCase()} pose. Polara keeps your full capture untouched.`
       : 'Polara keeps the full capture. Adjust fit, zoom, and pan after choosing a frame.';
   renderSlotCards(refs.cameraSlots, (index) => {
     state.activeSlot = index;
@@ -1877,7 +1878,7 @@ refs.experienceChoose.addEventListener('click', async (event) => {
     const guest = getGuest(DEFAULT_GUEST_ID);
     button.setAttribute('aria-busy', 'true');
     try {
-      await Promise.all(getGuestOptions().flatMap((option) => getGuestAssets(option.id)).map(preloadGuestAsset));
+      await Promise.all(getGuestOptions().flatMap((option) => getGuestRuntimeAssets(option.id)).map(preloadGuestAsset));
       if (!guestSelectionGate.isCurrent(requestId)) return;
       state.experience = POSE_MATE_EXPERIENCE;
       state.guestId = guest.id;

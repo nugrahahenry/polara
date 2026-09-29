@@ -39,6 +39,24 @@ const PM01_POSES = Object.freeze({
     pose: 'seated',
     kind: 'fictional-synthetic',
   }),
+  'seated-wave': Object.freeze({
+    id: 'polara-pm-01-seated-wave',
+    guestId: DEFAULT_GUEST_ID,
+    name: 'Juno',
+    src: 'assets/guests/polara-pm-01-seated-wave.png',
+    alt: 'Juno, a fictional Polara guest, seated and waving beside you.',
+    pose: 'seated-wave',
+    kind: 'fictional-synthetic',
+  }),
+  'seated-heart': Object.freeze({
+    id: 'polara-pm-01-seated-heart',
+    guestId: DEFAULT_GUEST_ID,
+    name: 'Juno',
+    src: 'assets/guests/polara-pm-01-seated-heart.png',
+    alt: 'Juno, a fictional Polara guest, seated and making a half-heart beside you.',
+    pose: 'seated-heart',
+    kind: 'fictional-synthetic',
+  }),
 });
 
 const PM02_POSES = Object.freeze({
@@ -66,6 +84,18 @@ const PM02_POSES = Object.freeze({
     alt: 'Mina, a fictional Polara guest, seated beside you.',
     pose: 'seated', kind: 'fictional-synthetic',
   }),
+  'seated-wave': Object.freeze({
+    id: 'polara-pm-02-seated-wave', guestId: 'polara-pm-02', name: 'Mina',
+    src: 'assets/guests/polara-pm-02-seated-wave.png',
+    alt: 'Mina, a fictional Polara guest, seated and waving beside you.',
+    pose: 'seated-wave', kind: 'fictional-synthetic',
+  }),
+  'seated-heart': Object.freeze({
+    id: 'polara-pm-02-seated-heart', guestId: 'polara-pm-02', name: 'Mina',
+    src: 'assets/guests/polara-pm-02-seated-heart.png',
+    alt: 'Mina, a fictional Polara guest, seated and making a half-heart beside you.',
+    pose: 'seated-heart', kind: 'fictional-synthetic',
+  }),
 });
 
 const GUESTS = Object.freeze({
@@ -83,7 +113,8 @@ const GUESTS = Object.freeze({
 
 // Duduk bersama keeps the real camera as the full photo window, then layers a
 // dedicated seated guest into that same window. The guest is cropped just below
-// the waist so the pair reads like two people sharing a laptop camera.
+// the waist and kept deliberately smaller so the pair reads like two people
+// sharing a laptop camera, not a full-body cutout taking over the photo.
 const SEATED_BUST_CROP = Object.freeze({ x: 0.02, y: 0, width: 0.96, height: 0.76 });
 
 const LAYOUTS = Object.freeze({
@@ -107,13 +138,13 @@ const LAYOUTS = Object.freeze({
       // The camera photo remains full width. The seated guest is layered inside
       // the same clipped window, like a friend sitting beside the user.
       userRegion: Object.freeze({ x: 0, y: 0, width: 1, height: 1 }),
-      guestRegion: Object.freeze({ x: 0.47, y: 0.13, width: 0.5, height: 0.78 }),
+      guestRegion: Object.freeze({ x: 0.6, y: 0.24, width: 0.38, height: 0.62 }),
       guestCrop: SEATED_BUST_CROP,
       flipGuest: false,
     }),
     left: Object.freeze({
       userRegion: Object.freeze({ x: 0, y: 0, width: 1, height: 1 }),
-      guestRegion: Object.freeze({ x: 0.03, y: 0.13, width: 0.5, height: 0.78 }),
+      guestRegion: Object.freeze({ x: 0.02, y: 0.24, width: 0.38, height: 0.62 }),
       guestCrop: SEATED_BUST_CROP,
       flipGuest: true,
     }),
@@ -136,6 +167,20 @@ export function getGuestAssets(id = DEFAULT_GUEST_ID) {
 
 export function getSeatedGuestAsset(id = DEFAULT_GUEST_ID) {
   return getGuest(id)?.poses.seated || null;
+}
+
+export function getGuestRuntimeAssets(id = DEFAULT_GUEST_ID) {
+  const guest = getGuest(id);
+  return guest ? Object.values(guest.poses) : [];
+}
+
+export function getSitTogetherGuestAsset(id = DEFAULT_GUEST_ID, slotIndex = 0, mode = 3) {
+  const guest = getGuest(id);
+  if (!guest) return null;
+  const seatedPose = Number(mode) === 1
+    ? 'seated'
+    : ['seated', 'seated-wave', 'seated-heart'][Math.max(0, Math.min(2, Number(slotIndex) || 0))];
+  return guest.poses[seatedPose] || guest.poses.seated || null;
 }
 
 export function poseForSlot(index, mode, guestId = DEFAULT_GUEST_ID) {
@@ -178,7 +223,11 @@ export async function retryWithoutGuestOnFailure({
   }
 }
 
-export function poseGuideForSlot(index, mode) {
+export function poseGuideForSlot(index, mode, layout = 'matched') {
+  if (layout === 'side-by-side') {
+    if (Number(mode) === 1) return 'Relaxed';
+    return ['Relaxed', 'Wave', 'Half-heart'][Math.max(0, Math.min(2, Number(index) || 0))];
+  }
   if (Number(mode) === 1) return 'Half-heart';
   return ['Natural', 'Peace', 'Half-heart'][Math.max(0, Math.min(2, Number(index) || 0))];
 }
@@ -196,7 +245,7 @@ export function createGuestComposition({
   const normalizedSide = side === 'left' ? 'left' : 'right';
   const resolvedGuestId = guestId || DEFAULT_GUEST_ID;
   const asset = normalizedLayout === 'side-by-side'
-    ? getSeatedGuestAsset(resolvedGuestId)
+    ? getSitTogetherGuestAsset(resolvedGuestId, slotIndex, mode)
     : poseForSlot(slotIndex, mode, resolvedGuestId);
   if (!asset) return null;
   const geometry = LAYOUTS[normalizedLayout][normalizedSide];

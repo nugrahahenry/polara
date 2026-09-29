@@ -69,10 +69,14 @@ test('runtime Pose Mate guests have clean transparent backgrounds', async () => 
     'polara-pm-01-half-heart.png',
     'polara-pm-01-neutral.png',
     'polara-pm-01-peace.png',
+    'polara-pm-01-seated-heart.png',
+    'polara-pm-01-seated-wave.png',
     'polara-pm-01-seated.png',
     'polara-pm-02-half-heart.png',
     'polara-pm-02-neutral.png',
     'polara-pm-02-peace.png',
+    'polara-pm-02-seated-heart.png',
+    'polara-pm-02-seated-wave.png',
     'polara-pm-02-seated.png',
   ]);
 

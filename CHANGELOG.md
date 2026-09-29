@@ -5,6 +5,18 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.43.0] - 2026-09-29
+
+### Added
+- Sit together sekarang memiliki tiga pose seated per guest: relaxed, wave, dan half-heart. Strip 3 memilih pose berbeda per slot, sedangkan Single tetap memakai pose relaxed.
+- Menambahkan empat runtime PNG seated baru untuk Juno dan Mina dengan alpha bersih dan manifest provenance lengkap.
+
+### Fixed
+- Skala companion Sit together diperkecil agar foto kamera tetap menjadi fokus utama dan guest tidak memenuhi photo window.
+
+### Validation
+- Semua pose memakai composition, crop, mask, preview, dan export yang sama. Exact export tetap Single 1080×1350 dan Strip 720×1800.
+
 ## [0.42.0] - 2026-09-29
 
 ### Added
