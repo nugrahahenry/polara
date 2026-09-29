@@ -5,6 +5,17 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.45.3] - 2026-09-29
+
+### Changed
+- Tipografi utility pada seluruh Strip diseragamkan ke sans yang lebih bersih dan mudah dibaca. Kepribadian display tiap keluarga tetap dipertahankan agar Purikura, film, editorial, dan ticket tidak kehilangan konteksnya.
+- Judul Lucky Ticket Strip kini memakai sans condensed yang lebih ticket-like, sedangkan Postcard Club Ink, Sage, dan Night memakai serif editorial. Cloud Picnic, Purikura, film, dan editorial Polara Daily tetap mempertahankan display face yang sudah sesuai dengan materialnya.
+- Label `POLARA / PROOF | STRIP 3` diremaster dari overlay canonical, lalu frame-only thumbnail dan composite picker dibuat ulang dari sumber yang sama.
+
+### Validation
+- Photo window, crop, mask, dan ukuran output tidak berubah. Preview dan export tetap memakai geometry bersama dengan ukuran Single 1080×1350 dan Strip 720×1800.
+- Dua belas Strip memakai `frame-overlay-v7` dan `polara-proof-edge-v3`; dua belas Single tetap memakai profile sebelumnya.
+
 ## [0.45.2] - 2026-09-29
 
 ### Changed

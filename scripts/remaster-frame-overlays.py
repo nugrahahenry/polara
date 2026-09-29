@@ -12,7 +12,6 @@ from PIL import Image, ImageChops, ImageColor, ImageDraw, ImageFont, PngImagePlu
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "assets" / "frames" / "frame-overlay-manifest.json"
-PROFILE = "polara-proof-edge-v2"
 PALETTES = {
     "poca-purikura": ("#ec5e9e", "#8fd3ff", "#ffe26f"),
     "vintage-film-lofi": ("#e3b67a", "#342824", "#f7eee5"),
@@ -23,7 +22,9 @@ PALETTES = {
     "lucky-ticket": ("#ff8fbd", "#8fd3ff", "#ffe26f"),
     "postcard-club": ("#d88968", "#1f2f4f", "#f4d7bc"),
 }
-FONT_PATH = Path("C:/Windows/Fonts/segoeprb.ttf")
+FONT_PATH = Path("C:/Windows/Fonts/seguisb.ttf")
+PROFILE_BY_MODE = {"single": "polara-proof-edge-v2", "strip": "polara-proof-edge-v3"}
+VERSION_BY_MODE = {"single": "frame-overlay-v5", "strip": "frame-overlay-v7"}
 
 
 def project_path(relative_path: str) -> Path:
@@ -57,6 +58,19 @@ def clear_photo_windows(image: Image.Image, frame: dict[str, object]) -> None:
     image.putalpha(ImageChops.subtract(image.getchannel("A"), mask))
 
 
+def restore_footer_label_zone(image: Image.Image, left: int | None = None, right: int | None = None) -> None:
+    width, height = image.size
+    unit = max(2, round(min(width, height) / 360))
+    inset = unit * 5
+    left = inset if left is None else left
+    right = min(width - inset, round(width * 0.46)) if right is None else right
+    top = height - inset - unit * 10
+    bottom = height - inset + 1
+    sample_height = bottom - top
+    sample_top = max(0, top - sample_height)
+    image.paste(image.crop((left, sample_top, right, top)), (left, top))
+
+
 def draw_edge_signature(image: Image.Image, palette: tuple[str, str, str], mode: str) -> None:
     draw = ImageDraw.Draw(image)
     width, height = image.size
@@ -64,6 +78,13 @@ def draw_edge_signature(image: Image.Image, palette: tuple[str, str, str], mode:
     inset = unit * 5
     arm = unit * 14
     primary, secondary, tertiary = palette
+
+    restore_footer_label_zone(image)
+    label_x = inset * 4 + arm
+    if mode == "strip" and width == 720 and primary == "#df6d57":
+        restore_footer_label_zone(image, 480, 666)
+        label_x = 500
+    draw = ImageDraw.Draw(image)
 
     # A quiet crop-safe perimeter creates one shared Polara proof system.
     border = rgba(primary, 178)
@@ -90,18 +111,18 @@ def draw_edge_signature(image: Image.Image, palette: tuple[str, str, str], mode:
 
     # Shared label keeps typography and format language consistent while staying in the footer safe zone.
     if FONT_PATH.is_file():
-        font_size = max(12, unit * 6)
+        font_size = max(11, unit * 6)
         label_font = ImageFont.truetype(str(FONT_PATH), size=font_size)
         label = f"POLARA / PROOF  |  {'SINGLE' if mode == 'single' else 'STRIP 3'}"
-        draw.text((inset * 2, height - inset - unit), label, font=label_font, anchor="ls", fill=rgba(primary, 230))
+        draw.text((label_x, height - inset - 1), label, font=label_font, anchor="ls", fill=rgba(primary, 232))
 
 
-def save_png(image: Image.Image, path: Path, source_info: dict[str, object]) -> bytes:
+def save_png(image: Image.Image, path: Path, source_info: dict[str, object], profile: str) -> bytes:
     metadata = PngImagePlugin.PngInfo()
     for key, value in source_info.items():
         if key != "polara:quality-profile" and isinstance(value, str):
             metadata.add_text(key, value)
-    metadata.add_text("polara:quality-profile", PROFILE)
+    metadata.add_text("polara:quality-profile", profile)
     image.save(path, format="PNG", optimize=True, compress_level=9, pnginfo=metadata)
     return path.read_bytes()
 
@@ -123,15 +144,16 @@ def main() -> None:
             (0, 0, 0, 0) if alpha == 0 else (red, green, blue, alpha)
             for red, green, blue, alpha in image.get_flattened_data()
         ])
-        payload = save_png(image, overlay_path, source_info)
+        payload = save_png(image, overlay_path, source_info, PROFILE_BY_MODE[frame["mode"]])
         frame["sha256"] = hashlib.sha256(payload).hexdigest()
         frame["byteSize"] = len(payload)
-        frame["assetVersion"] = "frame-overlay-v5"
-        frame["qualityProfile"] = PROFILE
+        frame["assetVersion"] = VERSION_BY_MODE[frame["mode"]]
+        frame["qualityProfile"] = PROFILE_BY_MODE[frame["mode"]]
         frame["edgePalette"] = list(palette)
 
     MANIFEST_PATH.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"[frame-remaster] applied {PROFILE} to {len(manifest['frames'])} variants")
+    profiles = ", ".join(sorted(set(PROFILE_BY_MODE.values())))
+    print(f"[frame-remaster] applied {profiles} to {len(manifest['frames'])} variants")
 
 
 if __name__ == "__main__":

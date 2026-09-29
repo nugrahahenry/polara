@@ -14,7 +14,8 @@ test('Cloud Picnic and Lucky Ticket ship complete Single, Strip, and exclusive s
     const frames = frameOverlayTemplates.filter((frame) => frame.familyId === family);
     assert.deepEqual(new Set(frames.map((frame) => frame.mode)), new Set(['single', 'strip']));
     assert.ok(frames.every((frame) => frame.characterPolicy === 'character-free'));
-    assert.ok(frames.every((frame) => frame.assetVersion === 'frame-overlay-v5'));
+    assert.equal(frames.find((frame) => frame.mode === 'single')?.assetVersion, 'frame-overlay-v5');
+    assert.equal(frames.find((frame) => frame.mode === 'strip')?.assetVersion, 'frame-overlay-v7');
     assert.equal(exclusiveStickers.filter((sticker) => sticker.exclusiveFamilyId === family).length, 1);
   }
 });

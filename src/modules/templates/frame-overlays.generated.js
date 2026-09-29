@@ -144,7 +144,7 @@ export const frameOverlayTemplates = [
         "height": 388
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -278,7 +278,7 @@ export const frameOverlayTemplates = [
         "height": 388
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -412,7 +412,7 @@ export const frameOverlayTemplates = [
         "height": 384
       }
     ],
-    "assetVersion": "frame-overlay-v6",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#1c191b",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -546,7 +546,7 @@ export const frameOverlayTemplates = [
         "height": 388
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -709,7 +709,7 @@ export const frameOverlayTemplates = [
         "radius": 14
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#f5e3c4",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -872,7 +872,7 @@ export const frameOverlayTemplates = [
         "radius": 14
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#07091e",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -1010,7 +1010,7 @@ export const frameOverlayTemplates = [
         "radius": 28
       }
     ],
-    "assetVersion": "frame-overlay-v6",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#f4d7bc",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -1148,7 +1148,7 @@ export const frameOverlayTemplates = [
         "radius": 24
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#eaf7ff",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -1319,7 +1319,7 @@ export const frameOverlayTemplates = [
         "radius": 20
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#202f66",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -1457,7 +1457,7 @@ export const frameOverlayTemplates = [
         "radius": 22
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#f7f2e9",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -1595,7 +1595,7 @@ export const frameOverlayTemplates = [
         "radius": 22
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#eef0e6",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -1733,7 +1733,7 @@ export const frameOverlayTemplates = [
         "radius": 22
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v7",
     "slotBackground": "#e8edf3",
     "supportsDynamicText": false,
     "metadataZones": {

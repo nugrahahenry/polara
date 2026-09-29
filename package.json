@@ -1,6 +1,6 @@
 {
   "name": "polara",
-  "version": "0.45.2",
+  "version": "0.45.3",
   "private": true,
   "type": "module",
   "scripts": {
@@ -16,6 +16,8 @@
     "assets:demo": "python scripts/generate-demo-proofs.py",
     "frames:remaster": "python scripts/remaster-frame-overlays.py",
     "frames:photo-first": "python scripts/remaster-photo-first-strips.py",
+    "frames:strip-type": "python scripts/remaster-strip-typography.py",
+    "frames:strip-titles": "python scripts/remaster-strip-titles.py",
     "frames:expand": "python scripts/generate-new-frame-families.py",
     "guests:integrate": "python scripts/integrate-pose-mate-pack.py",
     "stickers:generate": "python scripts/generate-sticker-workshop.py",

@@ -291,11 +291,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-strip-overlay-master.png",
-      "sha256": "56a79f157a17d99c1cd44b7b8b53b32dda0585f8c01acac3ce8972eeea44dfcf",
-      "byteSize": 609045,
+      "sha256": "4218d1ecee7215601c1d55b1f62280ca3ab411bd4415e17d4e8ec74655fdc112",
+      "byteSize": 610743,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v7",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -311,7 +311,7 @@
         "pink gingham",
         "character-free footer"
       ],
-      "qualityProfile": "polara-proof-edge-v2",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#ec5e9e",
         "#8fd3ff",
@@ -399,11 +399,11 @@
           "height": 388
         }
       ],
-      "sha256": "0dd0d585094a4ad5d5cd35efcd2fa4a4be7e31f48a6c402a4a4f4b35733e8052",
-      "byteSize": 604197,
+      "sha256": "6dd48145908e109dd73cdb1a194edf00836abaa215f6d4464ce131ab81c00480",
+      "byteSize": 605976,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v7",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -419,7 +419,7 @@
         "blueberry gingham",
         "character-free footer"
       ],
-      "qualityProfile": "polara-proof-edge-v2",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#ec5e9e",
         "#8fd3ff",
@@ -509,11 +509,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/vintage-film-lofi-strip-overlay-master.png",
-      "sha256": "4cba7288bd8b432a466dc232b6bdfb62b9c7edfb75713d79d65b29eb71c1993e",
-      "byteSize": 275958,
+      "sha256": "8e4f1fea455c775e9ed7266cf7c50a0bfbc4bfa599cb29602ad422b9a8d3f061",
+      "byteSize": 275882,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v6",
+      "assetVersion": "frame-overlay-v7",
       "slotBackground": "#1c191b",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -529,7 +529,7 @@
         "warm film burn",
         "F01/F02/F03 marks"
       ],
-      "qualityProfile": "polara-proof-edge-v2",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#e3b67a",
         "#342824",
@@ -620,11 +620,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/seoul-snap-y2k-strip-overlay-master.png",
-      "sha256": "fd7b609cee4183ad859b44381b246d505650f089f4787c284c6c3e717a8a5817",
-      "byteSize": 527401,
+      "sha256": "4f52f3a9ce32a897a79b14966e59613b769c1711546525cf3a5850fb0fb7bcd5",
+      "byteSize": 526294,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v7",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -641,7 +641,7 @@
         "Y2K console",
         "focus brackets outside windows"
       ],
-      "qualityProfile": "polara-proof-edge-v2",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#ff8fbd",
         "#8fd3ff",
@@ -751,11 +751,11 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-daily-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "6368becf80800f46f1106aac8f77137df94372c976978bea6bd6f6561a62a4d6",
-      "byteSize": 993285,
+      "sha256": "e849e1020ad97e2611d884d1c54867d3f710f2301ba980303cd6edd3e4d583b9",
+      "byteSize": 993249,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v7",
       "slotBackground": "#f5e3c4",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -770,7 +770,7 @@
         "archive footer",
         "character-free photo report"
       ],
-      "qualityProfile": "polara-proof-edge-v2",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#df6d57",
         "#40312a",
@@ -880,11 +880,11 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "9e6a7580061613216e45a6e064d419aed6219c33448b5daa30d28efdacff64dc",
-      "byteSize": 568076,
+      "sha256": "07bf9e182ed6ce8cc70f2d5b07ed06863244a2e82bf4bcd481c5e2f7f582cebd",
+      "byteSize": 567037,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v7",
       "slotBackground": "#07091e",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -899,7 +899,7 @@
         "electric blue accents",
         "character-free technical footer"
       ],
-      "qualityProfile": "polara-proof-edge-v2",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#5f8cff",
         "#ff8fbd",
@@ -992,12 +992,12 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "2381c3b08c5e4e482aa03a6fa802b8eaeeb4ebfdebc0d8f894ba028d1289478b",
-      "byteSize": 529711,
+      "sha256": "c87faff76b77c85e75bccf5b801b2a4cdfc8de35a8a3b750620bfdb86c7002bb",
+      "byteSize": 528151,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v6",
-      "qualityProfile": "polara-proof-edge-v2",
+      "assetVersion": "frame-overlay-v7",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#d88968",
         "#1f2f4f",
@@ -1104,12 +1104,12 @@
       "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "a4aa535a556d7fe0a5584264c01ee58260ef9f4a1c5d9ad7d4cdc4bf16655ed3",
-      "byteSize": 31999,
+      "sha256": "c76650c7c76290bc7975cdffb1687b9e24d62f0bb0fe028aa91ebc228182981d",
+      "byteSize": 31330,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v2",
+      "assetVersion": "frame-overlay-v7",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#8fd3ff",
         "#ff8fbd",
@@ -1241,12 +1241,12 @@
       "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "e32d45de7f7fbe7982e0252cc9df5fe2d1902ddea1feb961c2f14099c3b48061",
-      "byteSize": 34194,
+      "sha256": "434176600823e55b305823eb76409c4740aa01e756039cb559ded330a59c0785",
+      "byteSize": 31014,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v2",
+      "assetVersion": "frame-overlay-v7",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#ff8fbd",
         "#8fd3ff",
@@ -1353,11 +1353,11 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-ink-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "c952735cec57bbd5097fa240bd139daa1fb0c7c381c948fc2334f8d82ee85531",
-      "byteSize": 35960,
+      "sha256": "789ff6d3ad7646b9dffbebf5b06946cdade63bf2aa304d8be11060c2c5cab40f",
+      "byteSize": 33496,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v7",
       "slotBackground": "#f7f2e9",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -1372,7 +1372,7 @@
         "edition color blocks",
         "character-free postcard proof"
       ],
-      "qualityProfile": "polara-proof-edge-v2",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#d88968",
         "#1f2f4f",
@@ -1465,11 +1465,11 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-sage-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "ad88e517c0ec6d503c4e1d03fcef81ee02e6f342c9d9d6508903f0b2ef2a2d95",
-      "byteSize": 36157,
+      "sha256": "19d73f21111ec2a803239399069d5dd3864ecf1166bbe94ae568e77519b81912",
+      "byteSize": 33634,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v7",
       "slotBackground": "#eef0e6",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -1484,7 +1484,7 @@
         "edition color blocks",
         "character-free postcard proof"
       ],
-      "qualityProfile": "polara-proof-edge-v2",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#d88968",
         "#1f2f4f",
@@ -1577,11 +1577,11 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-night-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "d91d8ab290bfcc748cb3d44609a1f452aaaf7aba1532b653550303db186740e2",
-      "byteSize": 36163,
+      "sha256": "462163d4b999074751b717ee4c5656ea3b01b8000a0d2d7a96d16c4260835fcc",
+      "byteSize": 33566,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v7",
       "slotBackground": "#e8edf3",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -1596,7 +1596,7 @@
         "edition color blocks",
         "character-free postcard proof"
       ],
-      "qualityProfile": "polara-proof-edge-v2",
+      "qualityProfile": "polara-proof-edge-v3",
       "edgePalette": [
         "#d88968",
         "#1f2f4f",

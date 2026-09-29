@@ -90,7 +90,7 @@ def save_png(image: Image.Image, path: Path, source_info: dict[str, object]) -> 
     for key, value in source_info.items():
         if key != "polara:quality-profile" and isinstance(value, str):
             metadata.add_text(key, value)
-    metadata.add_text("polara:quality-profile", "polara-proof-edge-v2")
+    metadata.add_text("polara:quality-profile", "polara-proof-edge-v3")
     image.save(path, format="PNG", optimize=True, compress_level=9, pnginfo=metadata)
     return path.read_bytes()
 
@@ -146,8 +146,8 @@ def main() -> None:
         payload = save_png(image, overlay_path, source_info)
         frame["sha256"] = hashlib.sha256(payload).hexdigest()
         frame["byteSize"] = len(payload)
-        frame["assetVersion"] = "frame-overlay-v5"
-        frame["qualityProfile"] = "polara-proof-edge-v2"
+        frame["assetVersion"] = "frame-overlay-v7"
+        frame["qualityProfile"] = "polara-proof-edge-v3"
 
         master_src = frame.get("masterSrc")
         if master_src:

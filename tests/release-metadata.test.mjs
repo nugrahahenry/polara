@@ -16,8 +16,16 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.45.2 photo-first Strip remaster', () => {
-  assert.equal(packageJson.version, '0.45.2');
+test('release metadata records the v0.45.3 Strip typography remaster', () => {
+  assert.equal(packageJson.version, '0.45.3');
+  assert.match(changelog, /## \[0\.45\.3\] - 2026-09-29/);
+  assert.match(changelog, /tipografi utility.*Strip/i);
+  assert.match(changelog, /sans condensed/i);
+  assert.match(changelog, /serif editorial/i);
+  assert.match(changelog, /frame-overlay-v7/i);
+  assert.match(changelog, /polara-proof-edge-v3/i);
+  assert.match(changelog, /preview dan export/i);
+  assert.match(changelog, /## \[0\.45\.2\] - 2026-09-29/);
   assert.match(changelog, /## \[0\.45\.2\] - 2026-09-29/);
   assert.match(changelog, /Vintage Film Lo-Fi dan Postcard Club Strip/i);
   assert.match(changelog, /jendela foto yang lebih lebar/i);
