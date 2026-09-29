@@ -16,6 +16,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "assets" / "frames" / "frame-overlay-manifest.json"
 FONT_BOLD = Path("C:/Windows/Fonts/segoeuib.ttf")
 FONT_REGULAR = Path("C:/Windows/Fonts/segoeui.ttf")
+FONT_DISPLAY = Path("C:/Windows/Fonts/segoeprb.ttf")
 PROFILE = "polara-proof-edge-v2"
 
 
@@ -95,7 +96,7 @@ def make_cloud_picnic(mode: str) -> tuple[Image.Image, dict[str, Any]]:
     draw.rounded_rectangle((43, 43, width - 43, height - 43), radius=28, outline="#8fd3ff", width=4)
 
     title_size = 48 if mode == "single" else 34
-    draw.text((width // 2, 84), "CLOUD PICNIC", anchor="mm", fill="#4b2e1f", font=font(FONT_BOLD, title_size))
+    draw.text((width // 2, 84), "CLOUD PICNIC", anchor="mm", fill="#4b2e1f", font=font(FONT_DISPLAY, title_size))
     draw.text((width // 2, 128 if mode == "single" else 118), "POLARA WEEKEND EDITION", anchor="mm", fill="#70584b", font=font(FONT_BOLD, 16 if mode == "single" else 12))
     cloud(draw, 48, 62, 12 if mode == "single" else 8, "#ffffff", "#8fd3ff")
     cloud(draw, width - (124 if mode == "single" else 88), 72, 10 if mode == "single" else 7, "#ffffff", "#8fd3ff")
@@ -109,15 +110,15 @@ def make_cloud_picnic(mode: str) -> tuple[Image.Image, dict[str, Any]]:
         draw.text((width // 2, footer_y + 34), "A LITTLE DAY TO KEEP", anchor="mm", fill="#ec5e9e", font=font(FONT_BOLD, 17))
     else:
         windows = [
-            {"x": 68, "y": 170, "width": 584, "height": 420, "radius": 24},
-            {"x": 68, "y": 625, "width": 584, "height": 420, "radius": 24},
-            {"x": 68, "y": 1080, "width": 584, "height": 420, "radius": 24},
+            {"x": 68, "y": 160, "width": 584, "height": 440, "radius": 24},
+            {"x": 68, "y": 620, "width": 584, "height": 440, "radius": 24},
+            {"x": 68, "y": 1080, "width": 584, "height": 440, "radius": 24},
         ]
         for index, window in enumerate(windows, 1):
             draw.text((38, window["y"] + 26), f"{index}", anchor="mm", fill="#ec5e9e", font=font(FONT_BOLD, 20))
         daisy(draw, 110, 1608, 24)
         daisy(draw, width - 110, 1608, 20)
-        draw.text((width // 2, 1600), "CLOUD PICNIC", anchor="mm", fill="#4b2e1f", font=font(FONT_BOLD, 30))
+        draw.text((width // 2, 1600), "CLOUD PICNIC", anchor="mm", fill="#4b2e1f", font=font(FONT_DISPLAY, 30))
         draw.text((width // 2, 1642), "three little moments under one sky", anchor="mm", fill="#70584b", font=font(FONT_REGULAR, 17))
 
     for window in windows:
@@ -147,7 +148,7 @@ def make_lucky_ticket(mode: str) -> tuple[Image.Image, dict[str, Any]]:
     for y in range(88, height - 88, 28):
         draw.ellipse((34, y, 42, y + 8), fill="#f7eee5")
         draw.ellipse((width - 42, y, width - 34, y + 8), fill="#f7eee5")
-    draw.text((width // 2, 98), "LUCKY TICKET", anchor="mm", fill="#fffaf2", font=font(FONT_BOLD, 46 if mode == "single" else 34))
+    draw.text((width // 2, 98), "LUCKY TICKET", anchor="mm", fill="#fffaf2", font=font(FONT_DISPLAY, 46 if mode == "single" else 34))
     draw.text((width // 2, 138 if mode == "single" else 128), "ONE SESSION · ALL GOOD MOMENTS", anchor="mm", fill="#ffe26f", font=font(FONT_BOLD, 15 if mode == "single" else 11))
 
     if mode == "single":
@@ -160,16 +161,16 @@ def make_lucky_ticket(mode: str) -> tuple[Image.Image, dict[str, Any]]:
         geometry: dict[str, Any] = {"maskType": "polygon", "photoPolygon": polygon}
     else:
         windows = [
-            {"x": 74, "y": 172, "width": 572, "height": 422, "radius": 20},
-            {"x": 74, "y": 628, "width": 572, "height": 422, "radius": 20},
-            {"x": 74, "y": 1084, "width": 572, "height": 422, "radius": 20},
+            {"x": 74, "y": 160, "width": 572, "height": 440, "radius": 20},
+            {"x": 74, "y": 620, "width": 572, "height": 440, "radius": 20},
+            {"x": 74, "y": 1080, "width": 572, "height": 440, "radius": 20},
         ]
         for index, window in enumerate(windows, 1):
             x, y, w, h, radius = window["x"], window["y"], window["width"], window["height"], window["radius"]
             draw.rounded_rectangle((x - 8, y - 8, x + w + 8, y + h + 8), radius=radius + 8, fill="#ff8fbd" if index % 2 else "#8fd3ff")
             draw.rounded_rectangle((x, y, x + w, y + h), radius=radius, fill=(0, 0, 0, 0))
             draw.text((34, y + 24), f"0{index}", anchor="mm", fill="#ffe26f", font=font(FONT_BOLD, 15))
-        draw.text((width // 2, 1605), "LUCKY TICKET / STRIP THREE", anchor="mm", fill="#fffaf2", font=font(FONT_BOLD, 25))
+        draw.text((width // 2, 1605), "LUCKY TICKET / STRIP THREE", anchor="mm", fill="#fffaf2", font=font(FONT_DISPLAY, 25))
         draw.text((width // 2, 1644), "KEEP THE STUB · KEEP THE STORY", anchor="mm", fill="#ffe26f", font=font(FONT_BOLD, 14))
         geometry = {"maskType": "rounded-rectangles", "photoWindows": windows}
     palette = ("#ff8fbd", "#8fd3ff", "#ffe26f")

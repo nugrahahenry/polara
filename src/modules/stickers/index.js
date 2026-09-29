@@ -96,6 +96,22 @@ export const universalStickers = [
     id: 'best-day', type: 'sticker', category: 'word', name: 'Best Day!', src: STICKER + 'best-day.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .82, scale: .2, rotation: 3 }, minScale: .1, maxScale: .42,
   },
+  {
+    id: 'today-stamp', type: 'sticker', category: 'material', name: 'Today Stamp', src: STICKER + 'today-stamp.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .2, y: .22, scale: .18, rotation: -4 }, minScale: .09, maxScale: .4,
+  },
+  {
+    id: 'together-tag', type: 'sticker', category: 'word', name: 'Together', src: STICKER + 'together-tag.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .5, y: .82, scale: .2, rotation: 3 }, minScale: .1, maxScale: .42,
+  },
+  {
+    id: 'postmark-heart', type: 'sticker', category: 'charm', name: 'Sent With Love', src: STICKER + 'postmark-heart.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .8, y: .22, scale: .18, rotation: 5 }, minScale: .09, maxScale: .4,
+  },
+  {
+    id: 'film-flash', type: 'sticker', category: 'accent', name: 'Film Flash', src: STICKER + 'film-flash.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .8, y: .72, scale: .16, rotation: 6 }, minScale: .08, maxScale: .4,
+  },
 ];
 
 export const exclusiveStickers = [

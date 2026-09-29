@@ -84,9 +84,9 @@ const EXPECTED = {
   'cloud-picnic.strip': {
     mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
     windows: [
-      { x: 68, y: 170, width: 584, height: 420, radius: 24 },
-      { x: 68, y: 625, width: 584, height: 420, radius: 24 },
-      { x: 68, y: 1080, width: 584, height: 420, radius: 24 },
+      { x: 68, y: 160, width: 584, height: 440, radius: 24 },
+      { x: 68, y: 620, width: 584, height: 440, radius: 24 },
+      { x: 68, y: 1080, width: 584, height: 440, radius: 24 },
     ],
   },
   'lucky-ticket.single': {
@@ -96,9 +96,9 @@ const EXPECTED = {
   'lucky-ticket.strip': {
     mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
     windows: [
-      { x: 74, y: 172, width: 572, height: 422, radius: 20 },
-      { x: 74, y: 628, width: 572, height: 422, radius: 20 },
-      { x: 74, y: 1084, width: 572, height: 422, radius: 20 },
+      { x: 74, y: 160, width: 572, height: 440, radius: 20 },
+      { x: 74, y: 620, width: 572, height: 440, radius: 20 },
+      { x: 74, y: 1080, width: 572, height: 440, radius: 20 },
     ],
   },
   'postcard-club.single': {
@@ -115,38 +115,38 @@ const EXPECTED = {
   },
   'postcard-club-ink.single': {
     mode: 'single', canvas: { width: 1080, height: 1350 }, maskType: 'rounded-rectangles',
-    windows: [{ x: 170, y: 210, width: 740, height: 870, radius: 26 }],
+    windows: [{ x: 170, y: 198, width: 740, height: 900, radius: 26 }],
   },
   'postcard-club-ink.strip': {
     mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
     windows: [
-      { x: 76, y: 174, width: 568, height: 394, radius: 22 },
-      { x: 76, y: 606, width: 568, height: 394, radius: 22 },
-      { x: 76, y: 1038, width: 568, height: 394, radius: 22 },
+      { x: 76, y: 162, width: 568, height: 418, radius: 22 },
+      { x: 76, y: 610, width: 568, height: 418, radius: 22 },
+      { x: 76, y: 1058, width: 568, height: 418, radius: 22 },
     ],
   },
   'postcard-club-sage.single': {
     mode: 'single', canvas: { width: 1080, height: 1350 }, maskType: 'rounded-rectangles',
-    windows: [{ x: 170, y: 210, width: 740, height: 870, radius: 26 }],
+    windows: [{ x: 170, y: 198, width: 740, height: 900, radius: 26 }],
   },
   'postcard-club-sage.strip': {
     mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
     windows: [
-      { x: 76, y: 174, width: 568, height: 394, radius: 22 },
-      { x: 76, y: 606, width: 568, height: 394, radius: 22 },
-      { x: 76, y: 1038, width: 568, height: 394, radius: 22 },
+      { x: 76, y: 162, width: 568, height: 418, radius: 22 },
+      { x: 76, y: 610, width: 568, height: 418, radius: 22 },
+      { x: 76, y: 1058, width: 568, height: 418, radius: 22 },
     ],
   },
   'postcard-club-night.single': {
     mode: 'single', canvas: { width: 1080, height: 1350 }, maskType: 'rounded-rectangles',
-    windows: [{ x: 170, y: 210, width: 740, height: 870, radius: 26 }],
+    windows: [{ x: 170, y: 198, width: 740, height: 900, radius: 26 }],
   },
   'postcard-club-night.strip': {
     mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
     windows: [
-      { x: 76, y: 174, width: 568, height: 394, radius: 22 },
-      { x: 76, y: 606, width: 568, height: 394, radius: 22 },
-      { x: 76, y: 1038, width: 568, height: 394, radius: 22 },
+      { x: 76, y: 162, width: 568, height: 418, radius: 22 },
+      { x: 76, y: 610, width: 568, height: 418, radius: 22 },
+      { x: 76, y: 1058, width: 568, height: 418, radius: 22 },
     ],
   },
 };

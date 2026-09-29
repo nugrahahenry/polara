@@ -92,9 +92,9 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
     "cloud-picnic.strip": (
         (720, 1800),
         [
-            {"x": 68, "y": 170, "width": 584, "height": 420, "radius": 24},
-            {"x": 68, "y": 625, "width": 584, "height": 420, "radius": 24},
-            {"x": 68, "y": 1080, "width": 584, "height": 420, "radius": 24},
+            {"x": 68, "y": 160, "width": 584, "height": 440, "radius": 24},
+            {"x": 68, "y": 620, "width": 584, "height": 440, "radius": 24},
+            {"x": 68, "y": 1080, "width": 584, "height": 440, "radius": 24},
         ],
     ),
     "lucky-ticket.single": (
@@ -104,9 +104,9 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
     "lucky-ticket.strip": (
         (720, 1800),
         [
-            {"x": 74, "y": 172, "width": 572, "height": 422, "radius": 20},
-            {"x": 74, "y": 628, "width": 572, "height": 422, "radius": 20},
-            {"x": 74, "y": 1084, "width": 572, "height": 422, "radius": 20},
+            {"x": 74, "y": 160, "width": 572, "height": 440, "radius": 20},
+            {"x": 74, "y": 620, "width": 572, "height": 440, "radius": 20},
+            {"x": 74, "y": 1080, "width": 572, "height": 440, "radius": 20},
         ],
     ),
     "postcard-club.single": (
@@ -123,38 +123,38 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
     ),
     "postcard-club-ink.single": (
         (1080, 1350),
-        [{"x": 170, "y": 210, "width": 740, "height": 870, "radius": 26}],
+        [{"x": 170, "y": 198, "width": 740, "height": 900, "radius": 26}],
     ),
     "postcard-club-ink.strip": (
         (720, 1800),
         [
-            {"x": 76, "y": 174, "width": 568, "height": 394, "radius": 22},
-            {"x": 76, "y": 606, "width": 568, "height": 394, "radius": 22},
-            {"x": 76, "y": 1038, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 162, "width": 568, "height": 418, "radius": 22},
+            {"x": 76, "y": 610, "width": 568, "height": 418, "radius": 22},
+            {"x": 76, "y": 1058, "width": 568, "height": 418, "radius": 22},
         ],
     ),
     "postcard-club-sage.single": (
         (1080, 1350),
-        [{"x": 170, "y": 210, "width": 740, "height": 870, "radius": 26}],
+        [{"x": 170, "y": 198, "width": 740, "height": 900, "radius": 26}],
     ),
     "postcard-club-sage.strip": (
         (720, 1800),
         [
-            {"x": 76, "y": 174, "width": 568, "height": 394, "radius": 22},
-            {"x": 76, "y": 606, "width": 568, "height": 394, "radius": 22},
-            {"x": 76, "y": 1038, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 162, "width": 568, "height": 418, "radius": 22},
+            {"x": 76, "y": 610, "width": 568, "height": 418, "radius": 22},
+            {"x": 76, "y": 1058, "width": 568, "height": 418, "radius": 22},
         ],
     ),
     "postcard-club-night.single": (
         (1080, 1350),
-        [{"x": 170, "y": 210, "width": 740, "height": 870, "radius": 26}],
+        [{"x": 170, "y": 198, "width": 740, "height": 900, "radius": 26}],
     ),
     "postcard-club-night.strip": (
         (720, 1800),
         [
-            {"x": 76, "y": 174, "width": 568, "height": 394, "radius": 22},
-            {"x": 76, "y": 606, "width": 568, "height": 394, "radius": 22},
-            {"x": 76, "y": 1038, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 162, "width": 568, "height": 418, "radius": 22},
+            {"x": 76, "y": 610, "width": 568, "height": 418, "radius": 22},
+            {"x": 76, "y": 1058, "width": 568, "height": 418, "radius": 22},
         ],
     ),
 }

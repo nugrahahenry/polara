@@ -484,6 +484,12 @@ input, textarea { caret-color: var(--pink-deep); }
   background: var(--proof-mat);
   box-shadow: var(--proof-mat-shadow);
 }
+.review-pose-window {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: 10px;
+}
 .review-photo-wrap::before {
   content: '';
   position: absolute;
@@ -706,6 +712,7 @@ input, textarea { caret-color: var(--pink-deep); }
 .frame-edition-copy h3 {
   margin: 0;
   color: var(--proof-ink);
+  font-family: var(--font-display);
   font-size: 1rem;
   line-height: 1.15;
 }
@@ -888,7 +895,7 @@ input, textarea { caret-color: var(--pink-deep); }
   text-transform: uppercase;
 }
 .tpl-badge { border: 0; border-radius: 7px; box-shadow: 0 3px 10px rgba(75,46,31,.12); }
-.tpl-name { font-size: .8rem; }
+.tpl-name { font: 700 .84rem/1.2 var(--font-display); }
 .tpl-family-material {
   display: block;
   margin-top: 3px;
@@ -977,6 +984,7 @@ input, textarea { caret-color: var(--pink-deep); }
   text-overflow: ellipsis;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 2;
+  font-family: var(--font-display);
 }
 .sticker-kind {
   width: 100%;
@@ -1287,6 +1295,15 @@ input, textarea { caret-color: var(--pink-deep); }
 }
 #cameraWrap[data-pose-mate="true"] #video { z-index: 1; object-fit: cover; }
 .review-photo-region { position: relative; width: 100%; height: 100%; overflow: hidden; }
+.review-photo-wrap:not([data-pose-mate="true"]) .review-pose-window {
+  position: relative;
+  inset: auto;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  place-items: center;
+  overflow: visible;
+}
 .review-photo-wrap:not([data-pose-mate="true"]) .review-photo-region { display: grid; place-items: center; }
 .review-photo-wrap:not([data-pose-mate="true"]) #reviewPhoto {
   display: block;
@@ -1337,6 +1354,9 @@ input, textarea { caret-color: var(--pink-deep); }
   pointer-events: none;
 }
 .review-photo-wrap[data-pose-mate="true"] { background: linear-gradient(145deg, #ffe8f2, #dcefff); }
+.review-photo-wrap[data-pose-mate="true"] .review-pose-window {
+  background: linear-gradient(145deg, rgba(255,232,242,.9), rgba(220,239,255,.9));
+}
 .review-photo-wrap[data-pose-mate="true"] #reviewPhoto { display: block; max-width: none; }
 .review-photo-wrap[data-pose-mate="true"] .review-guest { display: block; }
 

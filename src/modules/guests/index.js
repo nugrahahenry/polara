@@ -69,7 +69,7 @@ const GUESTS = Object.freeze({
 // Side by side reads as two people sharing a laptop-sized camera window. Keep
 // the original pose assets, but show the upper-body crop so legs do not pull
 // the composition down or make the guest feel like a separate cutout.
-const SEATED_BUST_CROP = Object.freeze({ x: 0.08, y: 0.02, width: 0.84, height: 0.68 });
+const SEATED_BUST_CROP = Object.freeze({ x: 0.04, y: 0.02, width: 0.92, height: 0.64 });
 
 const LAYOUTS = Object.freeze({
   matched: Object.freeze({
@@ -89,14 +89,16 @@ const LAYOUTS = Object.freeze({
   }),
   'side-by-side': Object.freeze({
     right: Object.freeze({
-      userRegion: Object.freeze({ x: 0, y: 0, width: 0.62, height: 1 }),
-      guestRegion: Object.freeze({ x: 0.58, y: 0.08, width: 0.42, height: 0.64 }),
+      // Both people share one clipped camera window. Busts sit on one baseline
+      // so the guest reads as a seated companion, not a floating cutout.
+      userRegion: Object.freeze({ x: 0.03, y: 0.2, width: 0.47, height: 0.64 }),
+      guestRegion: Object.freeze({ x: 0.5, y: 0.16, width: 0.47, height: 0.68 }),
       guestCrop: SEATED_BUST_CROP,
       flipGuest: false,
     }),
     left: Object.freeze({
-      userRegion: Object.freeze({ x: 0.38, y: 0, width: 0.62, height: 1 }),
-      guestRegion: Object.freeze({ x: 0, y: 0.08, width: 0.42, height: 0.64 }),
+      userRegion: Object.freeze({ x: 0.5, y: 0.2, width: 0.47, height: 0.64 }),
+      guestRegion: Object.freeze({ x: 0.03, y: 0.16, width: 0.47, height: 0.68 }),
       guestCrop: SEATED_BUST_CROP,
       flipGuest: true,
     }),

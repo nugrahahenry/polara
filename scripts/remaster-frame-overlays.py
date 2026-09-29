@@ -23,7 +23,7 @@ PALETTES = {
     "lucky-ticket": ("#ff8fbd", "#8fd3ff", "#ffe26f"),
     "postcard-club": ("#d88968", "#1f2f4f", "#f4d7bc"),
 }
-FONT_PATH = Path("C:/Windows/Fonts/seguisb.ttf")
+FONT_PATH = Path("C:/Windows/Fonts/segoeprb.ttf")
 
 
 def project_path(relative_path: str) -> Path:
@@ -108,8 +108,8 @@ def save_png(image: Image.Image, path: Path, source_info: dict[str, object]) -> 
 
 def main() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    if len(manifest.get("frames", [])) != 20:
-        raise RuntimeError("The current Polara library expects exactly twenty runtime variants.")
+    if len(manifest.get("frames", [])) != 24:
+        raise RuntimeError("The current Polara library expects exactly twenty-four runtime variants.")
 
     for frame in manifest["frames"]:
         palette = PALETTES[frame["family"]]

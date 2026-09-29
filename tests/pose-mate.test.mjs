@@ -152,8 +152,9 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   assert.deepEqual(matched.guestRegion, { x: 0.54, y: 0, width: 0.46, height: 1 });
   assert.equal(sideBySide.flipGuest, true);
   assert.equal(sideBySide.asset.pose, 'peace');
-  assert.deepEqual(sideBySide.guestRegion, { x: 0, y: 0.08, width: 0.42, height: 0.64 });
-  assert.deepEqual(sideBySide.guestCrop, { x: 0.08, y: 0.02, width: 0.84, height: 0.68 });
+  assert.deepEqual(sideBySide.guestRegion, { x: 0.03, y: 0.16, width: 0.47, height: 0.68 });
+  assert.deepEqual(sideBySide.userRegion, { x: 0.5, y: 0.2, width: 0.47, height: 0.64 });
+  assert.deepEqual(sideBySide.guestCrop, { x: 0.04, y: 0.02, width: 0.92, height: 0.64 });
   assert.equal(guestModule.poseGuideForSlot(2, 3), 'Half-heart');
   assert.equal(guestModule.createGuestComposition({
     experience: 'pose-mate', guestId: 'unknown-guest',
@@ -168,6 +169,7 @@ test('camera, review, preview, and raw export all receive the same guest composi
 
   assert.match(html, /id="poseGuestPreview"/);
   assert.match(html, /id="reviewGuest"/);
+  assert.match(html, /id="reviewPoseWindow"[\s\S]*id="reviewPhotoRegion"[\s\S]*id="reviewGuest"/);
   assert.match(html, /id="poseMateControls"/);
   assert.doesNotMatch(html, /id="startGuestPreview"[^>]+src=/);
   assert.doesNotMatch(html, /id="poseGuestPreview"[^>]+src=/);

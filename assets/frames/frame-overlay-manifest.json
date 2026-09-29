@@ -230,8 +230,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-single-overlay-master.png",
-      "sha256": "590740d9f875cfaa7f3c292a8e1b03de92c323da9bfd9cbf39595c157d534ed0",
-      "byteSize": 723084,
+      "sha256": "c8f6cc65fccec89f2052e68b852d92d76ff4e3dab32bfe01e1910e84abb84a8f",
+      "byteSize": 725343,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -291,8 +291,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-strip-overlay-master.png",
-      "sha256": "19a356729ce2c1846cb634c94077327cb2a18946a64e3c8a49ed6a88a15d5e58",
-      "byteSize": 607516,
+      "sha256": "56a79f157a17d99c1cd44b7b8b53b32dda0585f8c01acac3ce8972eeea44dfcf",
+      "byteSize": 609045,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -339,8 +339,8 @@
           "height": 840
         }
       ],
-      "sha256": "7242b564b841ed7223505b6a5789c7b2ffc0408f911c6d8eb8aa1f431ed3c5da",
-      "byteSize": 713635,
+      "sha256": "4abfef1c733703d58841ab52750ab92d4708da31655a8179b0932239a0f72d92",
+      "byteSize": 715965,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -399,8 +399,8 @@
           "height": 388
         }
       ],
-      "sha256": "59ca642d907caaeccf1f3651d5193d82820d2c7b7ac28d7fb0d1ceac01c56913",
-      "byteSize": 602598,
+      "sha256": "0dd0d585094a4ad5d5cd35efcd2fa4a4be7e31f48a6c402a4a4f4b35733e8052",
+      "byteSize": 604197,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -448,8 +448,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/vintage-film-lofi-single-overlay-master.png",
-      "sha256": "a2e81d6cc11bcbe203181bfc953cf8a7b08f35677538c34d3ff76d7a98546ee2",
-      "byteSize": 244167,
+      "sha256": "a6d76e6fcfccbca22ffadfeb088108550674c77efac214f26b27dc74c79273b9",
+      "byteSize": 247439,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -509,8 +509,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/vintage-film-lofi-strip-overlay-master.png",
-      "sha256": "d68f139ca27297e44de1066a0d89d77618163fb0320bcf8d9dc8c8f842f36d9b",
-      "byteSize": 296624,
+      "sha256": "f71a29cc10683590fa8305aa294158c74cc9fba50c7d1234cc5b23f148ca86a4",
+      "byteSize": 298575,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -558,8 +558,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/seoul-snap-y2k-single-overlay-master.png",
-      "sha256": "ef45111257ec0071615a073b82effadf82e98a65af8bcf0b37667e06e45d4f43",
-      "byteSize": 888999,
+      "sha256": "3d34fd1d40efd400c69597d7899022c7ae715b42800e7882e1959e76b806d0be",
+      "byteSize": 891224,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -620,8 +620,8 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/seoul-snap-y2k-strip-overlay-master.png",
-      "sha256": "0bbb209c51b7c9c674ace5c9a57fd8e7429e5701edc7a15955a19250655c91b8",
-      "byteSize": 526099,
+      "sha256": "fd7b609cee4183ad859b44381b246d505650f089f4787c284c6c3e717a8a5817",
+      "byteSize": 527401,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -688,8 +688,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-daily-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "fb532ef6f95b918ac4f9c157fb180d73e1e1f09239184ff400bee34bd66a117b",
-      "byteSize": 1353009,
+      "sha256": "cd8470ff409a0e76a78411fb5c907d05f1f585195d89ee4bdcdf1a1df5aca75e",
+      "byteSize": 1355501,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -751,8 +751,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-daily-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "5415c39ae15b232c5454f6f58a862d8e183fec71dda37b512683a52eceef61f2",
-      "byteSize": 992095,
+      "sha256": "6368becf80800f46f1106aac8f77137df94372c976978bea6bd6f6561a62a4d6",
+      "byteSize": 993285,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -817,8 +817,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "9c09a77623e548be348776ea4c37b2338acbe5c6215bbceea8dafc7068393387",
-      "byteSize": 831767,
+      "sha256": "d2954cf6400e72426ee9d210aff15b83f542b9164f2f15342e6111da1934ef6e",
+      "byteSize": 834641,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -880,8 +880,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/polara-midnight-club-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "03be012cbe53abaeb9a0438a43f9ad50383ac7e3304c8fecf9d6da4c5c1ee15a",
-      "byteSize": 566384,
+      "sha256": "9e6a7580061613216e45a6e064d419aed6219c33448b5daa30d28efdacff64dc",
+      "byteSize": 568076,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -907,6 +907,118 @@
       ]
     },
     {
+      "id": "postcard-club.single",
+      "family": "postcard-club",
+      "name": "Postcard Club",
+      "category": "editorial-postcard",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 205,
+          "y": 240,
+          "width": 670,
+          "height": 870,
+          "radius": 34
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-single-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "sha256": "0f655fe907ea594f997cac53b5ab004d53ec8983178520cbbd73a99df9e535d3",
+      "byteSize": 1022840,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "qualityProfile": "polara-proof-edge-v2",
+      "edgePalette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ],
+      "slotBackground": "#f4d7bc",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "postcard paper",
+        "stamp blocks",
+        "registration marks",
+        "coral and indigo ink"
+      ]
+    },
+    {
+      "id": "postcard-club.strip",
+      "family": "postcard-club",
+      "name": "Postcard Club",
+      "category": "editorial-postcard",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 152,
+          "y": 230,
+          "width": 419,
+          "height": 375,
+          "radius": 28
+        },
+        {
+          "x": 155,
+          "y": 730,
+          "width": 415,
+          "height": 375,
+          "radius": 28
+        },
+        {
+          "x": 152,
+          "y": 1230,
+          "width": 419,
+          "height": 350,
+          "radius": 28
+        }
+      ],
+      "overlaySrc": "assets/frames/postcard-club-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-strip-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "sha256": "aa9c90af6317becf38c442d5d1c67f4ad809c4c1f0d4b7b1a9fb5743eb72febc",
+      "byteSize": 743882,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "qualityProfile": "polara-proof-edge-v2",
+      "edgePalette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ],
+      "slotBackground": "#f4d7bc",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "postcard paper",
+        "stamp blocks",
+        "registration marks",
+        "coral and indigo ink"
+      ]
+    },
+    {
       "id": "cloud-picnic.single",
       "family": "cloud-picnic",
       "name": "Cloud Picnic",
@@ -929,8 +1041,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "ef9e645a788b71d4e9d9b4ed0028311f1c2b4bccd6684109bdc765ab2a8d8906",
-      "byteSize": 31216,
+      "sha256": "a549ead25d8192222c0e06e0caef46cf56f688675aa0b3ec77c32bf7fa1bd0ad",
+      "byteSize": 36473,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -967,23 +1079,23 @@
       "photoWindows": [
         {
           "x": 68,
-          "y": 170,
+          "y": 160,
           "width": 584,
-          "height": 420,
+          "height": 440,
           "radius": 24
         },
         {
           "x": 68,
-          "y": 625,
+          "y": 620,
           "width": 584,
-          "height": 420,
+          "height": 440,
           "radius": 24
         },
         {
           "x": 68,
           "y": 1080,
           "width": 584,
-          "height": 420,
+          "height": 440,
           "radius": 24
         }
       ],
@@ -992,8 +1104,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/cloud-picnic-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "62aedb3140899d75ba296ba0b02a6ae68a7adf56da589e4b6fe54b419fb09ff8",
-      "byteSize": 26634,
+      "sha256": "a4aa535a556d7fe0a5584264c01ee58260ef9f4a1c5d9ad7d4cdc4bf16655ed3",
+      "byteSize": 31999,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1066,8 +1178,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "405f6a5a65e8d063a46f10a8c0587257dd9fa565af7bb78c51d719e41304ec6d",
-      "byteSize": 28250,
+      "sha256": "b01baa8563d3021466337370f69e08daf3ad38f91a8eb40fe8ea4d2356012bff",
+      "byteSize": 34093,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1104,23 +1216,23 @@
       "photoWindows": [
         {
           "x": 74,
-          "y": 172,
+          "y": 160,
           "width": 572,
-          "height": 422,
+          "height": 440,
           "radius": 20
         },
         {
           "x": 74,
-          "y": 628,
+          "y": 620,
           "width": 572,
-          "height": 422,
+          "height": 440,
           "radius": 20
         },
         {
           "x": 74,
-          "y": 1084,
+          "y": 1080,
           "width": 572,
-          "height": 422,
+          "height": 440,
           "radius": 20
         }
       ],
@@ -1129,8 +1241,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/lucky-ticket-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "ff7e7164af8d95c9d6b347a61adbc87c90117712b37c40f9e45fef7749eedfd5",
-      "byteSize": 27014,
+      "sha256": "e32d45de7f7fbe7982e0252cc9df5fe2d1902ddea1feb961c2f14099c3b48061",
+      "byteSize": 34194,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1156,118 +1268,6 @@
       ]
     },
     {
-      "id": "postcard-club.single",
-      "family": "postcard-club",
-      "name": "Postcard Club",
-      "category": "editorial-postcard",
-      "mode": "single",
-      "renderMode": "png-overlay",
-      "characterPolicy": "character-free",
-      "maskType": "rounded-rectangles",
-      "photoWindows": [
-        {
-          "x": 205,
-          "y": 240,
-          "width": 670,
-          "height": 870,
-          "radius": 34
-        }
-      ],
-      "overlaySrc": "assets/frames/postcard-club-single-overlay.png",
-      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-single-thumbnail.png",
-      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-single-thumbnail.png",
-      "canvasWidth": 1080,
-      "canvasHeight": 1350,
-      "sha256": "fdadb924f04caad6f1b165af9184ba03e3ffade9c9d60cfb460de0de732df32e",
-      "byteSize": 1019808,
-      "colorMode": "RGBA",
-      "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v2",
-      "edgePalette": [
-        "#d88968",
-        "#1f2f4f",
-        "#f4d7bc"
-      ],
-      "slotBackground": "#f4d7bc",
-      "supportsDynamicText": false,
-      "metadataZones": {
-        "caption": null,
-        "date": null,
-        "brand": null
-      },
-      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
-      "decorativeElements": [
-        "postcard paper",
-        "stamp blocks",
-        "registration marks",
-        "coral and indigo ink"
-      ]
-    },
-    {
-      "id": "postcard-club.strip",
-      "family": "postcard-club",
-      "name": "Postcard Club",
-      "category": "editorial-postcard",
-      "mode": "strip",
-      "renderMode": "png-overlay",
-      "characterPolicy": "character-free",
-      "maskType": "rounded-rectangles",
-      "photoWindows": [
-        {
-          "x": 152,
-          "y": 230,
-          "width": 419,
-          "height": 375,
-          "radius": 28
-        },
-        {
-          "x": 155,
-          "y": 730,
-          "width": 415,
-          "height": 375,
-          "radius": 28
-        },
-        {
-          "x": 152,
-          "y": 1230,
-          "width": 419,
-          "height": 350,
-          "radius": 28
-        }
-      ],
-      "overlaySrc": "assets/frames/postcard-club-strip-overlay.png",
-      "thumbnailSrc": "assets/frames/thumbnails/postcard-club-strip-thumbnail.png",
-      "pickerThumbnailSrc": "assets/frames/composites/postcard-club-strip-thumbnail.png",
-      "canvasWidth": 720,
-      "canvasHeight": 1800,
-      "sha256": "f0f0d15be40ccbdad2ef9cd5581eaeaf3b442565ff29e0f1e9113e406c3e9590",
-      "byteSize": 742280,
-      "colorMode": "RGBA",
-      "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
-      "qualityProfile": "polara-proof-edge-v2",
-      "edgePalette": [
-        "#d88968",
-        "#1f2f4f",
-        "#f4d7bc"
-      ],
-      "slotBackground": "#f4d7bc",
-      "supportsDynamicText": false,
-      "metadataZones": {
-        "caption": null,
-        "date": null,
-        "brand": null
-      },
-      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
-      "decorativeElements": [
-        "postcard paper",
-        "stamp blocks",
-        "registration marks",
-        "coral and indigo ink"
-      ]
-    },
-    {
       "id": "postcard-club-ink.single",
       "family": "postcard-club",
       "name": "Postcard Club Ink",
@@ -1279,9 +1279,9 @@
       "photoWindows": [
         {
           "x": 170,
-          "y": 210,
+          "y": 198,
           "width": 740,
-          "height": 870,
+          "height": 900,
           "radius": 26
         }
       ],
@@ -1290,8 +1290,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-ink-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "bef8701814ee94b46c89febdca819ec0039c6b9a30c7486ba17f6957cbc8be4e",
-      "byteSize": 30354,
+      "sha256": "3def4a8f6b603e2c7bee8bed188b94c1295afaca52fe136f9dbe6e35fde4d089",
+      "byteSize": 40925,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1313,7 +1313,7 @@
       "edgePalette": [
         "#d88968",
         "#1f2f4f",
-        "#f7f2e9"
+        "#f4d7bc"
       ]
     },
     {
@@ -1328,23 +1328,23 @@
       "photoWindows": [
         {
           "x": 76,
-          "y": 174,
+          "y": 162,
           "width": 568,
-          "height": 394,
+          "height": 418,
           "radius": 22
         },
         {
           "x": 76,
-          "y": 606,
+          "y": 610,
           "width": 568,
-          "height": 394,
+          "height": 418,
           "radius": 22
         },
         {
           "x": 76,
-          "y": 1038,
+          "y": 1058,
           "width": 568,
-          "height": 394,
+          "height": 418,
           "radius": 22
         }
       ],
@@ -1353,8 +1353,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-ink-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "0c46bd001e6b16cf48d2b8a0a96bba6898a808f8f23206862a9af0c3bc8525f4",
-      "byteSize": 26170,
+      "sha256": "c952735cec57bbd5097fa240bd139daa1fb0c7c381c948fc2334f8d82ee85531",
+      "byteSize": 35960,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1376,7 +1376,7 @@
       "edgePalette": [
         "#d88968",
         "#1f2f4f",
-        "#f7f2e9"
+        "#f4d7bc"
       ]
     },
     {
@@ -1391,9 +1391,9 @@
       "photoWindows": [
         {
           "x": 170,
-          "y": 210,
+          "y": 198,
           "width": 740,
-          "height": 870,
+          "height": 900,
           "radius": 26
         }
       ],
@@ -1402,8 +1402,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-sage-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "8b2aa05cff11312c2d2eb58f68a4bd70e68068ac91e582399ecebf563e1fbeca",
-      "byteSize": 30477,
+      "sha256": "67f444b763e3e480f0669a64041dd7b429bec78a5e61e9bb2794f5c061406f02",
+      "byteSize": 41085,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1423,9 +1423,9 @@
       ],
       "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
-        "#799b83",
-        "#243b36",
-        "#eef0e6"
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
       ]
     },
     {
@@ -1440,23 +1440,23 @@
       "photoWindows": [
         {
           "x": 76,
-          "y": 174,
+          "y": 162,
           "width": 568,
-          "height": 394,
+          "height": 418,
           "radius": 22
         },
         {
           "x": 76,
-          "y": 606,
+          "y": 610,
           "width": 568,
-          "height": 394,
+          "height": 418,
           "radius": 22
         },
         {
           "x": 76,
-          "y": 1038,
+          "y": 1058,
           "width": 568,
-          "height": 394,
+          "height": 418,
           "radius": 22
         }
       ],
@@ -1465,8 +1465,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-sage-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "d18c919d192b6ad090b571081c64874d26cd8b1caef09b96fe275a4bce324407",
-      "byteSize": 26453,
+      "sha256": "ad88e517c0ec6d503c4e1d03fcef81ee02e6f342c9d9d6508903f0b2ef2a2d95",
+      "byteSize": 36157,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1486,9 +1486,9 @@
       ],
       "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
-        "#799b83",
-        "#243b36",
-        "#eef0e6"
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
       ]
     },
     {
@@ -1503,9 +1503,9 @@
       "photoWindows": [
         {
           "x": 170,
-          "y": 210,
+          "y": 198,
           "width": 740,
-          "height": 870,
+          "height": 900,
           "radius": 26
         }
       ],
@@ -1514,8 +1514,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-night-single-thumbnail.png",
       "canvasWidth": 1080,
       "canvasHeight": 1350,
-      "sha256": "e01a5e214191ffdd985fd8276b2e0864eb996cb16f22dadc042e5d13e31b621b",
-      "byteSize": 30435,
+      "sha256": "437fbe61e4a1749decc3ff3f5fddfdecb77664e9fc77ca56ba573b2ed3c4ee59",
+      "byteSize": 41144,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1535,9 +1535,9 @@
       ],
       "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
-        "#c18b49",
-        "#15263e",
-        "#e8edf3"
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
       ]
     },
     {
@@ -1552,23 +1552,23 @@
       "photoWindows": [
         {
           "x": 76,
-          "y": 174,
+          "y": 162,
           "width": 568,
-          "height": 394,
+          "height": 418,
           "radius": 22
         },
         {
           "x": 76,
-          "y": 606,
+          "y": 610,
           "width": 568,
-          "height": 394,
+          "height": 418,
           "radius": 22
         },
         {
           "x": 76,
-          "y": 1038,
+          "y": 1058,
           "width": 568,
-          "height": 394,
+          "height": 418,
           "radius": 22
         }
       ],
@@ -1577,8 +1577,8 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-night-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "e200f25dbbad0b44a1ec75dfaac144d1ffd965684313e6d790500e5c07c6b751",
-      "byteSize": 26353,
+      "sha256": "d91d8ab290bfcc748cb3d44609a1f452aaaf7aba1532b653550303db186740e2",
+      "byteSize": 36163,
       "colorMode": "RGBA",
       "hasAlpha": true,
       "assetVersion": "frame-overlay-v5",
@@ -1598,9 +1598,9 @@
       ],
       "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
-        "#c18b49",
-        "#15263e",
-        "#e8edf3"
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
       ]
     }
   ]

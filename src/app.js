@@ -16,11 +16,11 @@ import {
   isRequestedFrameStillSelected,
   templateSupportsDynamicText,
 } from './modules/templates/template-ui.js?v=13';
-import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=2';
+import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=3';
 import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
   getGuest, getGuestAssets, getGuestOptions, poseGuideForSlot, retryWithoutGuestOnFailure,
-} from './modules/guests/index.js?v=4';
+} from './modules/guests/index.js?v=5';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';
@@ -65,7 +65,7 @@ const refs = {
   countdownProgress: $('countdownProgress'), flash: $('flashLayer'),
   shotBadge: $('shotBadge'), cameraSlots: $('cameraSlots'), cameraPanelTitle: $('cameraPanelTitle'),
   cameraPanelCopy: $('cameraPanelCopy'), cameraStateNote: $('cameraStateNote'),
-  reviewPhoto: $('reviewPhoto'), reviewPhotoRegion: $('reviewPhotoRegion'), reviewGuest: $('reviewGuest'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
+  reviewPhoto: $('reviewPhoto'), reviewPhotoRegion: $('reviewPhotoRegion'), reviewGuest: $('reviewGuest'), reviewPoseWindow: $('reviewPoseWindow'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
   reviewProofTag: $('reviewProofTag'), reviewProofLabel: $('reviewProofLabel'), reviewSourceMeta: $('reviewSourceMeta'), reviewSlots: $('reviewSlots'),
   stage: $('canvasScale'), revealBuddy: $('revealBuddy'), templateList: $('templateList'),
   frameRailShell: $('frameRailShell'), frameRailPosition: $('frameRailPosition'), frameRailProgress: $('frameRailProgress'),
@@ -1470,8 +1470,8 @@ function renderStickerTray() {
   const stickerPack = getStickerPack(template?.familyId);
   const exclusive = stickerPack.find((asset) => asset.exclusiveFamilyId === template?.familyId);
   if (refs.stickerRailMeta) refs.stickerRailMeta.textContent = exclusive
-    ? `${exclusive.name} + 19 universal`
-    : '19 universal stickers';
+    ? `${exclusive.name} + 23 universal`
+    : '23 universal stickers';
   refs.stickerTray.setAttribute('aria-label', `Add a sticker for ${template?.name || 'the selected frame'}`);
   stickerPack.forEach((asset, index) => {
     const button = document.createElement('button');

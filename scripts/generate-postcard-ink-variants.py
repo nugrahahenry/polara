@@ -14,6 +14,7 @@ ROOT = Path(__file__).resolve().parents[1]
 MANIFEST = ROOT / "assets" / "frames" / "frame-overlay-manifest.json"
 FONT_BOLD = Path("C:/Windows/Fonts/seguisb.ttf")
 FONT_REGULAR = Path("C:/Windows/Fonts/segoeui.ttf")
+FONT_DISPLAY = Path("C:/Windows/Fonts/segoeprb.ttf")
 PROFILE = "polara-proof-edge-v2"
 
 
@@ -103,24 +104,24 @@ def make_variant(mode: str, theme_id: str = "ink") -> tuple[Image.Image, list[di
     draw.line((inset + 32, 148 if mode == "single" else 118, width - inset - 32, 148 if mode == "single" else 118), fill=coral, width=4)
     title_size = 52 if mode == "single" else 36
     small_size = 16 if mode == "single" else 12
-    draw.text((width // 2, 82 if mode == "single" else 66), "POSTCARD CLUB", anchor="mm", fill=navy, font=font(FONT_BOLD, title_size))
+    draw.text((width // 2, 82 if mode == "single" else 66), "POSTCARD CLUB", anchor="mm", fill=navy, font=font(FONT_DISPLAY, title_size))
     draw.text((width // 2, 116 if mode == "single" else 94), f"{theme['edition']} · POLARA MEMORY SERVICE", anchor="mm", fill=coral, font=font(FONT_REGULAR, small_size))
 
     if mode == "single":
-        windows = [{"x": 170, "y": 210, "width": 740, "height": 870, "radius": 26}]
+        windows = [{"x": 170, "y": 198, "width": 740, "height": 900, "radius": 26}]
         footer_y = 1180
         draw.text((84, footer_y), "POST / 01", fill=navy, font=font(FONT_BOLD, 20))
         draw.text((width - 84, footer_y), "KEEP THE FRAME", anchor="ra", fill=coral, font=font(FONT_BOLD, 20))
         draw.text((width // 2, 1240), "A SMALL PRINT FOR A BIG DAY", anchor="mm", fill=navy, font=font(FONT_REGULAR, 20))
     else:
         windows = [
-            {"x": 76, "y": 174, "width": 568, "height": 394, "radius": 22},
-            {"x": 76, "y": 606, "width": 568, "height": 394, "radius": 22},
-            {"x": 76, "y": 1038, "width": 568, "height": 394, "radius": 22},
+            {"x": 76, "y": 162, "width": 568, "height": 418, "radius": 22},
+            {"x": 76, "y": 610, "width": 568, "height": 418, "radius": 22},
+            {"x": 76, "y": 1058, "width": 568, "height": 418, "radius": 22},
         ]
         for index, window in enumerate(windows, 1):
             draw.text((42, window["y"] + 28), f"0{index}", fill=coral, font=font(FONT_BOLD, 15))
-        draw.text((width // 2, 1548), "POSTCARD CLUB / STRIP THREE", anchor="mm", fill=navy, font=font(FONT_BOLD, 25))
+        draw.text((width // 2, 1548), "POSTCARD CLUB / STRIP THREE", anchor="mm", fill=navy, font=font(FONT_DISPLAY, 25))
         draw.text((width // 2, 1588), "three notes from the same afternoon", anchor="mm", fill=coral, font=font(FONT_REGULAR, 16))
 
     for index, window in enumerate(windows):

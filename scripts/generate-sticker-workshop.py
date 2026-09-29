@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parents[1]
 OUTPUT = ROOT / "assets" / "stickers"
 FONT_BOLD = Path("C:/Windows/Fonts/arialbd.ttf")
 FONT_REGULAR = Path("C:/Windows/Fonts/arial.ttf")
+FONT_DISPLAY = Path("C:/Windows/Fonts/segoeprb.ttf")
 INK = "#4b2e1f"
 CREAM = "#fffaf2"
 PINK = "#ff8fbd"
@@ -26,6 +27,10 @@ PROFILE = "polara-sticker-workshop-v2"
 
 def font(path: Path, size: int) -> ImageFont.FreeTypeFont:
     return ImageFont.truetype(str(path), size=size)
+
+
+def display_font(size: int) -> ImageFont.FreeTypeFont:
+    return font(FONT_DISPLAY if FONT_DISPLAY.is_file() else FONT_BOLD, size)
 
 
 def sanitized(image: Image.Image) -> Image.Image:
@@ -53,6 +58,10 @@ def save(image: Image.Image, name: str, description: str) -> None:
 
 def centered_text(draw: ImageDraw.ImageDraw, xy: tuple[int, int], text: str, size: int, fill: str = INK, stroke: int = 0) -> None:
     draw.text(xy, text, anchor="mm", font=font(FONT_BOLD, size), fill=fill, stroke_width=stroke, stroke_fill=CREAM)
+
+
+def display_text(draw: ImageDraw.ImageDraw, xy: tuple[int, int], text: str, size: int, fill: str = INK) -> None:
+    draw.text(xy, text, anchor="mm", font=display_font(size), fill=fill, stroke_width=2, stroke_fill=CREAM)
 
 
 def star(draw: ImageDraw.ImageDraw, center: tuple[int, int], outer: int, fill: str) -> None:
@@ -179,6 +188,65 @@ def best_day() -> Image.Image:
     return image
 
 
+def today_stamp() -> Image.Image:
+    image = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    draw.rounded_rectangle((112, 246, 912, 778), radius=110, fill=CREAM, outline=INK, width=24)
+    draw.rounded_rectangle((150, 284, 874, 740), radius=78, fill=BLUE, outline=PINK_DEEP, width=18)
+    display_text(draw, (512, 430), "TODAY", 132, CREAM)
+    display_text(draw, (512, 590), "STAMP", 110, YELLOW)
+    for x in (238, 786):
+        draw.ellipse((x - 34, 170, x + 34, 238), fill=YELLOW, outline=INK, width=12)
+    draw.line((226, 822, 798, 822), fill=INK, width=18)
+    return image
+
+
+def together_tag() -> Image.Image:
+    image = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    ribbon = [(144, 320), (880, 320), (812, 752), (212, 752)]
+    draw.polygon(ribbon, fill=CREAM)
+    draw.line(ribbon + [ribbon[0]], fill=INK, width=22, joint="curve")
+    draw.polygon([(212, 752), (132, 888), (324, 790)], fill=PINK)
+    draw.polygon([(812, 752), (892, 888), (700, 790)], fill=BLUE)
+    display_text(draw, (512, 474), "TOGETHER", 92, INK)
+    draw.line((252, 620, 772, 620), fill=YELLOW, width=20)
+    draw.ellipse((454, 138, 570, 254), fill=YELLOW, outline=INK, width=18)
+    return image
+
+
+def postmark_heart() -> Image.Image:
+    image = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    draw.ellipse((112, 112, 912, 912), fill=CREAM, outline=INK, width=24)
+    draw.ellipse((160, 160, 864, 864), outline=PINK_DEEP, width=18)
+    for y in (292, 732):
+        draw.line((192, y, 832, y), fill=BLUE_DEEP, width=12)
+    display_text(draw, (512, 292), "SENT", 92, INK)
+    display_text(draw, (512, 732), "WITH LOVE", 62, INK)
+    draw.polygon([(512, 630), (430, 548), (350, 568), (342, 662), (512, 812), (682, 662), (674, 568), (594, 548)], fill=PINK, outline=INK)
+    return image
+
+
+def film_flash() -> Image.Image:
+    image = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(image)
+    center = (512, 512)
+    for start, end, width, color in (
+        ((512, 84), (512, 238), 30, YELLOW),
+        ((512, 786), (512, 940), 30, PINK),
+        ((84, 512), (238, 512), 30, BLUE),
+        ((786, 512), (940, 512), 30, LILAC),
+        ((208, 208), (316, 316), 24, PINK),
+        ((708, 708), (816, 816), 24, BLUE),
+    ):
+        draw.line((*start, *end), fill=color, width=width)
+    draw.ellipse((302, 302, 722, 722), fill=CREAM, outline=INK, width=24)
+    draw.ellipse((364, 364, 660, 660), fill=YELLOW, outline=INK, width=18)
+    draw.polygon([(512, 396), (548, 476), (634, 486), (568, 542), (588, 628), (512, 584), (436, 628), (456, 542), (390, 486), (476, 476)], fill=PINK_DEEP, outline=INK)
+    return image
+
+
 def speech_bubble() -> Image.Image:
     image = Image.new("RGBA", (1024, 1024), (0, 0, 0, 0))
     draw = ImageDraw.Draw(image)
@@ -216,6 +284,10 @@ def main() -> None:
         ("proof-tape.png", proof_tape(), "Original Polara Proof Keeper paper tape material sticker."),
         ("confetti-pop.png", confetti_pop(), "Original Polara celebratory confetti accent sticker."),
         ("best-day.png", best_day(), "Original Polara Best Day word sticker."),
+        ("today-stamp.png", today_stamp(), "Original Polara Today Stamp material sticker."),
+        ("together-tag.png", together_tag(), "Original Polara Together paper tag sticker."),
+        ("postmark-heart.png", postmark_heart(), "Original Polara Sent With Love postmark sticker."),
+        ("film-flash.png", film_flash(), "Original Polara film flash accent sticker."),
         ("speech-bubble.png", speech_bubble(), "Remastered Polara Say Hi speech bubble sticker."),
         ("photo-buddy-badge.png", photo_buddy_badge(), "Remastered Polara Photo Buddy Club badge sticker."),
     ]

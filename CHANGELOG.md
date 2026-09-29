@@ -5,6 +5,20 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.41.0] - 2026-09-29
+
+### Added
+- Menambahkan empat dekorasi universal baru: Today Stamp, Together, Sent With Love, dan Film Flash.
+- Pose Mate side by side sekarang memakai satu jendela foto yang ter-clipped, dengan crop bust duduk yang sama untuk kamera, review, preview, dan export.
+
+### Changed
+- Tipografi judul Cloud Picnic, Lucky Ticket, Postcard Club, label picker, dan nama stiker disamakan ke display face Polara yang lebih hangat.
+- Photo window Cloud Picnic, Lucky Ticket, dan Postcard Club diperluas secara terukur agar Strip dan Single tidak menyisakan ruang mati berlebihan.
+- Thumbnail frame dan composite dibuat ulang dari overlay canonical setelah geometry diperbarui.
+
+### Validation
+- Registry tetap 24 variant dari 8 keluarga, exact export tetap Single 1080×1350 dan Strip 720×1800.
+
 ## [0.40.0] - 2026-09-29
 
 ### Added

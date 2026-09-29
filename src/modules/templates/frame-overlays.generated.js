@@ -882,6 +882,144 @@ export const frameOverlayTemplates = [
     }
   },
   {
+    "id": "postcard-club.single",
+    "familyId": "postcard-club",
+    "name": "Postcard Club",
+    "category": "editorial-postcard",
+    "mode": "single",
+    "tone": "postcard-keepsake",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Single · 1080 × 1350",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/postcard-club-single-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/postcard-club-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/postcard-club-single-thumbnail.png",
+    "familyProfile": {
+      "id": "postcard-club",
+      "collectionId": "keepsakes",
+      "story": "A tactile postcard edition for moments worth sending home.",
+      "material": "Recycled postcard",
+      "palette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ],
+      "exclusiveStickerId": "poca-postcard-club-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "postcard-club-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-postcard-club-exclusive"
+      }
+    },
+    "canvas": {
+      "width": 1080,
+      "height": 1350
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 205,
+        "y": 240,
+        "width": 670,
+        "height": 870,
+        "radius": 34
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#f4d7bc",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "postcard-club.strip",
+    "familyId": "postcard-club",
+    "name": "Postcard Club",
+    "category": "editorial-postcard",
+    "mode": "strip",
+    "tone": "postcard-keepsake",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Strip 3 · 720 × 1800",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/postcard-club-strip-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/postcard-club-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/postcard-club-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "postcard-club",
+      "collectionId": "keepsakes",
+      "story": "A tactile postcard edition for moments worth sending home.",
+      "material": "Recycled postcard",
+      "palette": [
+        "#d88968",
+        "#1f2f4f",
+        "#f4d7bc"
+      ],
+      "exclusiveStickerId": "poca-postcard-club-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "postcard-club-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-postcard-club-exclusive"
+      }
+    },
+    "canvas": {
+      "width": 720,
+      "height": 1800
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 152,
+        "y": 230,
+        "width": 419,
+        "height": 375,
+        "radius": 28
+      },
+      {
+        "x": 155,
+        "y": 730,
+        "width": 415,
+        "height": 375,
+        "radius": 28
+      },
+      {
+        "x": 152,
+        "y": 1230,
+        "width": 419,
+        "height": 350,
+        "radius": 28
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#f4d7bc",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
     "id": "cloud-picnic.single",
     "familyId": "cloud-picnic",
     "name": "Cloud Picnic",
@@ -990,23 +1128,23 @@ export const frameOverlayTemplates = [
     "photoWindows": [
       {
         "x": 68,
-        "y": 170,
+        "y": 160,
         "width": 584,
-        "height": 420,
+        "height": 440,
         "radius": 24
       },
       {
         "x": 68,
-        "y": 625,
+        "y": 620,
         "width": 584,
-        "height": 420,
+        "height": 440,
         "radius": 24
       },
       {
         "x": 68,
         "y": 1080,
         "width": 584,
-        "height": 420,
+        "height": 440,
         "radius": 24
       }
     ],
@@ -1161,166 +1299,28 @@ export const frameOverlayTemplates = [
     "photoWindows": [
       {
         "x": 74,
-        "y": 172,
+        "y": 160,
         "width": 572,
-        "height": 422,
+        "height": 440,
         "radius": 20
       },
       {
         "x": 74,
-        "y": 628,
+        "y": 620,
         "width": 572,
-        "height": 422,
+        "height": 440,
         "radius": 20
       },
       {
         "x": 74,
-        "y": 1084,
+        "y": 1080,
         "width": 572,
-        "height": 422,
+        "height": 440,
         "radius": 20
       }
     ],
     "assetVersion": "frame-overlay-v5",
     "slotBackground": "#202f66",
-    "supportsDynamicText": false,
-    "metadataZones": {
-      "caption": null,
-      "date": null,
-      "brand": null
-    }
-  },
-  {
-    "id": "postcard-club.single",
-    "familyId": "postcard-club",
-    "name": "Postcard Club",
-    "category": "editorial-postcard",
-    "mode": "single",
-    "tone": "postcard-keepsake",
-    "premium": false,
-    "status": "runtime-overlay",
-    "pickerBadge": "Hero",
-    "pickerDetail": "Single · 1080 × 1350",
-    "renderMode": "png-overlay",
-    "characterPolicy": "character-free",
-    "overlaySrc": "assets/frames/postcard-club-single-overlay.png",
-    "thumbnailSrc": "assets/frames/thumbnails/postcard-club-single-thumbnail.png",
-    "pickerThumbnailSrc": "assets/frames/composites/postcard-club-single-thumbnail.png",
-    "familyProfile": {
-      "id": "postcard-club",
-      "collectionId": "keepsakes",
-      "story": "A tactile postcard edition for moments worth sending home.",
-      "material": "Recycled postcard",
-      "palette": [
-        "#d88968",
-        "#1f2f4f",
-        "#f4d7bc"
-      ],
-      "exclusiveStickerId": "poca-postcard-club-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1",
-      "assetKit": {
-        "id": "postcard-club-kit-v1",
-        "status": "ready",
-        "formats": [
-          "single",
-          "strip"
-        ],
-        "preview": "composite",
-        "stickerCompanion": "poca-postcard-club-exclusive"
-      }
-    },
-    "canvas": {
-      "width": 1080,
-      "height": 1350
-    },
-    "maskType": "rounded-rectangles",
-    "photoWindows": [
-      {
-        "x": 205,
-        "y": 240,
-        "width": 670,
-        "height": 870,
-        "radius": 34
-      }
-    ],
-    "assetVersion": "frame-overlay-v5",
-    "slotBackground": "#f4d7bc",
-    "supportsDynamicText": false,
-    "metadataZones": {
-      "caption": null,
-      "date": null,
-      "brand": null
-    }
-  },
-  {
-    "id": "postcard-club.strip",
-    "familyId": "postcard-club",
-    "name": "Postcard Club",
-    "category": "editorial-postcard",
-    "mode": "strip",
-    "tone": "postcard-keepsake",
-    "premium": false,
-    "status": "runtime-overlay",
-    "pickerBadge": "Hero",
-    "pickerDetail": "Strip 3 · 720 × 1800",
-    "renderMode": "png-overlay",
-    "characterPolicy": "character-free",
-    "overlaySrc": "assets/frames/postcard-club-strip-overlay.png",
-    "thumbnailSrc": "assets/frames/thumbnails/postcard-club-strip-thumbnail.png",
-    "pickerThumbnailSrc": "assets/frames/composites/postcard-club-strip-thumbnail.png",
-    "familyProfile": {
-      "id": "postcard-club",
-      "collectionId": "keepsakes",
-      "story": "A tactile postcard edition for moments worth sending home.",
-      "material": "Recycled postcard",
-      "palette": [
-        "#d88968",
-        "#1f2f4f",
-        "#f4d7bc"
-      ],
-      "exclusiveStickerId": "poca-postcard-club-exclusive",
-      "pickerFixtureId": "polara-picker-friends-v1",
-      "assetKit": {
-        "id": "postcard-club-kit-v1",
-        "status": "ready",
-        "formats": [
-          "single",
-          "strip"
-        ],
-        "preview": "composite",
-        "stickerCompanion": "poca-postcard-club-exclusive"
-      }
-    },
-    "canvas": {
-      "width": 720,
-      "height": 1800
-    },
-    "maskType": "rounded-rectangles",
-    "photoWindows": [
-      {
-        "x": 152,
-        "y": 230,
-        "width": 419,
-        "height": 375,
-        "radius": 28
-      },
-      {
-        "x": 155,
-        "y": 730,
-        "width": 415,
-        "height": 375,
-        "radius": 28
-      },
-      {
-        "x": 152,
-        "y": 1230,
-        "width": 419,
-        "height": 350,
-        "radius": 28
-      }
-    ],
-    "assetVersion": "frame-overlay-v5",
-    "slotBackground": "#f4d7bc",
     "supportsDynamicText": false,
     "metadataZones": {
       "caption": null,
@@ -1375,9 +1375,9 @@ export const frameOverlayTemplates = [
     "photoWindows": [
       {
         "x": 170,
-        "y": 210,
+        "y": 198,
         "width": 740,
-        "height": 870,
+        "height": 900,
         "radius": 26
       }
     ],
@@ -1437,23 +1437,23 @@ export const frameOverlayTemplates = [
     "photoWindows": [
       {
         "x": 76,
-        "y": 174,
+        "y": 162,
         "width": 568,
-        "height": 394,
+        "height": 418,
         "radius": 22
       },
       {
         "x": 76,
-        "y": 606,
+        "y": 610,
         "width": 568,
-        "height": 394,
+        "height": 418,
         "radius": 22
       },
       {
         "x": 76,
-        "y": 1038,
+        "y": 1058,
         "width": 568,
-        "height": 394,
+        "height": 418,
         "radius": 22
       }
     ],
@@ -1513,9 +1513,9 @@ export const frameOverlayTemplates = [
     "photoWindows": [
       {
         "x": 170,
-        "y": 210,
+        "y": 198,
         "width": 740,
-        "height": 870,
+        "height": 900,
         "radius": 26
       }
     ],
@@ -1575,23 +1575,23 @@ export const frameOverlayTemplates = [
     "photoWindows": [
       {
         "x": 76,
-        "y": 174,
+        "y": 162,
         "width": 568,
-        "height": 394,
+        "height": 418,
         "radius": 22
       },
       {
         "x": 76,
-        "y": 606,
+        "y": 610,
         "width": 568,
-        "height": 394,
+        "height": 418,
         "radius": 22
       },
       {
         "x": 76,
-        "y": 1038,
+        "y": 1058,
         "width": 568,
-        "height": 394,
+        "height": 418,
         "radius": 22
       }
     ],
@@ -1651,9 +1651,9 @@ export const frameOverlayTemplates = [
     "photoWindows": [
       {
         "x": 170,
-        "y": 210,
+        "y": 198,
         "width": 740,
-        "height": 870,
+        "height": 900,
         "radius": 26
       }
     ],
@@ -1713,23 +1713,23 @@ export const frameOverlayTemplates = [
     "photoWindows": [
       {
         "x": 76,
-        "y": 174,
+        "y": 162,
         "width": 568,
-        "height": 394,
+        "height": 418,
         "radius": 22
       },
       {
         "x": 76,
-        "y": 606,
+        "y": 610,
         "width": 568,
-        "height": 394,
+        "height": 418,
         "radius": 22
       },
       {
         "x": 76,
-        "y": 1038,
+        "y": 1058,
         "width": 568,
-        "height": 394,
+        "height": 418,
         "radius": 22
       }
     ],

@@ -3,7 +3,7 @@
   "assets": [
     {
       "runtimeSrc": "assets/stickers/poca-cloud-picnic-exclusive.png",
-      "sha256": "a9c4337f7c6ca5d1132b2935c81c20e49347668351529550a4a181d00f997a78",
+      "sha256": "22257529f96ee5010116b126807ee03822db559f8046ab614f806641cd7276e1",
       "kind": "original-fictional",
       "sourceMode": "built-in-imagegen-plus-local-chroma-extraction",
       "publicFigure": false,
@@ -13,7 +13,7 @@
     },
     {
       "runtimeSrc": "assets/stickers/poca-lucky-ticket-exclusive.png",
-      "sha256": "c85134e6996b13ee0cd98630b40f2c62f4bc5fbee74501b981fb73822919aa4d",
+      "sha256": "7dd3ef4c006ff7f44fb6240d91da2d4b8cbe3851ec2c2e895ccaf52dc82abeed",
       "kind": "original-fictional",
       "sourceMode": "built-in-imagegen-plus-local-chroma-extraction",
       "publicFigure": false,
@@ -25,7 +25,7 @@
       "runtimeSrc": "assets/stickers/poca-postcard-club-exclusive.png",
       "sha256": "a59497bfbdad29ac587aa22dff19f7c7b85c417c1eecc73529e1e384ed8a0903",
       "kind": "original-fictional",
-      "sourceMode": "built-in-imagegen-edit-plus-local-alpha-cleanup",
+      "sourceMode": "built-in-imagegen-plus-local-chroma-extraction",
       "publicFigure": false,
       "collaborationClaim": false,
       "background": "transparent",
