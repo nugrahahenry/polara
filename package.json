@@ -1,6 +1,6 @@
 {
   "name": "polara",
-  "version": "0.45.1",
+  "version": "0.45.2",
   "private": true,
   "type": "module",
   "scripts": {
@@ -15,6 +15,7 @@
     "assets:previews:check": "python scripts/generate-picker-previews.py --check",
     "assets:demo": "python scripts/generate-demo-proofs.py",
     "frames:remaster": "python scripts/remaster-frame-overlays.py",
+    "frames:photo-first": "python scripts/remaster-photo-first-strips.py",
     "frames:expand": "python scripts/generate-new-frame-families.py",
     "guests:integrate": "python scripts/integrate-pose-mate-pack.py",
     "stickers:generate": "python scripts/generate-sticker-workshop.py",

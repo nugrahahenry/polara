@@ -394,25 +394,25 @@ export const frameOverlayTemplates = [
     "maskType": "rectangles",
     "photoWindows": [
       {
-        "x": 159,
+        "x": 120,
         "y": 255,
-        "width": 402,
+        "width": 480,
         "height": 384
       },
       {
-        "x": 159,
+        "x": 120,
         "y": 702,
-        "width": 402,
+        "width": 480,
         "height": 384
       },
       {
-        "x": 159,
+        "x": 120,
         "y": 1149,
-        "width": 402,
+        "width": 480,
         "height": 384
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v6",
     "slotBackground": "#1c191b",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -989,28 +989,28 @@ export const frameOverlayTemplates = [
     "maskType": "rounded-rectangles",
     "photoWindows": [
       {
-        "x": 152,
+        "x": 114,
         "y": 230,
-        "width": 419,
+        "width": 492,
         "height": 375,
         "radius": 28
       },
       {
-        "x": 155,
+        "x": 114,
         "y": 730,
-        "width": 415,
+        "width": 492,
         "height": 375,
         "radius": 28
       },
       {
-        "x": 152,
+        "x": 114,
         "y": 1230,
-        "width": 419,
+        "width": 492,
         "height": 350,
         "radius": 28
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v6",
     "slotBackground": "#f4d7bc",
     "supportsDynamicText": false,
     "metadataZones": {

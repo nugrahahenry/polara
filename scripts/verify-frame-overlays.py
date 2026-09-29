@@ -32,9 +32,9 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
     "vintage-film-lofi.strip": (
         (720, 1800),
         [
-            {"x": 159, "y": 255, "width": 402, "height": 384},
-            {"x": 159, "y": 702, "width": 402, "height": 384},
-            {"x": 159, "y": 1149, "width": 402, "height": 384},
+            {"x": 120, "y": 255, "width": 480, "height": 384},
+            {"x": 120, "y": 702, "width": 480, "height": 384},
+            {"x": 120, "y": 1149, "width": 480, "height": 384},
         ],
     ),
     "seoul-snap-y2k.single": (
@@ -116,9 +116,9 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
     "postcard-club.strip": (
         (720, 1800),
         [
-            {"x": 152, "y": 230, "width": 419, "height": 375, "radius": 28},
-            {"x": 155, "y": 730, "width": 415, "height": 375, "radius": 28},
-            {"x": 152, "y": 1230, "width": 419, "height": 350, "radius": 28},
+            {"x": 114, "y": 230, "width": 492, "height": 375, "radius": 28},
+            {"x": 114, "y": 730, "width": 492, "height": 375, "radius": 28},
+            {"x": 114, "y": 1230, "width": 492, "height": 350, "radius": 28},
         ],
     ),
     "postcard-club-ink.single": (

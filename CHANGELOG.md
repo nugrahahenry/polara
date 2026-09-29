@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.45.2] - 2026-09-29
+
+### Changed
+- Vintage Film Lo-Fi dan Postcard Club Strip memakai jendela foto yang lebih lebar agar hasil tetap terasa penuh ketika pengguna tidak menambahkan dekorasi.
+- Border jendela dan thumbnail diregenerasi dari geometry manifest yang sama, dengan asset version v6 untuk dua Strip yang berubah agar cache browser tidak menampilkan overlay lama.
+
+### Validation
+- Exact export tetap Single 1080×1350 dan Strip 720×1800. Dua keluarga yang diremaster sekarang memiliki area foto minimum sekitar 40% dari canvas Strip.
+
 ## [0.45.1] - 2026-09-29
 
 ### Fixed

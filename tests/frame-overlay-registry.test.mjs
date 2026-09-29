@@ -24,9 +24,9 @@ const EXPECTED = {
   'vintage-film-lofi.strip': {
     mode: 'strip', canvas: { width: 720, height: 1800 },
     windows: [
-      { x: 159, y: 255, width: 402, height: 384 },
-      { x: 159, y: 702, width: 402, height: 384 },
-      { x: 159, y: 1149, width: 402, height: 384 },
+      { x: 120, y: 255, width: 480, height: 384 },
+      { x: 120, y: 702, width: 480, height: 384 },
+      { x: 120, y: 1149, width: 480, height: 384 },
     ],
   },
   'seoul-snap-y2k.single': {
@@ -108,9 +108,9 @@ const EXPECTED = {
   'postcard-club.strip': {
     mode: 'strip', canvas: { width: 720, height: 1800 }, maskType: 'rounded-rectangles',
     windows: [
-      { x: 152, y: 230, width: 419, height: 375, radius: 28 },
-      { x: 155, y: 730, width: 415, height: 375, radius: 28 },
-      { x: 152, y: 1230, width: 419, height: 350, radius: 28 },
+      { x: 114, y: 230, width: 492, height: 375, radius: 28 },
+      { x: 114, y: 730, width: 492, height: 375, radius: 28 },
+      { x: 114, y: 1230, width: 492, height: 350, radius: 28 },
     ],
   },
   'postcard-club-ink.single': {
@@ -186,4 +186,17 @@ test('registry generated memisahkan overlay export dari picker thumbnail runtime
   });
 
   assert.equal(new Set(frameOverlayTemplates.map((template) => template.pickerThumbnailSrc)).size, 24);
+});
+
+
+test('photo-first Strip remaster keeps the base result visually full without stickers', () => {
+  for (const id of ['vintage-film-lofi.strip', 'postcard-club.strip']) {
+    const template = frameOverlayTemplates.find((entry) => entry.id === id);
+    const photoArea = template.photoWindows.reduce(
+      (sum, window) => sum + window.width * window.height,
+      0,
+    );
+    const canvasArea = template.canvas.width * template.canvas.height;
+    assert.ok(photoArea / canvasArea >= 0.4, `${id} should keep at least 40% photo area`);
+  }
 });

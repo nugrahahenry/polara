@@ -490,30 +490,30 @@
       "canvasHeight": 1800,
       "photoWindows": [
         {
-          "x": 159,
+          "x": 120,
           "y": 255,
-          "width": 402,
+          "width": 480,
           "height": 384
         },
         {
-          "x": 159,
+          "x": 120,
           "y": 702,
-          "width": 402,
+          "width": 480,
           "height": 384
         },
         {
-          "x": 159,
+          "x": 120,
           "y": 1149,
-          "width": 402,
+          "width": 480,
           "height": 384
         }
       ],
       "masterSrc": "assets/_originals/frames/vintage-film-lofi-strip-overlay-master.png",
-      "sha256": "f71a29cc10683590fa8305aa294158c74cc9fba50c7d1234cc5b23f148ca86a4",
-      "byteSize": 298575,
+      "sha256": "4cba7288bd8b432a466dc232b6bdfb62b9c7edfb75713d79d65b29eb71c1993e",
+      "byteSize": 275958,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v6",
       "slotBackground": "#1c191b",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -966,23 +966,23 @@
       "maskType": "rounded-rectangles",
       "photoWindows": [
         {
-          "x": 152,
+          "x": 114,
           "y": 230,
-          "width": 419,
+          "width": 492,
           "height": 375,
           "radius": 28
         },
         {
-          "x": 155,
+          "x": 114,
           "y": 730,
-          "width": 415,
+          "width": 492,
           "height": 375,
           "radius": 28
         },
         {
-          "x": 152,
+          "x": 114,
           "y": 1230,
-          "width": 419,
+          "width": 492,
           "height": 350,
           "radius": 28
         }
@@ -992,11 +992,11 @@
       "pickerThumbnailSrc": "assets/frames/composites/postcard-club-strip-thumbnail.png",
       "canvasWidth": 720,
       "canvasHeight": 1800,
-      "sha256": "aa9c90af6317becf38c442d5d1c67f4ad809c4c1f0d4b7b1a9fb5743eb72febc",
-      "byteSize": 743882,
+      "sha256": "2381c3b08c5e4e482aa03a6fa802b8eaeeb4ebfdebc0d8f894ba028d1289478b",
+      "byteSize": 529711,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v6",
       "qualityProfile": "polara-proof-edge-v2",
       "edgePalette": [
         "#d88968",

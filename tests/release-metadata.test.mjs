@@ -16,8 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.45.1 seated companion polish', () => {
-  assert.equal(packageJson.version, '0.45.1');
+test('release metadata records the v0.45.2 photo-first Strip remaster', () => {
+  assert.equal(packageJson.version, '0.45.2');
+  assert.match(changelog, /## \[0\.45\.2\] - 2026-09-29/);
+  assert.match(changelog, /Vintage Film Lo-Fi dan Postcard Club Strip/i);
+  assert.match(changelog, /jendela foto yang lebih lebar/i);
+  assert.match(changelog, /area foto minimum sekitar 40%/i);
   assert.match(changelog, /## \[0\.45\.1\] - 2026-09-29/);
   assert.match(changelog, /Sit together/i);
   assert.match(changelog, /rasio visual yang sama/i);
