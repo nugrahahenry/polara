@@ -2,6 +2,7 @@
 // Render template + foto + sticker dan export PNG exact-size.
 import { toPng } from 'https://esm.sh/html-to-image@1.11.11';
 import { applyPhotoGeometry, drawPhotoGeometry } from './photo-geometry.js';
+import { clampStickerToCanvas } from './sticker-geometry.js';
 
 export function renderTemplate(containerEl, html) {
   containerEl.innerHTML = html;
@@ -217,6 +218,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
   const handleSize = Math.max(76, 44 / displayScale);
 
   stickers.forEach((item) => {
+    clampStickerToCanvas(item, canvasWidth, canvasHeight);
     const size = canvasWidth * item.scale;
     const wrap = document.createElement('div');
     const selected = interactive && item.uid === options.selectedId;
@@ -317,6 +319,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
       const scale = screenToCanvas();
       item.x = clamp(originX + ((event.clientX - startX) * scale) / canvasWidth, 0, 1);
       item.y = clamp(originY + ((event.clientY - startY) * scale) / canvasHeight, 0, 1);
+      clampStickerToCanvas(item, canvasWidth, canvasHeight);
       apply();
     });
     const stopDrag = () => { dragging = false; wrap.style.cursor = 'grab'; };
@@ -335,6 +338,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
       if (!rotating) return;
       const center = centerOnScreen();
       item.rotation = Math.atan2(event.clientY - center.y, event.clientX - center.x) * 180 / Math.PI - rotationOffset;
+      clampStickerToCanvas(item, canvasWidth, canvasHeight);
       apply();
     });
     const stopRotate = () => { rotating = false; };
@@ -351,6 +355,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
       const center = centerOnScreen();
       const sizePx = Math.hypot(event.clientX - center.x, event.clientY - center.y) * screenToCanvas() * 1.414;
       item.scale = clamp(sizePx / canvasWidth, item.minScale || .08, item.maxScale || .42);
+      clampStickerToCanvas(item, canvasWidth, canvasHeight);
       apply();
     });
     const stopResize = () => { resizing = false; };
@@ -383,6 +388,7 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
         options.onDelete?.(item.uid);
         return;
       }
+      clampStickerToCanvas(item, canvasWidth, canvasHeight);
       apply();
     });
 

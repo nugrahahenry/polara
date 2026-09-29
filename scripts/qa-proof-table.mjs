@@ -337,6 +337,32 @@ async function startPage(context) {
   return page;
 }
 
+async function auditStickerBounds(page) {
+  return page.evaluate(() => {
+    const canvas = document.querySelector('.ph-canvas');
+    const canvasBounds = canvas?.getBoundingClientRect();
+    if (!canvasBounds) return { complete: false, stickers: [] };
+    const stickers = [...document.querySelectorAll('.placed-sticker img')].map((image) => {
+      const bounds = image.getBoundingClientRect();
+      return {
+        left: bounds.left - canvasBounds.left,
+        top: bounds.top - canvasBounds.top,
+        right: bounds.right - canvasBounds.left,
+        bottom: bounds.bottom - canvasBounds.top,
+      };
+    });
+    return {
+      complete: stickers.every((bounds) => (
+        bounds.left >= -0.5
+        && bounds.top >= -0.5
+        && bounds.right <= canvasBounds.width + 0.5
+        && bounds.bottom <= canvasBounds.height + 0.5
+      )),
+      stickers,
+    };
+  });
+}
+
 async function auditFrameEdition(page) {
   return page.evaluate(() => {
     const dossier = document.querySelector('#frameEditionDossier');
@@ -786,6 +812,14 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.match(await page.locator('#proofBuddyImage').getAttribute('src'), /poca-decorate-guide\.png$/);
   await page.locator('#undoStickerBtn').click();
   assert.equal(await page.locator('.placed-sticker').count(), 1);
+
+  await page.locator('.placed-sticker').first().focus({ preventScroll: true });
+  await page.keyboard.press('Shift+ArrowRight');
+  await page.keyboard.press('Shift+ArrowRight');
+  await page.keyboard.press('Shift+ArrowUp');
+  await page.keyboard.press('Shift+ArrowUp');
+  await page.waitForFunction(() => [...document.querySelectorAll('.placed-sticker img')].every((image) => image.complete && image.naturalWidth > 0));
+  assert.equal((await auditStickerBounds(page)).complete, true, `${name}: sticker artwork must remain inside the proof canvas`);
 
   const persistedStickerRailX = await page.locator('#stickerTray').evaluate((rail) => {
     rail.scrollLeft = rail.scrollWidth;

@@ -5,6 +5,14 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.44.0] - 2026-09-29
+
+### Fixed
+- Sticker yang dipindah, diputar, atau diperbesar sekarang otomatis tetap berada di dalam batas canvas dengan safe inset kecil. Dekorasi tidak lagi terpotong di preview atau export.
+
+### Validation
+- Geometry sticker yang sama dipakai saat render interaktif dan hasil PNG. Exact export tetap Single 1080×1350 dan Strip 720×1800.
+
 ## [0.43.0] - 2026-09-29
 
 ### Added

@@ -16,8 +16,10 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.43.0 seated pose expansion', () => {
-  assert.equal(packageJson.version, '0.43.0');
+test('release metadata records the v0.44.0 sticker safe-bounds fix', () => {
+  assert.equal(packageJson.version, '0.44.0');
+  assert.match(changelog, /## \[0\.44\.0\] - 2026-09-29/);
+  assert.match(changelog, /safe inset/i);
   assert.match(changelog, /## \[0\.43\.0\] - 2026-09-29/);
   assert.match(changelog, /Postcard Club character-free/);
   assert.match(changelog, /Ready to keep/);
@@ -107,7 +109,7 @@ test('release metadata records the v0.43.0 seated pose expansion', () => {
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=44/);
+  assert.match(indexHtml, /src\/app\.js\?v=45/);
   assert.match(indexHtml, /data-guest-layout="side-by-side"[^>]*>Sit together</);
   assert.match(indexHtml, /styles\/proof-table\.css\?v=357/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);

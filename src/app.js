@@ -6,7 +6,7 @@ import {
 import {
   renderTemplate, setPhotoSlot, refreshPhotoSlots, setMeta, exportPng, exportRawPng,
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
-} from './core/compositor.js';
+} from './core/compositor.js?v=2';
 import { applyPhotoGeometry, initializePhotosForFrame, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
 import { frameCollections, templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=17';
 import { applyPhotoSlotPresentation, getPhotoSlotPresentation } from './modules/templates/photo-slot-ui.js';
