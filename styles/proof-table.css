@@ -1394,6 +1394,12 @@ input, textarea { caret-color: var(--pink-deep); }
 @media (min-width: 1180px) {
   .stage-docket,
   .stage-footline { display: flex; }
+  /* Give the tall Strip proof a deliberate paper deck on wide screens so the
+     portrait print reads as an object, not a narrow column lost in whitespace. */
+  .canvas-stage[data-proof-mode="strip"] {
+    --proof-deck-width: min(68%, 560px);
+    --proof-deck-height: min(96%, 780px);
+  }
 }
 
 .privacy-dialog { width: min(660px, calc(100% - 30px)); border: 0; border-radius: 18px; box-shadow: 0 28px 90px rgba(75,46,31,.25); }

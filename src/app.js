@@ -21,7 +21,7 @@ import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
   getGuest, getGuestOptions, getGuestRuntimeAssets, poseGuideForSlot,
   retryWithoutGuestOnFailure,
-} from './modules/guests/index.js?v=7';
+} from './modules/guests/index.js?v=8';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';

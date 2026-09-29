@@ -153,9 +153,12 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   assert.equal(sideBySide.flipGuest, true);
   assert.equal(sideBySide.asset.pose, 'seated');
   assert.equal(sideBySide.asset.src, 'assets/guests/polara-pm-01-seated.png');
-  assert.deepEqual(sideBySide.guestRegion, { x: 0.02, y: 0.24, width: 0.38, height: 0.62 });
+  assert.deepEqual(sideBySide.guestRegion, { x: 0.02, y: 0.25, width: 0.44, height: 0.6 });
   assert.deepEqual(sideBySide.userRegion, { x: 0, y: 0, width: 1, height: 1 });
-  assert.deepEqual(sideBySide.guestCrop, { x: 0.02, y: 0, width: 0.96, height: 0.76 });
+  assert.deepEqual(sideBySide.guestCrop, { x: 0.18, y: 0.02, width: 0.64, height: 0.88 });
+  const cropRatio = sideBySide.guestCrop.width / sideBySide.guestCrop.height;
+  const regionRatio = sideBySide.guestRegion.width / sideBySide.guestRegion.height;
+  assert.ok(Math.abs(cropRatio - regionRatio) < 0.05, 'seated guest crop and render region should share the same visual ratio');
   assert.equal(guestModule.poseGuideForSlot(2, 3), 'Half-heart');
   assert.equal(guestModule.poseGuideForSlot(0, 3, 'side-by-side'), 'Relaxed');
   assert.equal(guestModule.poseGuideForSlot(1, 3, 'side-by-side'), 'Wave');

@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.45.1] - 2026-09-29
+
+### Fixed
+- Sit together sekarang memakai crop bust duduk dan render region dengan rasio visual yang sama, sehingga companion tidak lagi terjepit atau terlihat gepeng pada picker, preview, dan hasil akhir.
+- Proof deck Strip di desktop diperlebar sebagai lapisan UI-only agar frame terasa seperti lembar foto yang sengaja dipajang, bukan kolom sempit yang tenggelam di ruang kosong.
+
+### Validation
+- Geometry compositor tetap shared antara preview dan export. Ukuran export tetap Single 1080×1350 dan Strip 720×1800.
+
 ## [0.45.0] - 2026-09-29
 
 ### Added
