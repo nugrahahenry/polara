@@ -112,6 +112,18 @@ export const universalStickers = [
     id: 'film-flash', type: 'sticker', category: 'accent', name: 'Film Flash', src: STICKER + 'film-flash.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .8, y: .72, scale: .16, rotation: 6 }, minScale: .08, maxScale: .4,
   },
+  {
+    id: 'paper-bow', type: 'sticker', category: 'prop', name: 'Paper Bow', src: STICKER + 'paper-bow.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .18, y: .22, scale: .16, rotation: -8 }, minScale: .08, maxScale: .38,
+  },
+  {
+    id: 'love-envelope', type: 'sticker', category: 'charm', name: 'Love Letter', src: STICKER + 'love-envelope.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .82, y: .5, scale: .18, rotation: 5 }, minScale: .09, maxScale: .4,
+  },
+  {
+    id: 'botanical-sprig', type: 'sticker', category: 'accent', name: 'Botanical Sprig', src: STICKER + 'botanical-sprig.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .18, y: .72, scale: .18, rotation: -10 }, minScale: .09, maxScale: .4,
+  },
 ];
 
 export const exclusiveStickers = [

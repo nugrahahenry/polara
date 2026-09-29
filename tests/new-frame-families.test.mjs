@@ -19,9 +19,9 @@ test('Cloud Picnic and Lucky Ticket ship complete Single, Strip, and exclusive s
   }
 });
 
-test('new family provenance rejects public figures and collaboration claims', () => {
+test('generated sticker provenance rejects public figures and collaboration claims', () => {
   const provenance = JSON.parse(fs.readFileSync(new URL('../assets/sticker-provenance.json', import.meta.url), 'utf8'));
-  assert.equal(provenance.assets.length, 3);
+  assert.equal(provenance.assets.length, 7);
   assert.ok(provenance.assets.every((asset) => asset.kind === 'original-fictional'));
   assert.ok(provenance.assets.every((asset) => asset.publicFigure === false));
   assert.ok(provenance.assets.every((asset) => asset.collaborationClaim === false));

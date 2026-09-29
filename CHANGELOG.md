@@ -5,6 +5,18 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.45.0] - 2026-09-29
+
+### Added
+- Memperluas Sticker Workshop menjadi 26 premium sticker universal dengan Paper Bow, Love Letter, dan Botanical Sprig yang memakai gaya paper-cut Polara.
+
+### Changed
+- Sent With Love diremaster dari overlay baru yang lebih terbaca pada ukuran picker dan tetap aman saat ditempatkan dekat tepi canvas.
+- Provenance runtime mencatat empat aset hasil imagegen yang sudah melalui alpha cleanup lokal.
+
+### Validation
+- Preview dan export memakai registry sticker yang sama. Exact export tetap Single 1080×1350 dan Strip 720×1800.
+
 ## [0.44.0] - 2026-09-29
 
 ### Fixed

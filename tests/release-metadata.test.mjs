@@ -16,9 +16,15 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.44.0 sticker safe-bounds fix', () => {
-  assert.equal(packageJson.version, '0.44.0');
-  assert.match(changelog, /## \[0\.44\.0\] - 2026-09-29/);
+test('release metadata records the v0.45.0 premium sticker expansion', () => {
+  assert.equal(packageJson.version, '0.45.0');
+  assert.match(changelog, /## \[0\.45\.0\] - 2026-09-29/);
+  assert.match(changelog, /premium sticker/i);
+  assert.match(changelog, /Paper Bow/i);
+  assert.match(changelog, /Love Letter/i);
+  assert.match(changelog, /Botanical Sprig/i);
+  assert.match(changelog, /Sent With Love/i);
+  assert.match(changelog, /26 .*universal/i);
   assert.match(changelog, /safe inset/i);
   assert.match(changelog, /## \[0\.43\.0\] - 2026-09-29/);
   assert.match(changelog, /Postcard Club character-free/);
@@ -109,7 +115,7 @@ test('release metadata records the v0.44.0 sticker safe-bounds fix', () => {
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=45/);
+  assert.match(indexHtml, /src\/app\.js\?v=46/);
   assert.match(indexHtml, /data-guest-layout="side-by-side"[^>]*>Sit together</);
   assert.match(indexHtml, /styles\/proof-table\.css\?v=357/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);

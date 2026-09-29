@@ -30,6 +30,46 @@
       "collaborationClaim": false,
       "background": "transparent",
       "hiddenRgbPolicy": "zero-at-alpha-0"
+    },
+    {
+      "runtimeSrc": "assets/stickers/postmark-heart.png",
+      "sha256": "6155355ebdce9bdd173cf21f0afa73e4b6eabba24412a123fd3055a0331ed872",
+      "kind": "original-fictional",
+      "sourceMode": "built-in-imagegen-plus-local-alpha-cleanup",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "background": "transparent",
+      "hiddenRgbPolicy": "zero-at-alpha-0"
+    },
+    {
+      "runtimeSrc": "assets/stickers/paper-bow.png",
+      "sha256": "d1756f5360ab3d9e690acab763801aaacb1586ff4addc8d7af3355f71c145718",
+      "kind": "original-fictional",
+      "sourceMode": "built-in-imagegen-plus-local-alpha-cleanup",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "background": "transparent",
+      "hiddenRgbPolicy": "zero-at-alpha-0"
+    },
+    {
+      "runtimeSrc": "assets/stickers/love-envelope.png",
+      "sha256": "f454419302ba7eb9a69c326ba366b951e39caf0fd45470b407d540bd7b3fa608",
+      "kind": "original-fictional",
+      "sourceMode": "built-in-imagegen-plus-local-alpha-cleanup",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "background": "transparent",
+      "hiddenRgbPolicy": "zero-at-alpha-0"
+    },
+    {
+      "runtimeSrc": "assets/stickers/botanical-sprig.png",
+      "sha256": "f7bc0cd0fd411f9dc246d0c137125bcf2554f2310599897e94b78df56be3375a",
+      "kind": "original-fictional",
+      "sourceMode": "built-in-imagegen-plus-local-alpha-cleanup",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "background": "transparent",
+      "hiddenRgbPolicy": "zero-at-alpha-0"
     }
   ]
 }

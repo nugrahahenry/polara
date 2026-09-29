@@ -16,7 +16,7 @@ import {
   isRequestedFrameStillSelected,
   templateSupportsDynamicText,
 } from './modules/templates/template-ui.js?v=13';
-import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=3';
+import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=4';
 import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
   getGuest, getGuestOptions, getGuestRuntimeAssets, poseGuideForSlot,
@@ -1474,9 +1474,10 @@ function renderStickerTray() {
   const template = getTemplate(state.frameId);
   const stickerPack = getStickerPack(template?.familyId);
   const exclusive = stickerPack.find((asset) => asset.exclusiveFamilyId === template?.familyId);
+  const universalCount = stickerPack.filter((asset) => !asset.exclusiveFamilyId).length;
   if (refs.stickerRailMeta) refs.stickerRailMeta.textContent = exclusive
-    ? `${exclusive.name} + 23 universal`
-    : '23 universal stickers';
+    ? `${exclusive.name} + ${universalCount} universal`
+    : `${universalCount} universal stickers`;
   refs.stickerTray.setAttribute('aria-label', `Add a sticker for ${template?.name || 'the selected frame'}`);
   stickerPack.forEach((asset, index) => {
     const button = document.createElement('button');
