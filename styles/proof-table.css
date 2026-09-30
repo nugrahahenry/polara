@@ -1337,20 +1337,17 @@ input, textarea { caret-color: var(--pink-deep); }
   font: 800 clamp(.6rem, 1.5vw, .76rem)/1 var(--font-ui);
   white-space: nowrap;
 }
-.pose-guest-preview,
-.review-guest {
+.pose-guest-layer {
   position: absolute;
   z-index: 4;
-  left: var(--pose-guest-x);
-  top: var(--pose-guest-y);
-  width: var(--pose-guest-width);
-  height: var(--pose-guest-height);
-  max-width: none;
-  object-fit: contain;
-  object-position: center bottom;
-  transform: var(--pose-guest-transform);
-  transform-origin: center bottom;
+  overflow: hidden;
   filter: drop-shadow(0 9px 13px rgba(75,46,31,.19));
+  pointer-events: none;
+}
+.pose-guest-preview,
+.review-guest {
+  display: block;
+  max-width: none;
   pointer-events: none;
 }
 .review-photo-wrap[data-pose-mate="true"] { background: linear-gradient(145deg, #ffe8f2, #dcefff); }

@@ -299,7 +299,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=358" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=359" />
 </head>
 <body>
   <!--
@@ -381,8 +381,10 @@
             <div id="cameraWrap" data-camera-state="idle">
               <video id="video" autoplay playsinline muted></video>
               <div class="pose-user-guide" id="poseUserGuide" aria-hidden="true" hidden></div>
-            <!-- impeccable-disable-next-line broken-image: camera composition assigns the verified pose source before unhiding this image -->
-            <img class="pose-guest-preview" id="poseGuestPreview" alt="" hidden />
+            <div class="pose-guest-layer" id="poseGuestLayer" hidden>
+              <!-- impeccable-disable-next-line broken-image: camera composition assigns the verified pose source before unhiding this image -->
+              <img class="pose-guest-preview" id="poseGuestPreview" alt="" />
+            </div>
               <div class="camera-guide" aria-hidden="true"></div>
               <div class="shot-badge" id="shotBadge" aria-live="polite" hidden></div>
               <div id="cameraOverlay">
@@ -421,8 +423,10 @@
               <div class="review-photo-region" id="reviewPhotoRegion">
                 <img id="reviewPhoto" src="assets/brand/logo-polara.png" alt="Selected photo" />
               </div>
-              <!-- impeccable-disable-next-line broken-image: Review assigns the verified pose source before unhiding this image -->
-              <img class="review-guest" id="reviewGuest" alt="" hidden />
+              <div class="pose-guest-layer" id="reviewGuestLayer" hidden>
+                <!-- impeccable-disable-next-line broken-image: Review assigns the verified pose source before unhiding this image -->
+                <img class="review-guest" id="reviewGuest" alt="" />
+              </div>
             </div>
           </div>
           <p class="review-caption" id="reviewCaption">
@@ -711,6 +715,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=48"></script>
+  <script type="module" src="src/app.js?v=49"></script>
 </body>
 </html>

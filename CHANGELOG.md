@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.45.6] - 2026-09-30
+
+### Fixed
+- Geometry Pose Mate sekarang dihitung dalam piksel dari satu helper bersama. Guest tidak lagi diregangkan oleh persentase lebar dan tinggi yang berbeda pada slot potret, dan Sit together tetap menapak di dalam photo window.
+- Camera, Review, Frame, Reveal, dan export memakai layer clip yang sama untuk guest. Review mengikuti bounds foto yang benar saat foto contain sehingga companion tidak muncul di area mat di luar foto.
+
+### Validation
+- Ditambahkan regresi proporsi source, sisi kiri/kanan, viewport Review, retake per-slot, dan kontrak ukuran Single 1080×1350 serta Strip 720×1800. Tidak ada backend, database, akun, cloud, AI, atau perubahan pada flow canonical.
+
 ## [0.45.5] - 2026-09-30
 
 ### Fixed

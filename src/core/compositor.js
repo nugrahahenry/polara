@@ -3,6 +3,7 @@
 import { toPng } from 'https://esm.sh/html-to-image@1.11.11';
 import { applyPhotoGeometry, drawPhotoGeometry } from './photo-geometry.js';
 import { clampStickerToCanvas } from './sticker-geometry.js';
+import { applyGuestImageGeometry, computeGuestGeometry, drawGuestGeometry } from './guest-geometry.js';
 
 export function renderTemplate(containerEl, html) {
   containerEl.innerHTML = html;
@@ -26,7 +27,7 @@ export function setPhotoSlot(canvasEl, slotNum, photo, options = {}) {
   const slotPosition = slot.ownerDocument.defaultView?.getComputedStyle(slot).position;
   if (!slotPosition || slotPosition === 'static') slot.style.position = 'relative';
   slot.style.overflow = 'hidden';
-  slot.querySelectorAll(':scope > .ph-photo, :scope > .ph-photo-region, :scope > .ph-guest')
+  slot.querySelectorAll(':scope > .ph-photo, :scope > .ph-photo-region, :scope > .ph-guest, :scope > .pose-guest-layer')
     .forEach((item) => item.remove());
   const image = document.createElement('img');
   image.className = 'ph-photo';
@@ -57,7 +58,7 @@ export function setPhotoSlot(canvasEl, slotNum, photo, options = {}) {
 
   if (guestComposition) {
     const guest = document.createElement('img');
-    const region = guestComposition.guestRegion;
+    const layer = document.createElement('div');
     guest.className = 'ph-guest';
     guest.src = guestComposition.asset.src;
     guest.alt = '';
@@ -66,33 +67,17 @@ export function setPhotoSlot(canvasEl, slotNum, photo, options = {}) {
       position: 'absolute',
       display: 'block',
       maxWidth: 'none',
-      transform: guestComposition.flipGuest ? 'scaleX(-1)' : 'none',
       pointerEvents: 'none',
-      zIndex: '2',
     });
-    const crop = guestComposition.guestCrop;
-    if (crop) {
-      // All production guest assets are square. Scale the source crop to cover
-      // the region, matching the canvas export path below.
-      const imageSize = Math.max(region.width / crop.width, region.height / crop.height);
-      guest.style.width = `${imageSize * 100}%`;
-      guest.style.height = `${imageSize * 100}%`;
-      guest.style.left = `${(region.x + region.width / 2 - (crop.x + crop.width / 2) * imageSize) * 100}%`;
-      guest.style.top = `${(region.y + region.height / 2 - (crop.y + crop.height / 2) * imageSize) * 100}%`;
-      guest.style.objectFit = 'fill';
-      guest.style.objectPosition = 'center';
-      guest.style.transformOrigin = 'center center';
-    } else {
-      guest.style.left = `${region.x * 100}%`;
-      guest.style.top = `${region.y * 100}%`;
-      guest.style.width = `${region.width * 100}%`;
-      guest.style.height = `${region.height * 100}%`;
-      guest.style.objectFit = 'contain';
-      guest.style.objectPosition = 'center bottom';
-      guest.style.transformOrigin = 'center bottom';
-    }
+    layer.className = 'pose-guest-layer';
+    layer.dataset.guestAsset = guestComposition.asset.id;
+    layer.style.zIndex = '2';
+    layer.appendChild(guest);
     guest.addEventListener('error', () => onGuestAssetError?.(guestComposition.asset), { once: true });
-    slot.appendChild(guest);
+    slot.appendChild(layer);
+    const applyGuest = () => applyGuestImageGeometry(guest, guestComposition, { container: slot });
+    guest.addEventListener('load', applyGuest, { once: true });
+    if (guest.complete) requestAnimationFrame(applyGuest);
   }
 }
 
@@ -100,7 +85,7 @@ export function clearPhotoSlot(canvasEl, slotNum) {
   const slot = canvasEl?.querySelector(`.ph-slot[data-slot="${slotNum}"]`)
     || canvasEl?.querySelectorAll('.ph-slot')[slotNum - 1];
   if (!slot) return;
-  slot.querySelectorAll(':scope > .ph-photo, :scope > .ph-photo-region, :scope > .ph-guest')
+  slot.querySelectorAll(':scope > .ph-photo, :scope > .ph-photo-region, :scope > .ph-guest, :scope > .pose-guest-layer')
     .forEach((item) => item.remove());
 }
 
@@ -441,7 +426,6 @@ export async function exportRawPng(photos, mode, options = {}) {
 
 function drawGuestComposition(ctx, photoImage, photo, guestImage, composition, x, y, width, height) {
   const user = composition.userRegion;
-  const guest = composition.guestRegion;
   drawPhotoGeometry(
     ctx,
     photoImage,
@@ -452,37 +436,16 @@ function drawGuestComposition(ctx, photoImage, photo, guestImage, composition, x
     user.height * height,
   );
 
-  const regionX = x + guest.x * width;
-  const regionY = y + guest.y * height;
-  const regionWidth = guest.width * width;
-  const regionHeight = guest.height * height;
-  const crop = composition.guestCrop;
-  const sourceX = crop ? crop.x * guestImage.naturalWidth : 0;
-  const sourceY = crop ? crop.y * guestImage.naturalHeight : 0;
-  const sourceWidth = crop ? crop.width * guestImage.naturalWidth : guestImage.naturalWidth;
-  const sourceHeight = crop ? crop.height * guestImage.naturalHeight : guestImage.naturalHeight;
-  const scale = crop
-    ? Math.max(regionWidth / sourceWidth, regionHeight / sourceHeight)
-    : Math.min(regionWidth / sourceWidth, regionHeight / sourceHeight);
-  const drawWidth = sourceWidth * scale;
-  const drawHeight = sourceHeight * scale;
-  const drawX = (regionWidth - drawWidth) / 2;
-  // Keep the cropped bust on the same lower baseline as the camera preview.
-  // The visible source crop can overflow upward, but never appears to float
-  // below the shared photo window.
-  const drawY = regionY + regionHeight - drawHeight;
-  ctx.save();
-  ctx.beginPath();
-  ctx.rect(regionX, regionY, regionWidth, regionHeight);
-  ctx.clip();
-  if (composition.flipGuest) {
-    ctx.translate(regionX + regionWidth, 0);
-    ctx.scale(-1, 1);
-    ctx.drawImage(guestImage, sourceX, sourceY, sourceWidth, sourceHeight, drawX, drawY, drawWidth, drawHeight);
-  } else {
-    ctx.drawImage(guestImage, sourceX, sourceY, sourceWidth, sourceHeight, regionX + drawX, drawY, drawWidth, drawHeight);
-  }
-  ctx.restore();
+  const geometry = computeGuestGeometry(
+    composition,
+    guestImage.naturalWidth,
+    guestImage.naturalHeight,
+    width,
+    height,
+    x,
+    y,
+  );
+  drawGuestGeometry(ctx, guestImage, geometry);
 }
 
 function loadImage(src, label = 'photo') {

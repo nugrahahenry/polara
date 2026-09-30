@@ -2,6 +2,7 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs/promises';
 import { createHash } from 'node:crypto';
+import { computeGuestGeometry, guestGeometryInvariant } from '../src/core/guest-geometry.js';
 
 
 const root = new URL('../', import.meta.url);
@@ -159,7 +160,7 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   const cropRatio = sideBySide.guestCrop.width / sideBySide.guestCrop.height;
   const regionRatio = sideBySide.guestRegion.width / sideBySide.guestRegion.height;
   assert.ok(Math.abs(cropRatio - regionRatio) < 0.2, 'seated bust crop and render region should stay visually compatible');
-  assert.ok(sideBySide.guestRegion.y + sideBySide.guestRegion.height >= 0.94, 'seated guest should land on the lower camera baseline');
+  assert.equal(sideBySide.guestRegion.y + sideBySide.guestRegion.height, 0.94, 'seated guest should land on the lower camera baseline');
   assert.equal(guestModule.poseGuideForSlot(2, 3), 'Half-heart');
   assert.equal(guestModule.poseGuideForSlot(0, 3, 'side-by-side'), 'Relaxed');
   assert.equal(guestModule.poseGuideForSlot(1, 3, 'side-by-side'), 'Wave');
@@ -167,6 +168,29 @@ test('guest registry keeps matched gesture and side-by-side geometry pure and de
   assert.equal(guestModule.createGuestComposition({
     experience: 'pose-mate', guestId: 'unknown-guest',
   }), null);
+});
+
+test('Pose Mate keeps source aspect ratio across portrait preview and export geometry', async () => {
+  const guestModule = await import('../src/modules/guests/index.js');
+  for (const layout of ['matched', 'side-by-side']) {
+    for (const side of ['left', 'right']) {
+      const composition = guestModule.createGuestComposition({
+        experience: 'pose-mate', guestId: 'polara-pm-02', layout, side, mode: 3, slotIndex: 1,
+      });
+      const geometry = computeGuestGeometry(composition, 1254, 1254, 720, 600);
+      assert.ok(guestGeometryInvariant(geometry), `${layout}/${side} geometry must stay proportional`);
+      assert.equal(Math.round(geometry.region.y + geometry.region.height), layout === 'side-by-side' ? 564 : 600);
+      assert.equal(Math.round(geometry.image.width / geometry.image.height * 1e6), 1e6);
+    }
+  }
+  const review = computeGuestGeometry(
+    guestModule.createGuestComposition({ experience: 'pose-mate', guestId: 'polara-pm-01', layout: 'side-by-side', side: 'right', mode: 3, slotIndex: 0 }),
+    1254, 1254, 320, 240, 120, 80,
+  );
+  assert.deepEqual(review.viewport, { x: 120, y: 80, width: 320, height: 240 });
+  assert.equal(review.region.x, 280);
+  assert.equal(review.region.y, 185.6);
+  assert.equal(review.region.y + review.region.height, 305.6);
 });
 
 
@@ -228,10 +252,13 @@ test('camera, review, preview, and raw export all receive the same guest composi
   assert.match(compositor, /className\s*=\s*'ph-guest'/);
   assert.match(compositor, /drawGuestComposition/);
   assert.match(compositor, /resolveGuestComposition/);
-  assert.match(compositor, /guestComposition\.guestCrop/);
-  assert.match(compositor, /drawY = regionY \+ regionHeight - drawHeight/);
+  assert.match(compositor, /computeGuestGeometry/);
+  assert.match(compositor, /drawGuestGeometry/);
+  assert.match(compositor, /pose-guest-layer/);
   assert.match(app, /applyGuestImageGeometry/);
-  assert.match(app, /clipPath/);
+  assert.match(app, /getReviewGuestViewport/);
+  assert.match(app, /poseGuestLayer/);
+  assert.doesNotMatch(app, /clipPath/);
   assert.doesNotMatch(app, /objectFit = 'fill'/);
 });
 

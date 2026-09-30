@@ -924,6 +924,110 @@ async function runSingleExport() {
   return exported;
 }
 
+async function auditPoseMateGeometry(page, stage) {
+  return page.evaluate((currentStage) => {
+    const inside = (child, parent, tolerance = 1.5) => {
+      const a = child?.getBoundingClientRect();
+      const b = parent?.getBoundingClientRect();
+      return Boolean(a && b && a.width > 0 && a.height > 0
+        && a.left >= b.left - tolerance
+        && a.top >= b.top - tolerance
+        && a.right <= b.right + tolerance
+        && a.bottom <= b.bottom + tolerance);
+    };
+    const layer = document.querySelector(currentStage === 'frame'
+      ? '#canvasScale .pose-guest-layer'
+      : currentStage === 'review' ? '#reviewGuestLayer' : '#poseGuestLayer');
+    const parent = currentStage === 'frame'
+      ? layer?.closest('.ph-slot')
+      : currentStage === 'review' ? document.querySelector('#reviewPhoto') : document.querySelector('#cameraWrap');
+    const image = layer?.querySelector('img');
+    const imageRect = image?.getBoundingClientRect();
+    const box = (selector) => {
+      const element = document.querySelector(selector);
+      if (!element) return null;
+      const rect = element.getBoundingClientRect();
+      return { hidden: element.hidden, width: rect.width, height: rect.height, x: rect.x, y: rect.y };
+    };
+    return {
+      insideParent: inside(layer, parent),
+      layerWidth: layer?.getBoundingClientRect().width || 0,
+      layerHeight: layer?.getBoundingClientRect().height || 0,
+      imageRatio: imageRect?.height ? imageRect.width / imageRect.height : 0,
+      imageLoaded: Boolean(image?.complete && image.naturalWidth > 0),
+      window: box('#reviewPoseWindow'),
+      region: box('#reviewPhotoRegion'),
+      photo: box('#reviewPhoto'),
+      reviewView: box('#reviewView'),
+      reviewStage: box('.review-stage'),
+      stageShell: box('.stage-shell'),
+    };
+  }, stage);
+}
+
+async function runPoseMateAudit() {
+  const matrix = [
+    { guest: 'polara-pm-01', layout: 'matched', side: 'right', mode: 1, viewport: { width: 390, height: 844 } },
+    { guest: 'polara-pm-02', layout: 'matched', side: 'left', mode: 3, viewport: { width: 390, height: 844 } },
+    { guest: 'polara-pm-01', layout: 'side-by-side', side: 'right', mode: 1, viewport: { width: 768, height: 1024 } },
+    { guest: 'polara-pm-02', layout: 'side-by-side', side: 'left', mode: 3, viewport: { width: 768, height: 1024 } },
+  ];
+  report.poseMate = {};
+  for (const item of matrix) {
+    const context = await browser.newContext({
+      viewport: item.viewport,
+      permissions: ['camera'],
+      reducedMotion: 'reduce',
+      acceptDownloads: true,
+    });
+    const page = await startPage(context);
+    const key = `${item.guest}-${item.layout}-${item.side}-mode${item.mode}`;
+    await page.locator('[data-experience="pose-mate"]').click();
+    await page.locator('#guestChoose').waitFor({ state: 'visible', timeout: 30_000 });
+    await page.locator(`[data-guest-id="${item.guest}"]`).click();
+    await page.locator(`[data-guest-id="${item.guest}"][aria-pressed="true"]`).waitFor({ state: 'visible', timeout: 30_000 });
+    await page.locator(`[data-mode="${item.mode}"]`).click();
+    await page.locator('#primaryBtn').click();
+    await waitForCameraReady(page);
+    await page.locator(`[data-panel="camera"] [data-guest-layout="${item.layout}"]`).waitFor({ state: 'visible', timeout: 30_000 });
+    await page.locator(`[data-guest-layout="${item.layout}"]`).click();
+    if (item.side === 'left') await page.locator('#guestSideBtn').click();
+    await page.locator('#tertiaryBtn').click();
+    await page.locator('[data-timer="5"]').click();
+    assert.equal(await page.locator('[data-timer="5"]').getAttribute('aria-pressed'), 'true', `${key}: five second timer must be selectable`);
+    for (let slot = 0; slot < item.mode; slot += 1) await captureProof(page);
+    await waitForPanel(page, 'review');
+    await page.locator('#reviewView').waitFor({ state: 'visible', timeout: 30_000 });
+    await page.waitForFunction(() => {
+      const layer = document.querySelector('#reviewGuestLayer');
+      const image = layer?.querySelector('img');
+      return layer && !layer.hidden && image?.complete && image.naturalWidth > 0;
+    }, null, { timeout: 30_000 });
+    await page.waitForTimeout(200);
+    const review = await auditPoseMateGeometry(page, 'review');
+    assert.equal(review.insideParent, true, `${key}: Review guest must stay inside the visible photo ${JSON.stringify(review)}`);
+    assert.equal(review.imageLoaded, true, `${key}: Review guest asset must load`);
+    await page.locator('#primaryBtn').click();
+    await waitForPanel(page, 'frame');
+    await page.waitForFunction(() => [...document.querySelectorAll('#canvasScale .pose-guest-layer img')]
+      .every((image) => image.complete && image.naturalWidth > 0), null, { timeout: 30_000 });
+    const frame = await auditPoseMateGeometry(page, 'frame');
+    assert.equal(frame.insideParent, true, `${key}: Frame guest must stay inside the slot`);
+    await page.locator('#primaryBtn').click();
+    await waitForPanel(page, 'decorate');
+    await page.locator('#primaryBtn').click();
+    await page.waitForFunction(() => document.querySelector('#revealTitle')?.textContent === 'Proof approved.', null, { timeout: 40_000 });
+    const exported = await downloadPng(page, `pose-mate-${item.guest}-${item.layout}-mode${item.mode}.png`);
+    assert.deepEqual(
+      { width: exported.width, height: exported.height },
+      item.mode === 3 ? { width: 720, height: 1800 } : { width: 1080, height: 1350 },
+      `${key}: export dimensions must stay exact`,
+    );
+    report.poseMate[key] = { viewport: item.viewport, timer: 5, review, frame, export: exported };
+    await context.close();
+  }
+}
+
 const VARIANTS = [
   { id: 'poca-purikura.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
   { id: 'poca-purikura-blue.single', mode: 1, width: 1080, height: 1350, maskType: 'rectangles' },
@@ -1066,6 +1170,7 @@ try {
   await runFlow({ name: '768x1024', viewport: { width: 768, height: 1024 }, screenshots: true });
   await runFlow({ name: '900x510', viewport: { width: 900, height: 510 }, screenshots: true });
   report.exports.single = await runSingleExport();
+  await runPoseMateAudit();
   await runVariantExportMatrix();
   await runRapidTransitionRegression();
 

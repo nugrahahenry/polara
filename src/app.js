@@ -6,8 +6,9 @@ import {
 import {
   renderTemplate, setPhotoSlot, refreshPhotoSlots, setMeta, exportPng, exportRawPng,
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
-} from './core/compositor.js?v=2';
-import { applyPhotoGeometry, initializePhotosForFrame, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
+} from './core/compositor.js?v=3';
+import { applyPhotoGeometry, computePhotoGeometry, initializePhotosForFrame, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
+import { applyGuestImageGeometry } from './core/guest-geometry.js';
 import { frameCollections, templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=17';
 import { applyPhotoSlotPresentation, getPhotoSlotPresentation } from './modules/templates/photo-slot-ui.js';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
@@ -58,7 +59,7 @@ const refs = {
   guestOptionList: $('guestOptionList'), poseMateKicker: $('poseMateKicker'), poseMateTitle: $('poseMateTitle'), poseMateNote: $('poseMateNote'),
   guestLayoutChoose: $('guestLayoutChoose'), guestSide: $('guestSideBtn'), poseGuideText: $('poseGuideText'),
   video: $('video'), cameraWrap: $('cameraWrap'), cameraOverlay: $('cameraOverlay'),
-  poseUserGuide: $('poseUserGuide'), poseGuestPreview: $('poseGuestPreview'),
+  poseUserGuide: $('poseUserGuide'), poseGuestLayer: $('poseGuestLayer'), poseGuestPreview: $('poseGuestPreview'),
   cameraMessage: $('cameraMessage'), cameraOverlayTitle: $('cameraOverlayTitle'), cameraOverlayActions: $('cameraOverlayActions'),
   cameraBayCounter: $('cameraBayCounter'), cameraBayStatus: $('cameraBayStatus'),
   retryCamera: $('retryCameraBtn'), demoMode: $('demoModeBtn'), countdown: $('countdown'),
@@ -66,7 +67,7 @@ const refs = {
   countdownProgress: $('countdownProgress'), flash: $('flashLayer'),
   shotBadge: $('shotBadge'), cameraSlots: $('cameraSlots'), cameraPanelTitle: $('cameraPanelTitle'),
   cameraPanelCopy: $('cameraPanelCopy'), cameraStateNote: $('cameraStateNote'),
-  reviewPhoto: $('reviewPhoto'), reviewPhotoRegion: $('reviewPhotoRegion'), reviewGuest: $('reviewGuest'), reviewPoseWindow: $('reviewPoseWindow'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
+  reviewPhoto: $('reviewPhoto'), reviewPhotoRegion: $('reviewPhotoRegion'), reviewGuestLayer: $('reviewGuestLayer'), reviewGuest: $('reviewGuest'), reviewPoseWindow: $('reviewPoseWindow'), reviewWrap: document.querySelector('.review-photo-wrap'), reviewCaption: $('reviewCaption'),
   reviewProofTag: $('reviewProofTag'), reviewProofLabel: $('reviewProofLabel'), reviewSourceMeta: $('reviewSourceMeta'), reviewSlots: $('reviewSlots'),
   stage: $('canvasScale'), revealBuddy: $('revealBuddy'), templateList: $('templateList'),
   frameRailShell: $('frameRailShell'), frameRailPosition: $('frameRailPosition'), frameRailProgress: $('frameRailProgress'),
@@ -210,37 +211,28 @@ function applyGuestVariables(element, composition) {
   element.style.setProperty('--pose-guest-transform', composition.flipGuest ? 'scaleX(-1)' : 'none');
 }
 
-function applyGuestImageGeometry(image, composition) {
-  if (!image || !composition) return;
-  const region = composition.guestRegion;
-  const crop = composition.guestCrop;
-  image.style.position = 'absolute';
-  image.style.maxWidth = 'none';
-  image.style.pointerEvents = 'none';
-  image.style.transform = composition.flipGuest ? 'scaleX(-1)' : 'none';
-  if (crop) {
-    // Guest runtime assets are square. Cover the bust crop without stretching
-    // the source, clip to the same crop used by export, and pin its lower edge
-    // to the camera window so the companion has a clear seated baseline.
-    const imageSize = Math.max(region.width / crop.width, region.height / crop.height);
-    image.style.width = `${imageSize * 100}%`;
-    image.style.height = `${imageSize * 100}%`;
-    image.style.left = `${(region.x + region.width / 2 - (crop.x + crop.width / 2) * imageSize) * 100}%`;
-    image.style.top = `${(region.y + region.height - (crop.y + crop.height) * imageSize) * 100}%`;
-    image.style.objectFit = 'contain';
-    image.style.objectPosition = 'center';
-    image.style.clipPath = `inset(${crop.y * 100}% ${(1 - crop.x - crop.width) * 100}% ${(1 - crop.y - crop.height) * 100}% ${crop.x * 100}%)`;
-    image.style.transformOrigin = 'center center';
-  } else {
-    image.style.left = `${region.x * 100}%`;
-    image.style.top = `${region.y * 100}%`;
-    image.style.width = `${region.width * 100}%`;
-    image.style.height = `${region.height * 100}%`;
-    image.style.objectFit = 'contain';
-    image.style.objectPosition = 'center bottom';
-    image.style.clipPath = 'none';
-    image.style.transformOrigin = 'center bottom';
-  }
+function getReviewGuestViewport(photo) {
+  if (!photo || !refs.reviewPhotoRegion) return null;
+  const width = refs.reviewPhotoRegion.clientWidth || refs.reviewPhotoRegion.offsetWidth;
+  const height = refs.reviewPhotoRegion.clientHeight || refs.reviewPhotoRegion.offsetHeight;
+  const geometry = computePhotoGeometry(photo, width, height);
+  if (!geometry) return null;
+  return {
+    x: geometry.left,
+    y: geometry.top,
+    width: geometry.width,
+    height: geometry.height,
+  };
+}
+
+function refreshGuestImageGeometry(photo = state.photos[state.selectedSlot] || state.photos.find(Boolean)) {
+  const composition = currentGuestComposition();
+  if (!composition) return;
+  applyGuestImageGeometry(refs.poseGuestPreview, composition, { container: refs.cameraWrap });
+  applyGuestImageGeometry(refs.reviewGuest, composition, {
+    container: refs.reviewPoseWindow,
+    viewport: getReviewGuestViewport(photo),
+  });
 }
 
 function syncGuestExperienceSurfaces() {
@@ -251,8 +243,8 @@ function syncGuestExperienceSurfaces() {
   refs.guestChoose.hidden = state.experience !== POSE_MATE_EXPERIENCE;
   refs.poseMateControls.hidden = !active;
   refs.poseUserGuide.hidden = !active;
-  refs.poseGuestPreview.hidden = !active;
-  refs.reviewGuest.hidden = !active;
+  refs.poseGuestLayer.hidden = !active;
+  refs.reviewGuestLayer.hidden = !active;
   refs.cameraWrap.dataset.poseMate = String(active);
   refs.reviewWrap.dataset.poseMate = String(active);
   refs.guestLayoutChoose.querySelectorAll('[data-guest-layout]').forEach((button) => {
@@ -276,8 +268,9 @@ function syncGuestExperienceSurfaces() {
   refs.poseGuestPreview.src = guestComposition.asset.src;
   refs.reviewGuest.src = guestComposition.asset.src;
   refs.reviewGuest.alt = `${guestComposition.asset.name}, a fictional Polara guest.`;
-  applyGuestImageGeometry(refs.poseGuestPreview, guestComposition);
-  applyGuestImageGeometry(refs.reviewGuest, guestComposition);
+  refs.poseGuestPreview.addEventListener('load', () => refreshGuestImageGeometry(), { once: true });
+  refs.reviewGuest.addEventListener('load', () => refreshGuestImageGeometry(), { once: true });
+  refreshGuestImageGeometry();
   refs.poseMateKicker.textContent = `Pose Mate · ${guestComposition.asset.guestId.replace('polara-', '').toUpperCase()}`;
   refs.poseMateTitle.textContent = state.guestLayout === 'side-by-side'
     ? `Sit with ${guestComposition.asset.name}`
@@ -939,7 +932,10 @@ function renderReview() {
   if (photo && currentGuestComposition()) {
     const apply = () => applyPhotoGeometry(refs.reviewPhotoRegion, refs.reviewPhoto, photo);
     refs.reviewPhoto.addEventListener('load', apply, { once: true });
-    requestAnimationFrame(apply);
+    requestAnimationFrame(() => {
+      apply();
+      refreshGuestImageGeometry(photo);
+    });
   }
   renderSlotCards(refs.reviewSlots, (index) => {
     setActiveProof(index);
@@ -1915,6 +1911,7 @@ function handleResize() {
       refreshPhotoSlots(phCanvas, state.photos, { guestCompositionForSlot, onGuestAssetError: handleGuestAssetError });
       renderEditorStickers();
     }
+    if (state.step === 'camera' || state.step === 'review') refreshGuestImageGeometry();
   }, 120);
 }
 
