@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.45.7] - 2026-10-02
+
+### Fixed
+- Timer Camera sekarang memakai hitungan detik yang benar, tetap dapat dipilih pada 3, 5, dan 10 detik sebelum capture, lalu terkunci selama countdown berjalan. Pilihan aktif juga terbaca jelas oleh keyboard dan assistive technology.
+- Kontrol interaktif mendapat touch feedback yang stabil dan control sheet menyisakan ruang scroll agar focus keyboard tidak tertutup action dock.
+
+### Validation
+- Regression guard mencakup durasi timer nyata, callback yang datang terlambat, pembatalan aman, timer selection state, focus-safe scroll, dan touch feedback. Flow canonical, Pose Mate geometry, exact export, dan local-only processing tidak berubah.
+
 ## [0.45.6] - 2026-09-30
 
 ### Fixed

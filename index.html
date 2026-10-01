@@ -299,7 +299,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=359" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=360" />
 </head>
 <body>
   <!--
@@ -497,14 +497,15 @@
             <button type="button" class="mini-btn guest-side-toggle" id="guestSideBtn">Move Juno to the left</button>
             <p class="pose-mate-note" id="poseMateNote">Juno is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.</p>
           </section>
-          <section class="camera-timer-controls" aria-labelledby="timerLabel">
+          <section class="camera-timer-controls" aria-labelledby="timerLabel" aria-describedby="timerHelp timerSelection">
             <span class="section-label" id="timerLabel">Countdown</span>
             <div class="timer-grid" id="timerChoose" role="group" aria-label="Shot timer">
-              <button type="button" class="choice-btn active" data-timer="3" aria-pressed="true">3 sec</button>
-              <button type="button" class="choice-btn" data-timer="5" aria-pressed="false">5 sec</button>
-              <button type="button" class="choice-btn" data-timer="10" aria-pressed="false">10 sec</button>
+              <button type="button" class="choice-btn active" data-timer="3" aria-pressed="true" aria-label="3 seconds, selected"><span class="timer-value">3 sec</span><span class="timer-state" aria-hidden="true">Selected</span></button>
+              <button type="button" class="choice-btn" data-timer="5" aria-pressed="false" aria-label="5 seconds"><span class="timer-value">5 sec</span><span class="timer-state" aria-hidden="true">Selected</span></button>
+              <button type="button" class="choice-btn" data-timer="10" aria-pressed="false" aria-label="10 seconds"><span class="timer-value">10 sec</span><span class="timer-state" aria-hidden="true">Selected</span></button>
             </div>
-            <p class="timer-help">Choose before each photo. The countdown locks while the camera is taking a photo.</p>
+            <p class="timer-selection" id="timerSelection" role="status" aria-live="polite" aria-atomic="true">Timer set to 3 seconds. You can change it before the next photo.</p>
+            <p class="timer-help" id="timerHelp">Choose before each photo. The countdown locks while the camera is taking a photo.</p>
           </section>
           <p class="privacy-note" id="cameraStateNote">Press Take photo when everyone is ready.</p>
         </section>
@@ -715,6 +716,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=49"></script>
+  <script type="module" src="src/app.js?v=50"></script>
 </body>
 </html>

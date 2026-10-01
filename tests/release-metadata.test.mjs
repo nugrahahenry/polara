@@ -16,9 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.45.6 Pose Mate geometry checkpoint', () => {
-  assert.equal(packageJson.version, '0.45.6');
-  assert.match(changelog, /## \[0\.45\.6\] - 2026-09-30/);
+test('release metadata records the v0.45.7 timer and interaction polish checkpoint', () => {
+  assert.equal(packageJson.version, '0.45.7');
+  assert.match(changelog, /## \[0\.45\.7\] - 2026-10-02/);
+  assert.match(changelog, /timer selection state/i);
+  assert.match(changelog, /focus-safe scroll/i);
+  assert.match(changelog, /touch feedback/i);
   assert.match(changelog, /helper bersama/i);
   assert.match(changelog, /layer clip/i);
   assert.match(changelog, /Review mengikuti bounds foto/i);
@@ -148,9 +151,9 @@ test('release metadata records the v0.45.6 Pose Mate geometry checkpoint', () =>
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=49/);
+  assert.match(indexHtml, /src\/app\.js\?v=50/);
   assert.match(indexHtml, /data-guest-layout="side-by-side"[^>]*>Sit together</);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=359/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=360/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);

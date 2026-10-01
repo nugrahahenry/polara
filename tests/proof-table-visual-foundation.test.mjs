@@ -13,6 +13,8 @@ test('Proof Table shell exposes a unified desktop desk and authored browser surf
   assert.match(css, /caret-color/);
   assert.match(tokens, /--proof-desk:/);
   assert.match(tokens, /--proof-shadow-low:/);
+  assert.match(css, /scroll-padding-block: 18px 156px/);
+  assert.match(css, /touch-action: manipulation/);
 });
 
 test('footer remains the canonical hnry.dev identity foundation', () => {

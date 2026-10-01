@@ -31,7 +31,7 @@ import {
 } from './ui/frame-collections.js?v=1';
 import { getCaptureMomentCopy } from './ui/capture-delight.js?v=1';
 import { getRevealDossier } from './ui/reveal-dossier.js?v=1';
-import { selectShotTimer } from './ui/shot-timer.js?v=1';
+import { getShotTimerFeedback, runShotCountdown, selectShotTimer } from './ui/shot-timer.js?v=2';
 
 const POLARA_URL = 'polara.vercel.app';
 const BRAND_LINE = `Polara · ${POLARA_URL}`;
@@ -53,7 +53,7 @@ const refs = {
   startView: $('startView'), cameraView: $('cameraView'), reviewView: $('reviewView'), canvasView: $('canvasView'),
   controlSheet: $('controlSheet'), controlScroll: $('controlScroll'), panels: [...document.querySelectorAll('[data-panel]')],
   primary: $('primaryBtn'), secondary: $('secondaryBtn'), tertiary: $('tertiaryBtn'), back: $('backBtn'),
-  status: $('status'), countdownLive: $('countdownLive'),
+  status: $('status'), countdownLive: $('countdownLive'), timerSelection: $('timerSelection'),
   experienceChoose: $('experienceChoose'), modeChoose: $('modeChoose'), timerChoose: $('timerChoose'),
   startGuestPreview: $('startGuestPreview'), poseMateControls: $('poseMateControls'), guestChoose: $('guestChoose'),
   guestOptionList: $('guestOptionList'), poseMateKicker: $('poseMateKicker'), poseMateTitle: $('poseMateTitle'), poseMateNote: $('poseMateNote'),
@@ -558,7 +558,13 @@ function syncTimerControls() {
     button.classList.toggle('active', active);
     button.setAttribute('aria-pressed', String(active));
     button.disabled = state.shooting || state.busy;
+    button.setAttribute('aria-label', button.dataset.timer + ' seconds' + (active ? ', selected' : ''));
   });
+  refs.timerSelection.textContent = state.shooting || state.busy
+    ? 'Timer locked at ' + state.timer + ' seconds while the camera is taking a photo.'
+    : 'Timer set to ' + state.timer + ' seconds. You can change it before the next photo.';
+  refs.timerSelection.dataset.state = state.shooting || state.busy ? 'locked' : 'ready';
+  refs.timerSelection.title = getShotTimerFeedback(state);
 }
 
 refs.modeChoose.addEventListener('click', (event) => {
@@ -819,17 +825,14 @@ async function runCountdown(seconds, copy) {
   refs.countdownProof.textContent = copy.proofLabel;
   refs.countdownCue.textContent = copy.countdownCue;
   try {
-    for (let number = seconds; number > 0; number -= 1) {
-      if (requestId !== countdownRequestId || document.hidden || state.step !== 'camera') {
-        const error = new Error('Countdown was cancelled.');
-        error.name = 'AbortError';
-        throw error;
-      }
-      refs.countdownValue.textContent = String(number);
-      refs.countdownProgress.style.setProperty('--countdown-progress', String((seconds - number + 1) / seconds));
-      refs.countdownLive.textContent = `${number}`;
-      await new Promise((resolve) => setTimeout(resolve, reducedMotion.matches ? 300 : 760));
-    }
+    await runShotCountdown(seconds, {
+      onTick: (number) => {
+        refs.countdownValue.textContent = String(number);
+        refs.countdownProgress.style.setProperty('--countdown-progress', String((seconds - number + 1) / seconds));
+        refs.countdownLive.textContent = String(number);
+      },
+      isCancelled: () => requestId !== countdownRequestId || document.hidden || state.step !== 'camera',
+    });
     if (requestId !== countdownRequestId || document.hidden || state.step !== 'camera') {
       const error = new Error('Countdown was cancelled.');
       error.name = 'AbortError';

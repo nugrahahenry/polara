@@ -216,7 +216,7 @@ input, textarea { caret-color: var(--pink-deep); }
 .stage-docket::after { top: calc(100% + 8px); }
 .stage-footline::before { bottom: calc(100% + 8px); }
 .control-sheet { max-height: calc(100dvh - 156px); border-radius: 20px; }
-.control-scroll { padding: 26px 24px 138px; }
+.control-scroll { padding: 26px 24px 138px; scroll-padding-block: 18px 156px; }
 
 @media (min-width: 1180px) {
   .workspace { min-height: calc(100dvh - 156px); align-items: start; }
@@ -285,6 +285,12 @@ input, textarea { caret-color: var(--pink-deep); }
 .choice-btn { border-radius: 12px; background: #fffaf5; }
 .choice-btn.active { border-color: rgba(75,46,31,.45); background: var(--proof-pink); box-shadow: 0 5px 14px rgba(255,143,189,.23); }
 .choice-btn:hover, .mini-btn:hover { transform: translateY(-1px); border-color: rgba(75,46,31,.38); }
+.choice-btn, .mini-btn, .slot-tab, .slot-card, .tpl-btn, .sticker-btn, .btn,
+.header-action, .privacy-trigger, .social-link { touch-action: manipulation; }
+.choice-btn:active:not(:disabled), .mini-btn:active:not(:disabled), .slot-tab:active:not(:disabled),
+.slot-card:active:not(:disabled), .tpl-btn:active:not(:disabled), .sticker-btn:active:not(:disabled),
+.btn:active:not(:disabled), .header-action:active:not(:disabled), .privacy-trigger:active:not(:disabled),
+.social-link:active:not(:disabled) { transform: translateY(1px) scale(.99); }
 .privacy-note { border: 0; border-radius: 12px; background: #f5eee8; color: var(--proof-muted); }
 
 .camera-stage { width: min(100%, 620px); height: min(100%, 680px); }
@@ -1276,6 +1282,11 @@ input, textarea { caret-color: var(--pink-deep); }
 }
 .camera-timer-controls { margin-top: 14px; }
 .camera-timer-controls .section-label { margin-top: 0; }
+.timer-grid .choice-btn { min-height: 62px; display: grid; place-items: center; gap: 2px; padding: 8px 10px; }
+.timer-value { font: 800 .82rem/1 var(--font-ui); }
+.timer-state { min-height: 1em; color: var(--proof-ink); font: 800 .52rem/1 var(--font-ui); letter-spacing: .07em; text-transform: uppercase; visibility: hidden; }
+.timer-grid .choice-btn.active .timer-state { visibility: visible; }
+.timer-selection { margin: 10px 0 0; color: var(--proof-ink); font: 700 .7rem/1.35 var(--font-ui); }
 .timer-help { margin: 8px 0 0; color: var(--proof-muted); font-size: .68rem; line-height: 1.4; }
 .timer-grid .choice-btn:disabled { cursor: not-allowed; opacity: .58; transform: none; }
 .stage-shell[data-experience="pose-mate"] .hero-strip { transform: translateX(-9%) rotate(-3deg); }
