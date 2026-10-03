@@ -116,7 +116,12 @@ async function verify() {
   }
 
   for (const guest of guestManifest.guests) {
-    requireQuality(guest.publicFigure === false && guest.collaborationClaim === false, `${guest.id} rights metadata is unsafe.`);
+    if (guest.kind === 'licensed-public-figure') {
+      requireQuality(guest.publicFigure === true && guest.collaborationClaim === false, `${guest.id} owner-authorized metadata is unsafe.`);
+      requireQuality(guest.rightsScope === 'Polara runtime pack; rights record kept outside repository', `${guest.id} must not embed a private rights record.`);
+    } else {
+      requireQuality(guest.publicFigure === false && guest.collaborationClaim === false, `${guest.id} rights metadata is unsafe.`);
+    }
     await inspectPng(guest.runtimeSrc, policy.guests.dimensions, policy.guests.maximumBytes, { requireTransparent: true });
   }
 

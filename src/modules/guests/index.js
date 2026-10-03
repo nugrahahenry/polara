@@ -98,6 +98,33 @@ const PM02_POSES = Object.freeze({
   }),
 });
 
+function createOwnerAuthorizedPoseSet(guestId, name) {
+  const kind = 'licensed-public-figure';
+  const description = `${name}, an owner-authorized Polara guest`;
+  const makePose = (pose, label, id = `${guestId}-${pose}`) => Object.freeze({
+    id,
+    guestId,
+    name,
+    src: `assets/guests/${guestId}-${pose}.png`,
+    alt: `${description}, ${label}.`,
+    pose,
+    kind,
+    publicFigure: true,
+  });
+  return Object.freeze({
+    neutral: makePose('neutral', 'in a relaxed neutral pose'),
+    peace: makePose('peace', 'making a peace sign'),
+    'half-heart': makePose('half-heart', 'making half of a heart pose', guestId),
+    seated: makePose('seated', 'seated beside you'),
+    'seated-wave': makePose('seated-wave', 'seated and waving beside you'),
+    'seated-heart': makePose('seated-heart', 'seated and making a half-heart beside you'),
+  });
+}
+
+const PM03_POSES = createOwnerAuthorizedPoseSet('polara-pm-03', 'Byun Woo-seok');
+const PM04_POSES = createOwnerAuthorizedPoseSet('polara-pm-04', 'Wonyoung');
+const PM05_POSES = createOwnerAuthorizedPoseSet('polara-pm-05', 'Yeji');
+
 const GUESTS = Object.freeze({
   [DEFAULT_GUEST_ID]: Object.freeze({
     ...PM01_POSES['half-heart'],
@@ -108,6 +135,21 @@ const GUESTS = Object.freeze({
     ...PM02_POSES['half-heart'],
     id: 'polara-pm-02',
     poses: PM02_POSES,
+  }),
+  'polara-pm-03': Object.freeze({
+    ...PM03_POSES['half-heart'],
+    id: 'polara-pm-03',
+    poses: PM03_POSES,
+  }),
+  'polara-pm-04': Object.freeze({
+    ...PM04_POSES['half-heart'],
+    id: 'polara-pm-04',
+    poses: PM04_POSES,
+  }),
+  'polara-pm-05': Object.freeze({
+    ...PM05_POSES['half-heart'],
+    id: 'polara-pm-05',
+    poses: PM05_POSES,
   }),
 });
 
@@ -159,7 +201,14 @@ export function getGuest(id = DEFAULT_GUEST_ID) {
 }
 
 export function getGuestOptions() {
-  return Object.values(GUESTS).map(({ id, name, src, alt, kind }) => ({ id, name, src, alt, kind }));
+  return Object.values(GUESTS).map(({ id, name, src, alt, kind, publicFigure = false }) => ({
+    id,
+    name,
+    src,
+    alt,
+    kind,
+    publicFigure,
+  }));
 }
 
 export function getGuestAssets(id = DEFAULT_GUEST_ID) {

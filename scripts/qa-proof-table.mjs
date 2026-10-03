@@ -444,6 +444,7 @@ async function runEditorialFixtureAudit({ name, viewport }) {
   const page = await startPage(context);
   await page.locator('[data-experience="pose-mate"]').click();
   await page.locator('#guestChoose').waitFor({ state: 'visible', timeout: 30_000 });
+  assert.equal(await page.locator('#guestOptionList .guest-option').count(), 5, 'Pose Mate picker should expose five guests');
   await page.locator('[data-guest-id="polara-pm-02"]').click();
   await page.waitForFunction(() => /polara-pm-02-(?:neutral|peace|half-heart)\.png$/.test(document.querySelector('#startGuestPreview')?.getAttribute('src') || ''));
   assert.equal(await page.locator('[data-guest-id="polara-pm-02"]').getAttribute('aria-pressed'), 'true');
@@ -971,6 +972,9 @@ async function runPoseMateAudit() {
     { guest: 'polara-pm-02', layout: 'matched', side: 'left', mode: 3, viewport: { width: 390, height: 844 } },
     { guest: 'polara-pm-01', layout: 'side-by-side', side: 'right', mode: 1, viewport: { width: 768, height: 1024 } },
     { guest: 'polara-pm-02', layout: 'side-by-side', side: 'left', mode: 3, viewport: { width: 768, height: 1024 } },
+    { guest: 'polara-pm-03', layout: 'matched', side: 'right', mode: 3, viewport: { width: 390, height: 844 } },
+    { guest: 'polara-pm-04', layout: 'side-by-side', side: 'right', mode: 1, viewport: { width: 768, height: 1024 } },
+    { guest: 'polara-pm-05', layout: 'matched', side: 'left', mode: 3, viewport: { width: 768, height: 1024 } },
   ];
   report.poseMate = {};
   for (const item of matrix) {
@@ -1009,10 +1013,12 @@ async function runPoseMateAudit() {
     assert.equal(review.imageLoaded, true, `${key}: Review guest asset must load`);
     await page.locator('#primaryBtn').click();
     await waitForPanel(page, 'frame');
-    await page.waitForFunction(() => [...document.querySelectorAll('#canvasScale .pose-guest-layer img')]
-      .every((image) => image.complete && image.naturalWidth > 0), null, { timeout: 30_000 });
+    await page.waitForFunction(() => {
+      const images = [...document.querySelectorAll('#canvasScale .pose-guest-layer img')];
+      return images.length > 0 && images.every((image) => image.complete && image.naturalWidth > 0);
+    }, null, { timeout: 30_000 });
     const frame = await auditPoseMateGeometry(page, 'frame');
-    assert.equal(frame.insideParent, true, `${key}: Frame guest must stay inside the slot`);
+    assert.equal(frame.insideParent, true, `${key}: Frame guest must stay inside the slot ${JSON.stringify(frame)}`);
     await page.locator('#primaryBtn').click();
     await waitForPanel(page, 'decorate');
     await page.locator('#primaryBtn').click();

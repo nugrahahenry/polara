@@ -264,10 +264,13 @@ function syncGuestExperienceSurfaces() {
   }
   [refs.cameraWrap, refs.reviewWrap].forEach((element) => applyGuestVariables(element, guestComposition));
   refs.startGuestPreview.src = guestComposition.asset.src;
-  refs.startGuestPreview.alt = `${guestComposition.asset.name}, an original fictional Polara guest.`;
+  const guestDescription = guestComposition.asset.publicFigure
+    ? 'a Polara guest'
+    : 'an original fictional Polara guest';
+  refs.startGuestPreview.alt = `${guestComposition.asset.name}, ${guestDescription}.`;
   refs.poseGuestPreview.src = guestComposition.asset.src;
   refs.reviewGuest.src = guestComposition.asset.src;
-  refs.reviewGuest.alt = `${guestComposition.asset.name}, a fictional Polara guest.`;
+  refs.reviewGuest.alt = `${guestComposition.asset.name}, ${guestDescription}.`;
   refs.poseGuestPreview.addEventListener('load', () => refreshGuestImageGeometry(), { once: true });
   refs.reviewGuest.addEventListener('load', () => refreshGuestImageGeometry(), { once: true });
   refreshGuestImageGeometry();
@@ -277,7 +280,7 @@ function syncGuestExperienceSurfaces() {
     : `Match ${guestComposition.asset.name}'s gesture`;
   refs.poseMateNote.textContent = state.guestLayout === 'side-by-side'
     ? `${guestComposition.asset.name} is seated inside the same camera window. Your photo stays untouched and the composition remains reversible through export.`
-    : `${guestComposition.asset.name} is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.`;
+    : `${guestComposition.asset.name} stays inside the camera window. Your camera capture stays untouched; composition remains reversible through export.`;
   refs.poseGuideText.textContent = poseGuideForSlot(state.activeSlot, state.mode, state.guestLayout);
   refs.poseUserGuide.dataset.poseCue = poseGuideForSlot(state.activeSlot, state.mode, state.guestLayout);
   refs.guestSide.textContent = guestComposition.side === 'right' ? `Move ${guestComposition.asset.name} to the left` : `Move ${guestComposition.asset.name} to the right`;
@@ -1886,7 +1889,7 @@ refs.experienceChoose.addEventListener('click', async (event) => {
       if (!guestSelectionGate.isCurrent(requestId)) return;
       state.experience = POSE_MATE_EXPERIENCE;
       state.guestId = guest.id;
-      status('Pose Mate selected. Choose Juno or Mina for every preview and exact-size export.');
+      status('Pose Mate selected. Choose a guest for every preview and exact-size export.');
     } catch {
       if (!guestSelectionGate.isCurrent(requestId)) return;
       state.experience = 'regular';

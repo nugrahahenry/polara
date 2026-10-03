@@ -1257,6 +1257,9 @@ input, textarea { caret-color: var(--pink-deep); }
   font: 800 .9rem/1 var(--font-display);
 }
 .guest-option-avatar-mina { background: linear-gradient(145deg, #e1f1ff, #b9d7f4); color: #235179; }
+.guest-option-avatar-byun { background: linear-gradient(145deg, #dceeff, #a8ccee); color: #2f5175; }
+.guest-option-avatar-wonyoung { background: linear-gradient(145deg, #f2e8ff, #d8c6f0); color: #684b86; }
+.guest-option-avatar-yeji { background: linear-gradient(145deg, #ece9eb, #c5c0c5); color: #403b42; }
 .guest-option > span:last-child { min-width: 0; font: 800 .76rem/1.15 var(--font-ui); }
 .guest-option small { display: block; margin-top: 3px; color: var(--proof-muted); font-size: .61rem; font-weight: 700; }
 .start-guest-preview {

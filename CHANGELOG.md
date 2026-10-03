@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.47.0] - 2026-10-03
+
+- Pose Mate kini punya tiga pilihan guest owner-authorized tambahan: Byun Woo-seok, Wonyoung, dan Yeji, masing-masing dengan pose Neutral, Peace, Half-heart, Seated, Seated-wave, dan Seated-heart.
+- Aset guest dibuat sebagai PNG RGBA 1254×1254, dibersihkan secara lokal dari contact sheet, lalu dipakai bersama oleh Camera, Review, Frame, Hias, Reveal, Save, dan Share. Tidak ada dokumen lisensi, sumber privat, akun, backend, atau upload baru yang masuk repository.
+- Picker Start diperluas menjadi lima guest dan tetap memakai target sentuh 44 px, keyboard focus, serta fallback Regular Booth bila aset guest gagal dimuat.
+- Manifest guest naik ke schemaVersion 3 dengan metadata teknis minimum, tanpa menyimpan detail hak atau sumber lisensi privat.
+- Cleanup transparansi membuang garis pemisah contact sheet dari enam pose Yeji sebelum PNG runtime dipakai.
+- QA mempertahankan preview/export parity, Single 1080×1350, Strip 720×1800, retake per-slot, dan local-only processing.
+
 ## [0.46.1] - 2026-10-03
 
 ### Fixed

@@ -12,6 +12,9 @@ import {
 const manifest = JSON.parse(
   await fs.readFile(new URL('../assets/frames/frame-overlay-manifest.json', import.meta.url), 'utf8'),
 );
+const guestManifest = JSON.parse(
+  await fs.readFile(new URL('../assets/guests/guest-manifest.json', import.meta.url), 'utf8'),
+);
 
 test('runtime overlays do not retain source RGB inside fully transparent pixels', async () => {
   assert.equal(manifest.frames.length, 26);
@@ -65,20 +68,7 @@ test('runtime Pose Mate guests have clean transparent backgrounds', async () => 
   const guestFiles = (await fs.readdir(guestDirectory))
     .filter((file) => file.endsWith('.png'))
     .sort();
-  assert.deepEqual(guestFiles, [
-    'polara-pm-01-half-heart.png',
-    'polara-pm-01-neutral.png',
-    'polara-pm-01-peace.png',
-    'polara-pm-01-seated-heart.png',
-    'polara-pm-01-seated-wave.png',
-    'polara-pm-01-seated.png',
-    'polara-pm-02-half-heart.png',
-    'polara-pm-02-neutral.png',
-    'polara-pm-02-peace.png',
-    'polara-pm-02-seated-heart.png',
-    'polara-pm-02-seated-wave.png',
-    'polara-pm-02-seated.png',
-  ]);
+  assert.deepEqual(guestFiles, guestManifest.guests.map((asset) => asset.runtimeSrc.split('/').at(-1)).sort());
 
   const contaminatedGuests = [];
   for (const file of guestFiles) {

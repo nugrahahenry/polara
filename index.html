@@ -299,7 +299,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=360" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=361" />
 </head>
 <body>
   <!--
@@ -460,12 +460,21 @@
           </div>
           <div class="guest-choose" id="guestChoose" hidden>
             <span class="section-label">Pose guest</span>
-            <div class="guest-option-list" id="guestOptionList" role="group" aria-label="Choose a fictional Pose Mate guest">
+            <div class="guest-option-list" id="guestOptionList" role="group" aria-label="Choose a Pose Mate guest">
               <button type="button" class="guest-option active" data-guest-id="polara-pm-01" aria-pressed="true">
                 <span class="guest-option-avatar" aria-hidden="true">J</span><span>Juno<small>Soft studio</small></span>
               </button>
               <button type="button" class="guest-option" data-guest-id="polara-pm-02" aria-pressed="false">
                 <span class="guest-option-avatar guest-option-avatar-mina" aria-hidden="true">M</span><span>Mina<small>Blue day</small></span>
+              </button>
+              <button type="button" class="guest-option" data-guest-id="polara-pm-03" aria-pressed="false">
+                <span class="guest-option-avatar guest-option-avatar-byun" aria-hidden="true">B</span><span>Byun Woo-seok<small>Blue guest</small></span>
+              </button>
+              <button type="button" class="guest-option" data-guest-id="polara-pm-04" aria-pressed="false">
+                <span class="guest-option-avatar guest-option-avatar-wonyoung" aria-hidden="true">W</span><span>Wonyoung<small>Lavender day</small></span>
+              </button>
+              <button type="button" class="guest-option" data-guest-id="polara-pm-05" aria-pressed="false">
+                <span class="guest-option-avatar guest-option-avatar-yeji" aria-hidden="true">Y</span><span>Yeji<small>Charcoal knit</small></span>
               </button>
             </div>
           </div>
@@ -716,6 +725,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=50"></script>
+  <script type="module" src="src/app.js?v=51"></script>
 </body>
 </html>

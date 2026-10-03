@@ -23,7 +23,7 @@ test('Pose Mate exposes an explicit opt-in while Regular Booth remains the defau
 });
 
 
-test('Pose Mate exposes original fictional Juno and Mina guests without collaboration claims', async () => {
+test('Pose Mate exposes the default guests and the owner-authorized guest pack without collaboration claims', async () => {
   const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
   const guestModule = await import('../src/modules/guests/index.js');
   const options = guestModule.getGuestOptions();
@@ -31,12 +31,17 @@ test('Pose Mate exposes original fictional Juno and Mina guests without collabor
   assert.deepEqual(options.map((guest) => [guest.id, guest.name]), [
     ['polara-pm-01', 'Juno'],
     ['polara-pm-02', 'Mina'],
+    ['polara-pm-03', 'Byun Woo-seok'],
+    ['polara-pm-04', 'Wonyoung'],
+    ['polara-pm-05', 'Yeji'],
   ]);
   for (const option of options) {
     const guest = manifest.guests.find((item) => item.id === option.id);
     assert.ok(guest);
-    assert.equal(guest.kind, 'fictional-synthetic');
-    assert.equal(guest.publicFigure, false);
+    const publicFigure = option.id.startsWith('polara-pm-0') && Number(option.id.slice(-2)) >= 3;
+    assert.equal(guest.kind, publicFigure ? 'licensed-public-figure' : 'fictional-synthetic');
+    assert.equal(guest.publicFigure, publicFigure);
+    assert.equal(option.publicFigure, publicFigure);
     assert.equal(guest.collaborationClaim, false);
     assert.equal(option.src, guest.runtimeSrc);
     const digest = createHash('sha256').update(await readBytes(guest.runtimeSrc)).digest('hex');
@@ -88,6 +93,24 @@ test('PM-02 female pose pack maps Single and every Strip proof to the same verif
     assert.equal(manifestAsset.runtimeSrc, asset.src);
     assert.equal(manifestAsset.publicFigure, false);
     assert.equal(manifestAsset.collaborationClaim, false);
+  }
+});
+
+
+test('owner-authorized guest packs map every pose to an exact runtime asset', async () => {
+  const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
+  const guestModule = await import('../src/modules/guests/index.js');
+  for (const guestId of ['polara-pm-03', 'polara-pm-04', 'polara-pm-05']) {
+    const assets = guestModule.getGuestRuntimeAssets(guestId);
+    assert.deepEqual(assets.map((asset) => asset.pose), ['neutral', 'peace', 'half-heart', 'seated', 'seated-wave', 'seated-heart']);
+    for (const asset of assets) {
+      const entry = manifest.guests.find((item) => item.id === asset.id);
+      assert.ok(entry, `Missing manifest entry for ${asset.id}`);
+      assert.equal(entry.kind, 'licensed-public-figure');
+      assert.equal(entry.publicFigure, true);
+      assert.equal(entry.collaborationClaim, false);
+      assert.equal(createHash('sha256').update(await readBytes(asset.src)).digest('hex'), entry.sha256);
+    }
   }
 });
 
@@ -194,17 +217,17 @@ test('Pose Mate keeps source aspect ratio across portrait preview and export geo
 });
 
 
-test('seated Pose Mate assets are registered for both fictional guests', async () => {
+test('seated Pose Mate assets are registered for every guest', async () => {
   const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
   const guestModule = await import('../src/modules/guests/index.js');
-  for (const guestId of ['polara-pm-01', 'polara-pm-02']) {
+  for (const guestId of ['polara-pm-01', 'polara-pm-02', 'polara-pm-03', 'polara-pm-04', 'polara-pm-05']) {
     const asset = guestModule.getSeatedGuestAsset(guestId);
     const entry = manifest.guests.find((item) => item.id === asset.id);
     assert.equal(asset.pose, 'seated');
     assert.ok(entry);
     assert.equal(entry.width, 1254);
     assert.equal(entry.height, 1254);
-    assert.equal(entry.publicFigure, false);
+    assert.equal(entry.publicFigure, guestId >= 'polara-pm-03');
     assert.equal(entry.collaborationClaim, false);
     assert.equal(createHash('sha256').update(await readBytes(asset.src)).digest('hex'), entry.sha256);
   }
@@ -214,7 +237,7 @@ test('seated Pose Mate assets are registered for both fictional guests', async (
 test('Sit together maps three seated poses across Strip and keeps Single relaxed', async () => {
   const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
   const guestModule = await import('../src/modules/guests/index.js');
-  for (const guestId of ['polara-pm-01', 'polara-pm-02']) {
+  for (const guestId of ['polara-pm-01', 'polara-pm-02', 'polara-pm-03', 'polara-pm-04', 'polara-pm-05']) {
     const stripAssets = [0, 1, 2].map((slotIndex) => guestModule.createGuestComposition({
       experience: 'pose-mate', guestId, layout: 'side-by-side', mode: 3, slotIndex,
     }).asset);

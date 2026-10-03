@@ -16,8 +16,16 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.46.1 Poca style remaster checkpoint', () => {
-  assert.equal(packageJson.version, '0.46.1');
+test('release metadata records the v0.47.0 owner-authorized Pose Mate guest pack checkpoint', () => {
+  assert.equal(packageJson.version, '0.47.0');
+  assert.match(changelog, /## \[0\.47\.0\] - 2026-10-03/);
+  assert.match(changelog, /Byun Woo-seok.*Wonyoung.*Yeji/i);
+  assert.match(changelog, /PNG RGBA 1254×1254/i);
+  assert.match(changelog, /schemaVersion 3/i);
+  assert.match(changelog, /detail hak.*sumber lisensi privat/i);
+  assert.match(indexHtml, /src\/app\.js\?v=51/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=361/);
+  assert.match(changelog, /## \[0\.46\.1\] - 2026-10-03/);
   assert.match(changelog, /## \[0\.46\.1\] - 2026-10-03/);
   assert.match(changelog, /Poca Soft Archive exclusive/i);
   assert.match(changelog, /glossy chibi/i);
@@ -160,9 +168,9 @@ test('release metadata records the v0.46.1 Poca style remaster checkpoint', () =
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=50/);
+  assert.match(indexHtml, /src\/app\.js\?v=51/);
   assert.match(indexHtml, /data-guest-layout="side-by-side"[^>]*>Sit together</);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=360/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=361/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);
