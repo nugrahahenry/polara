@@ -124,6 +124,10 @@ export const universalStickers = [
     id: 'botanical-sprig', type: 'sticker', category: 'accent', name: 'Botanical Sprig', src: STICKER + 'botanical-sprig.png',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .18, y: .72, scale: .18, rotation: -10 }, minScale: .09, maxScale: .4,
   },
+  {
+    id: 'soft-archive-botanical', type: 'sticker', category: 'accent', name: 'Archive Bouquet', src: STICKER + 'soft-archive-botanical.png',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .18, y: .72, scale: .18, rotation: -8 }, minScale: .09, maxScale: .4,
+  },
 ];
 
 export const exclusiveStickers = [
@@ -166,6 +170,11 @@ export const exclusiveStickers = [
     id: 'poca-postcard-club-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Postcard Club',
     src: STICKER + 'poca-postcard-club-exclusive.png', exclusiveFamilyId: 'postcard-club', pickerBadge: 'Exclusive',
     exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .76, scale: .21, rotation: 4 }, minScale: .1, maxScale: .42,
+  },
+  {
+    id: 'poca-soft-archive-exclusive', type: 'sticker', category: 'exclusive', name: 'Poca Soft Archive',
+    src: STICKER + 'poca-soft-archive-exclusive.png', exclusiveFamilyId: 'soft-archive', pickerBadge: 'Exclusive',
+    exportPolicy: 'preview-and-export', defaultTransform: { x: .78, y: .76, scale: .21, rotation: -4 }, minScale: .1, maxScale: .42,
   },
 ];
 

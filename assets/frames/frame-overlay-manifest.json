@@ -205,6 +205,29 @@
         "preview": "composite",
         "stickerCompanion": "poca-postcard-club-exclusive"
       }
+    },
+    {
+      "id": "soft-archive",
+      "collectionId": "keepsakes",
+      "story": "A quiet editorial archive for moments that deserve a softer edge.",
+      "material": "Archival paper",
+      "palette": [
+        "#d99a9e",
+        "#b9a9d0",
+        "#e7c76f"
+      ],
+      "exclusiveStickerId": "poca-soft-archive-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "soft-archive-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-soft-archive-exclusive"
+      }
     }
   ],
   "frames": [
@@ -1601,6 +1624,118 @@
         "#d88968",
         "#1f2f4f",
         "#f4d7bc"
+      ]
+    },
+    {
+      "id": "soft-archive.single",
+      "family": "soft-archive",
+      "name": "Soft Archive",
+      "category": "editorial-keepsake",
+      "mode": "single",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 92,
+          "y": 208,
+          "width": 896,
+          "height": 876,
+          "radius": 34
+        }
+      ],
+      "overlaySrc": "assets/frames/soft-archive-single-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/soft-archive-single-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/soft-archive-single-thumbnail.png",
+      "canvasWidth": 1080,
+      "canvasHeight": 1350,
+      "sha256": "f74ca211c0f4be6bbd703ecf26e8b1b0451f32ebd7a9ebfdfe4c95ea93c3acf8",
+      "byteSize": 35728,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v5",
+      "qualityProfile": "polara-proof-edge-v2",
+      "edgePalette": [
+        "#d99a9e",
+        "#b9a9d0",
+        "#e7c76f"
+      ],
+      "slotBackground": "#f4eee8",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "archival paper",
+        "editorial header",
+        "rose and lilac proof edge",
+        "keepsake footer"
+      ]
+    },
+    {
+      "id": "soft-archive.strip",
+      "family": "soft-archive",
+      "name": "Soft Archive",
+      "category": "editorial-keepsake",
+      "mode": "strip",
+      "renderMode": "png-overlay",
+      "characterPolicy": "character-free",
+      "maskType": "rounded-rectangles",
+      "photoWindows": [
+        {
+          "x": 64,
+          "y": 178,
+          "width": 592,
+          "height": 420,
+          "radius": 24
+        },
+        {
+          "x": 64,
+          "y": 632,
+          "width": 592,
+          "height": 420,
+          "radius": 24
+        },
+        {
+          "x": 64,
+          "y": 1086,
+          "width": 592,
+          "height": 420,
+          "radius": 24
+        }
+      ],
+      "overlaySrc": "assets/frames/soft-archive-strip-overlay.png",
+      "thumbnailSrc": "assets/frames/thumbnails/soft-archive-strip-thumbnail.png",
+      "pickerThumbnailSrc": "assets/frames/composites/soft-archive-strip-thumbnail.png",
+      "canvasWidth": 720,
+      "canvasHeight": 1800,
+      "sha256": "03a14c51e283c67c39a2d0cb8efcf2496cee53040ef1473124fc1c62367c2c77",
+      "byteSize": 33048,
+      "colorMode": "RGBA",
+      "hasAlpha": true,
+      "assetVersion": "frame-overlay-v7",
+      "qualityProfile": "polara-proof-edge-v3",
+      "edgePalette": [
+        "#d99a9e",
+        "#b9a9d0",
+        "#e7c76f"
+      ],
+      "slotBackground": "#f4eee8",
+      "supportsDynamicText": false,
+      "metadataZones": {
+        "caption": null,
+        "date": null,
+        "brand": null
+      },
+      "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
+      "decorativeElements": [
+        "archival paper",
+        "editorial header",
+        "rose and lilac proof edge",
+        "keepsake footer"
       ]
     }
   ]

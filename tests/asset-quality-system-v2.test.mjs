@@ -11,12 +11,12 @@ const readText = (relativePath) => fs.readFile(new URL(relativePath, projectRoot
 const readJson = async (relativePath) => JSON.parse(await readText(relativePath));
 
 
-test('manifest defines eight complete frame family profiles', async () => {
+test('manifest defines nine complete frame family profiles', async () => {
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
   assert.equal(manifest.familyProfileVersion, 'frame-family-v3');
   assert.equal(manifest.collectionProfileVersion, 'frame-collection-v1');
   assert.equal(manifest.assetExpansionProfileVersion, 'asset-expansion-v1');
-  assert.equal(manifest.families.length, 8);
+  assert.equal(manifest.families.length, 9);
 
   const familyIds = new Set(manifest.frames.map((frame) => frame.family));
   assert.deepEqual(new Set(manifest.families.map((family) => family.id)), familyIds);
@@ -34,9 +34,9 @@ test('manifest defines eight complete frame family profiles', async () => {
 
 
 test('generated templates carry the same family profile for Single and Strip', () => {
-  assert.equal(frameOverlayTemplates.length, 24);
+  assert.equal(frameOverlayTemplates.length, 26);
   const byFamily = Map.groupBy(frameOverlayTemplates, (frame) => frame.familyId);
-  assert.equal(byFamily.size, 8);
+  assert.equal(byFamily.size, 9);
 
   for (const [familyId, variants] of byFamily) {
     assert.ok(variants.length >= 2, familyId);

@@ -109,6 +109,18 @@ EXPECTED_GEOMETRY: dict[str, tuple[tuple[int, int], list[dict[str, int]]]] = {
             {"x": 74, "y": 1080, "width": 572, "height": 440, "radius": 20},
         ],
     ),
+    "soft-archive.single": (
+        (1080, 1350),
+        [{"x": 92, "y": 208, "width": 896, "height": 876, "radius": 34}],
+    ),
+    "soft-archive.strip": (
+        (720, 1800),
+        [
+            {"x": 64, "y": 178, "width": 592, "height": 420, "radius": 24},
+            {"x": 64, "y": 632, "width": 592, "height": 420, "radius": 24},
+            {"x": 64, "y": 1086, "width": 592, "height": 420, "radius": 24},
+        ],
+    ),
     "postcard-club.single": (
         (1080, 1350),
         [{"x": 205, "y": 240, "width": 670, "height": 870, "radius": 34}],
@@ -265,6 +277,12 @@ EXPECTED_CONTRACTS: dict[str, dict[str, Any]] = {
     },
     "lucky-ticket.strip": {
         "family": "lucky-ticket", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "soft-archive.single": {
+        "family": "soft-archive", "mode": "single", "maskType": "rounded-rectangles", "masterRequired": False,
+    },
+    "soft-archive.strip": {
+        "family": "soft-archive", "mode": "strip", "maskType": "rounded-rectangles", "masterRequired": False,
     },
     "postcard-club.single": {
         "family": "postcard-club", "mode": "single", "maskType": "rounded-rectangles", "masterRequired": False,
@@ -594,8 +612,8 @@ def verify(root: Path) -> None:
     manifest = load_manifest(manifest_path)
     frames = manifest["frames"]
     require(
-        len(frames) == 24,
-        f"Manifest harus berisi tepat 24 frame; ditemukan {len(frames)}.",
+        len(frames) == 26,
+        f"Manifest harus berisi tepat 26 frame; ditemukan {len(frames)}.",
     )
     ids = [frame.get("id") for frame in frames]
     require(len(set(ids)) == len(ids), "Manifest memiliki ID duplikat.")
@@ -605,8 +623,8 @@ def verify(root: Path) -> None:
     )
 
     hashes = [verify_frame(root, frame) for frame in frames]
-    require(len(set(hashes)) == 24, "Runtime overlay memiliki hash duplikat.")
-    print("24/24 overlay passed")
+    require(len(set(hashes)) == 26, "Runtime overlay memiliki hash duplikat.")
+    print("26/26 overlay passed")
 
 
 def main() -> int:

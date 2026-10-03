@@ -129,8 +129,8 @@ def save_png(image: Image.Image, path: Path, source_info: dict[str, object], pro
 
 def main() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-    if len(manifest.get("frames", [])) != 24:
-        raise RuntimeError("The current Polara library expects exactly twenty-four runtime variants.")
+    if len(manifest.get("frames", [])) != 26:
+        raise RuntimeError("The current Polara library expects exactly twenty-six runtime variants.")
 
     for frame in manifest["frames"]:
         palette = PALETTES[frame["family"]]

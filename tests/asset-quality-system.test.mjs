@@ -37,7 +37,7 @@ test('asset quality policy locks production budgets and fictional picker provena
 
 test('all frame families separate character-free overlay, fallback thumbnail, and picker composite', async () => {
   const manifest = await readJson('assets/frames/frame-overlay-manifest.json');
-  assert.equal(manifest.frames.length, 24);
+  assert.equal(manifest.frames.length, 26);
 
   for (const frame of manifest.frames) {
     assert.equal(frame.characterPolicy, 'character-free', frame.id);
@@ -69,7 +69,7 @@ test('runtime PNG directories contain only registry assets and one exclusive Poc
   assert.deepEqual(await listPng('assets/stickers/'), stickerPaths);
   assert.deepEqual(await listPng('assets/mascot/'), mascotPaths);
   assert.deepEqual(await listPng('assets/guests/'), guestPaths);
-  assert.equal(exclusiveStickers.length, 8);
-  assert.equal(new Set(exclusiveStickers.map((asset) => asset.exclusiveFamilyId)).size, 8);
+  assert.equal(exclusiveStickers.length, 9);
+  assert.equal(new Set(exclusiveStickers.map((asset) => asset.exclusiveFamilyId)).size, 9);
   assert.ok(!mascotPaths.some((asset) => asset.endsWith('/poca-pointing-down.png')));
 });

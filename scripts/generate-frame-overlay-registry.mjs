@@ -85,15 +85,15 @@ function validateFrame(frame, ids) {
 const raw = await fs.readFile(inputPath, 'utf8');
 const manifest = JSON.parse(raw);
 if (!Array.isArray(manifest.frames)) fail('Manifest harus memiliki array frames.');
-if (manifest.frames.length !== 24) fail(`Manifest produksi harus berisi tepat 24 frame Hero; ditemukan ${manifest.frames.length}.`);
+if (manifest.frames.length !== 26) fail(`Manifest produksi harus berisi tepat 26 frame Hero; ditemukan ${manifest.frames.length}.`);
 if (manifest.familyProfileVersion !== 'frame-family-v3') fail('Manifest harus memakai frame-family-v3.');
 if (manifest.collectionProfileVersion !== 'frame-collection-v1') fail('Manifest harus memakai frame-collection-v1.');
 if (manifest.assetExpansionProfileVersion !== 'asset-expansion-v1') fail('Manifest harus memakai asset-expansion-v1.');
 if (!Array.isArray(manifest.collections) || manifest.collections.length !== 3) {
   fail('Manifest harus memiliki tepat tiga collection profile.');
 }
-if (!Array.isArray(manifest.families) || manifest.families.length !== 8) {
-  fail('Manifest harus memiliki tepat delapan family profile.');
+if (!Array.isArray(manifest.families) || manifest.families.length !== 9) {
+  fail('Manifest harus memiliki tepat sembilan family profile.');
 }
 
 const collectionIds = new Set();

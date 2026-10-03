@@ -16,8 +16,13 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.45.7 timer and interaction polish checkpoint', () => {
-  assert.equal(packageJson.version, '0.45.7');
+test('release metadata records the v0.46.0 asset expansion checkpoint', () => {
+  assert.equal(packageJson.version, '0.46.0');
+  assert.match(changelog, /## \[0\.46\.0\] - 2026-10-03/);
+  assert.match(changelog, /Soft Archive/i);
+  assert.match(changelog, /Archive Bouquet/i);
+  assert.match(changelog, /9 keluarga dan 26 variant/i);
+  assert.match(changelog, /parity preview dan export/i);
   assert.match(changelog, /## \[0\.45\.7\] - 2026-10-02/);
   assert.match(changelog, /timer selection state/i);
   assert.match(changelog, /focus-safe scroll/i);

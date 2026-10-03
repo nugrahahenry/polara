@@ -641,7 +641,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.equal(frameRail.overflowX, 'auto');
   assert.equal(frameRail.overflowY, 'hidden');
   assert.ok(frameRail.visibleCards >= 2 && frameRail.visibleCards < 3, `${name}: frame rail should reveal about 2-2.5 cards`);
-  assert.equal(await page.locator('#templateList .tpl-btn').count(), 12, `${name}: each mode must expose twelve frame variants`);
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 13, `${name}: each mode must expose thirteen frame variants`);
   const frameCollection = {
     optionCount: await page.locator('#frameCollectionFilters .frame-collection-btn').count(),
     labels: await page.locator('#frameCollectionFilters .frame-collection-btn').allTextContents(),
@@ -650,9 +650,9 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   };
   assert.equal(frameCollection.optionCount, 4);
   assert.equal(frameCollection.active, 'all');
-  assert.equal(frameCollection.defaultCount, '12 styles');
+  assert.equal(frameCollection.defaultCount, '13 styles');
   assert.deepEqual(frameCollection.labels.map((label) => label.replace(/\s+/g, ' ').trim()), [
-    'All styles12', 'Pop room4', 'Studio room3', 'Keepsakes5',
+    'All styles13', 'Pop room4', 'Studio room3', 'Keepsakes6',
   ]);
   const frameEdition = await auditFrameEdition(page);
   assert.equal(frameEdition.exists, true);
@@ -692,7 +692,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   });
   assert.ok(studioRailX > 0, `${name}: Studio room rail must accept horizontal scrolling`);
   await page.locator('[data-frame-collection="all"]').click();
-  await page.waitForFunction(() => document.querySelectorAll('#templateList .tpl-btn').length === 12);
+  await page.waitForFunction(() => document.querySelectorAll('#templateList .tpl-btn').length === 13);
   await page.locator('[data-frame-collection="studio-room"]').click();
   await page.waitForFunction((expected) => {
     const rail = document.querySelector('#templateList');
@@ -702,10 +702,10 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   await page.locator('#frameCollectionFilters .frame-collection-btn').first().focus();
   await page.keyboard.press('End');
   await page.waitForFunction(() => document.querySelector('[data-frame-collection="keepsakes"]')?.getAttribute('aria-pressed') === 'true');
-  assert.equal(await page.locator('#templateList .tpl-btn').count(), 5);
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 6);
   await page.keyboard.press('Home');
   await page.waitForFunction(() => document.querySelector('[data-frame-collection="all"]')?.getAttribute('aria-pressed') === 'true');
-  assert.equal(await page.locator('#templateList .tpl-btn').count(), 12);
+  assert.equal(await page.locator('#templateList .tpl-btn').count(), 13);
   await page.locator('#templateList .tpl-btn').first().click();
 
   await page.locator('#photoSlotTabs .slot-tab').nth(1).click();
@@ -771,10 +771,10 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   assert.ok(emptyDecorateWorkshop.undoOpacity <= .55, `${name}: unavailable sticker history actions must read as disabled`);
   assert.equal(emptyDecorateWorkshop.inspectorOverlapsProof, false);
   await shot('05', 'decorate');
-  assert.equal(await page.locator('#stickerTray .sticker-btn').count(), 27);
+  assert.equal(await page.locator('#stickerTray .sticker-btn').count(), 28);
   assert.equal(await page.locator('#stickerTray .sticker-btn').first().getAttribute('class'), 'sticker-btn exclusive');
   assert.equal(await page.locator('#stickerTray .sticker-badge').first().textContent(), 'Exclusive');
-    assert.match(await page.locator('#stickerRailMeta').textContent(), /Poca Purikura.*26 universal/);
+    assert.match(await page.locator('#stickerRailMeta').textContent(), /Poca Purikura.*27 universal/);
   assert.equal(await page.locator('#stickerTray .sticker-family-match').first().textContent(), 'Made for this frame');
   assert.equal(await page.locator('#stickerTray .sticker-family-match').first().getAttribute('aria-label'), 'Poca match for Poca Purikura');
   await page.locator('#stickerTray .sticker-btn').first().focus();
@@ -1041,6 +1041,7 @@ const VARIANTS = [
   { id: 'postcard-club-ink.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles', radii: ['26px'] },
   { id: 'postcard-club-sage.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles', radii: ['26px'] },
   { id: 'postcard-club-night.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles', radii: ['26px'] },
+  { id: 'soft-archive.single', mode: 1, width: 1080, height: 1350, maskType: 'rounded-rectangles', radii: ['34px'] },
   { id: 'poca-purikura.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'poca-purikura-blue.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
   { id: 'vintage-film-lofi.strip', mode: 3, width: 720, height: 1800, maskType: 'rectangles' },
@@ -1053,6 +1054,7 @@ const VARIANTS = [
   { id: 'postcard-club-ink.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['22px', '22px', '22px'] },
   { id: 'postcard-club-sage.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['22px', '22px', '22px'] },
   { id: 'postcard-club-night.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['22px', '22px', '22px'] },
+  { id: 'soft-archive.strip', mode: 3, width: 720, height: 1800, maskType: 'rounded-rectangles', radii: ['24px', '24px', '24px'] },
 ];
 
 async function reachFrames(page, mode) {

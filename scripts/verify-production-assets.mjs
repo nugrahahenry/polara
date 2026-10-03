@@ -98,7 +98,7 @@ async function verify() {
   requireQuality(exclusiveStickers.length === policy.stickers.exclusiveFamilyCount, 'Exclusive family count drifted.');
   requireQuality(new Set(exclusiveStickers.map((item) => item.exclusiveFamilyId)).size === policy.stickers.exclusiveFamilyCount, 'Exclusive families must be unique.');
   const provenance = await readJson(policy.stickers.generatedExclusiveProvenance);
-  requireQuality(provenance.assets.length === 7, 'Generated sticker provenance must contain seven assets.');
+  requireQuality(provenance.assets.length === 9, 'Generated sticker provenance must contain nine assets.');
   for (const asset of provenance.assets) {
     requireQuality(asset.kind === 'original-fictional' && asset.publicFigure === false && asset.collaborationClaim === false, `${asset.runtimeSrc} provenance is unsafe.`);
     const bytes = await fs.readFile(resolveAsset(asset.runtimeSrc));

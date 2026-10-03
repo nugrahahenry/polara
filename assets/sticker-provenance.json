@@ -70,6 +70,26 @@
       "collaborationClaim": false,
       "background": "transparent",
       "hiddenRgbPolicy": "zero-at-alpha-0"
+    },
+    {
+      "runtimeSrc": "assets/stickers/soft-archive-botanical.png",
+      "sha256": "df8f2e98c60682f972fe381ea5bf910c9b8315aad7d85eef160f35008ebacc3c",
+      "kind": "original-fictional",
+      "sourceMode": "built-in-imagegen-plus-local-alpha-cleanup",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "background": "transparent",
+      "hiddenRgbPolicy": "zero-at-alpha-0"
+    },
+    {
+      "runtimeSrc": "assets/stickers/poca-soft-archive-exclusive.png",
+      "sha256": "4ec515645578075dd04b043fa202b84c54ce2c7a26fd10ed84bd9150f53b1063",
+      "kind": "original-fictional",
+      "sourceMode": "built-in-imagegen-plus-local-alpha-cleanup",
+      "publicFigure": false,
+      "collaborationClaim": false,
+      "background": "transparent",
+      "hiddenRgbPolicy": "zero-at-alpha-0"
     }
   ]
 }

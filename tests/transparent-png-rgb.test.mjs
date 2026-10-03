@@ -14,7 +14,7 @@ const manifest = JSON.parse(
 );
 
 test('runtime overlays do not retain source RGB inside fully transparent pixels', async () => {
-  assert.equal(manifest.frames.length, 24);
+  assert.equal(manifest.frames.length, 26);
   const contaminatedOverlays = [];
 
   for (const frame of manifest.frames) {
@@ -40,7 +40,7 @@ test('runtime stickers do not retain RGB inside fully transparent pixels', async
   const stickerFiles = (await fs.readdir(stickerDirectory))
     .filter((file) => path.extname(file).toLowerCase() === '.png')
     .sort();
-  assert.equal(stickerFiles.length, 34);
+  assert.equal(stickerFiles.length, 36);
 
   const contaminatedStickers = [];
   for (const file of stickerFiles) {

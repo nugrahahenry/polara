@@ -23,14 +23,15 @@ const NEW_STICKERS = new Map([
   ['paper-bow', 'prop'],
   ['love-envelope', 'charm'],
   ['botanical-sprig', 'accent'],
+  ['soft-archive-botanical', 'accent'],
 ]);
 const ALLOWED_CATEGORIES = new Set(['word', 'charm', 'prop', 'accent', 'material', 'exclusive']);
 
 
 test('Sticker Workshop ships nine purposeful additions and complete category metadata', () => {
-  assert.equal(universalStickers.length, 26);
-  assert.equal(exclusiveStickers.length, 8);
-  assert.equal(stickers.length, 34);
+  assert.equal(universalStickers.length, 27);
+  assert.equal(exclusiveStickers.length, 9);
+  assert.equal(stickers.length, 36);
 
   for (const asset of stickers) {
     assert.ok(ALLOWED_CATEGORIES.has(asset.category), `${asset.id}: ${asset.category}`);

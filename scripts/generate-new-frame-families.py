@@ -183,6 +183,62 @@ def make_lucky_ticket(mode: str) -> tuple[Image.Image, dict[str, Any]]:
     }
 
 
+def make_soft_archive(mode: str) -> tuple[Image.Image, dict[str, Any]]:
+    """Create a calm editorial archive frame with dense, useful photo windows."""
+    width, height = ((1080, 1350) if mode == "single" else (720, 1800))
+    paper = "#f4eee8"
+    ink = "#352b2d"
+    rose = "#d99a9e"
+    lilac = "#b9a9d0"
+    butter = "#e7c76f"
+    image = Image.new("RGBA", (width, height), paper)
+    draw = ImageDraw.Draw(image)
+    draw.rectangle((0, 0, width, height), fill=paper)
+    draw.rounded_rectangle((30, 30, width - 30, height - 30), radius=28, fill="#fbf8f3", outline=ink, width=5)
+    draw.rounded_rectangle((48, 48, width - 48, height - 48), radius=22, outline=rose, width=4)
+
+    title_size = 54 if mode == "single" else 36
+    sub_size = 16 if mode == "single" else 12
+    draw.text((width // 2, 88), "SOFT ARCHIVE", anchor="mm", fill=ink, font=font(FONT_DISPLAY, title_size))
+    draw.text((width // 2, 132 if mode == "single" else 122), "POLARA KEEPSAKE EDITION", anchor="mm", fill="#6d5a59", font=font(FONT_BOLD, sub_size))
+    draw.line((88, 166 if mode == "single" else 150, width - 88, 166 if mode == "single" else 150), fill=lilac, width=5)
+    draw.ellipse((72, 76, 112, 116), fill=butter, outline=ink, width=4)
+    draw.ellipse((width - 112, 76, width - 72, 116), fill=rose, outline=ink, width=4)
+
+    if mode == "single":
+        windows = [{"x": 92, "y": 208, "width": 896, "height": 876, "radius": 34}]
+        draw.text((98, 1138), "ARCHIVE / 01", fill=ink, font=font(FONT_BOLD, 22))
+        draw.text((width - 98, 1138), "KEEP CLOSE", anchor="ra", fill=rose, font=font(FONT_BOLD, 22))
+        draw.text((width // 2, 1212), "a little proof of a good day", anchor="mm", fill=ink, font=font(FONT_REGULAR, 25))
+        draw.text((width // 2, 1252), "POLARA PHOTO CLUB", anchor="mm", fill=lilac, font=font(FONT_BOLD, 17))
+    else:
+        windows = [
+            {"x": 64, "y": 178, "width": 592, "height": 420, "radius": 24},
+            {"x": 64, "y": 632, "width": 592, "height": 420, "radius": 24},
+            {"x": 64, "y": 1086, "width": 592, "height": 420, "radius": 24},
+        ]
+        for index, window in enumerate(windows, 1):
+            draw.text((42, window["y"] + 26), f"0{index}", anchor="mm", fill=rose if index != 2 else lilac, font=font(FONT_BOLD, 16))
+        draw.text((width // 2, 1594), "SOFT ARCHIVE", anchor="mm", fill=ink, font=font(FONT_DISPLAY, 30))
+        draw.text((width // 2, 1636), "three proofs, kept close", anchor="mm", fill="#6d5a59", font=font(FONT_REGULAR, 17))
+        draw.text((width // 2, 1682), "POLARA PHOTO CLUB", anchor="mm", fill=rose, font=font(FONT_BOLD, 13))
+
+    for index, window in enumerate(windows):
+        x, y, w, h, radius = window["x"], window["y"], window["width"], window["height"], window["radius"]
+        border = rose if index % 2 == 0 else lilac
+        draw.rounded_rectangle((x - 9, y - 9, x + w + 9, y + h + 9), radius=radius + 9, fill=border, outline=ink, width=3)
+        draw.rounded_rectangle((x, y, x + w, y + h), radius=radius, fill=(0, 0, 0, 0))
+
+    palette = (rose, lilac, butter)
+    draw_edge_signature(draw, width, height, palette)
+    return image, {
+        "family": "soft-archive", "name": "Soft Archive", "category": "editorial-keepsake", "mode": mode,
+        "maskType": "rounded-rectangles", "photoWindows": windows, "slotBackground": paper,
+        "decorativeElements": ["archival paper", "editorial header", "rose and lilac proof edge", "keepsake footer"],
+        "edgePalette": list(palette),
+    }
+
+
 def extract_chroma(source_path: Path, output_path: Path, prompt: str) -> bytes:
     source = Image.open(source_path).convert("RGB")
     width, height = source.size
@@ -260,7 +316,9 @@ def frame_entry(base: dict[str, Any], payload: bytes, overlay_path: str) -> dict
         "pickerThumbnailSrc": f"assets/frames/composites/{slug}-{suffix}-thumbnail.png",
         "canvasWidth": 1080 if mode == "single" else 720, "canvasHeight": 1350 if mode == "single" else 1800,
         "sha256": hashlib.sha256(payload).hexdigest(), "byteSize": len(payload), "colorMode": "RGBA", "hasAlpha": True,
-        "assetVersion": "frame-overlay-v5", "qualityProfile": PROFILE, "edgePalette": base["edgePalette"],
+        "assetVersion": "frame-overlay-v7" if mode == "strip" else "frame-overlay-v5",
+        "qualityProfile": "polara-proof-edge-v3" if mode == "strip" else "polara-proof-edge-v2",
+        "edgePalette": base["edgePalette"],
         "slotBackground": base["slotBackground"], "supportsDynamicText": False,
         "metadataZones": {"caption": None, "date": None, "brand": None},
         "metadataAreaNote": "Family copy is baked into the character-free overlay; geometry remains manifest-owned.",
@@ -270,7 +328,7 @@ def frame_entry(base: dict[str, Any], payload: bytes, overlay_path: str) -> dict
 
 def main() -> None:
     generated_entries: list[dict[str, Any]] = []
-    for family, maker in (("cloud-picnic", make_cloud_picnic), ("lucky-ticket", make_lucky_ticket)):
+    for family, maker in (("cloud-picnic", make_cloud_picnic), ("lucky-ticket", make_lucky_ticket), ("soft-archive", make_soft_archive)):
         for mode in ("single", "strip"):
             image, base = maker(mode)
             suffix = "single" if mode == "single" else "strip"
@@ -289,17 +347,21 @@ def main() -> None:
         ("poca-cloud-picnic-exclusive.png", "poca-cloud-picnic-chroma.png", "Original fictional Poca Cloud Picnic sticker generated with built-in ImageGen; chroma extracted locally."),
         ("poca-lucky-ticket-exclusive.png", "poca-lucky-ticket-chroma.png", "Original fictional Poca Lucky Ticket sticker generated with built-in ImageGen; chroma extracted locally."),
     ]
-    provenance = {"schemaVersion": 1, "assets": []}
+    provenance_path = ROOT / "assets" / "sticker-provenance.json"
+    existing_provenance = json.loads(provenance_path.read_text(encoding="utf-8")) if provenance_path.is_file() else {"schemaVersion": 1, "assets": []}
+    existing_assets = {item["runtimeSrc"]: item for item in existing_provenance.get("assets", [])}
     for runtime_name, source_name, prompt in sticker_specs:
         runtime_path = ROOT / "assets" / "stickers" / runtime_name
         payload = extract_chroma(sources / source_name, runtime_path, prompt)
-        provenance["assets"].append({
+        existing_assets[f"assets/stickers/{runtime_name}"] = {
             "runtimeSrc": f"assets/stickers/{runtime_name}", "sha256": hashlib.sha256(payload).hexdigest(),
             "kind": "original-fictional", "sourceMode": "built-in-imagegen-plus-local-chroma-extraction",
             "publicFigure": False, "collaborationClaim": False, "background": "transparent", "hiddenRgbPolicy": "zero-at-alpha-0",
-        })
-    (ROOT / "assets" / "sticker-provenance.json").write_text(json.dumps(provenance, indent=2) + "\n", encoding="utf-8")
-    print("[new-frame-families] generated 4 overlays and 2 transparent exclusive stickers")
+        }
+    existing_provenance["schemaVersion"] = 1
+    existing_provenance["assets"] = list(existing_assets.values())
+    provenance_path.write_text(json.dumps(existing_provenance, indent=2) + "\n", encoding="utf-8")
+    print("[new-frame-families] generated 6 overlays and refreshed 2 transparent exclusive stickers")
 
 
 if __name__ == "__main__":

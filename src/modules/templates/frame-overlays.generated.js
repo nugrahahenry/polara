@@ -1741,5 +1741,143 @@ export const frameOverlayTemplates = [
       "date": null,
       "brand": null
     }
+  },
+  {
+    "id": "soft-archive.single",
+    "familyId": "soft-archive",
+    "name": "Soft Archive",
+    "category": "editorial-keepsake",
+    "mode": "single",
+    "tone": "statement",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Single · 1080 × 1350",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/soft-archive-single-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/soft-archive-single-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/soft-archive-single-thumbnail.png",
+    "familyProfile": {
+      "id": "soft-archive",
+      "collectionId": "keepsakes",
+      "story": "A quiet editorial archive for moments that deserve a softer edge.",
+      "material": "Archival paper",
+      "palette": [
+        "#d99a9e",
+        "#b9a9d0",
+        "#e7c76f"
+      ],
+      "exclusiveStickerId": "poca-soft-archive-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "soft-archive-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-soft-archive-exclusive"
+      }
+    },
+    "canvas": {
+      "width": 1080,
+      "height": 1350
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 92,
+        "y": 208,
+        "width": 896,
+        "height": 876,
+        "radius": 34
+      }
+    ],
+    "assetVersion": "frame-overlay-v5",
+    "slotBackground": "#f4eee8",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
+  },
+  {
+    "id": "soft-archive.strip",
+    "familyId": "soft-archive",
+    "name": "Soft Archive",
+    "category": "editorial-keepsake",
+    "mode": "strip",
+    "tone": "statement",
+    "premium": false,
+    "status": "runtime-overlay",
+    "pickerBadge": "Hero",
+    "pickerDetail": "Strip 3 · 720 × 1800",
+    "renderMode": "png-overlay",
+    "characterPolicy": "character-free",
+    "overlaySrc": "assets/frames/soft-archive-strip-overlay.png",
+    "thumbnailSrc": "assets/frames/thumbnails/soft-archive-strip-thumbnail.png",
+    "pickerThumbnailSrc": "assets/frames/composites/soft-archive-strip-thumbnail.png",
+    "familyProfile": {
+      "id": "soft-archive",
+      "collectionId": "keepsakes",
+      "story": "A quiet editorial archive for moments that deserve a softer edge.",
+      "material": "Archival paper",
+      "palette": [
+        "#d99a9e",
+        "#b9a9d0",
+        "#e7c76f"
+      ],
+      "exclusiveStickerId": "poca-soft-archive-exclusive",
+      "pickerFixtureId": "polara-picker-friends-v1",
+      "assetKit": {
+        "id": "soft-archive-kit-v1",
+        "status": "ready",
+        "formats": [
+          "single",
+          "strip"
+        ],
+        "preview": "composite",
+        "stickerCompanion": "poca-soft-archive-exclusive"
+      }
+    },
+    "canvas": {
+      "width": 720,
+      "height": 1800
+    },
+    "maskType": "rounded-rectangles",
+    "photoWindows": [
+      {
+        "x": 64,
+        "y": 178,
+        "width": 592,
+        "height": 420,
+        "radius": 24
+      },
+      {
+        "x": 64,
+        "y": 632,
+        "width": 592,
+        "height": 420,
+        "radius": 24
+      },
+      {
+        "x": 64,
+        "y": 1086,
+        "width": 592,
+        "height": 420,
+        "radius": 24
+      }
+    ],
+    "assetVersion": "frame-overlay-v7",
+    "slotBackground": "#f4eee8",
+    "supportsDynamicText": false,
+    "metadataZones": {
+      "caption": null,
+      "date": null,
+      "brand": null
+    }
   }
 ];

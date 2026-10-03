@@ -5,6 +5,16 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.46.0] - 2026-10-03
+
+### Added
+- Asset expansion v1 menambah keluarga frame Soft Archive untuk Single dan Strip, lengkap dengan overlay character-free, thumbnail fallback, composite picker, geometry manifest, serta Poca Soft Archive exclusive.
+- Sticker workshop menambah Archive Bouquet, sebuah sticker botanical transparan yang dibuat sebagai aset orisinal Polara.
+
+### Validation
+- Registry production bertambah menjadi 9 keluarga dan 26 variant tanpa mengubah flow canonical, ukuran export, atau parity preview dan export.
+- Asset provenance, alpha cleanup, frame geometry, picker thumbnail, dan exact export tetap diuji bersama suite produksi.
+
 ## [0.45.7] - 2026-10-02
 
 ### Fixed
