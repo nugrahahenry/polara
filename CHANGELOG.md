@@ -5,6 +5,44 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-10-04
+
+Polara v1.0.0 menandai rilis publik pertama dari pengalaman photobooth
+local-first yang sudah diaudit end-to-end.
+
+### Release contract
+
+- Flow canonical tetap `Mulai -> Kamera -> Review -> Frame -> Hias -> Reveal`.
+- Strip 3 tetap default. Single, timer 3/5/10 detik, retake per slot, Fill
+  frame, preview/export parity, dan local browser processing tetap tersedia.
+- Export exact tetap Single 1080x1350 dan Strip 720x1800.
+- Sembilan keluarga frame dan 26 variant memakai overlay canonical, geometry
+  bersama, thumbnail fallback, composite picker, dan satu Poca exclusive per
+  keluarga.
+- Pose Mate memiliki lima guest, termasuk pack owner-authorized PM-03 Byun
+  Woo-seok, PM-04 Wonyoung, dan PM-05 Yeji. Detail hak pakai tetap berada di
+  luar repository dan tidak ada klaim kolaborasi di UI.
+- Save PNG, Photo only, native Share bila tersedia, fallback download, privacy
+  dialog, reduced motion, focus-visible, safe area, dan target sentuh 44 px
+  tetap menjadi bagian dari kontrak rilis.
+- Tidak ada backend, database, akun, upload, cloud gallery, payment, atau AI.
+
+### Validation
+
+- 116 test Node lulus.
+- 10 test Python, 26/26 overlay, dan asset quality pass lulus menggunakan
+  bundled Python runtime.
+- QA browser production lulus pada 390x844, 768x1024, 900x510, dan 1440x900,
+  mencakup 26 variant, tujuh kombinasi Pose Mate, exact export, accessibility,
+  reduced motion, footer, camera fallback, dan runtime error 0.
+- Dogfooding lokal lulus dari Start sampai Reveal, termasuk preload guest,
+  timer, tiga capture, frame card selection, exclusive sticker, Proof approved,
+  dan Save PNG 720x1800.
+- Validasi perangkat fisik Android/iPhone, Safari safe area, native share
+  sheet, dan dogfooding kelompok teman masih menjadi post-release validation.
+  Hal ini tidak mengubah kontrak v1, tetapi belum boleh diklaim tervalidasi
+  sebelum benar-benar diuji.
+
 ## [0.47.1] - 2026-10-03
 
 - Tombol buka kamera sekarang terkunci selama aset guest Pose Mate sedang dimuat, sehingga pilihan guest tidak dapat tertimpa oleh perpindahan tahap yang terlalu cepat.

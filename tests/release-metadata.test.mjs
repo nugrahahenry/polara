@@ -16,8 +16,13 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.47.1 Pose Mate preload guard checkpoint', () => {
-  assert.equal(packageJson.version, '0.47.1');
+test('release metadata records the Polara v1.0.0 launch checkpoint', () => {
+  assert.equal(packageJson.version, '1.0.0');
+  assert.match(changelog, /## \[1\.0\.0\] - 2026-10-04/);
+  assert.match(changelog, /rilis publik pertama/i);
+  assert.match(changelog, /Validasi perangkat fisik Android\/iPhone/i);
+  assert.match(changelog, /Tidak ada backend, database, akun, upload, cloud gallery, payment, atau AI/i);
+  assert.match(changelog, /## \[0\.47\.1\] - 2026-10-03/);
   assert.match(changelog, /## \[0\.47\.1\] - 2026-10-03/);
   assert.match(changelog, /terkunci selama aset guest Pose Mate sedang dimuat/i);
   assert.match(changelog, /## \[0\.47\.0\] - 2026-10-03/);
