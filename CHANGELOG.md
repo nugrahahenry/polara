@@ -5,6 +5,14 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.46.1] - 2026-10-03
+
+### Fixed
+- Poca Soft Archive exclusive diremaster agar mengikuti gaya glossy chibi Poca produksi, dengan siluet folder lavender dan bunga tetap dipertahankan.
+
+### Validation
+- Runtime sticker tetap 512×512, transparan, alpha bersih, dan provenance diperbarui.
+
 ## [0.46.0] - 2026-10-03
 
 ### Added

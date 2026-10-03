@@ -16,8 +16,12 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the v0.46.0 asset expansion checkpoint', () => {
-  assert.equal(packageJson.version, '0.46.0');
+test('release metadata records the v0.46.1 Poca style remaster checkpoint', () => {
+  assert.equal(packageJson.version, '0.46.1');
+  assert.match(changelog, /## \[0\.46\.1\] - 2026-10-03/);
+  assert.match(changelog, /Poca Soft Archive exclusive/i);
+  assert.match(changelog, /glossy chibi/i);
+  assert.match(changelog, /## \[0\.46\.0\] - 2026-10-03/);
   assert.match(changelog, /## \[0\.46\.0\] - 2026-10-03/);
   assert.match(changelog, /Soft Archive/i);
   assert.match(changelog, /Archive Bouquet/i);

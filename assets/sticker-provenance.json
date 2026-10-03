@@ -83,9 +83,9 @@
     },
     {
       "runtimeSrc": "assets/stickers/poca-soft-archive-exclusive.png",
-      "sha256": "4ec515645578075dd04b043fa202b84c54ce2c7a26fd10ed84bd9150f53b1063",
+      "sha256": "fcf6130068e31497d0ab1b1ed03205a993bb62dffdb341df3dbfaa0126dbfc77",
       "kind": "original-fictional",
-      "sourceMode": "built-in-imagegen-plus-local-alpha-cleanup",
+      "sourceMode": "built-in-imagegen-style-remaster-plus-local-alpha-cleanup",
       "publicFigure": false,
       "collaborationClaim": false,
       "background": "transparent",
