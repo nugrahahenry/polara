@@ -5,6 +5,12 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [0.47.1] - 2026-10-03
+
+- Tombol buka kamera sekarang terkunci selama aset guest Pose Mate sedang dimuat, sehingga pilihan guest tidak dapat tertimpa oleh perpindahan tahap yang terlalu cepat.
+- Cache aplikasi dinaikkan agar patch perilaku selalu termuat saat dogfooding lokal.
+- Import module guest ikut diberi cache version agar pilihan guest baru tidak tertahan oleh cache browser lama.
+
 ## [0.47.0] - 2026-10-03
 
 - Pose Mate kini punya tiga pilihan guest owner-authorized tambahan: Byun Woo-seok, Wonyoung, dan Yeji, masing-masing dengan pose Neutral, Peace, Half-heart, Seated, Seated-wave, dan Seated-heart.

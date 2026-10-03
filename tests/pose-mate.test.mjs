@@ -23,6 +23,16 @@ test('Pose Mate exposes an explicit opt-in while Regular Booth remains the defau
 });
 
 
+test('Pose Mate keeps Open camera locked while a guest pack is preloading', async () => {
+  const app = await read('src/app.js');
+
+  assert.match(app, /guestLoading:\s*false/);
+  assert.match(app, /disabled:\s*state\.guestLoading/);
+  assert.match(app, /state\.guestLoading\s*=\s*true;\s*syncStartControls\(\);/);
+  assert.match(app, /state\.guestLoading\s*=\s*false;\s*syncStartControls\(\);/);
+});
+
+
 test('Pose Mate exposes the default guests and the owner-authorized guest pack without collaboration claims', async () => {
   const manifest = JSON.parse(await read('assets/guests/guest-manifest.json'));
   const guestModule = await import('../src/modules/guests/index.js');

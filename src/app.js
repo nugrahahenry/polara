@@ -22,7 +22,7 @@ import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
   getGuest, getGuestOptions, getGuestRuntimeAssets, poseGuideForSlot,
   retryWithoutGuestOnFailure,
-} from './modules/guests/index.js?v=8';
+} from './modules/guests/index.js?v=9';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';
@@ -105,7 +105,7 @@ function initialState() {
     cameraStatus: 'idle', cameraError: null, shooting: false,
     photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null, recentCaptureSlot: null,
     frameId: null, frameCollectionId: ALL_FRAME_COLLECTION_ID, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
-    revealReady: false, busy: false, scroll: { frameX: 0, frameByCollection: { all: 0 }, decorateX: 0 },
+    revealReady: false, busy: false, guestLoading: false, scroll: { frameX: 0, frameByCollection: { all: 0 }, decorateX: 0 },
   };
 }
 
@@ -291,6 +291,7 @@ async function handleGuestAssetError() {
   guestAssetFailureHandling = true;
   try {
     guestSelectionGate.cancel();
+    state.guestLoading = false;
     state.experience = 'regular';
     state.guestId = null;
     syncStartControls();
@@ -462,7 +463,11 @@ function updateActions() {
   setButton(refs.tertiary, { hidden: true });
 
   if (state.step === 'start') {
-    setButton(refs.primary, { label: state.experience === POSE_MATE_EXPERIENCE ? 'Open Pose Mate' : 'Open camera', tone: 'primary' });
+    setButton(refs.primary, {
+      label: state.experience === POSE_MATE_EXPERIENCE ? 'Open Pose Mate' : 'Open camera',
+      tone: 'primary',
+      disabled: state.guestLoading,
+    });
   } else if (state.step === 'camera') {
     const ready = state.cameraStatus === 'ready' || state.cameraStatus === 'demo';
     setButton(refs.primary, { label: state.shooting ? 'Taking photo…' : 'Take photo', tone: 'primary', disabled: !ready || state.shooting });
@@ -613,6 +618,8 @@ refs.guestOptionList.addEventListener('click', async (event) => {
   const guest = getGuest(button.dataset.guestId);
   if (!guest) return;
   const requestId = guestSelectionGate.begin();
+  state.guestLoading = true;
+  syncStartControls();
   button.setAttribute('aria-busy', 'true');
   try {
     await Promise.all(getGuestRuntimeAssets(guest.id).map(preloadGuestAsset));
@@ -625,6 +632,10 @@ refs.guestOptionList.addEventListener('click', async (event) => {
     if (guestSelectionGate.isCurrent(requestId)) status(`${guest.name} could not load. Your current Pose Mate stays selected.`);
   } finally {
     button.removeAttribute('aria-busy');
+    if (guestSelectionGate.isCurrent(requestId)) {
+      state.guestLoading = false;
+      syncStartControls();
+    }
   }
 });
 
@@ -1883,6 +1894,8 @@ refs.experienceChoose.addEventListener('click', async (event) => {
   if (requestedExperience === state.experience) return;
   if (requestedExperience === POSE_MATE_EXPERIENCE) {
     const guest = getGuest(DEFAULT_GUEST_ID);
+    state.guestLoading = true;
+    syncStartControls();
     button.setAttribute('aria-busy', 'true');
     try {
       await Promise.all(getGuestOptions().flatMap((option) => getGuestRuntimeAssets(option.id)).map(preloadGuestAsset));
@@ -1894,13 +1907,19 @@ refs.experienceChoose.addEventListener('click', async (event) => {
       if (!guestSelectionGate.isCurrent(requestId)) return;
       state.experience = 'regular';
       state.guestId = null;
+      state.guestLoading = false;
       status('Pose Mate is unavailable right now. Regular Booth remains ready.');
     } finally {
       button.removeAttribute('aria-busy');
+      if (guestSelectionGate.isCurrent(requestId)) {
+        state.guestLoading = false;
+        syncStartControls();
+      }
     }
   } else {
     state.experience = 'regular';
     state.guestId = null;
+    state.guestLoading = false;
     status('Regular Booth selected. Your photos stay character-free.');
   }
   invalidatePreparedExport();
