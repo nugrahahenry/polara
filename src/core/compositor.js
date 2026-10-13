@@ -257,9 +257,9 @@ export function renderStickerLayer(canvasEl, stickers, options = {}) {
       return button;
     };
 
-    const removeButton = makeHandle(`top:${-handleSize / 2}px;right:${-handleSize / 2}px;background:#ff5f7a;cursor:pointer;`, 'Hapus sticker', '✕');
-    const rotateButton = makeHandle(`top:${-handleSize * 1.35}px;left:50%;transform:translateX(-50%);background:#4eb7f8;cursor:grab;`, 'Putar sticker', '↻');
-    const resizeButton = makeHandle(`bottom:${-handleSize / 2}px;right:${-handleSize / 2}px;background:#ffe26f;color:#4b2e1f;cursor:nwse-resize;`, 'Ubah ukuran sticker', '⤢');
+    const removeButton = makeHandle(`top:${-handleSize / 2}px;right:${-handleSize / 2}px;background:#ff5f7a;cursor:pointer;`, 'Remove sticker', '✕');
+    const rotateButton = makeHandle(`top:${-handleSize * 1.35}px;left:50%;transform:translateX(-50%);background:#4eb7f8;cursor:grab;`, 'Rotate sticker', '↻');
+    const resizeButton = makeHandle(`bottom:${-handleSize / 2}px;right:${-handleSize / 2}px;background:#ffe26f;color:#4b2e1f;cursor:nwse-resize;`, 'Resize sticker', '⤢');
 
     const select = () => {
       if (!interactive) return;

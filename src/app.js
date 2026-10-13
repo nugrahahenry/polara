@@ -6,7 +6,7 @@ import {
 import {
   renderTemplate, setPhotoSlot, refreshPhotoSlots, setMeta, exportPng, exportRawPng,
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
-} from './core/compositor.js?v=4';
+} from './core/compositor.js?v=5';
 import { applyPhotoGeometry, computePhotoGeometry, initializePhotosForFrame, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
 import { applyGuestImageGeometry, computeGuestGeometry } from './core/guest-geometry.js?v=2';
 import { resolveGuestPlacement, patchGuestPlacements } from './core/guest-placement.js';
@@ -1833,7 +1833,7 @@ refs.primary.addEventListener('click', async () => {
   if (state.step === 'start') await beginCamera();
   else if (state.step === 'camera') await takePhoto();
   else if (state.step === 'review') await goToStep('frame', 'Choose a frame. Photo adjustments remain reversible.');
-  else if (state.step === 'frame') await goToStep('decorate', 'Add a caption and stickers. Photos and frame remain unchanged when you go back.');
+  else if (state.step === 'frame') await goToStep('decorate', 'Add stickers to your print. Photos and frame stay as they are when you go back.');
   else if (state.step === 'decorate') await goToStep('reveal');
   else if (state.step === 'reveal') await shareResult();
 });
@@ -1929,7 +1929,7 @@ async function resetSession() {
   phCanvas = null;
   refs.stage.innerHTML = '';
   refs.caption.value = '';
-  await goToStep('start', 'New session ready. Choose a format and timer.');
+  await goToStep('start', 'New session ready. Choose a format to get started.');
 }
 
 function wireCollectionKeyboard(container, selector, { activateOnMove = false } = {}) {
@@ -2031,7 +2031,7 @@ document.querySelectorAll('.mascot-runtime').forEach((image) => {
 
 preloadMascots();
 try {
-  await goToStep('start', 'Choose a format and timer, then open the camera when ready.', { focusTitle: false });
+  await goToStep('start', 'Choose a format, then open the camera when ready.', { focusTitle: false });
 } finally {
   await finishBootScreen(bootState);
 }

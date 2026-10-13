@@ -5,6 +5,19 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [1.1.1] - 2026-10-13
+
+Polara v1.1.1 merapikan petunjuk sesi setelah dogfooding v1.1.
+
+### Fixed
+
+- Petunjuk Start dan New session tidak lagi meminta pilihan timer sebelum
+  membuka Camera. Timer tetap dipilih sebelum setiap foto di Camera.
+- Petunjuk masuk Decorate tidak menjanjikan caption pada frame yang tidak
+  mendukungnya. Kontrol caption pada frame yang mendukungnya tetap tersedia.
+- Label kontrol stiker memakai Remove, Rotate, dan Resize sticker agar konsisten
+  dengan bahasa utama UI. Tidak ada perubahan geometry, aset, atau hasil export.
+
 ## [1.1.0] - 2026-10-13
 
 Polara v1.1.0 menambahkan penyesuaian Pose Mate per foto.

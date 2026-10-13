@@ -96,6 +96,12 @@ async function runGuestPlacementAudit() {
     if (writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${key}-placement-frame.png`) });
     await page.locator('#primaryBtn').click();
     await waitForPanel(page, 'decorate');
+    assert.equal(await page.locator('#status').textContent(), 'Add stickers to your print. Photos and frame stay as they are when you go back.');
+    await page.locator('#stickerTray .sticker-btn').first().click();
+    for (const name of ['Remove sticker', 'Rotate sticker', 'Resize sticker']) {
+      assert.equal(await page.getByRole('button', { name, exact: true }).isVisible(), true);
+    }
+    await page.locator('#undoStickerBtn').click();
     await page.locator('#backBtn').click();
     await waitForPanel(page, 'frame');
     assert.equal(await page.locator('#frameGuestAdjust-scale').inputValue(), '115');
@@ -108,7 +114,7 @@ async function runGuestPlacementAudit() {
     const raw = await downloadPng(page, `${key}-placement-photo-only.png`, '#tertiaryBtn');
     assert.deepEqual({ width: raw.width, height: raw.height }, { width: exported.width, height: exported.height });
     if (writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${key}-placement-reveal.png`) });
-    report.guestPlacement[key] = { camera, frame, accessibility: a11y, export: exported, raw, isolation: 'per-slot and per-layout passed', retake: 'passed', reset: 'passed', countdownLock: 'passed' };
+    report.guestPlacement[key] = { camera, frame, accessibility: a11y, export: exported, raw, isolation: 'per-slot and per-layout passed', retake: 'passed', reset: 'passed', countdownLock: 'passed', sessionGuidance: 'Start, Decorate and sticker handle labels passed' };
     await context.close();
   }
   for (const kind of ['export', 'raw']) {
@@ -434,6 +440,7 @@ async function startPage(context) {
   await page.goto(baseUrl, { waitUntil: 'load', timeout: 30_000 });
   await page.locator('#bootScreen').waitFor({ state: 'hidden', timeout: 5_000 });
   await page.locator('#primaryBtn').waitFor({ state: 'visible' });
+  assert.equal(await page.locator('#status').textContent(), 'Choose a format, then open the camera when ready.');
   return page;
 }
 
