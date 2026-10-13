@@ -202,7 +202,7 @@ input, textarea { caret-color: var(--pink-deep); }
   text-transform: uppercase;
 }
 .stage-docket { top: 28px; }
-.stage-footline { bottom: 28px; }
+.stage-footline { bottom: 28px; justify-content: flex-end; }
 .stage-docket strong { color: var(--proof-ink); font-weight: 800; }
 .stage-docket::after,
 .stage-footline::before {
@@ -1807,15 +1807,6 @@ html.app-entering .workspace { animation: proof-desk-arrival 720ms cubic-bezier(
   white-space: nowrap;
 }
 .maker-spark { width: 16px; height: 16px; }
-.footer-proof-label {
-  padding: 4px 7px;
-  border: 1px solid var(--proof-hairline);
-  border-radius: 6px;
-  color: var(--proof-muted);
-  font: 800 .55rem/1 var(--font-ui);
-  letter-spacing: .08em;
-  text-transform: uppercase;
-}
 .maker-link { font-family: var(--font-display); font-weight: 700; }
 .footer-privacy {
   grid-column: 1 / -1;
@@ -1873,7 +1864,6 @@ html.app-entering .workspace { animation: proof-desk-arrival 720ms cubic-bezier(
   .app-footer { padding-top: 32px; }
   .footer-inner { gap: 9px 12px; }
   .maker-seal { gap: 6px; font-size: .75rem; }
-  .footer-proof-label { display: none; }
   .footer-end { gap: 0; }
   .social-links { gap: 6px; }
   .social-link { width: 44px; padding: 0; border-radius: 50%; }
@@ -1882,7 +1872,7 @@ html.app-entering .workspace { animation: proof-desk-arrival 720ms cubic-bezier(
 }
 
 @media (max-width: 360px) {
-  .maker-seal > span:not(.footer-proof-label) { display: none; }
+  .maker-seal > span { display: none; }
 }
 
 @media (max-height: 560px) and (orientation: landscape) {
@@ -1896,7 +1886,6 @@ html.app-entering .workspace { animation: proof-desk-arrival 720ms cubic-bezier(
   .app-footer::before { top: 8px; }
   .footer-inner { grid-template-columns: minmax(180px, .8fr) minmax(260px, 1.2fr) auto; gap: 12px; }
   .maker-seal { grid-column: 1; }
-  .maker-seal .footer-proof-label { display: none; }
   .footer-privacy { grid-column: 2; grid-row: 1; padding: 0; border: 0; }
   .footer-end { grid-column: 3; grid-row: 1; }
   .social-label, .footer-meta { display: none; }

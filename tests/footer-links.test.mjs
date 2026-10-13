@@ -33,7 +33,7 @@ test('desktop shell keeps Proof Table context and a horizontal footer foundation
   assert.match(html, /id="stageDocketStep"/);
   assert.match(html, /id="stageDocketFormat"/);
   assert.match(html, /class="footer-end"/);
-  assert.match(html, /class="footer-proof-label"/);
+  assert.doesNotMatch(html, /class="footer-proof-label"/);
   assert.match(
     proofTableCss,
     /@media \(min-width: 1100px\)[\s\S]*?\.footer-inner\s*\{[^}]*grid-template-columns:/,
@@ -69,7 +69,7 @@ test('social links are accessible, safe, and keep 44px targets', () => {
 
 
 test('short landscape keeps the maker footer reachable after the workspace', () => {
-  assert.match(html, /styles\/proof-table\.css\?v=362/);
+  assert.match(html, /styles\/proof-table\.css\?v=363/);
   assert.doesNotMatch(
     proofTableCss,
     /\.progress-wrap,\s*\.status-bar,\s*\.app-footer\s*\{\s*display:\s*none\s*!important;/,

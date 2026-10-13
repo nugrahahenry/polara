@@ -273,7 +273,7 @@ async function auditCameraProofDocket(page) {
   return page.evaluate(() => ({
     state: document.querySelector('#cameraWrap')?.dataset.cameraState || '',
     counter: document.querySelector('#cameraBayCounter')?.textContent.trim() || '',
-    localStatus: document.querySelector('#cameraBayLocal')?.textContent.trim() || '',
+    label: document.querySelector('#cameraBayLabel')?.textContent.trim() || '',
     slotStates: [...document.querySelectorAll('#cameraSlots .slot-state')]
       .map((node) => node.textContent.trim()),
   }));
@@ -627,7 +627,7 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   const initialCameraDocket = await auditCameraProofDocket(page);
   assert.equal(initialCameraDocket.state, 'ready');
   assert.equal(initialCameraDocket.counter, 'Photo 1 / 3');
-  assert.equal(initialCameraDocket.localStatus, 'Local session');
+  assert.equal(initialCameraDocket.label, 'Live camera');
   assert.deepEqual(initialCameraDocket.slotStates, ['Next', 'Waiting', 'Waiting']);
   const cameraCompanion = await auditStageCompanion(page, '#cameraWrap');
   assert.equal(cameraCompanion.companionOverlapsTarget, false, 'Camera Poca must not cover the live proof');
@@ -638,6 +638,8 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   // useful evidence instead of Chrome's synthetic green camera feed.
   await page.locator('#tertiaryBtn').click();
   await page.waitForFunction(() => document.querySelector('#cameraWrap')?.dataset.cameraState === 'demo');
+  assert.equal(await page.locator('#cameraBayLabel').textContent(), 'Demo photos');
+  assert.equal(await page.locator('#cameraStateNote').textContent(), 'Demo mode uses sample photos, not your camera.');
   let captureDelight;
   await captureProof(page, {
     onCountdown: async () => {

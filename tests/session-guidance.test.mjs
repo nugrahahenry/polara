@@ -4,6 +4,15 @@ import fs from 'node:fs/promises';
 
 const read = (file) => fs.readFile(new URL(`../${file}`, import.meta.url), 'utf8');
 
+test('decorative local labels are removed while demo and privacy stay explicit', async () => {
+  const [html, app] = await Promise.all([read('index.html'), read('src/app.js')]);
+  assert.doesNotMatch(html, /Local photos|Local session|LOCAL SESSION 06|Studio note 06/);
+  assert.match(html, /id="privacyDialog"/);
+  assert.match(html, /Nothing is uploaded, and no account is needed/);
+  assert.match(app, /Demo mode uses sample photos, not your camera\./);
+  assert.match(app, /cameraBayLabel\.textContent = demo \? 'Demo photos' : 'Live camera'/);
+});
+
 test('Start guidance does not offer a timer before Camera', async () => {
   const [html, app] = await Promise.all([read('index.html'), read('src/app.js')]);
   for (const source of [html, app]) {

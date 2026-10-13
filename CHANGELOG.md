@@ -5,6 +5,28 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [1.1.2] - 2026-10-13
+
+Polara v1.1.2 merapikan label UI dan struktur repository produksi.
+
+### Fixed
+
+- Label dekoratif Local photos, Local session, nomor sesi pembuka, dan Studio
+  note dihapus. Informasi privasi dan dimensi output tetap tersedia.
+- Camera menampilkan Demo photos saat mode contoh aktif. Petunjuk menjelaskan
+  bahwa mode tersebut memakai foto contoh, bukan kamera pengguna.
+
+### Added
+
+- README publik berbahasa Indonesia: cara memakai, menjalankan lokal, struktur
+  file, pengujian, batas privasi, dan aturan aset produksi.
+
+### Removed
+
+- Sepuluh template HTML pra-overlay beserta loader, registry rollback, dan kode
+  preview iframe yang tidak dipakai katalog produksi. Pemulihan tersedia melalui
+  riwayat Git. Seluruh 26 variant PNG, fallback thumbnail, dan geometry tetap.
+
 ## [1.1.1] - 2026-10-13
 
 Polara v1.1.1 merapikan petunjuk sesi setelah dogfooding v1.1.

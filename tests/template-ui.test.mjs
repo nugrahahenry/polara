@@ -4,7 +4,6 @@ import assert from 'node:assert/strict';
 import {
   findAvailableTemplate,
   isRequestedFrameStillSelected,
-  getTemplatePreviewConfig,
   getTemplatePreviewSources,
   getFramePreviewState,
   selectFramePreservingEditorState,
@@ -12,29 +11,33 @@ import {
 } from '../src/modules/templates/template-ui.js';
 
 
-test('thumbnail overlay memakai PNG versioned sedangkan legacy tetap iframe', () => {
+test('thumbnail overlay memakai PNG versioned dan tanpa sumber tidak membuat iframe', () => {
   assert.deepEqual(
-    getTemplatePreviewConfig({
+    getTemplatePreviewSources({
       thumbnailSrc: 'assets/frames/thumbnails/poca-thumbnail.png',
       assetVersion: 'frame overlay/v1',
     }),
-    {
+    [{
       kind: 'image',
+      role: 'frame',
       src: 'assets/frames/thumbnails/poca-thumbnail.png?v=frame%20overlay%2Fv1',
-    },
+    }],
   );
-  assert.deepEqual(getTemplatePreviewConfig({ file: 'legacy.html' }), { kind: 'iframe' });
+  assert.deepEqual(getTemplatePreviewSources({}), []);
 });
 
 
 test('picker memakai composite bila tersedia tanpa mengganti thumbnail fallback', () => {
   assert.deepEqual(
-    getTemplatePreviewConfig({
+    getTemplatePreviewSources({
       thumbnailSrc: 'assets/frames/thumbnails/plain.png',
       pickerThumbnailSrc: 'assets/frames/composites/proof.png',
       assetVersion: 'frame-overlay-v1',
     }),
-    { kind: 'image', src: 'assets/frames/composites/proof.png?v=frame-overlay-v1' },
+    [
+      { kind: 'image', role: 'picker', src: 'assets/frames/composites/proof.png?v=frame-overlay-v1' },
+      { kind: 'image', role: 'frame', src: 'assets/frames/thumbnails/plain.png?v=frame-overlay-v1' },
+    ],
   );
 });
 

@@ -1,10 +1,3 @@
-export function getTemplatePreviewConfig(template) {
-  const previewSrc = template.pickerThumbnailSrc || template.thumbnailSrc;
-  if (!previewSrc) return { kind: 'iframe' };
-  const version = encodeURIComponent(template.assetVersion || '1');
-  return { kind: 'image', src: `${previewSrc}?v=${version}` };
-}
-
 export function getTemplatePreviewSources(template) {
   const version = encodeURIComponent(template.assetVersion || '1');
   const sources = [];

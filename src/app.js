@@ -11,14 +11,14 @@ import { applyPhotoGeometry, computePhotoGeometry, initializePhotosForFrame, pat
 import { applyGuestImageGeometry, computeGuestGeometry } from './core/guest-geometry.js?v=2';
 import { resolveGuestPlacement, patchGuestPlacements } from './core/guest-placement.js';
 import { mountGuestPlacementControls, syncGuestPlacementControls } from './ui/guest-placement-controls.js';
-import { frameCollections, templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=17';
+import { frameCollections, templates, getTemplate, resolveTemplateHtml, templateDims } from './modules/templates/index.js?v=18';
 import { applyPhotoSlotPresentation, getPhotoSlotPresentation } from './modules/templates/photo-slot-ui.js';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {
-  findAvailableTemplate, getTemplatePreviewConfig, getTemplatePreviewSources, selectFramePreservingEditorState,
+  findAvailableTemplate, getTemplatePreviewSources, selectFramePreservingEditorState,
   isRequestedFrameStillSelected,
   templateSupportsDynamicText,
-} from './modules/templates/template-ui.js?v=13';
+} from './modules/templates/template-ui.js?v=14';
 import { getStickerPack, createStickerInstance, preloadMascots } from './modules/stickers/index.js?v=4';
 import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
@@ -65,6 +65,7 @@ const refs = {
   poseUserGuide: $('poseUserGuide'), poseGuestLayer: $('poseGuestLayer'), poseGuestPreview: $('poseGuestPreview'),
   cameraMessage: $('cameraMessage'), cameraOverlayTitle: $('cameraOverlayTitle'), cameraOverlayActions: $('cameraOverlayActions'),
   cameraBayCounter: $('cameraBayCounter'), cameraBayStatus: $('cameraBayStatus'),
+  cameraBayLabel: $('cameraBayLabel'),
   retryCamera: $('retryCameraBtn'), demoMode: $('demoModeBtn'), countdown: $('countdown'),
   countdownProof: $('countdownProof'), countdownValue: $('countdownValue'), countdownCue: $('countdownCue'),
   countdownProgress: $('countdownProgress'), flash: $('flashLayer'),
@@ -123,7 +124,6 @@ let reviewArrivalTimer = null;
 let revealRequestId = 0;
 let preparedExportRequestId = 0;
 let preparedFramedExport = null;
-let thumbFrames = [];
 const unavailableFrameIds = new Set();
 let resizeTimer = null;
 let guestAssetFailureHandling = false;
@@ -764,6 +764,7 @@ function showCameraState() {
   refs.cameraWrap.dataset.cameraState = state.cameraStatus;
   refs.cameraOverlayTitle.textContent = stateLabel;
   refs.cameraBayStatus.textContent = stateLabel;
+  refs.cameraBayLabel.textContent = demo ? 'Demo photos' : 'Live camera';
   refs.cameraOverlay.hidden = ready || demo;
   refs.cameraOverlayActions.hidden = ready || demo || state.cameraStatus === 'idle';
   refs.retryCamera.hidden = !['denied', 'unavailable', 'paused'].includes(state.cameraStatus);
@@ -776,7 +777,7 @@ function showCameraState() {
   else if (state.cameraStatus === 'idle') refs.cameraMessage.textContent = 'Camera has not started.';
   refs.video.hidden = demo;
   refs.cameraStateNote.textContent = demo
-    ? 'Demo mode is on. Each photo uses a local sample so you can test the flow.'
+    ? 'Demo mode uses sample photos, not your camera.'
     : state.cameraStatus === 'ready' ? 'Camera ready. The full capture is kept without permanent cropping.'
       : state.cameraStatus === 'paused' ? 'Press Try again to restart the camera. Existing photos will not change.'
         : 'The session and existing photos remain safe.';
@@ -1066,7 +1067,6 @@ function ensureCurrentFrame() {
 async function renderTemplateList() {
   refs.templateList.innerHTML = '';
   refs.templateList.classList.toggle('mode-strip', state.mode === 3);
-  thumbFrames = [];
   const available = filterFramesByCollection(
     framesForMode({ includeUnavailable: true }),
     state.frameCollectionId,
@@ -1271,50 +1271,15 @@ async function buildTemplateThumb(template, mount) {
     return;
   }
 
-  const preview = getTemplatePreviewConfig(template);
-  if (preview.kind === 'image') return;
-
-  try {
-    const { w, h } = templateDims(template);
-    const frame = document.createElement('iframe');
-    frame.className = 'tpl-thumb-frame';
-    frame.tabIndex = -1;
-    frame.setAttribute('aria-hidden', 'true');
-    frame.setAttribute('scrolling', 'no');
-    frame.style.width = `${w}px`;
-    frame.style.height = `${h}px`;
-    frame.srcdoc = await resolveTemplateDoc(template);
-    mount.appendChild(frame);
-    const focus = template.thumbnailFocus ?? .14;
-    thumbFrames.push({ frame, w, h, mode: template.mode, focus });
-    requestAnimationFrame(() => scaleThumb(frame, w, h, template.mode, focus));
-  } catch (error) {
-    mount.textContent = 'Preview unavailable';
-    mount.dataset.previewState = 'unavailable';
-    const button = mount.closest('.tpl-btn');
-    if (button) {
-      button.disabled = true;
-      button.classList.add('unavailable');
-      button.dataset.frameState = 'unavailable';
-      button.setAttribute('aria-selected', 'false');
-    }
-    console.debug('Frame thumbnail failed:', template.id, error);
+  mount.textContent = 'Preview unavailable';
+  mount.dataset.previewState = 'unavailable';
+  const button = mount.closest('.tpl-btn');
+  if (button) {
+    button.disabled = true;
+    button.classList.add('unavailable');
+    button.dataset.frameState = 'unavailable';
+    button.setAttribute('aria-selected', 'false');
   }
-}
-
-function scaleThumb(frame, width, height, mode = 'single', focus = .14) {
-  const box = frame.parentElement;
-  if (!box?.clientHeight) return;
-  const scale = mode === 'strip'
-    ? box.clientWidth / width
-    : Math.min(box.clientWidth / width, box.clientHeight / height);
-  const scaledWidth = width * scale;
-  const scaledHeight = height * scale;
-  const offsetX = Math.max(0, (box.clientWidth - scaledWidth) / 2);
-  const offsetY = mode === 'strip'
-    ? Math.min(0, (box.clientHeight - scaledHeight) * focus)
-    : Math.max(0, (box.clientHeight - scaledHeight) / 2);
-  frame.style.transform = `translate(${offsetX}px, ${offsetY}px) scale(${scale})`;
 }
 
 function syncCaptionAvailability(template) {
@@ -1887,7 +1852,7 @@ function activateDemoMode() {
   state.demo = true;
   state.cameraStatus = 'demo';
   showCameraState();
-  status('Demo mode is active. These local placeholders only test the Polara flow.');
+  status('Demo mode uses sample photos, not your camera.');
 }
 refs.demoMode.addEventListener('click', activateDemoMode);
 
@@ -1997,7 +1962,6 @@ refs.experienceChoose.addEventListener('click', async (event) => {
 function handleResize() {
   clearTimeout(resizeTimer);
   resizeTimer = setTimeout(() => {
-    thumbFrames.forEach(({ frame, w, h, mode, focus }) => scaleThumb(frame, w, h, mode, focus));
     syncAllRailWayfinding();
     if (phCanvas && ['frame', 'decorate', 'reveal'].includes(state.step)) {
       fitStage(templateDims(getTemplate(state.frameId)));
