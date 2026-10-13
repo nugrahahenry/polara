@@ -71,7 +71,7 @@ export const frameOverlayTemplates = [
         "height": 840
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v8",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -144,7 +144,7 @@ export const frameOverlayTemplates = [
         "height": 388
       }
     ],
-    "assetVersion": "frame-overlay-v7",
+    "assetVersion": "frame-overlay-v8",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -205,7 +205,7 @@ export const frameOverlayTemplates = [
         "height": 840
       }
     ],
-    "assetVersion": "frame-overlay-v5",
+    "assetVersion": "frame-overlay-v8",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {
@@ -278,7 +278,7 @@ export const frameOverlayTemplates = [
         "height": 388
       }
     ],
-    "assetVersion": "frame-overlay-v7",
+    "assetVersion": "frame-overlay-v8",
     "slotBackground": "#fff7ef",
     "supportsDynamicText": false,
     "metadataZones": {

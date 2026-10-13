@@ -13,6 +13,8 @@ from pathlib import Path
 
 from PIL import Image, ImageColor, ImageDraw, ImageFont, PngImagePlugin
 
+from frame_footer import ASSET_VERSION, FOOTER_PROFILE, draw_purikura_footer
+
 
 ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = ROOT / "assets" / "frames" / "frame-overlay-manifest.json"
@@ -129,8 +131,8 @@ def save_png(image: Image.Image, path: Path, source_info: dict[str, object]) -> 
 def main() -> None:
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     strips = [frame for frame in manifest["frames"] if frame.get("mode") == "strip"]
-    if len(strips) != 12:
-        raise RuntimeError(f"Expected 12 Strip variants, found {len(strips)}.")
+    if len(strips) != 13:
+        raise RuntimeError(f"Expected 13 Strip variants, found {len(strips)}.")
 
     for frame in strips:
         palette = tuple(frame["edgePalette"])
@@ -139,10 +141,15 @@ def main() -> None:
             image = source.convert("RGBA")
             source_info = dict(source.info)
         draw_edge_signature(image, palette, frame["id"])
+        if frame["family"] == "poca-purikura":
+            draw_purikura_footer(image, "strip")
+            source_info["polara:footer-profile"] = FOOTER_PROFILE
         payload = save_png(image, overlay_path, source_info)
         frame["sha256"] = hashlib.sha256(payload).hexdigest()
         frame["byteSize"] = len(payload)
-        frame["assetVersion"] = VERSION
+        frame["assetVersion"] = (
+            ASSET_VERSION if frame["family"] == "poca-purikura" else VERSION
+        )
         frame["qualityProfile"] = PROFILE
 
     MANIFEST_PATH.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")

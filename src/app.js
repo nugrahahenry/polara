@@ -11,7 +11,7 @@ import { applyPhotoGeometry, computePhotoGeometry, initializePhotosForFrame, pat
 import { applyGuestImageGeometry, computeGuestGeometry } from './core/guest-geometry.js?v=2';
 import { resolveGuestPlacement, patchGuestPlacements } from './core/guest-placement.js';
 import { mountGuestPlacementControls, syncGuestPlacementControls } from './ui/guest-placement-controls.js';
-import { frameCollections, templates, getTemplate, resolveTemplateHtml, templateDims } from './modules/templates/index.js?v=18';
+import { frameCollections, templates, getTemplate, resolveTemplateHtml, templateDims } from './modules/templates/index.js?v=19';
 import { applyPhotoSlotPresentation, getPhotoSlotPresentation } from './modules/templates/photo-slot-ui.js';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
 import {

@@ -68,7 +68,7 @@ def main() -> None:
             "pickerThumbnailSrc": f"assets/frames/composites/{slug}-thumbnail.png",
             "sha256": hashlib.sha256(payload).hexdigest(),
             "byteSize": len(payload),
-            "assetVersion": "frame-overlay-v5",
+            "assetVersion": base["assetVersion"],
             "edgePalette": ["#7087ed", "#8fd3ff", "#ffe26f"],
         })
         frame.pop("masterSrc", None)

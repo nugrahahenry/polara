@@ -428,6 +428,65 @@ async function downloadPng(page, name, button = '#secondaryBtn') {
   };
 }
 
+async function auditSaveAndShare(page, saved, name) {
+  let downloads = 0;
+  const countDownload = () => { downloads += 1; };
+  page.on('download', countDownload);
+  try {
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, 'canShare', { configurable: true, value: () => false });
+    });
+    const fallback = await downloadPng(page, `${name}-share-fallback.png`, '#primaryBtn');
+    assert.equal(fallback.sha256, saved.sha256, 'Share fallback must match Save PNG exactly');
+    await page.waitForFunction(() => document.querySelector('#status')?.textContent.includes('downloaded instead'));
+
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, 'canShare', { configurable: true, value: () => true });
+      Object.defineProperty(navigator, 'share', { configurable: true, value: async ({ files }) => {
+        const file = files[0];
+        const digest = await crypto.subtle.digest('SHA-256', await file.arrayBuffer());
+        window.__polaraQaShare = {
+          count: files.length, type: file.type,
+          sha256: Array.from(new Uint8Array(digest), (byte) => byte.toString(16).padStart(2, '0')).join(''),
+        };
+      } });
+    });
+    await page.locator('#primaryBtn').click();
+    await page.waitForFunction(() => document.querySelector('#status')?.textContent === 'Your print was shared.');
+    const payload = await page.evaluate(() => window.__polaraQaShare);
+    assert.deepEqual(payload, { count: 1, type: 'image/png', sha256: saved.sha256 });
+    assert.equal(downloads, 1, 'successful native-share fixture must not also download');
+
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, 'share', { configurable: true, value: async () => {
+        throw new DOMException('Cancelled by QA fixture', 'AbortError');
+      } });
+    });
+    await page.locator('#primaryBtn').click();
+    await page.waitForFunction(() => document.querySelector('#status')?.textContent.startsWith('Sharing was cancelled.'));
+    assert.equal(downloads, 1, 'cancel must not trigger a fallback download');
+    assert.equal(await page.locator('[data-panel="reveal"]').isVisible(), true);
+    const afterCancel = await downloadPng(page, `${name}-after-share-cancel.png`);
+    assert.equal(afterCancel.sha256, saved.sha256, 'cancel must preserve the exact prepared print');
+
+    await page.evaluate(() => {
+      Object.defineProperty(navigator, 'share', { configurable: true, value: async () => {
+        throw new DOMException('Unavailable by QA fixture', 'NotAllowedError');
+      } });
+    });
+    const denied = await downloadPng(page, `${name}-share-denied.png`, '#primaryBtn');
+    assert.equal(denied.sha256, saved.sha256, 'failed share must fall back to the same PNG');
+    report.saveShare ??= {};
+    report.saveShare[name] = {
+      sha256: saved.sha256, fallback: 'byte-identical', nativePayloadFixture: 'byte-identical',
+      cancelFixture: 'no download, Reveal retained, Save retry byte-identical',
+      deniedFixture: 'byte-identical download', physicalDevice: 'not tested',
+    };
+  } finally {
+    page.off('download', countDownload);
+  }
+}
+
 async function startPage(context) {
   const page = await context.newPage();
   page.on('console', (message) => {
@@ -993,7 +1052,10 @@ async function runFlow({ name, viewport, screenshots = false, retake = false, ex
   await shot('06', 'reveal');
 
   let exported = null;
-  if (exportStrip) exported = await downloadPng(page, 'polara-strip-proof-table.png');
+  if (exportStrip) {
+    exported = await downloadPng(page, 'polara-strip-proof-table.png');
+    await auditSaveAndShare(page, exported, 'strip');
+  }
   report.viewports[name] = {
     viewport, stages: stageAudit, frameRail, frameCollection, frameEdition, decorateWorkshop, chapterContinuity, revealTheatre,
       captureReview: {
@@ -1030,6 +1092,7 @@ async function runSingleExport() {
   await page.locator('#primaryBtn').click();
   await page.waitForFunction(() => document.querySelector('#revealTitle')?.textContent === 'Proof approved.', null, { timeout: 40_000 });
   const exported = await downloadPng(page, 'polara-single-proof-table.png');
+  await auditSaveAndShare(page, exported, 'single');
   await context.close();
   return exported;
 }

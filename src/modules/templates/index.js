@@ -1,5 +1,5 @@
 // Registry runtime: geometry dan aset berasal dari manifest overlay canonical.
-import { frameCollections, frameOverlayTemplates } from './frame-overlays.generated.js';
+import { frameCollections, frameOverlayTemplates } from './frame-overlays.generated.js?v=8';
 import { buildOverlayTemplateHtml } from './overlay-renderer.js';
 
 export const templates = [...frameOverlayTemplates];

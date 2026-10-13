@@ -5,6 +5,29 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [1.1.3] - 2026-10-13
+
+Polara v1.1.3 memperbaiki footer frame Poca Purikura.
+
+### Fixed
+
+- Bekas tulisan footer bertumpuk dibersihkan pada Poca Purikura dan Blueberry,
+  Single maupun Strip. Label POLARA / SINGLE atau POLARA / STRIP 3 memakai
+  area cetak terang dengan tinta gelap, tanpa mengubah geometry atau foto.
+- Thumbnail dan composite picker diregenerasi dari overlay canonical yang sama.
+  Hanya empat variant terkait yang memakai cache aset frame-overlay-v8.
+- Generator footer menghasilkan piksel yang sama ketika dijalankan ulang,
+  gagal jelas jika font tidak tersedia, dan membatasi perubahan ke area label.
+- Generator edisi warna mewarisi versi aset sumber; generator tipografi Strip
+  mengikuti katalog 13 Strip dan mempertahankan perbaikan label Purikura.
+
+### Added
+
+- Regresi batas area, alpha, penghapusan glyph lama, dan regenerasi footer.
+  Perintah test Python kini menjalankan seluruh test Python di repository.
+- QA Save/Share membandingkan PNG yang sama untuk unduhan, fallback, dan payload
+  berbagi; fixture cancel menjaga hasil siap disimpan, tanpa unduhan otomatis.
+
 ## [1.1.2] - 2026-10-13
 
 Polara v1.1.2 merapikan label UI dan struktur repository produksi.

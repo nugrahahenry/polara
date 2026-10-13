@@ -3,11 +3,14 @@
 
 from __future__ import annotations
 
+import argparse
 import hashlib
 import json
 from pathlib import Path
 
 from PIL import Image, ImageChops, ImageColor, ImageDraw, ImageFont, PngImagePlugin
+
+from frame_footer import ASSET_VERSION, FOOTER_PROFILE, draw_purikura_footer
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -128,18 +131,34 @@ def save_png(image: Image.Image, path: Path, source_info: dict[str, object], pro
 
 
 def main() -> None:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "--purikura-footer-only", action="store_true",
+        help="Repair only the four Purikura footer labels; preserve all other pixels and frames.",
+    )
+    arguments = parser.parse_args()
     manifest = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
     if len(manifest.get("frames", [])) != 26:
         raise RuntimeError("The current Polara library expects exactly twenty-six runtime variants.")
 
-    for frame in manifest["frames"]:
-        palette = PALETTES[frame["family"]]
+    frames = [
+        frame for frame in manifest["frames"]
+        if not arguments.purikura_footer_only or frame["family"] == "poca-purikura"
+    ]
+    if arguments.purikura_footer_only and len(frames) != 4:
+        raise RuntimeError("Expected exactly four Purikura variants before writing assets.")
+    for frame in frames:
+        palette = tuple(frame.get("edgePalette") or PALETTES[frame["family"]])
         overlay_path = project_path(frame["overlaySrc"])
         with Image.open(overlay_path) as source:
             image = source.convert("RGBA")
             source_info = dict(source.info)
-        draw_edge_signature(image, palette, frame["mode"])
-        clear_photo_windows(image, frame)
+        if not arguments.purikura_footer_only:
+            draw_edge_signature(image, palette, frame["mode"])
+            clear_photo_windows(image, frame)
+        if frame["family"] == "poca-purikura":
+            draw_purikura_footer(image, frame["mode"])
+            source_info["polara:footer-profile"] = FOOTER_PROFILE
         image.putdata([
             (0, 0, 0, 0) if alpha == 0 else (red, green, blue, alpha)
             for red, green, blue, alpha in image.get_flattened_data()
@@ -147,13 +166,16 @@ def main() -> None:
         payload = save_png(image, overlay_path, source_info, PROFILE_BY_MODE[frame["mode"]])
         frame["sha256"] = hashlib.sha256(payload).hexdigest()
         frame["byteSize"] = len(payload)
-        frame["assetVersion"] = VERSION_BY_MODE[frame["mode"]]
+        frame["assetVersion"] = (
+            ASSET_VERSION if frame["family"] == "poca-purikura"
+            else VERSION_BY_MODE[frame["mode"]]
+        )
         frame["qualityProfile"] = PROFILE_BY_MODE[frame["mode"]]
         frame["edgePalette"] = list(palette)
 
     MANIFEST_PATH.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
     profiles = ", ".join(sorted(set(PROFILE_BY_MODE.values())))
-    print(f"[frame-remaster] applied {profiles} to {len(manifest['frames'])} variants")
+    print(f"[frame-remaster] applied {profiles} to {len(frames)} variants")
 
 
 if __name__ == "__main__":

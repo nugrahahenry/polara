@@ -1,11 +1,11 @@
 {
   "name": "polara",
-  "version": "1.1.2",
+  "version": "1.1.3",
   "private": true,
   "type": "module",
   "scripts": {
     "test": "node --test",
-    "test:python": "python -m unittest tests/test_verify_frame_overlays.py",
+    "test:python": "python -m unittest discover -s tests -p test_*.py",
     "test:all": "npm test && npm run test:python && npm run frames:verify && npm run assets:verify",
     "qa:proof-table": "node scripts/qa-proof-table.mjs",
     "frames:generate": "node scripts/generate-frame-overlay-registry.mjs assets/frames/frame-overlay-manifest.json src/modules/templates/frame-overlays.generated.js",
@@ -15,6 +15,7 @@
     "assets:previews:check": "python scripts/generate-picker-previews.py --check",
     "assets:demo": "python scripts/generate-demo-proofs.py",
     "frames:remaster": "python scripts/remaster-frame-overlays.py",
+    "frames:purikura-footer": "python scripts/remaster-frame-overlays.py --purikura-footer-only",
     "frames:photo-first": "python scripts/remaster-photo-first-strips.py",
     "frames:strip-type": "python scripts/remaster-strip-typography.py",
     "frames:strip-titles": "python scripts/remaster-strip-titles.py",

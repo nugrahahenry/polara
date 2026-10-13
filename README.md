@@ -1,4 +1,4 @@
-# Polara v1.1.2
+# Polara v1.1.3
 
 ![Polara](assets/brand/logo-polara.png)
 
@@ -152,6 +152,12 @@ atau native Share di Android/iPhone.
   review board, dan prototype tidak masuk runtime.
 - Generator dan tes yang masih menjaga katalog tetap dipertahankan. Hapus file
   hanya setelah referensi kode, manifest, dan kebutuhan regenerasinya diperiksa.
+- Untuk memperbarui label bawah Poca Purikura saja, jalankan
+  `npm run frames:purikura-footer`, lalu `npm run assets:previews` dan
+  `npm run frames:generate`. Generator ini menjaga jendela foto dan artwork di
+  luar area label. Generator footer memakai Segoe UI Semibold dari Windows dan
+  berhenti jika font tidak tersedia; font tersebut bukan dependency website.
+  Jalankan validasi aset sebelum commit.
 - Jangan menganggap izin melihat atau memakai aplikasi sebagai izin untuk
   memakai ulang artwork atau wajah dalam pack. Repository ini tidak menyertakan
   lisensi umum penggunaan ulang aset.

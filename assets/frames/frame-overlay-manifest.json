@@ -253,11 +253,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-single-overlay-master.png",
-      "sha256": "c8f6cc65fccec89f2052e68b852d92d76ff4e3dab32bfe01e1910e84abb84a8f",
-      "byteSize": 725343,
+      "sha256": "8af8e9c5358598faaf20f2530f6344da8da6ca3d2257dca8160c123f70181389",
+      "byteSize": 710676,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v8",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -314,11 +314,11 @@
         }
       ],
       "masterSrc": "assets/_originals/frames/poca-purikura-strip-overlay-master.png",
-      "sha256": "4218d1ecee7215601c1d55b1f62280ca3ab411bd4415e17d4e8ec74655fdc112",
-      "byteSize": 610743,
+      "sha256": "094c68c91d1847438eac8bf62c244e33c394ea3eb88b4e19f1485b5a8ab7c2cf",
+      "byteSize": 604054,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v7",
+      "assetVersion": "frame-overlay-v8",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -362,11 +362,11 @@
           "height": 840
         }
       ],
-      "sha256": "4abfef1c733703d58841ab52750ab92d4708da31655a8179b0932239a0f72d92",
-      "byteSize": 715965,
+      "sha256": "1001873ad1d6fc5119dd349ca5b2777f4aa11b3cdcf16f655e1c5db7a3cc1c39",
+      "byteSize": 701165,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v5",
+      "assetVersion": "frame-overlay-v8",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
@@ -422,11 +422,11 @@
           "height": 388
         }
       ],
-      "sha256": "6dd48145908e109dd73cdb1a194edf00836abaa215f6d4464ce131ab81c00480",
-      "byteSize": 605976,
+      "sha256": "a23f105efbc95ab2d9405df63bf97d06b4ebeb7a6ec598484a5033fa67012541",
+      "byteSize": 599026,
       "colorMode": "RGBA",
       "hasAlpha": true,
-      "assetVersion": "frame-overlay-v7",
+      "assetVersion": "frame-overlay-v8",
       "slotBackground": "#fff7ef",
       "supportsDynamicText": false,
       "metadataZones": {
