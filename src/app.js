@@ -6,9 +6,11 @@ import {
 import {
   renderTemplate, setPhotoSlot, refreshPhotoSlots, setMeta, exportPng, exportRawPng,
   download, dataUrlToBlob, renderStickerLayer, setStickerSelection,
-} from './core/compositor.js?v=3';
+} from './core/compositor.js?v=4';
 import { applyPhotoGeometry, computePhotoGeometry, initializePhotosForFrame, patchPhotoTransform, resetPhotoTransform } from './core/photo-geometry.js';
-import { applyGuestImageGeometry } from './core/guest-geometry.js';
+import { applyGuestImageGeometry, computeGuestGeometry } from './core/guest-geometry.js?v=2';
+import { resolveGuestPlacement, patchGuestPlacements } from './core/guest-placement.js';
+import { mountGuestPlacementControls, syncGuestPlacementControls } from './ui/guest-placement-controls.js';
 import { frameCollections, templates, getTemplate, resolveTemplateHtml, resolveTemplateDoc, templateDims } from './modules/templates/index.js?v=17';
 import { applyPhotoSlotPresentation, getPhotoSlotPresentation } from './modules/templates/photo-slot-ui.js';
 import { waitForOverlayImage } from './modules/templates/overlay-renderer.js?v=13';
@@ -22,7 +24,7 @@ import {
   DEFAULT_GUEST_ID, POSE_MATE_EXPERIENCE, createGuestComposition, createLatestSelectionGate,
   getGuest, getGuestOptions, getGuestRuntimeAssets, poseGuideForSlot,
   retryWithoutGuestOnFailure,
-} from './modules/guests/index.js?v=9';
+} from './modules/guests/index.js?v=10';
 import { PROOF_STEPS, getProofStepStatus, getPocaForState, selectActiveProof } from './ui/proof-table.js?v=13';
 import { getStickerBenchView, getStickerCategoryLabel } from './ui/decorate-workshop.js?v=2';
 import { getFamilyProofTheme, getRailWindow } from './ui/asset-rail.js?v=1';
@@ -58,6 +60,7 @@ const refs = {
   startGuestPreview: $('startGuestPreview'), poseMateControls: $('poseMateControls'), guestChoose: $('guestChoose'),
   guestOptionList: $('guestOptionList'), poseMateKicker: $('poseMateKicker'), poseMateTitle: $('poseMateTitle'), poseMateNote: $('poseMateNote'),
   guestLayoutChoose: $('guestLayoutChoose'), guestSide: $('guestSideBtn'), poseGuideText: $('poseGuideText'),
+  cameraGuestAdjust: $('cameraGuestAdjust'), frameGuestAdjust: $('frameGuestAdjust'),
   video: $('video'), cameraWrap: $('cameraWrap'), cameraOverlay: $('cameraOverlay'),
   poseUserGuide: $('poseUserGuide'), poseGuestLayer: $('poseGuestLayer'), poseGuestPreview: $('poseGuestPreview'),
   cameraMessage: $('cameraMessage'), cameraOverlayTitle: $('cameraOverlayTitle'), cameraOverlayActions: $('cameraOverlayActions'),
@@ -102,6 +105,7 @@ function initialState() {
   return {
     step: 'start', mode: 3, timer: 3, facing: 'user', demo: false,
     experience: 'regular', guestId: null, guestLayout: 'matched', guestSide: 'right',
+    guestPlacements: [{}, {}, {}],
     cameraStatus: 'idle', cameraError: null, shooting: false,
     photos: [null, null, null], activeSlot: 0, selectedSlot: 0, retakeSlot: null, recentCaptureSlot: null,
     frameId: null, frameCollectionId: ALL_FRAME_COLLECTION_ID, caption: '', stickers: [], selectedSticker: null, stickerHistory: [],
@@ -175,15 +179,77 @@ function status(message) {
   refs.status.textContent = message;
 }
 
-function currentGuestComposition(slotIndex = state.step === 'review' ? state.selectedSlot : state.activeSlot) {
+const guestAdjustmentSlot = () => state.step === 'camera' || state.step === 'start' ? state.activeSlot : state.selectedSlot;
+
+function currentGuestComposition(slotIndex = guestAdjustmentSlot()) {
+  const placement = state.guestPlacements[slotIndex]?.[state.guestLayout];
   return createGuestComposition({
     experience: state.experience,
     guestId: state.guestId,
     layout: state.guestLayout,
-    side: state.guestSide,
+    side: placement?.side || state.guestSide,
+    placement,
     mode: state.mode,
     slotIndex,
   });
+}
+
+function currentGuestPlacement(composition = currentGuestComposition()) {
+  if (!composition) return null;
+  const container = state.step === 'frame' ? phCanvas?.querySelectorAll('.ph-slot')[state.selectedSlot] : refs.cameraWrap;
+  const image = state.step === 'frame' ? container?.querySelector('.ph-guest') : refs.poseGuestPreview;
+  if (container?.clientWidth && container.clientHeight && image?.naturalWidth) {
+    return computeGuestGeometry(composition, image.naturalWidth, image.naturalHeight, container.clientWidth, container.clientHeight).placement;
+  }
+  return resolveGuestPlacement(composition);
+}
+
+function syncGuestAdjustments() {
+  const composition = currentGuestComposition();
+  const locked = state.shooting || state.busy || state.guestLoading;
+  for (const root of [refs.cameraGuestAdjust, refs.frameGuestAdjust]) {
+    syncGuestPlacementControls(root, composition, guestAdjustmentSlot(), locked, currentGuestPlacement(composition));
+  }
+  refs.guestSide.disabled = locked;
+  refs.guestLayoutChoose.querySelectorAll('button').forEach((button) => { button.disabled = locked; });
+  refs.cameraSlots.querySelectorAll('button').forEach((button) => { button.disabled = locked; });
+}
+
+function updateGuestPlacement(patch) {
+  if (state.shooting || state.busy || !['camera', 'frame'].includes(state.step)) return;
+  const composition = currentGuestComposition();
+  if (!composition) return;
+  const index = guestAdjustmentSlot();
+  // Keep untouched axes implicit, so a size-only change cannot shift alignment
+  // when the source or photo window has a different aspect ratio.
+  const next = patch == null ? null : { ...state.guestPlacements[index]?.[state.guestLayout], side: composition.side, ...patch };
+  state.guestPlacements = patchGuestPlacements(state.guestPlacements, index, state.guestLayout, next);
+  invalidatePreparedExport();
+  syncGuestAdjustments();
+  if (state.step === 'camera') {
+    syncGuestExperienceSurfaces();
+  } else if (phCanvas) {
+    const slot = phCanvas.querySelectorAll('.ph-slot')[index];
+    const image = slot?.querySelector('.ph-guest');
+    if (image) applyGuestImageGeometry(image, currentGuestComposition(index), { container: slot });
+  }
+}
+
+function flipGuestPlacement() {
+  if (state.shooting || state.busy || !['camera', 'frame'].includes(state.step)) return;
+  const composition = currentGuestComposition();
+  if (!composition) return;
+  const placement = currentGuestPlacement(composition);
+  const side = composition.side === 'right' ? 'left' : 'right';
+  updateGuestPlacement({ x: 1 - placement.x, side });
+  status(`${composition.asset.name} switched to the ${side} side for photo ${guestAdjustmentSlot() + 1}.`);
+}
+
+for (const root of [refs.cameraGuestAdjust, refs.frameGuestAdjust]) {
+  mountGuestPlacementControls(root, updateGuestPlacement, () => {
+    updateGuestPlacement(null);
+    status(`Pose Mate reset for photo ${guestAdjustmentSlot() + 1}. Other photos stay unchanged.`);
+  }, flipGuestPlacement);
 }
 
 const guestCompositionForSlot = (slotIndex) => currentGuestComposition(slotIndex);
@@ -236,6 +302,7 @@ function refreshGuestImageGeometry(photo = state.photos[state.selectedSlot] || s
 }
 
 function syncGuestExperienceSurfaces() {
+  syncGuestAdjustments();
   const guestComposition = currentGuestComposition();
   const active = Boolean(guestComposition);
   refs.stageShell.dataset.experience = active ? POSE_MATE_EXPERIENCE : 'regular';
@@ -279,8 +346,8 @@ function syncGuestExperienceSurfaces() {
     ? `Sit with ${guestComposition.asset.name}`
     : `Match ${guestComposition.asset.name}'s gesture`;
   refs.poseMateNote.textContent = state.guestLayout === 'side-by-side'
-    ? `${guestComposition.asset.name} is seated inside the same camera window. Your photo stays untouched and the composition remains reversible through export.`
-    : `${guestComposition.asset.name} stays inside the camera window. Your camera capture stays untouched; composition remains reversible through export.`;
+    ? `Make room for ${guestComposition.asset.name}. Adjust their position below to sit together.`
+    : `Try the gesture with ${guestComposition.asset.name}. Adjust their position below to fit beside you.`;
   refs.poseGuideText.textContent = poseGuideForSlot(state.activeSlot, state.mode, state.guestLayout);
   refs.poseUserGuide.dataset.poseCue = poseGuideForSlot(state.activeSlot, state.mode, state.guestLayout);
   refs.guestSide.textContent = guestComposition.side === 'right' ? `Move ${guestComposition.asset.name} to the left` : `Move ${guestComposition.asset.name} to the right`;
@@ -561,6 +628,7 @@ function syncStartControls() {
 }
 
 function syncTimerControls() {
+  syncGuestAdjustments();
   refs.timerChoose.querySelectorAll('[data-timer]').forEach((button) => {
     const active = Number(button.dataset.timer) === state.timer;
     button.classList.toggle('active', active);
@@ -580,6 +648,7 @@ refs.modeChoose.addEventListener('click', (event) => {
   if (!button) return;
   state.mode = Number(button.dataset.mode);
   state.photos = Array(state.mode === 3 ? 3 : 1).fill(null);
+  state.guestPlacements = Array.from({ length: state.mode }, () => ({}));
   state.activeSlot = 0;
   state.selectedSlot = 0;
   state.frameId = null;
@@ -600,7 +669,7 @@ refs.timerChoose.addEventListener('click', (event) => {
 
 refs.guestLayoutChoose.addEventListener('click', (event) => {
   const button = event.target.closest('[data-guest-layout]');
-  if (!button) return;
+  if (!button || state.shooting || state.busy) return;
   state.guestLayout = button.dataset.guestLayout;
   refs.guestLayoutChoose.querySelectorAll('[data-guest-layout]').forEach((item) => {
     const active = item.dataset.guestLayout === state.guestLayout;
@@ -640,10 +709,7 @@ refs.guestOptionList.addEventListener('click', async (event) => {
 });
 
 refs.guestSide.addEventListener('click', () => {
-  state.guestSide = state.guestSide === 'right' ? 'left' : 'right';
-  invalidatePreparedExport();
-  syncGuestExperienceSurfaces();
-  status(`${getGuest(state.guestId)?.name || 'Guest'} moved to the ${state.guestSide}.`);
+  flipGuestPlacement();
 });
 
 async function beginCamera({ retake = false } = {}) {
@@ -821,6 +887,7 @@ function renderCameraPanel() {
       ? `${state.guestLayout === 'side-by-side' ? 'Sit with' : 'Match the'} ${poseGuideForSlot(state.activeSlot, state.mode, state.guestLayout).toLowerCase()} pose. Polara keeps your full capture untouched.`
       : 'Polara keeps the full capture. Adjust fit, zoom, and pan after choosing a frame.';
   renderSlotCards(refs.cameraSlots, (index) => {
+    if (state.shooting || state.busy) return;
     state.activeSlot = index;
     state.retakeSlot = state.photos[index] ? index : null;
     renderCameraPanel();
@@ -1383,6 +1450,7 @@ function renderPhotoTabs() {
 }
 
 function syncPhotoControls() {
+  syncGuestAdjustments();
   const photo = state.photos[state.selectedSlot];
   if (!photo) return;
   refs.fitContain.classList.toggle('active', photo.fit === 'contain');

@@ -291,6 +291,7 @@ export function createGuestComposition({
   side = 'right',
   mode = 3,
   slotIndex = 0,
+  placement = null,
 } = {}) {
   if (experience !== POSE_MATE_EXPERIENCE) return null;
   const normalizedLayout = LAYOUTS[layout] ? layout : 'matched';
@@ -309,5 +310,6 @@ export function createGuestComposition({
     guestRegion: { ...geometry.guestRegion },
     ...(geometry.guestCrop ? { guestCrop: { ...geometry.guestCrop } } : {}),
     flipGuest: geometry.flipGuest,
+    ...(placement ? { placement: { ...placement } } : {}),
   };
 }

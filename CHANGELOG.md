@@ -5,6 +5,28 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-10-13
+
+Polara v1.1.0 menambahkan penyesuaian Pose Mate per foto.
+
+### Added
+
+- Kontrol Horizontal, Vertical, dan Size (60-140%) pada Camera dan Frames.
+  Switch sides dan Reset Pose Mate hanya mengubah foto yang sedang dipilih.
+- Posisi Match pose dan Sit together disimpan terpisah per slot selama sesi.
+  Pergantian frame, retake, dan navigasi tetap mempertahankan pengaturan slot lain.
+
+### Changed
+
+- Crop duduk memakai contain pada area bust, sehingga kepala tidak terpotong
+  ketika jendela foto Strip lebih lebar daripada crop aset.
+- Geometry bersama mempertahankan proporsi PNG dan crop saat digeser atau
+  diperbesar, termasuk clipping pada batas photo window di preview dan export.
+- Kontrol komposisi terkunci selama countdown atau perpindahan tahap, bersama
+  timer 3/5/10 detik. Kontrol range dapat dipakai melalui touch dan keyboard.
+- Foto tetap diproses lokal. Tidak ada aset baru, penyimpanan server, atau
+  perubahan dimensi Single 1080x1350 dan Strip 720x1800.
+
 ## [1.0.0] - 2026-10-04
 
 Polara v1.0.0 menandai rilis publik pertama dari pengalaman photobooth

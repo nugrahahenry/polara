@@ -3,7 +3,7 @@
 import { toPng } from 'https://esm.sh/html-to-image@1.11.11';
 import { applyPhotoGeometry, drawPhotoGeometry } from './photo-geometry.js';
 import { clampStickerToCanvas } from './sticker-geometry.js';
-import { applyGuestImageGeometry, computeGuestGeometry, drawGuestGeometry } from './guest-geometry.js';
+import { applyGuestImageGeometry, computeGuestGeometry, drawGuestGeometry } from './guest-geometry.js?v=2';
 
 export function renderTemplate(containerEl, html) {
   containerEl.innerHTML = html;
@@ -75,7 +75,7 @@ export function setPhotoSlot(canvasEl, slotNum, photo, options = {}) {
     layer.appendChild(guest);
     guest.addEventListener('error', () => onGuestAssetError?.(guestComposition.asset), { once: true });
     slot.appendChild(layer);
-    const applyGuest = () => applyGuestImageGeometry(guest, guestComposition, { container: slot });
+    const applyGuest = () => applyGuestImageGeometry(guest, resolveGuestComposition(options, slotNum - 1), { container: slot });
     guest.addEventListener('load', applyGuest, { once: true });
     if (guest.complete) requestAnimationFrame(applyGuest);
   }

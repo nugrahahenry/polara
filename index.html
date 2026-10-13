@@ -299,7 +299,7 @@
       *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
     }
   </style>
-  <link rel="stylesheet" href="styles/proof-table.css?v=361" />
+  <link rel="stylesheet" href="styles/proof-table.css?v=362" />
 </head>
 <body>
   <!--
@@ -506,6 +506,7 @@
             <button type="button" class="mini-btn guest-side-toggle" id="guestSideBtn">Move Juno to the left</button>
             <p class="pose-mate-note" id="poseMateNote">Juno is an original fictional Polara guest. Your camera capture stays untouched; composition remains reversible through export.</p>
           </section>
+          <div id="cameraGuestAdjust" hidden></div>
           <section class="camera-timer-controls" aria-labelledby="timerLabel" aria-describedby="timerHelp timerSelection">
             <span class="section-label" id="timerLabel">Countdown</span>
             <div class="timer-grid" id="timerChoose" role="group" aria-label="Shot timer">
@@ -577,6 +578,7 @@
             <span class="section-label">Selected photo</span>
             <div class="slot-tabs" id="photoSlotTabs" role="tablist" aria-label="Selected photo"></div>
             <p class="photo-adjust-hint">You can also click a photo in the preview.</p>
+            <div id="frameGuestAdjust" hidden></div>
             <span class="section-label">Fit</span>
             <div class="fit-buttons" role="group" aria-label="How the photo fills the frame">
               <button type="button" class="choice-btn" id="fitContainBtn">Full photo</button>
@@ -725,6 +727,6 @@
       </div>
     </div>
   </footer>
-  <script type="module" src="src/app.js?v=53"></script>
+  <script type="module" src="src/app.js?v=54"></script>
 </body>
 </html>

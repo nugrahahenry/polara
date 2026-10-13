@@ -16,8 +16,9 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the Polara v1.0.0 launch checkpoint', () => {
-  assert.equal(packageJson.version, '1.0.0');
+test('release metadata records the Polara v1.1.0 placement checkpoint', () => {
+  assert.equal(packageJson.version, '1.1.0');
+  assert.match(changelog, /## \[1\.1\.0\] - 2026-10-13/);
   assert.match(changelog, /## \[1\.0\.0\] - 2026-10-04/);
   assert.match(changelog, /rilis publik pertama/i);
   assert.match(changelog, /Validasi perangkat fisik Android\/iPhone/i);
@@ -30,8 +31,8 @@ test('release metadata records the Polara v1.0.0 launch checkpoint', () => {
   assert.match(changelog, /PNG RGBA 1254×1254/i);
   assert.match(changelog, /schemaVersion 3/i);
   assert.match(changelog, /detail hak.*sumber lisensi privat/i);
-  assert.match(indexHtml, /src\/app\.js\?v=53/);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=361/);
+  assert.match(indexHtml, /src\/app\.js\?v=54/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=362/);
   assert.match(changelog, /## \[0\.46\.1\] - 2026-10-03/);
   assert.match(changelog, /## \[0\.46\.1\] - 2026-10-03/);
   assert.match(changelog, /Poca Soft Archive exclusive/i);
@@ -175,9 +176,9 @@ test('release metadata records the Polara v1.0.0 launch checkpoint', () => {
   assert.match(changelog, /Regular Booth/i);
   assert.match(changelog, /720×1800/);
   assert.match(changelog, /1080×1350/);
-  assert.match(indexHtml, /src\/app\.js\?v=53/);
+  assert.match(indexHtml, /src\/app\.js\?v=54/);
   assert.match(indexHtml, /data-guest-layout="side-by-side"[^>]*>Sit together</);
-  assert.match(indexHtml, /styles\/proof-table\.css\?v=361/);
+  assert.match(indexHtml, /styles\/proof-table\.css\?v=362/);
   assert.match(changelog, /## \[0\.20\.0\] - 2026-08-19/);
   assert.match(changelog, /sticker Poca eksklusif/i);
   assert.match(changelog, /character-free/i);

@@ -17,6 +17,106 @@ await fs.mkdir(exportRoot, { recursive: true });
 
 const require = createRequire(import.meta.url);
 let playwright;
+async function runGuestPlacementAudit() {
+  report.guestPlacement = {};
+  for (const [width, height, mode] of [[390, 844, 3], [768, 1024, 1], [1440, 900, 3], [900, 510, 1]]) {
+    const key = `${width}x${height}`;
+    process.stdout.write(`Pose Mate placement: ${key}\n`);
+    const context = await browser.newContext({ viewport: { width, height }, permissions: ['camera'], reducedMotion: 'reduce', acceptDownloads: true, hasTouch: width < 1000 });
+    const page = await startPage(context);
+    await page.locator('[data-experience="pose-mate"]').click();
+    await page.locator('[data-guest-id="polara-pm-02"]').click();
+    await page.locator('[data-mode="' + mode + '"]').click();
+    await page.locator('#primaryBtn').click();
+    await waitForCameraReady(page);
+    await page.locator('#tertiaryBtn').click();
+    await page.locator('[data-guest-layout="side-by-side"]').click();
+    await page.locator('#cameraGuestAdjust summary').click();
+    await page.locator('#cameraGuestAdjust-x').fill('25');
+    await page.locator('#cameraGuestAdjust-y').fill('100');
+    await page.locator('#cameraGuestAdjust-scale').fill('85');
+    await page.locator('[data-guest-layout="matched"]').click();
+    assert.equal(await page.locator('#cameraGuestAdjust-scale').inputValue(), '100');
+    await page.locator('[data-guest-layout="side-by-side"]').click();
+    assert.equal(await page.locator('#cameraGuestAdjust-scale').inputValue(), '85');
+    const camera = await auditPoseMateGeometry(page, 'camera');
+    assert.equal(camera.insideParent, true);
+    if (writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${key}-placement-camera.png`) });
+    await captureProof(page, { onCountdown: async () => {
+      assert.equal(await page.locator('#cameraGuestAdjust-x').isDisabled(), true);
+      assert.equal(await page.locator('#guestSideBtn').isDisabled(), true);
+      assert.equal(await page.locator('#cameraSlots button').first().isDisabled(), true);
+      assert.equal(await page.locator('[data-guest-layout="matched"]').isDisabled(), true);
+    } });
+    if (mode === 3) {
+      assert.equal(await page.locator('#cameraGuestAdjust-scale').inputValue(), '100', 'next slot keeps its own default');
+      await captureProof(page);
+      await captureProof(page);
+    }
+    await waitForPanel(page, 'review');
+    await page.locator('#reviewSlots button').first().click();
+    const otherPhotos = await page.locator('#reviewSlots img').evaluateAll((images) => images.slice(1).map((image) => image.src));
+    await page.locator('#secondaryBtn').click();
+    await waitForCameraReady(page);
+    assert.equal(await page.locator('#cameraGuestAdjust-scale').inputValue(), '85', 'retake keeps placement');
+    await captureProof(page);
+    await waitForPanel(page, 'review');
+    assert.deepEqual(await page.locator('#reviewSlots img').evaluateAll((images) => images.slice(1).map((image) => image.src)), otherPhotos);
+    await page.locator('#primaryBtn').click();
+    await waitForPanel(page, 'frame');
+    await page.locator('#frameGuestAdjust summary').click();
+    assert.equal(await page.locator('#frameGuestAdjust-x').inputValue(), '25');
+    const others = await page.locator('#canvasScale .ph-guest').evaluateAll((images) => images.slice(1).map((image) => image.style.cssText));
+    await page.locator('#frameGuestAdjust [data-placement-reset]').click();
+    assert.equal(await page.locator('#frameGuestAdjust-scale').inputValue(), '100');
+    await page.locator('#frameGuestAdjust-x').fill('20');
+    await page.locator('#frameGuestAdjust-x').press('ArrowRight');
+    assert.equal(await page.locator('#frameGuestAdjust-x').inputValue(), '21', 'keyboard range adjustment');
+    await page.locator('#frameGuestAdjust-y').fill('100');
+    await page.locator('#frameGuestAdjust-scale').fill('115');
+    assert.deepEqual(await page.locator('#canvasScale .ph-guest').evaluateAll((images) => images.slice(1).map((image) => image.style.cssText)), others, 'other slots are untouched');
+    await page.locator('#frameGuestAdjust [data-placement-flip]').click();
+    assert.equal(await page.locator('#frameGuestAdjust-x').inputValue(), '79');
+    assert.match(await page.locator('#status').textContent(), /Mina switched to the left side for photo 1/);
+    await page.locator('#frameGuestAdjust [data-placement-flip]').click();
+    await page.locator('#frameGuestAdjust-x').focus();
+    await page.locator('#frameGuestAdjust-x').press('ArrowRight');
+    await page.locator('#frameGuestAdjust-x').press('ArrowLeft');
+    const a11y = await page.locator('#frameGuestAdjust-x').evaluate((input) => ({
+      focusVisible: input.matches(':focus-visible'), outline: getComputedStyle(input).outlineStyle,
+      height: input.getBoundingClientRect().height,
+      overflow: document.documentElement.scrollWidth - document.documentElement.clientWidth,
+    }));
+    assert.equal(a11y.focusVisible, true);
+    assert.notEqual(a11y.outline, 'none');
+    assert.ok(a11y.height >= 44);
+    assert.equal(a11y.overflow, 0);
+    const frame = await auditPoseMateGeometry(page, 'frame');
+    assert.equal(frame.insideParent, true);
+    if (writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${key}-placement-frame.png`) });
+    await page.locator('#primaryBtn').click();
+    await waitForPanel(page, 'decorate');
+    await page.locator('#backBtn').click();
+    await waitForPanel(page, 'frame');
+    assert.equal(await page.locator('#frameGuestAdjust-scale').inputValue(), '115');
+    await page.locator('#primaryBtn').click();
+    await waitForPanel(page, 'decorate');
+    await page.locator('#primaryBtn').click();
+    await page.waitForFunction(() => document.querySelector('#revealTitle')?.textContent === 'Proof approved.', null, { timeout: 40_000 });
+    const exported = await downloadPng(page, `${key}-placement.png`);
+    assert.deepEqual({ width: exported.width, height: exported.height }, mode === 3 ? { width: 720, height: 1800 } : { width: 1080, height: 1350 });
+    const raw = await downloadPng(page, `${key}-placement-photo-only.png`, '#tertiaryBtn');
+    assert.deepEqual({ width: raw.width, height: raw.height }, { width: exported.width, height: exported.height });
+    if (writeScreenshots) await page.screenshot({ path: path.join(screenshotRoot, `${key}-placement-reveal.png`) });
+    report.guestPlacement[key] = { camera, frame, accessibility: a11y, export: exported, raw, isolation: 'per-slot and per-layout passed', retake: 'passed', reset: 'passed', countdownLock: 'passed' };
+    await context.close();
+  }
+  for (const kind of ['export', 'raw']) {
+    assert.equal(report.guestPlacement['390x844'][kind].sha256, report.guestPlacement['1440x900'][kind].sha256, `${kind}: Strip output must not depend on viewport`);
+    assert.equal(report.guestPlacement['768x1024'][kind].sha256, report.guestPlacement['900x510'][kind].sha256, `${kind}: Single output must not depend on viewport`);
+  }
+}
+
 try {
   playwright = require('playwright');
 } catch {
@@ -307,9 +407,9 @@ async function auditRevealTheatre(page) {
   });
 }
 
-async function downloadPng(page, name) {
+async function downloadPng(page, name, button = '#secondaryBtn') {
   const downloadEvent = page.waitForEvent('download', { timeout: 30_000 });
-  await page.locator('#secondaryBtn').click();
+  await page.locator(button).click();
   const download = await downloadEvent;
   const filename = path.join(exportRoot, name);
   await download.saveAs(filename);
@@ -1169,6 +1269,8 @@ async function runRapidTransitionRegression() {
 }
 
 try {
+  await runGuestPlacementAudit();
+  if (process.env.POLARA_QA_PLACEMENT_ONLY !== '1') {
   await runOpeningAudit({ name: '390x844', viewport: { width: 390, height: 844 } });
   await runOpeningAudit({ name: '1440x900', viewport: { width: 1440, height: 900 } });
   await runEditorialFixtureAudit({ name: '390x844', viewport: { width: 390, height: 844 } });
@@ -1209,8 +1311,9 @@ try {
       assert.equal(stage.primaryActionInViewport, true, `${viewportName} ${stageName}: primary action must remain fully inside the viewport`);
     }
   }
+  }
   assert.deepEqual(report.runtimeErrors, []);
-  report.accessibility = {
+  if (process.env.POLARA_QA_PLACEMENT_ONLY !== '1') report.accessibility = {
     privacyDialog: 'native modal, Escape closes, trigger focus restored',
     keyboardTrays: 'Arrow selection passed for Review; Home/End passed for collection, frame, and sticker trays; collection-specific frame and sticker rail positions restored',
     touchTargets: 'all visible buttons and links at least 44×44 in audited stages',

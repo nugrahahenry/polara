@@ -1,6 +1,6 @@
 // Shared Pose Mate geometry for the live camera, Review, template preview, and
-// pixel export. The guest source stays proportional; only the declared crop
-// is used to cover the guest region.
+// pixel export. Fit the declared crop without cutting off its top in wide slots.
+import { resolveGuestPlacement } from './guest-placement.js';
 
 export function computeGuestGeometry(composition, sourceWidth, sourceHeight, viewportWidth, viewportHeight, viewportX = 0, viewportY = 0) {
   if (!composition) return null;
@@ -9,28 +9,68 @@ export function computeGuestGeometry(composition, sourceWidth, sourceHeight, vie
   const vw = Math.max(1, Number(viewportWidth) || 1);
   const vh = Math.max(1, Number(viewportHeight) || 1);
   const region = composition.guestRegion;
-  const regionX = viewportX + region.x * vw;
-  const regionY = viewportY + region.y * vh;
-  const regionWidth = region.width * vw;
-  const regionHeight = region.height * vh;
+  let regionX = viewportX + region.x * vw;
+  let regionY = viewportY + region.y * vh;
+  let regionWidth = region.width * vw;
+  let regionHeight = region.height * vh;
+  const layoutRegion = { x: regionX, y: regionY, width: regionWidth, height: regionHeight };
   const crop = composition.guestCrop;
   const sourceX = crop ? crop.x * sw : 0;
   const sourceY = crop ? crop.y * sh : 0;
   const sourceCropWidth = crop ? crop.width * sw : sw;
   const sourceCropHeight = crop ? crop.height * sh : sh;
-  const scale = crop
-    ? Math.max(regionWidth / sourceCropWidth, regionHeight / sourceCropHeight)
-    : Math.min(regionWidth / sourceCropWidth, regionHeight / sourceCropHeight);
-  const imageWidth = sw * scale;
-  const imageHeight = sh * scale;
-  const imageX = crop
+  let scale = Math.min(regionWidth / sourceCropWidth, regionHeight / sourceCropHeight);
+  let imageWidth = sw * scale;
+  let imageHeight = sh * scale;
+  let imageX = crop
     ? regionX + regionWidth / 2 - (crop.x + crop.width / 2) * imageWidth
     : regionX + (regionWidth - imageWidth) / 2;
-  const imageY = crop
+  let imageY = crop
     ? regionY + regionHeight - (crop.y + crop.height) * imageHeight
     : regionY + regionHeight - imageHeight;
 
+  if (crop) {
+    // Clip to the authored bust crop itself, not the surrounding layout space.
+    regionX = imageX + crop.x * imageWidth;
+    regionY = imageY + crop.y * imageHeight;
+    regionWidth = sourceCropWidth * scale;
+    regionHeight = sourceCropHeight * scale;
+  }
+
+  const anchor = crop ? layoutRegion : { x: imageX, y: imageY, width: imageWidth, height: imageHeight };
+  const placement = resolveGuestPlacement(composition, {
+    x: (anchor.x - viewportX) / vw, y: (anchor.y - viewportY) / vh,
+    width: anchor.width / vw, height: anchor.height / vh,
+  });
+  if (composition.placement) {
+    // A standing PNG has no bust crop. Move its actual bitmap bounds, not
+    // the full-height layout region, so vertical placement works at 100% too.
+    if (!crop) {
+      regionX = imageX;
+      regionY = imageY;
+      regionWidth = imageWidth;
+      regionHeight = imageHeight;
+    }
+    const width = anchor.width * placement.scale;
+    const height = anchor.height * placement.scale;
+    const x = viewportX + (vw - width) * placement.x;
+    const y = viewportY + (vh - height) * placement.y;
+    // Transform the original crop and image together, never stretch the bitmap.
+    imageX = x + (imageX - anchor.x) * placement.scale;
+    imageY = y + (imageY - anchor.y) * placement.scale;
+    imageWidth *= placement.scale;
+    imageHeight *= placement.scale;
+    scale *= placement.scale;
+    const cropX = x + (regionX - anchor.x) * placement.scale;
+    const cropY = y + (regionY - anchor.y) * placement.scale;
+    regionX = Math.max(viewportX, cropX);
+    regionY = Math.max(viewportY, cropY);
+    regionWidth = Math.min(viewportX + vw, cropX + regionWidth * placement.scale) - regionX;
+    regionHeight = Math.min(viewportY + vh, cropY + regionHeight * placement.scale) - regionY;
+  }
+
   return Object.freeze({
+    placement: Object.freeze(placement),
     viewport: Object.freeze({ x: viewportX, y: viewportY, width: vw, height: vh }),
     region: Object.freeze({ x: regionX, y: regionY, width: regionWidth, height: regionHeight }),
     natural: Object.freeze({ width: sw, height: sh }),
