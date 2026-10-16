@@ -21,8 +21,13 @@ test('footer Polara exposes the maker identity and privacy truth', () => {
   assert.match(html, /class="maker-seal"/);
   assert.match(
     html,
-    /class="maker-link"[^>]*href="https:\/\/hnry\.dev"[^>]*>hnry\.dev<\/a>/,
+    /class="maker-link"[^>]*href="https:\/\/henry-nugraha\.pages\.dev\/"[^>]*>Henry Nugraha<\/a>/,
   );
+  const maker = html.match(/<a class="maker-link"[^>]*>/)?.[0];
+  assert.ok(maker);
+  assert.match(maker, /target="_blank"/);
+  assert.match(maker, /rel="noopener noreferrer"/);
+  assert.doesNotMatch(html, /href="https:\/\/hnry\.dev\/?"/);
   assert.match(html, /Your photos stay in this browser\. Nothing is uploaded, and no account is needed\./);
   assert.match(html, /© 2026 Polara · Digital photobooth/);
 });

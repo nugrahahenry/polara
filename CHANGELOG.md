@@ -5,6 +5,15 @@ Lihat aturan lengkap di `../../KONVENSI-VERSI.md`.
 
 ## [Unreleased]
 
+## [1.1.4] - 2026-10-17
+
+Polara v1.1.4 menyambungkan kredit pembuat ke portfolio yang sudah live.
+
+### Fixed
+
+- Tautan Built by Henry Nugraha dan README menuju `https://henry-nugraha.pages.dev/`.
+- Kanal Instagram, GitHub, WhatsApp, privasi foto, dan alur photobooth tidak berubah.
+
 ## [1.1.3] - 2026-10-13
 
 Polara v1.1.3 memperbaiki footer frame Poca Purikura.

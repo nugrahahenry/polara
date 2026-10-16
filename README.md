@@ -1,4 +1,4 @@
-# Polara v1.1.3
+# Polara v1.1.4
 
 ![Polara](assets/brand/logo-polara.png)
 
@@ -7,7 +7,7 @@ menyimpan hasilnya sebagai PNG. Foto diproses di perangkat pengguna tanpa akun
 atau upload ke server Polara.
 
 [Buka Polara](https://polara.vercel.app/) · [Catatan versi](CHANGELOG.md) ·
-[Henry Nugraha](https://hnry.dev/)
+[Henry Nugraha](https://henry-nugraha.pages.dev/)
 
 ## Cara memakai
 

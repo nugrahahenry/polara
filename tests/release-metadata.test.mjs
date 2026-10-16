@@ -16,8 +16,9 @@ const indexHtml = await fs.readFile(
 );
 
 
-test('release metadata records the Polara v1.1.3 frame footer checkpoint', () => {
-  assert.equal(packageJson.version, '1.1.3');
+test('release metadata records the Polara v1.1.4 portfolio-link checkpoint', () => {
+  assert.equal(packageJson.version, '1.1.4');
+  assert.match(changelog, /## \[1\.1\.4\] - 2026-10-17/);
   assert.match(changelog, /## \[1\.1\.3\] - 2026-10-13/);
   assert.match(changelog, /## \[1\.1\.2\] - 2026-10-13/);
   assert.match(changelog, /## \[1\.1\.1\] - 2026-10-13/);

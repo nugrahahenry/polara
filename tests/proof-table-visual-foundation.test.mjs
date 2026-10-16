@@ -17,8 +17,8 @@ test('Proof Table shell exposes a unified desktop desk and authored browser surf
   assert.match(css, /touch-action: manipulation/);
 });
 
-test('footer remains the canonical hnry.dev identity foundation', () => {
-  assert.match(html, /href="https:\/\/hnry\.dev"/);
+test('footer connects the live portfolio and preserves social identity', () => {
+  assert.match(html, /href="https:\/\/henry-nugraha\.pages\.dev\/"/);
   assert.match(html, /instagram\.com\/hnry\.dev/);
   assert.match(html, /github\.com\/nugrahahenry/);
   assert.match(html, /wa\.me\/6289513595554/);
